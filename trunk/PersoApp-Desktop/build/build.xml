@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project Trinity-Desktop">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        
+        <!-- refactor? would require some current SVN installation in the path -->
+        <!--
+        <exec executable="svn" output="svn.properties">
+			<arg value="info" />
+		</exec>
+		-->
+		<property prefix="svn" file="svn.properties" />
+
+		<propertyfile file="version.properties" comment="Build version info">
+			<entry key="buildVersion" default="0" type="string" value="V0.1" />
+			<entry key="buildRevision" default="0" type="string" value="${svn.Revision}" />
+			<entry key="buildNo" default="0" type="int" operation="+" value="1" pattern="0000" />
+			<entry key="buildDate" type="date" value="now" />
+		</propertyfile>
+
+		<echo>Building Revision: ${svn.Revision}</echo>
+
+		<copy file="version.properties" tofile="../bin/resources/version.properties" overwrite="true" />
+        <jar destfile="rawbuild.jar" filesetmanifest="mergewithoutmain" duplicate="preserve">
+            <manifest>
+                <attribute name="Main-Class" value="de.persoapp.desktop.PersoApp"/>
+                <attribute name="Class-Path" value="."/>
+            	<attribute name="SplashScreen-Image" value="resources/ic_tray.png" />
+            	<attribute name="Sealed" value="true" />
+            </manifest>
+            <fileset dir="../bin"/>
+            <fileset dir="../../PersoApp-Core/bin"/>
+
+<!--     	
+            <zipfileset excludes="META-INF/*.SF" src="../../PersoApp-Core/lib/bcmail-jdk15on-149.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="../../PersoApp-Core/lib/bcpkix-jdk15on-149.jar"/>
+-->
+            <zipfileset excludes="META-INF/*.SF" src="../../PersoApp-Core/lib/bcprov-jdk15on-149.jar"/>
+        </jar>
+    	
+		<!-- run optimizer on build-package -->
+		<taskdef resource="proguard/ant/task.properties" classpath="lib/proguard.jar" />
+		<proguard configuration="optimize1.pro" printmapping="mapping.txt">
+			<injar file="rawbuild.jar"/>
+			<outjar file="optimized.jar"/>
+			<libraryjar file="${java.home}/lib/rt.jar"/>
+			<libraryjar file="${java.home}/lib/jce.jar"/>
+			<libraryjar file="${java.home}/lib/jsse.jar"/>
+			<libraryjar file="lib/junit-4.9b2.jar"/>
+		</proguard>
+    	
+    	<!-- repackage -->
+		<jar destfile="bin" compress="false" level="0">
+			<zipfileset src="optimized.jar" />
+		</jar>
+        	
+        <jar destfile="../dist/PersoApp.jar" update="true" compress="true" level="9">
+			<manifest>
+                <attribute name="Created-By" value="PersoApp Community"/>
+				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+				<attribute name="Class-Path" value=""/>
+                <attribute name="Rsrc-Class-Path" value="bin"/>
+				<attribute name="Rsrc-Main-Class" value="de.persoapp.desktop.PersoApp"/>
+					
+				<attribute name="SplashScreen-Image" value="icon.png" />
+				<attribute name="Sealed" value="true" />
+			</manifest>
+        	
+            <!-- boot JAR loader -->
+            <zipfileset src="lib/jar-in-jar-loader.zip"/>
+
+        	<zipfileset dir="../bin/resources/" includes="icon.png" fullpath="icon.png"/>
+        	
+        	<!-- application -->
+            <zipfileset dir="./" includes="bin"/>
+		</jar>
+    </target>
+</project>

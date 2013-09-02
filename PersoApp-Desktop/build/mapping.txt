@@ -64,6 +64,7 @@ de.persoapp.core.card.CardHandler -> de.persoapp.a.a.c:
     de.persoapp.core.client.IMainView mainView -> a
     int PACEv2_curveID -> a
     de.persoapp.core.card.CardHandler getInstance(de.persoapp.core.client.IMainView) -> a
+    byte[] buildCmd(byte,byte,byte,byte,byte[],int) -> a
     int setMSE_AT(de.persoapp.core.card.TransportProvider,java.lang.String,byte,byte[]) -> a
     byte[] generalAUTH(de.persoapp.core.card.TransportProvider,byte[],boolean) -> a
     de.persoapp.core.card.TransportProvider getECard() -> a
@@ -134,7 +135,6 @@ de.persoapp.core.card.ISOSMTransport -> de.persoapp.a.a.f:
     byte[] SM_PAD -> c
     java.lang.Object getParent() -> a
     int lastSW() -> a
-    byte[] transmit(java.lang.String) -> a
     byte[] transmit(byte[]) -> a_
     void setupKeys(byte[],byte[]) -> a
     byte[] getIV() -> a
@@ -153,7 +153,6 @@ de.persoapp.core.card.JSCIOTransport -> de.persoapp.a.a.g:
     java.lang.Object getParent() -> a
     int lastSW() -> a
     byte[] transmit(byte[]) -> a_
-    byte[] transmit(java.lang.String) -> a
     void close() -> a
     java.util.Map queryFeatures(javax.smartcardio.Card) -> a
     boolean hasFeature$132beb() -> a
@@ -187,7 +186,6 @@ de.persoapp.core.card.PACE -> de.persoapp.a.a.i:
     java.math.BigInteger[] multiplyBy2NEW(java.math.BigInteger[]) -> a
 de.persoapp.core.card.TransportProvider -> de.persoapp.a.a.j:
     java.lang.Object getParent() -> a
-    byte[] transmit(java.lang.String) -> a
     byte[] transmit(byte[]) -> a_
     int lastSW() -> a
     void close() -> a
@@ -481,8 +479,7 @@ de.persoapp.core.util.Hex -> de.persoapp.a.e.c:
     java.lang.String toString(byte[]) -> a
     byte[] fromString(java.lang.String) -> a
     int fromDigit(char) -> a
-    java.lang.String byteToString(int) -> a
-    java.lang.String shortToString(int) -> b
+    java.lang.String shortToString(int) -> a
 de.persoapp.core.util.Util -> de.persoapp.a.e.d:
     javax.net.ssl.SSLSocketFactory sslSF -> a
     javax.net.ssl.SSLSocketFactory getSSLSocketFactory() -> a

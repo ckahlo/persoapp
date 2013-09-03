@@ -637,7 +637,7 @@ public class CardHandler implements ICardHandler {
 				e.printStackTrace();
 			}
 		} else {
-			tp.transmit(buildCmd((byte) 0x00, (byte) 0x2C, (byte) 0x02, updateSecret, updateSecretInput.getValue(), 0));
+			tp.transmit(buildCmd((byte) 0x00, (byte) 0x2C, (byte) 0x02, updateSecret, updateSecretInput.getValue(), -1));
 			status = tp.lastSW();
 		}
 

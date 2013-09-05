@@ -1,4 +1,4 @@
-#how to build your own PersoApp
+How to build your own PersoApp
 
  * check out PersoApp-Desktop and PersoApp-Core into your workspace directory, i.e. with Eclipse do "Import Project from SVN" using the URL http://persoapp.googlecode.com/svn
  * open the newly created PersoApp-Desktop project

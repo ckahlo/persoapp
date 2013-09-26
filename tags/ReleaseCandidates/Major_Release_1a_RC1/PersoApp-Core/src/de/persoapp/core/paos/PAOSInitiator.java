@@ -1,0 +1,435 @@
+/**
+ * 
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * 
+ * Authors Christian Kahlo, Ralf Wondratschek
+ * 
+ * All Rights Reserved.
+ * 
+ * Contact: PersoApp, http://www.persoapp.de
+ * 
+ * @version 1.0, 30.07.2013 13:50:47
+ * 
+ *          This file is part of PersoApp.
+ * 
+ *          PersoApp is free software: you can redistribute it and/or modify it
+ *          under the terms of the GNU Lesser General Public License as
+ *          published by the Free Software Foundation, either version 3 of the
+ *          License, or (at your option) any later version.
+ * 
+ *          PersoApp is distributed in the hope that it will be useful, but
+ *          WITHOUT ANY WARRANTY; without even the implied warranty of
+ *          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ *          Lesser General Public License for more details.
+ * 
+ *          You should have received a copy of the GNU Lesser General Public
+ *          License along with PersoApp. If not, see
+ *          <http://www.gnu.org/licenses/>.
+ * 
+ *          Diese Datei ist Teil von PersoApp.
+ * 
+ *          PersoApp ist Freie Software: Sie k�nnen es unter den Bedingungen der
+ *          GNU Lesser General Public License, wie von der Free Software
+ *          Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder
+ *          sp�teren ver�ffentlichten Version, weiterverbreiten und/oder
+ *          modifizieren.
+ * 
+ *          PersoApp wird in der Hoffnung, dass es n�tzlich sein wird, aber OHNE
+ *          JEDE GEW�HRLEISTUNG, bereitgestellt; sogar ohne die implizite
+ *          Gew�hrleistung der MARKTF�HIGKEIT oder EIGNUNG F�R EINEN BESTIMMTEN
+ *          ZWECK. Siehe die GNU Lesser General Public License f�r weitere
+ *          Details.
+ * 
+ *          Sie sollten eine Kopie der GNU Lesser General Public License
+ *          zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
+ *          <http://www.gnu.org/licenses/>.
+ * 
+ */
+package de.persoapp.core.paos;
+
+import iso.std.iso_iec._24727.tech.schema.ConnectionHandleType;
+import iso.std.iso_iec._24727.tech.schema.RequestType;
+import iso.std.iso_iec._24727.tech.schema.ResponseType;
+import iso.std.iso_iec._24727.tech.schema.StartPAOS;
+import iso.std.iso_iec._24727.tech.schema.StartPAOS.SupportedAPIVersions;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.net.URI;
+import java.net.URL;
+import java.security.cert.Certificate;
+import java.util.Random;
+
+import javax.net.ssl.SSLPeerUnverifiedException;
+import javax.net.ssl.SSLSession;
+import javax.swing.JOptionPane;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.JAXBIntrospector;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.UnmarshalException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
+import javax.xml.transform.stream.StreamSource;
+
+import liberty.paos._2006_08.EndpointReferenceType;
+import liberty.paos._2006_08.MetaDataType;
+import liberty.paos._2006_08.OptionsType;
+import liberty.paos._2006_08.PaosType;
+
+import org.w3._2005._03.addressing.AttributedURIType;
+import org.w3._2005._03.addressing.RelatesToType;
+import org.w3c.dom.Element;
+import org.xmlsoap.schemas.soap.envelope.Body;
+import org.xmlsoap.schemas.soap.envelope.Envelope;
+import org.xmlsoap.schemas.soap.envelope.Header;
+
+import de.persoapp.core.tls.BCTlsSocketFactoryImpl;
+import de.persoapp.core.util.Hex;
+import de.persoapp.core.ws.engine.WSContainer;
+
+/**
+ * @author ckahlo
+ * 
+ */
+public final class PAOSInitiator {
+	public static final String												VERSION1_1		= "urn:liberty:2003-08";
+	public static final String												VERSION2_0		= "urn:liberty:2006-08";
+	public static final String												ENDPOINT1		= "http://www.projectliberty.org/2006/01/role/paos";
+	public static final String												ENDPOINT2		= "http://www.projectliberty.org/2006/02/role/paos";
+	public static final String												SERVICETYPE		= "http://www.bsi.bund.de/ecard/api/1.0/PAOS/GetNextCommand";
+	public static final String												ACTOR			= "http://schemas.xmlsoap.org/soap/actor/next";
+
+	private static final liberty.paos._2006_08.ObjectFactory				paosOF			= new liberty.paos._2006_08.ObjectFactory();
+	private static final org.xmlsoap.schemas.soap.envelope.ObjectFactory	soapOF			= new org.xmlsoap.schemas.soap.envelope.ObjectFactory();
+	private static final org.w3._2005._03.addressing.ObjectFactory			wsaOF			= new org.w3._2005._03.addressing.ObjectFactory();
+
+	private static final QName												wsa_messageID	= new QName(
+																									"http://www.w3.org/2005/03/addressing",
+																									"MessageID");
+
+	private WSContainer														wsc;
+
+	private MiniHttpClient													mhc;
+	private URL																serviceURL;
+	private String															sessionID;
+	private byte[]															pskKey;
+
+	private String															lastMessageID;
+
+	final Random															random			= new Random();
+
+	private static final JAXBContext										jaxbCtx			= createJAXBContext();
+	private final JAXBIntrospector											jaxbIS;
+
+	private final Marshaller												marshaller;
+	private final Unmarshaller												unmarshaller;
+
+	private static JAXBContext createJAXBContext() {
+		final Class<?>[] objectFactories = new Class<?>[] {
+				// Object-Factories of namespaces
+				org.xmlsoap.schemas.soap.envelope.ObjectFactory.class, // SOAP Envelope
+				liberty.paos._2006_08.ObjectFactory.class, // PAOS Header
+				org.w3._2005._03.addressing.ObjectFactory.class, // SOAP Addressing Header
+				iso.std.iso_iec._24727.tech.schema.ObjectFactory.class, // ISO-24727 messages
+		};
+
+		try {
+			return JAXBContext.newInstance(objectFactories);
+		} catch (final JAXBException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private PAOSInitiator() throws JAXBException {
+		jaxbIS = jaxbCtx.createJAXBIntrospector();
+		marshaller = jaxbCtx.createMarshaller();
+		unmarshaller = jaxbCtx.createUnmarshaller();
+
+		// omit xml-header?
+		marshaller.setProperty("com.sun.xml.internal.bind.xmlDeclaration", false);
+	}
+
+	public static final PAOSInitiator getInstance(final WSContainer wsc, URI endpoint, final String sessionID,
+			final byte[] pskKey) throws IOException {
+		if (wsc == null || endpoint == null) {
+			throw new IllegalArgumentException();
+		}
+
+		PAOSInitiator initiator = null;
+		try {
+			initiator = new PAOSInitiator();
+		} catch (final JAXBException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		initiator.wsc = wsc;
+		initiator.sessionID = sessionID;
+		initiator.pskKey = pskKey;
+
+		if (endpoint.getPath().isEmpty()) {
+			endpoint = endpoint.resolve("/").normalize();
+		}
+
+		// old OpenLimit requirement, do not support as of BSI TR-03124-1
+		//		if (sessionID != null) {
+		//			endpoint = endpoint.resolve("?sessionid=" + sessionID);
+		//		}
+
+		initiator.serviceURL = endpoint.toURL();
+
+		initiator.mhc = initiator.createClient();
+		final SSLSession s = initiator.mhc.getSSLSession();
+		final String p = s == null ? null : s.getProtocol();
+		if (p != null && p.startsWith("TLSv") && Float.parseFloat(p.substring(4)) > 1.1d) {
+			System.out.println("protocol ok: " + p);
+		} else {
+			System.out.println("protocol warning: " + p);
+
+			// TODO: strictmode will be a requirement soon, remove that
+			if ("true".equals(System.getProperty("de.persoapp.forceStrictMode"))) {
+				if (JOptionPane.showConfirmDialog(null, "Der eID-Server versucht ein nicht zulässiges\n"
+						+ "Protokoll auszuhandeln. (TLS1.0 statt TLS1.1+)\n" + "Wollen Sie fortfahren?", "TLS Warnung",
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) != JOptionPane.YES_OPTION) {
+					return null;
+				}
+			}
+		}
+
+		return initiator;
+	}
+
+	private final MiniHttpClient createClient() throws IOException {
+		final MiniHttpClient mhcInstance = new MiniHttpClient(serviceURL);
+		mhcInstance.setSocketFactory(new BCTlsSocketFactoryImpl(sessionID.getBytes(), pskKey));
+
+		mhcInstance.setRequestHeader("Accept", "application/vnd.paos+xml");
+
+		/*
+		 * Content-Type has to be "application/vnd.paos+xml" for PAOS messages
+		 */
+		mhcInstance.setRequestHeader("Content-Type", "application/vnd.paos+xml; charset=UTF-8");
+
+		mhcInstance.addRequestHeader("PAOS", new StringBuilder().append("ver=\"").append(VERSION1_1).append("\",\"")
+				.append(VERSION2_0).append("\"").toString());
+		mhcInstance.addRequestHeader("PAOS", SERVICETYPE);
+
+		return mhcInstance;
+	}
+
+	public final Certificate getPeerCertificate() {
+		try {
+			return this.mhc.getSSLSession().getPeerCertificates()[0];
+			// return ((HttpsURLConnection) this.uc).getServerCertificates()[0];
+		} catch (final SSLPeerUnverifiedException e) {
+			return null;
+		}
+	}
+
+	/*
+	 * create SOAP-Envelope
+	 */
+
+	public final JAXBElement<Envelope> createEnvelope(final JAXBElement<PaosType> messageHeader,
+			final String messageID, final String relatesTo, final String action, final Object message) {
+		final Header header = new Header();
+		header.getAny().add(messageHeader);
+
+		final AttributedURIType mid = new AttributedURIType();
+		mid.setValue(messageID);
+		header.getAny().add(wsaOF.createMessageID(mid));
+
+		final org.w3._2005._03.addressing.EndpointReferenceType replyTo = new org.w3._2005._03.addressing.EndpointReferenceType();
+		final AttributedURIType replyToAddress = new AttributedURIType();
+		replyToAddress.setValue(ENDPOINT2);
+		replyTo.setAddress(replyToAddress);
+		header.getAny().add(wsaOF.createReplyTo(replyTo));
+
+		if (relatesTo != null) {
+			final RelatesToType relation = new RelatesToType();
+			relation.setValue(relatesTo);
+			header.getAny().add(wsaOF.createRelatesTo(relation));
+		}
+
+		if (action != null) {
+			final AttributedURIType actionURI = new AttributedURIType();
+			actionURI.setValue(action);
+			header.getAny().add(wsaOF.createAction(actionURI));
+		}
+
+		final Body body = new Body();
+		body.getAny().add(message);
+
+		final Envelope envelope = new Envelope();
+		envelope.setHeader(header);
+		envelope.setBody(body);
+
+		return soapOF.createEnvelope(envelope);
+	}
+
+	/*
+	 * create PAOS-Header for SOAP-Envelope
+	 */
+
+	public final JAXBElement<PaosType> createPAOSHeader() {
+		final PaosType pt = new PaosType();
+		pt.setMustUnderstand(true);
+		pt.setActor(ACTOR);
+
+		pt.getVersion().add(VERSION2_0);
+		pt.getVersion().add(VERSION1_1);
+
+		final EndpointReferenceType endpointRef = new EndpointReferenceType();
+		endpointRef.setAddress(ENDPOINT1);
+
+		final MetaDataType metaData = new MetaDataType();
+		metaData.setServiceType(SERVICETYPE);
+		metaData.setOptions(new OptionsType());
+		endpointRef.setMetaData(metaData);
+
+		pt.getEndpointReference().add(endpointRef);
+
+		return paosOF.createPAOS(pt);
+	}
+
+	private final String createMessageID() {
+		final byte[] randomID = new byte[16];
+		random.nextBytes(randomID);
+		return new StringBuilder().append("urn:uuid").append(Hex.toString(randomID)).toString();
+	}
+
+	private final JAXBElement<Envelope> jaxbDispatch(final JAXBElement<Envelope> msg) throws IOException {
+		try {
+			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			marshaller.marshal(msg, baos);
+			byte[] buf = baos.toByteArray();
+			System.out.println("<< " + (buf != null ? buf.length : "-") + ": "
+					+ (buf != null ? new String(buf) : "null"));
+
+			buf = mhc.transmit(baos.toByteArray());
+
+			System.out.println(">> " + (buf != null ? buf.length : "-") + ": "
+					+ (buf != null ? new String(buf) : "null"));
+			if (buf != null) {
+				final ByteArrayInputStream bais = new ByteArrayInputStream(buf);
+				return unmarshaller.unmarshal(new StreamSource(bais), Envelope.class);
+			} else {
+				return null;
+			}
+		} catch (final Exception ex) {
+			ex.printStackTrace();
+			throw new IOException("Transmit error");
+		}
+	}
+
+	public final Object[] dispatch(final Object in) throws IOException {
+		final JAXBElement<Envelope> env = jaxbDispatch(createEnvelope(createPAOSHeader(), createMessageID(),
+				lastMessageID, null, in));
+
+		if (env == null) {
+			return null;
+		}
+
+		final Envelope e = env.getValue();
+		final Header soapHeader = e.getHeader();
+		if (soapHeader != null) {
+			for (final Object soapHE : soapHeader.getAny()) {
+				final JAXBElement<?> je = (JAXBElement<?>) soapHE;
+
+				if (wsa_messageID.equals(je.getName())) {
+					final AttributedURIType value = (AttributedURIType) je.getValue();
+					lastMessageID = value.getValue();
+				}
+			}
+		}
+
+		QName msgName = null;
+		Object message = e.getBody().getAny().size() > 0 ? e.getBody().getAny().get(0) : null;
+		if (message != null) {
+			if (message instanceof JAXBElement) {
+				msgName = ((JAXBElement<?>) message).getName();
+				message = ((JAXBElement<?>) message).getValue();
+			} else if (message instanceof Element) {
+				final Element elem = (Element) message;
+				System.out.println("#-> " + elem.getNamespaceURI() + ":" + elem.getNodeName() + " = "
+						+ elem.getNodeValue());
+				try {
+					message = unmarshaller.unmarshal(elem);
+				} catch (final UnmarshalException ue) {
+					try {
+						message = unmarshaller.unmarshal(elem, RequestType.class);
+					} catch (final JAXBException je) {
+						je.printStackTrace();
+					}
+				} catch (final JAXBException e1) {
+					e1.printStackTrace();
+				}
+				System.out.println(message.getClass() + " = " + message);
+				final JAXBElement<?> je = (JAXBElement<?>) message;
+				System.out.println("*-> " + je.getName().getNamespaceURI() + ":" + je.getName().getLocalPart());
+				msgName = je.getName();
+				message = je.getValue();
+			} else {
+				msgName = jaxbIS.getElementName(message);
+			}
+		}
+
+		return new Object[] { msgName, message };
+	}
+
+	public final ResponseType start(final byte[] contextHandle, final byte[] slotHandle) throws IOException {
+		final StartPAOS sp = new StartPAOS();
+		sp.setSessionIdentifier(sessionID);
+
+		final ConnectionHandleType ch = new ConnectionHandleType();
+		ch.setContextHandle(contextHandle);
+		ch.setSlotHandle(slotHandle);
+		sp.getConnectionHandle().add(ch);
+
+		final StartPAOS.UserAgent spua = new StartPAOS.UserAgent();
+		spua.setName("PersoApp");
+		spua.setVersionMajor(BigInteger.ZERO);
+		spua.setVersionMinor(BigInteger.ONE);
+		spua.setVersionSubminor(null);
+		sp.setUserAgent(spua);
+
+		final StartPAOS.SupportedAPIVersions api113 = new SupportedAPIVersions();
+		api113.setMajor(BigInteger.ONE);
+		api113.setMinor(BigInteger.ONE);
+		api113.setSubminor(BigInteger.valueOf(3));
+
+		sp.getSupportedAPIVersions().add(api113);
+
+		sp.getSupportedDIDProtocols().add(null);
+
+		// ISO24727Protocols.startPAOS(sp);
+		Object[] paosMsg = dispatch(sp);
+		while (paosMsg != null && paosMsg[1] != null && paosMsg[1] instanceof RequestType) {
+			final Object wsres = wsc.processRequest((QName) paosMsg[0], paosMsg[1]);
+			System.out.println(paosMsg[0] + " = " + paosMsg[1]);
+
+			if (wsres != null) {
+				paosMsg = dispatch(wsres);
+			} else {
+				return null;
+			}
+		}
+
+		if (paosMsg != null && paosMsg[1] != null) {
+			if (paosMsg[1] instanceof ResponseType) {
+				return (ResponseType) paosMsg[1];
+			} else {
+				System.out.println("Unknown object: " + paosMsg[1].getClass() + " = " + paosMsg[1]);
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+}

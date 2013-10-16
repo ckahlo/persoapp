@@ -23,6 +23,7 @@
 		<echo>Building Revision: ${svn.Revision}</echo>
 
 		<copy file="version.properties" tofile="build/classes/resources/version.properties" overwrite="true" />
+		<copy file="version.properties" tofile="../bin/resources/version.properties" overwrite="true" />
 	
 	<copy todir="build/classes/resources"><fileset dir="../src/resources"/></copy>
         <jar destfile="rawbuild.jar" filesetmanifest="mergewithoutmain" duplicate="preserve">

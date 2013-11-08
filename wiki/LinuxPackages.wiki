@@ -26,3 +26,7 @@ Testing packages will be made available via [https://drive.google.com/folderview
 === Gentoo ===
 
 === Archlinux ===
+
+
+== Running PersoApp ==
+In general, PersoApp can be started from terminal or GUI-Starter (ALT+F2) by calling {{{persoapp}}}. If everything works fine, the persoapp-icon should appear in your desktop einvironment's systray. In case PersoApp does not start properly, please report an [https://code.google.com/p/persoapp/issues/list Issue], which contains the distribution you're running, the persoapp package you installed and the console output when running {{{persoapp}}} from console.

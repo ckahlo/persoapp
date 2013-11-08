@@ -1,0 +1,21 @@
+#summary Where to find Linux Packages and how to use them.
+
+= Linux Packages =
+
+The PersoApp will provide linux package for the following Distributions:
+ * Ubuntu/Debian
+ * Fedora
+ * Gentoo
+ * Archlinux
+
+The stable packages will be announced on the project web site https://www.persoapp.de.
+
+
+= Testing/Unstable Packages = 
+Testing packages will be made available via [https://drive.google.com/folderview?id=0BwAMd9a8dhRzU0dPdlRuNTNYams&usp=sharing Linux Testing].
+
+== Instructions ==
+=== Debian/Ubuntu ===
+ # Download the .deb-file from [https://drive.google.com/folderview?id=0BwAMd9a8dhRzU0dPdlRuNTNYams&usp=sharing Linux Testing]
+ # Install the dependencies: {{{sudo apt-get install openjdk-6-jre jarwrapper java-wrappers libpcsclite1}}}
+ # Install the downloaded .deb-file either via a graphical installer or {{{ sudo dpkg -i XXX.deb}}}

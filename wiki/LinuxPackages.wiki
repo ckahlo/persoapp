@@ -35,7 +35,7 @@ There are 2 ebuilds, version 1.0. is the prebuild jar file which will be install
 
  # Create a local portage overlay
 {{{ 
-mkdir /usr/local/overlays/local
+mkdir -p /usr/local/overlays/local
 }}}
    # Create a configuration for the overlay
 {{{

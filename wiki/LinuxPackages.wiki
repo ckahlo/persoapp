@@ -116,7 +116,7 @@ sudo pacman -U persoapp-*.pkg.tar.xz
 
 You should make sure that {{{ pcscd }}} is running and has recognized your card reader. Most card readers, including the inexpensive Reiner SCT CyberJack RFID basis, are supported by the CCID drivers:
 {{{
-sudo pacman ccid
+sudo pacman -S ccid
 }}}
 The more advanced ReinerSCT CyberJack need a custom driver, which is available from the Arch User Repository (AUR): [https://aur.archlinux.org/packages/pcsc-cyberjack/ pcsc-cyberjack].
 After you have installed your drivers, you should start {{{ pcscd }}}:

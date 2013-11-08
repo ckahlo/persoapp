@@ -37,6 +37,21 @@ sudo yum install java jpackage-utils pcsc-lite-libs pcsc-lite-devel
 {{{
 sudo rpm -i persoapp-XXX.rpm
 }}}
+
+You should make sure that {{{ pcscd }}} is running and has recognized your card reader. Most card readers, including the inexpensive Reiner SCT CyberJack RFID basis, are supported by the CCID drivers:
+{{{
+sudo yum install ccid
+}}}
+
+After you have installed your drivers, you should start {{{ pcscd }}}:
+{{{
+sudo systemctl start pcscd
+}}}
+
+To make {{{ pcscd }}} start on system start do:
+{{{
+sudo systemctl enable pcscd
+}}}
 === Gentoo ===
 
 There are 2 ebuilds, version 1.0. is the prebuild jar file which will be installed on the computer. Version 9999 checks out the current development source code via subversion and compiles it. The later is to be used by developers or people who want to test the latest version of persoapp.
@@ -99,11 +114,11 @@ makepkg -sc
 sudo pacman -U persoapp-*.pkg.tar.xz
 }}}
 
-You should make sure that {{{ pcscd }}} is running and has recognized your card reader. Most card readers, including the inexpensive Reiner SCT cyberjac RFID basis, are supported by the CCID drivers:
+You should make sure that {{{ pcscd }}} is running and has recognized your card reader. Most card readers, including the inexpensive Reiner SCT CyberJack RFID basis, are supported by the CCID drivers:
 {{{
 sudo pacman ccid
 }}}
-The more advanced ReinerSCT cyberjack need a custom driver, which is available from the Arch User Repository (AUR): [https://aur.archlinux.org/packages/pcsc-cyberjack/ pcsc-cyberjack].
+The more advanced ReinerSCT CyberJack need a custom driver, which is available from the Arch User Repository (AUR): [https://aur.archlinux.org/packages/pcsc-cyberjack/ pcsc-cyberjack].
 After you have installed your drivers, you should start {{{ pcscd }}}:
 {{{
 sudo systemctl start pcscd

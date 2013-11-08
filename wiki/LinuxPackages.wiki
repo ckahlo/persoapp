@@ -29,47 +29,63 @@ There are 2 ebuilds, version 1.0. is the prebuild jar file which will be install
 
 1. Create a local portage overlay
 
-mkdir /usr/local/overlays/local/
+{{{ 
+mkdir /usr/local/overlays/local
+}}}
 
-1.1. Create a configuration for the overlay
+1.1 Create a configuration for the overlay
 
-mkdir /usr/local/overlays/local/metadata/
+{{{
+mkdir /usr/local/overlays/local/metadata
 vi /usr/local/overlays/local/metadata/layout.conf
+}}}
 
-Insert this as content:
+    Insert this as content:
+{{{
 masters = gentoo
+}}}
 
-The overlay has to have a name, therefore:
+   The overlay has to have a name, therefore:
 
+{{{
 mkdir /usr/local/overlays/local/profiles
 vi /usr/local/overlays/local/profiles/repo_name
+}}}
 
-Insert a name as content, for example
-persoapp_overlay
+   Insert a name as content, for example {{{ persoapp_overlay }}}
 
 2. Create the category and persoapp directories
 
+{{{
 mkdir -p /usr/local/overlays/local/app-misc/persoapp
+}}}
 
-2.1. Copy the ebuilds into this directory
+2.1 Copy the ebuilds into this directory
 
+{{{ 
 cp persoapp-1.0.ebuild /usr/local/overlays/local/app-misc/persoapp/
+}}}
 
-2.2. Create the manifest metadata for the ebuild(s)
+2.2 Create the manifest metadata for the ebuild(s)
 
-cd /usr/local/overlays/local/app-misc/persoapp/
-
+{{{
+cd /usr/local/overlays/local/app-misc/persoapp
 ebuild persoapp-1.0.ebuild digest
+}}}
 
 3. Integrate the local overlay into portage
 
-Edit the /etc/make.conf and add
+   Edit the {{{ /etc/make.conf }}} and add
 
+{{{
 PORTDIR_OVERLAY="/usr/local/overlays/local"
+}}}
 
 4. Install the app like any other gentoo software
 
+{{{
 emerge persoapp
+}}}
 
 === Archlinux ===
 

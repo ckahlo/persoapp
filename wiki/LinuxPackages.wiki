@@ -28,7 +28,15 @@ sudo dpkg -i persoapp-XXX.deb
 }}}
 
 === Fedora ===
-
+ # Download the .rpm-file from [https://drive.google.com/folderview?id=0BwAMd9a8dhRzU0dPdlRuNTNYams&usp=sharing Linux Testing]
+ # Install the dependencies: 
+{{{
+sudo yum install java jpackage-utils pcsc-lite-libs pcsc-lite-devel
+}}}
+ # Install the downloaded .rpm-file either via a graphical installer or
+{{{
+sudo rpm -i persoapp-XXX.rpm
+}}}
 === Gentoo ===
 
 There are 2 ebuilds, version 1.0. is the prebuild jar file which will be installed on the computer. Version 9999 checks out the current development source code via subversion and compiles it. The later is to be used by developers or people who want to test the latest version of persoapp.

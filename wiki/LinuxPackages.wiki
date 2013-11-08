@@ -97,7 +97,14 @@ PORTDIR_OVERLAY="/usr/local/overlays/local"
 {{{
 emerge persoapp
 }}}
-
+ # Start pcscd
+{{{
+/etc/init.d/pcscd start
+}}}
+ # Start persoapp like any other programm
+{{{
+persoapp
+}}}
 === Archlinux ===
  # Download the tar.gz-file from the Archlinux directory of [https://drive.google.com/folderview?id=0BwAMd9a8dhRzU0dPdlRuNTNYams&usp=sharing Linux Testing].
  # Extract the files from the archive

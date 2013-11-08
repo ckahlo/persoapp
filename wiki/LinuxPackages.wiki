@@ -18,4 +18,4 @@ Testing packages will be made available via [https://drive.google.com/folderview
 === Debian/Ubuntu ===
  # Download the .deb-file from [https://drive.google.com/folderview?id=0BwAMd9a8dhRzU0dPdlRuNTNYams&usp=sharing Linux Testing]
  # Install the dependencies: {{{sudo apt-get install openjdk-6-jre jarwrapper java-wrappers libpcsclite1}}}
- # Install the downloaded .deb-file either via a graphical installer or {{{ sudo dpkg -i XXX.deb}}}
+ # Install the downloaded .deb-file either via a graphical installer or {{{ sudo dpkg -i persoapp-XXX.deb}}}

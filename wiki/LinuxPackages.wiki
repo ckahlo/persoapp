@@ -2,7 +2,7 @@
 
 = Linux Packages =
 
-The PersoApp-Project will provide linux package for the following Distributions:
+The PersoApp-Project will provide linux packages for the following distributions:
  * Ubuntu/Debian
  * Fedora
  * Gentoo

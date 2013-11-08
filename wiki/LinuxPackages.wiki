@@ -25,6 +25,52 @@ Testing packages will be made available via [https://drive.google.com/folderview
 
 === Gentoo ===
 
+There are 2 ebuilds, version 1.0. is the prebuild jar file which will be installed on the computer. Version 9999 checks out the current development source code via subversion and compiles it. The later is to be used by developers or people who want to test the latest version of persoapp.
+
+1. Create a local portage overlay
+
+mkdir /usr/local/overlays/local/
+
+1.1. Create a configuration for the overlay
+
+mkdir /usr/local/overlays/local/metadata/
+vi /usr/local/overlays/local/metadata/layout.conf
+
+Insert this as content:
+masters = gentoo
+
+The overlay has to have a name, therefore:
+
+mkdir /usr/local/overlays/local/profiles
+vi /usr/local/overlays/local/profiles/repo_name
+
+Insert a name as content, for example
+persoapp_overlay
+
+2. Create the category and persoapp directories
+
+mkdir -p /usr/local/overlays/local/app-misc/persoapp
+
+2.1. Copy the ebuilds into this directory
+
+cp persoapp-1.0.ebuild /usr/local/overlays/local/app-misc/persoapp/
+
+2.2. Create the manifest metadata for the ebuild(s)
+
+cd /usr/local/overlays/local/app-misc/persoapp/
+
+ebuild persoapp-1.0.ebuild digest
+
+3. Integrate the local overlay into portage
+
+Edit the /etc/make.conf and add
+
+PORTDIR_OVERLAY="/usr/local/overlays/local"
+
+4. Install the app like any other gentoo software
+
+emerge persoapp
+
 === Archlinux ===
 
 

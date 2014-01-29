@@ -64,9 +64,9 @@ public class TLSClient extends DefaultTlsClient {
 
 	private static final int[]		defaultCS		= new int[] {
 													//
-			0x002F, 0x0035, // 0x003C, // 0x003D, // TLS_RSA_*
-			0xC009, 0xC00A, // 0xC023, // 0xC024, // TLS_ECDHE_ECDSA
-													// 0xC013, 0xC014, 0xC027, 0xC028 // TLS_ECDHE_RSA
+			0x002F, 0x0035, 0x003C, 0x003D, 		// TLS_RSA_*
+			0xC009, 0xC00A, 0xC023, 0xC024, 		// TLS_ECDHE_ECDSA_*
+			0xC013, 0xC014, 0xC027, 0xC028			// TLS_ECDHE_RSA_*
 													};
 
 	@Override

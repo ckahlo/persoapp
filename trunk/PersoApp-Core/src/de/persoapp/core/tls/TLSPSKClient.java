@@ -65,7 +65,7 @@ public class TLSPSKClient extends PSKTlsClient {
 	private static final int[]		defaultCS		= new int[] {
 													//
 													// 0x008C, 0x008D, 0x00AE, 0x00AF, // TLS_PSK_*
-			0x0094, 0x0095, // 0x00B6, 0x00B7, // TLS_RSA_PSK
+			0x0094, 0x0095, 0x00B6, 0x00B7, // TLS_RSA_PSK
 													};
 
 	@Override

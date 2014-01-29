@@ -132,7 +132,7 @@ public class EAC_Info implements IEAC_Info {
 	}
 
 	private final Date cvDate2Date(final byte[] cvDate, final boolean endOfDay) {
-		final GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance(TimeZone.getTimeZone("GMT"));
+		final GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
 		cal.set(Calendar.YEAR, 2000 + cvDate[0] * 10 + cvDate[1]);
 		cal.set(Calendar.MONTH, -1 + cvDate[2] * 10 + cvDate[3]);
 		cal.set(Calendar.DAY_OF_MONTH, cvDate[4] * 10 + cvDate[5]);

@@ -56,7 +56,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.spi.HttpServerProvider;
 
 import de.persoapp.core.ECApiHttpHandler;
 import de.persoapp.core.ECardWorker;
@@ -160,11 +159,10 @@ public final class PersoApp implements Runnable {
 			}
 
 			try {
-				final HttpServerProvider hsp = new sun.net.httpserver.DefaultHttpServerProvider();
 				final ECApiHttpHandler ecApiHttp = new ECApiHttpHandler();
 
-				final HttpServer server = hsp.createHttpServer(
-						new InetSocketAddress(EID_HTTP_HOST_NAME, EID_HTTP_PORT), 10);
+				final HttpServer server = HttpServer.create(new InetSocketAddress(EID_HTTP_HOST_NAME, EID_HTTP_PORT),
+						10);
 				server.start();
 				server.createContext("/").setHandler(ecApiHttp);
 				server.createContext(EID_HTTP_CTX_NAME).setHandler(ecApiHttp);

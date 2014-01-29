@@ -17,7 +17,7 @@ de.persoapp.core.ECardWorker -> de.persoapp.a.b:
     void init(de.persoapp.core.client.IMainView,de.persoapp.core.ws.engine.WSContainer,de.persoapp.core.card.ICardHandler) -> a
     java.lang.Object[] start(iso.std.iso_iec._24727.tech.schema.ChannelHandleType,byte[],java.net.URI,java.security.cert.Certificate[]) -> a
     void callback(java.lang.Object[]) -> a
-    void access$1(de.persoapp.core.ECardWorker) -> a
+    void access$100(de.persoapp.core.ECardWorker) -> a
 de.persoapp.core.ECardWorker$1 -> de.persoapp.a.c:
     iso.std.iso_iec._24727.tech.schema.ChannelHandleType val$ch -> a
     byte[] val$sessionPSK -> a
@@ -31,7 +31,7 @@ de.persoapp.core.ECardWorker$CALLBACK_RESULT -> de.persoapp.a.d:
     de.persoapp.core.ECardWorker$CALLBACK_RESULT TA_OK -> b
     de.persoapp.core.ECardWorker$CALLBACK_RESULT CANCEL -> c
     de.persoapp.core.ECardWorker$CALLBACK_RESULT TA_ERROR -> d
-    de.persoapp.core.ECardWorker$CALLBACK_RESULT[] ENUM$VALUES -> a
+    de.persoapp.core.ECardWorker$CALLBACK_RESULT[] $VALUES -> a
     de.persoapp.core.ECardWorker$CALLBACK_RESULT[] values() -> values
     de.persoapp.core.ECardWorker$CALLBACK_RESULT valueOf(java.lang.String) -> valueOf
 de.persoapp.core.card.CCID -> de.persoapp.a.a.a:
@@ -240,7 +240,7 @@ de.persoapp.core.client.ECardSession -> de.persoapp.a.b.b:
 de.persoapp.core.client.ECardSession$KEYS -> de.persoapp.a.b.c:
     de.persoapp.core.client.ECardSession$KEYS SPServerCert -> a
     de.persoapp.core.client.ECardSession$KEYS tcTokenURL -> b
-    de.persoapp.core.client.ECardSession$KEYS[] ENUM$VALUES -> a
+    de.persoapp.core.client.ECardSession$KEYS[] $VALUES -> a
     de.persoapp.core.client.ECardSession$KEYS[] values() -> values
     de.persoapp.core.client.ECardSession$KEYS valueOf(java.lang.String) -> valueOf
 de.persoapp.core.client.IEAC_Info -> de.persoapp.a.b.d:
@@ -256,10 +256,10 @@ de.persoapp.core.client.IEAC_Info -> de.persoapp.a.b.d:
     long getOptionalChat() -> b
     long getVerifyAge() -> c
 de.persoapp.core.client.IMainView -> de.persoapp.a.b.e:
-    void setEventLister$9acc018(org.bouncycastle.crypto.prng.ThreadedSeedGenerator) -> a
+    void setEventLister(de.persoapp.core.client.IMainView$EventListener) -> a
     java.lang.Object triggerEvent(int,java.lang.Object[]) -> a
     void showMainDialog(de.persoapp.core.client.IEAC_Info,int) -> a
-    de.persoapp.core.client.IMainView$MainDialogResult getMainDialogResult() -> a
+    org.bouncycastle.crypto.prng.ThreadedSeedGenerator getMainDialogResult$2bd16518() -> a
     de.persoapp.core.client.SecureHolder showCANDialog(java.lang.String) -> a
     void showChangePinDialog() -> a
     void showProgress$44bdce70(java.lang.String,int) -> a
@@ -268,55 +268,12 @@ de.persoapp.core.client.IMainView -> de.persoapp.a.b.e:
     void showMessage(java.lang.String,int) -> b
     void closeDialogs() -> b
     void shutdown() -> c
-de.persoapp.core.client.IMainView$ChangePINDialogResult -> de.persoapp.a.b.f:
-    de.persoapp.core.client.SecureHolder pinOld -> a
-    de.persoapp.core.client.SecureHolder pinNew -> b
-    de.persoapp.core.client.SecureHolder getPINNew() -> a
-    de.persoapp.core.client.SecureHolder getPINOld() -> b
-    byte[] arrayconcat(byte[],byte[]) -> a
-    byte[] subArray(byte[],int,int) -> a
-    boolean arrayequal(byte[],byte[]) -> a
-    void val2dst(byte[],int,int,byte) -> a
-    byte[] build(int,byte[]) -> a
-    byte[] buildOID(java.lang.String,byte[]) -> a
-    byte[] get(byte[],byte[]) -> b
-    byte[] get(byte[],byte) -> a
-    byte[] get(byte[],short) -> a
-    java.lang.String getString(byte[]) -> a
-    java.util.List getM(byte[],byte[]) -> a
-    java.util.List getM(byte[],byte) -> a
-    java.net.URL getResourceUrl(java.lang.String) -> a
-    java.awt.image.BufferedImage getImage(java.lang.String) -> a
-    void appendRDN(java.lang.StringBuffer,org.bouncycastle.asn1.x500.RDN,java.util.Hashtable) -> a
-    void appendTypeAndValue(java.lang.StringBuffer,org.bouncycastle.asn1.x500.AttributeTypeAndValue,java.util.Hashtable) -> a
-    java.lang.String valueToString(org.bouncycastle.asn1.ASN1Encodable) -> a
-    java.lang.String bytesToString(byte[]) -> c
-    java.lang.String canonicalize(java.lang.String) -> a
-    org.bouncycastle.asn1.ASN1Primitive decodeObject(java.lang.String) -> a
-    boolean rDNAreEqual(org.bouncycastle.asn1.x500.RDN,org.bouncycastle.asn1.x500.RDN) -> a
-    boolean atvAreEqual(org.bouncycastle.asn1.x500.AttributeTypeAndValue,org.bouncycastle.asn1.x500.AttributeTypeAndValue) -> a
-    byte[] generateEncryptedPreMasterSecret(org.bouncycastle.crypto.tls.TlsContext,org.bouncycastle.crypto.params.RSAKeyParameters,java.io.OutputStream) -> a
-    org.bouncycastle.crypto.params.AsymmetricKeyParameter createKey(org.bouncycastle.asn1.x509.SubjectPublicKeyInfo) -> a
-    org.bouncycastle.math.ec.ECPoint sumOfTwoMultiplies(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger,org.bouncycastle.math.ec.ECPoint,java.math.BigInteger) -> a
-    org.bouncycastle.math.ec.ECPoint implShamirsTrick(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger,org.bouncycastle.math.ec.ECPoint,java.math.BigInteger) -> b
-    boolean areEqual(byte[],byte[]) -> b
-    boolean constantTimeAreEqual(byte[],byte[]) -> c
-    void fill(byte[],byte) -> a
-    int hashCode(byte[]) -> a
-    byte[] clone(byte[]) -> a
-    byte[] copyOfRange(byte[],int,int) -> b
-    java.lang.String toLowerCase(java.lang.String) -> b
-    byte[] toByteArray(java.lang.String) -> a
-    java.lang.String fromByteArray(byte[]) -> b
-    char[] asCharArray(byte[]) -> a
-de.persoapp.core.client.IMainView$MainDialogResult -> de.persoapp.a.b.g:
-    long chat -> a
-    de.persoapp.core.client.SecureHolder pin -> a
-    boolean approved -> a
-    long getCHAT() -> a
-    de.persoapp.core.client.SecureHolder getPIN() -> a
-    boolean isApproved() -> a
-de.persoapp.core.client.PropertyResolver -> de.persoapp.a.b.h:
+de.persoapp.core.client.IMainView$EventListener -> de.persoapp.a.b.f:
+    de.persoapp.core.card.ICardHandler eCardHandler -> a
+    de.persoapp.core.client.IMainView mainView -> a
+    java.lang.Object handleEvent(int,java.lang.Object[]) -> a
+    de.persoapp.core.card.TransportProvider getCard(boolean) -> a
+de.persoapp.core.client.PropertyResolver -> de.persoapp.a.b.g:
     java.util.Map propertiesCache -> a
     java.util.Map resourceBundlesCache -> b
     java.util.ResourceBundle$Control utf8Control -> a
@@ -324,12 +281,12 @@ de.persoapp.core.client.PropertyResolver -> de.persoapp.a.b.h:
     java.lang.String getProperty(java.lang.String,java.lang.String) -> a
     java.util.ResourceBundle getResourceBundle(java.lang.String) -> a
     de.persoapp.core.client.PropertyResolver$Bundle getBundle(java.lang.String) -> a
-de.persoapp.core.client.PropertyResolver$1 -> de.persoapp.a.b.i:
+de.persoapp.core.client.PropertyResolver$1 -> de.persoapp.a.b.h:
     java.util.ResourceBundle newBundle(java.lang.String,java.util.Locale,java.lang.String,java.lang.ClassLoader,boolean) -> newBundle
-de.persoapp.core.client.PropertyResolver$Bundle -> de.persoapp.a.b.j:
+de.persoapp.core.client.PropertyResolver$Bundle -> de.persoapp.a.b.i:
     java.util.ResourceBundle resBundle -> a
     java.lang.String get(java.lang.String) -> a
-de.persoapp.core.client.SecureHolder -> de.persoapp.a.b.k:
+de.persoapp.core.client.SecureHolder -> de.persoapp.a.b.j:
     byte[] value -> a
     long ts -> a
     byte[] getValue() -> a
@@ -374,7 +331,7 @@ de.persoapp.core.tls.BCTlsAuthentication -> de.persoapp.a.d.a:
     java.util.List serverCertList -> a
     void notifyServerCertificate(org.bouncycastle.crypto.tls.Certificate) -> a
 de.persoapp.core.tls.BCTlsSession -> de.persoapp.a.d.b:
-    org.bouncycastle.crypto.CipherParameters tlsPeer$2414c3c4 -> a
+    org.bouncycastle.crypto.tls.TlsPeer tlsPeer -> a
     int getApplicationBufferSize() -> getApplicationBufferSize
     java.lang.String getCipherSuite() -> getCipherSuite
     long getCreationTime() -> getCreationTime
@@ -399,7 +356,6 @@ de.persoapp.core.tls.BCTlsSession -> de.persoapp.a.d.b:
 de.persoapp.core.tls.BCTlsSocketFactoryImpl -> de.persoapp.a.d.c:
     byte[] pskId -> a
     byte[] pskKey -> b
-    byte[][] getPSKParameters() -> a
     java.net.Socket createSocket(java.net.Socket,java.lang.String,int,boolean) -> createSocket
     java.lang.String[] getDefaultCipherSuites() -> getDefaultCipherSuites
     java.lang.String[] getSupportedCipherSuites() -> getSupportedCipherSuites
@@ -409,8 +365,7 @@ de.persoapp.core.tls.BCTlsSocketFactoryImpl -> de.persoapp.a.d.c:
     java.net.Socket createSocket(java.net.InetAddress,int,java.net.InetAddress,int) -> createSocket
 de.persoapp.core.tls.BCTlsSocketImpl -> de.persoapp.a.d.d:
     org.bouncycastle.crypto.tls.TlsProtocol tls -> a
-    org.bouncycastle.crypto.CipherParameters peerHandler$2414c3c4 -> a
-    org.bouncycastle.crypto.CipherParameters getPeerHandler$25b30c25() -> a
+    org.bouncycastle.crypto.tls.TlsPeer peerHandler -> a
     java.io.InputStream getInputStream() -> getInputStream
     java.io.OutputStream getOutputStream() -> getOutputStream
     void addHandshakeCompletedListener(javax.net.ssl.HandshakeCompletedListener) -> addHandshakeCompletedListener
@@ -433,13 +388,13 @@ de.persoapp.core.tls.BCTlsSocketImpl -> de.persoapp.a.d.d:
     void startHandshake() -> startHandshake
 de.persoapp.core.tls.TLSClient -> de.persoapp.a.d.e:
     org.bouncycastle.crypto.tls.TlsAuthentication authentication -> a
-    int[] defaultCS -> a
+    int[] defaultCS -> b
     int[] getCipherSuites() -> a
     org.bouncycastle.crypto.tls.TlsAuthentication getAuthentication() -> a
     java.util.Hashtable getClientExtensions() -> a
 de.persoapp.core.tls.TLSPSKClient -> de.persoapp.a.d.f:
     org.bouncycastle.crypto.tls.TlsAuthentication authentication -> a
-    int[] defaultCS -> a
+    int[] defaultCS -> b
     int[] getCipherSuites() -> a
     org.bouncycastle.crypto.tls.TlsAuthentication getAuthentication() -> a
     java.util.Hashtable getClientExtensions() -> a
@@ -556,16 +511,16 @@ de.persoapp.desktop.MainView -> de.persoapp.desktop.c:
     java.util.logging.Logger LOGGER -> a
     de.persoapp.core.client.IMainView instance -> a
     de.persoapp.desktop.StatusIndicator statusIndicator -> a
-    org.bouncycastle.crypto.prng.ThreadedSeedGenerator listener$6facf7d -> a
+    de.persoapp.core.client.IMainView$EventListener listener -> a
     javax.swing.JFrame currentFrame -> a
     de.persoapp.desktop.gui.frame.MainFrame mainFrame -> a
-    de.persoapp.core.client.IMainView$MainDialogResult result -> a
+    org.bouncycastle.crypto.prng.ThreadedSeedGenerator result$217c6467 -> a
     de.persoapp.desktop.gui.frame.NewChangePinFrame changePinFrame -> a
     de.persoapp.core.client.IMainView getInstance() -> a
     de.persoapp.desktop.gui.frame.MainFrame getMainFrame() -> a
     de.persoapp.desktop.gui.frame.NewChangePinFrame getChangePinFrame() -> a
     void showMainDialog(de.persoapp.core.client.IEAC_Info,int) -> a
-    de.persoapp.core.client.IMainView$MainDialogResult getMainDialogResult() -> a
+    org.bouncycastle.crypto.prng.ThreadedSeedGenerator getMainDialogResult$2bd16518() -> a
     void setResult(long,byte[],boolean) -> a
     void showProgress$44bdce70(java.lang.String,int) -> a
     boolean showQuestion(java.lang.String,java.lang.String) -> a
@@ -575,7 +530,7 @@ de.persoapp.desktop.MainView -> de.persoapp.desktop.c:
     void showChangePinDialog() -> a
     void showMessage(java.lang.String,int) -> b
     java.lang.Object triggerEvent(int,java.lang.Object[]) -> a
-    void setEventLister$9acc018(org.bouncycastle.crypto.prng.ThreadedSeedGenerator) -> a
+    void setEventLister(de.persoapp.core.client.IMainView$EventListener) -> a
     de.persoapp.core.client.SecureHolder showCANDialog(java.lang.String) -> a
 de.persoapp.desktop.MainView$1 -> de.persoapp.desktop.d:
     java.awt.Graphics2D val$splashGraphics -> a
@@ -602,7 +557,7 @@ de.persoapp.desktop.StatusIndicator -> de.persoapp.desktop.g:
     void displayMessage$3b99ba1a(java.lang.String,int) -> a
     void setDefaultTitle(java.lang.String) -> a
     void close() -> a
-    javax.swing.JDialog access$0(de.persoapp.desktop.StatusIndicator) -> a
+    javax.swing.JDialog access$000(de.persoapp.desktop.StatusIndicator) -> a
 de.persoapp.desktop.StatusIndicator$1 -> de.persoapp.desktop.h:
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
 de.persoapp.desktop.StatusIndicator$1MyMouseListener -> de.persoapp.desktop.i:
@@ -669,9 +624,9 @@ de.persoapp.desktop.gui.MyPasswordField -> de.persoapp.desktop.a.d:
     boolean isValid() -> isValid
     int getIndex() -> a
     void setIndex(int) -> a
-    de.persoapp.desktop.gui.panel.PinPanel access$0(de.persoapp.desktop.gui.MyPasswordField) -> a
-    void access$1(de.persoapp.desktop.gui.MyPasswordField,java.awt.Container) -> a
-    int access$2(de.persoapp.desktop.gui.MyPasswordField) -> a
+    de.persoapp.desktop.gui.panel.PinPanel access$000(de.persoapp.desktop.gui.MyPasswordField) -> a
+    void access$100(de.persoapp.desktop.gui.MyPasswordField,java.awt.Container) -> a
+    int access$200(de.persoapp.desktop.gui.MyPasswordField) -> a
 de.persoapp.desktop.gui.MyPasswordField$IntTextDocument -> de.persoapp.desktop.a.e:
     de.persoapp.desktop.gui.MyPasswordField this$0 -> a
     void insertString(int,java.lang.String,javax.swing.text.AttributeSet) -> insertString
@@ -685,8 +640,8 @@ de.persoapp.desktop.gui.frame.AboutFrame -> de.persoapp.desktop.a.a.a:
     javax.swing.JButton confirm -> a
     de.persoapp.core.client.PropertyResolver$Bundle textBundle -> a
     java.lang.String getText(java.lang.String) -> a
-    javax.swing.JLabel access$0(de.persoapp.desktop.gui.frame.AboutFrame) -> a
-    javax.swing.JLabel access$1(de.persoapp.desktop.gui.frame.AboutFrame) -> b
+    javax.swing.JLabel access$000(de.persoapp.desktop.gui.frame.AboutFrame) -> a
+    javax.swing.JLabel access$100(de.persoapp.desktop.gui.frame.AboutFrame) -> b
 de.persoapp.desktop.gui.frame.AboutFrame$1 -> de.persoapp.desktop.a.a.b:
     de.persoapp.desktop.gui.frame.AboutFrame this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
@@ -705,7 +660,7 @@ de.persoapp.desktop.gui.frame.CANDialog -> de.persoapp.desktop.a.a.d:
     java.lang.Object monitor -> a
     de.persoapp.core.client.SecureHolder getResult() -> a
     de.persoapp.core.client.SecureHolder show(java.awt.Frame,java.lang.String,java.lang.String) -> a
-    void access$0(de.persoapp.desktop.gui.frame.CANDialog) -> a
+    void access$000(de.persoapp.desktop.gui.frame.CANDialog) -> a
 de.persoapp.desktop.gui.frame.CANDialog$1 -> de.persoapp.desktop.a.a.e:
     de.persoapp.desktop.gui.frame.CANDialog this$0 -> a
     void windowClosing(java.awt.event.WindowEvent) -> windowClosing
@@ -797,24 +752,24 @@ de.persoapp.desktop.gui.frame.NewChangePinFrame -> de.persoapp.desktop.a.a.m:
     void processStateAction(int,java.lang.Object) -> a
     void setVisible(boolean) -> setVisible
     void setHelpPanelText(java.lang.String,java.lang.String) -> a
-    int access$0(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
-    boolean access$1(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
-    de.persoapp.desktop.gui.ArrowButton access$2(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
-    de.persoapp.desktop.gui.panel.ButtonPanel access$3(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
-    javax.swing.JButton access$4(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
-    javax.swing.JButton access$5(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> b
-    javax.swing.JButton access$6(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> c
-    javax.swing.JButton access$7(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> d
-    javax.swing.JButton access$8(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> e
-    javax.swing.JButton access$9(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> f
-    javax.swing.JButton access$10(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> g
-    javax.swing.JButton access$11(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> h
-    javax.swing.JButton access$12(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> i
-    javax.swing.JButton access$13(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> j
-    void access$14(de.persoapp.desktop.gui.frame.NewChangePinFrame,int) -> a
-    void access$15$558eb432(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
-    de.persoapp.core.client.PropertyResolver$Bundle access$16(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
-    void access$17$558eb432(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> b
+    int access$000(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
+    boolean access$100(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
+    de.persoapp.desktop.gui.ArrowButton access$200(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
+    de.persoapp.desktop.gui.panel.ButtonPanel access$300(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
+    javax.swing.JButton access$400(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
+    javax.swing.JButton access$500(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> b
+    javax.swing.JButton access$600(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> c
+    javax.swing.JButton access$700(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> d
+    javax.swing.JButton access$800(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> e
+    javax.swing.JButton access$900(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> f
+    javax.swing.JButton access$1000(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> g
+    javax.swing.JButton access$1100(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> h
+    javax.swing.JButton access$1200(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> i
+    javax.swing.JButton access$1300(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> j
+    void access$1400(de.persoapp.desktop.gui.frame.NewChangePinFrame,int) -> a
+    void access$1500$558eb432(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
+    de.persoapp.core.client.PropertyResolver$Bundle access$1600(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> a
+    void access$1700$558eb432(de.persoapp.desktop.gui.frame.NewChangePinFrame) -> b
 de.persoapp.desktop.gui.frame.NewChangePinFrame$1 -> de.persoapp.desktop.a.a.n:
     de.persoapp.desktop.gui.frame.NewChangePinFrame this$0 -> a
     void windowClosing(java.awt.event.WindowEvent) -> windowClosing
@@ -831,9 +786,9 @@ de.persoapp.desktop.gui.frame.NewChangePinFrame$5 -> de.persoapp.desktop.a.a.r:
     de.persoapp.desktop.gui.frame.NewChangePinFrame this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
 de.persoapp.desktop.gui.frame.NewChangePinFrame$6 -> de.persoapp.desktop.a.a.s:
-    de.persoapp.desktop.gui.frame.NewChangePinFrame this$0 -> a
     int val$state -> a
     java.lang.Object val$eventData -> a
+    de.persoapp.desktop.gui.frame.NewChangePinFrame this$0 -> a
     void run() -> run
 de.persoapp.desktop.gui.frame.ProxyPassFrame -> de.persoapp.desktop.a.a.t:
     java.lang.String user -> a
@@ -848,10 +803,10 @@ de.persoapp.desktop.gui.frame.ProxyPassFrame -> de.persoapp.desktop.a.a.t:
     de.persoapp.desktop.gui.panel.ButtonPanel buttonPanel -> a
     javax.swing.JPanel mainPanel -> a
     java.lang.String[] getCredentials() -> a
-    javax.swing.JTextField access$0(de.persoapp.desktop.gui.frame.ProxyPassFrame) -> a
-    void access$1(de.persoapp.desktop.gui.frame.ProxyPassFrame,java.lang.String) -> a
-    javax.swing.JPasswordField access$2(de.persoapp.desktop.gui.frame.ProxyPassFrame) -> a
-    void access$3(de.persoapp.desktop.gui.frame.ProxyPassFrame,java.lang.String) -> b
+    java.lang.String access$002(de.persoapp.desktop.gui.frame.ProxyPassFrame,java.lang.String) -> a
+    javax.swing.JTextField access$100(de.persoapp.desktop.gui.frame.ProxyPassFrame) -> a
+    java.lang.String access$202(de.persoapp.desktop.gui.frame.ProxyPassFrame,java.lang.String) -> b
+    javax.swing.JPasswordField access$300(de.persoapp.desktop.gui.frame.ProxyPassFrame) -> a
 de.persoapp.desktop.gui.frame.ProxyPassFrame$1 -> de.persoapp.desktop.a.a.u:
     de.persoapp.desktop.gui.frame.ProxyPassFrame this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
@@ -909,10 +864,10 @@ de.persoapp.desktop.gui.panel.HelpPanel -> de.persoapp.desktop.a.c.d:
     void removeMouseListener(java.awt.event.MouseListener) -> removeMouseListener
     java.awt.Dimension getPreferredSize() -> getPreferredSize
     java.awt.Dimension getMinimumSize() -> getMinimumSize
-    javax.swing.JScrollPane access$0(de.persoapp.desktop.gui.panel.HelpPanel) -> a
+    javax.swing.JScrollPane access$000(de.persoapp.desktop.gui.panel.HelpPanel) -> a
 de.persoapp.desktop.gui.panel.HelpPanel$1 -> de.persoapp.desktop.a.c.e:
-    de.persoapp.desktop.gui.panel.HelpPanel this$0 -> a
     java.awt.Point val$position -> a
+    de.persoapp.desktop.gui.panel.HelpPanel this$0 -> a
     void run() -> run
 de.persoapp.desktop.gui.panel.KeypadPanel -> de.persoapp.desktop.a.c.f:
     java.util.ArrayList keys -> a
@@ -925,7 +880,7 @@ de.persoapp.desktop.gui.panel.KeypadPanel -> de.persoapp.desktop.a.c.f:
     void setPinPanel(de.persoapp.desktop.gui.panel.PinPanel) -> a
     void setEnabled(boolean) -> setEnabled
     void addMouseListener(java.awt.event.MouseListener) -> addMouseListener
-    de.persoapp.desktop.gui.panel.PinPanel access$0(de.persoapp.desktop.gui.panel.KeypadPanel) -> a
+    de.persoapp.desktop.gui.panel.PinPanel access$000(de.persoapp.desktop.gui.panel.KeypadPanel) -> a
 de.persoapp.desktop.gui.panel.KeypadPanel$1 -> de.persoapp.desktop.a.c.g:
     de.persoapp.desktop.gui.panel.KeypadPanel this$0 -> a
     void actionPerformed(java.awt.event.ActionEvent) -> actionPerformed
@@ -960,12 +915,12 @@ de.persoapp.desktop.gui.panel.PinPanel -> de.persoapp.desktop.a.c.j:
     void paste(java.lang.String,int) -> a
     java.awt.Dimension getMinimumSize() -> getMinimumSize
     java.awt.Dimension getPreferredSize() -> getPreferredSize
-    java.util.ArrayList access$0(de.persoapp.desktop.gui.panel.PinPanel) -> a
-    de.persoapp.desktop.gui.panel.ButtonPanel access$1(de.persoapp.desktop.gui.panel.PinPanel) -> a
-    de.persoapp.desktop.gui.panel.PinPanel$PinRow[] access$2(de.persoapp.desktop.gui.panel.PinPanel) -> a
-    void access$3(de.persoapp.desktop.gui.panel.PinPanel,int) -> a
-    java.awt.Window access$4(de.persoapp.desktop.gui.panel.PinPanel) -> a
-    void access$5(de.persoapp.desktop.gui.panel.PinPanel,java.awt.Window) -> a
+    java.util.ArrayList access$300(de.persoapp.desktop.gui.panel.PinPanel) -> a
+    de.persoapp.desktop.gui.panel.ButtonPanel access$400(de.persoapp.desktop.gui.panel.PinPanel) -> a
+    de.persoapp.desktop.gui.panel.PinPanel$PinRow[] access$500(de.persoapp.desktop.gui.panel.PinPanel) -> a
+    int access$602(de.persoapp.desktop.gui.panel.PinPanel,int) -> a
+    java.awt.Window access$700(de.persoapp.desktop.gui.panel.PinPanel) -> a
+    java.awt.Window access$702(de.persoapp.desktop.gui.panel.PinPanel,java.awt.Window) -> a
 de.persoapp.desktop.gui.panel.PinPanel$MyDocumentListener -> de.persoapp.desktop.a.c.k:
     de.persoapp.desktop.gui.panel.PinPanel this$0 -> a
     void insertUpdate(javax.swing.event.DocumentEvent) -> insertUpdate
@@ -1094,11 +1049,11 @@ iso.std.iso_iec._24727.tech.schema.DIDScopeType -> iso.std.iso_iec._24727.tech.s
     iso.std.iso_iec._24727.tech.schema.DIDScopeType LOCAL -> LOCAL
     iso.std.iso_iec._24727.tech.schema.DIDScopeType GLOBAL -> GLOBAL
     java.lang.String value -> value
-    iso.std.iso_iec._24727.tech.schema.DIDScopeType[] ENUM$VALUES -> ENUM$VALUES
-    java.lang.String value() -> value
-    iso.std.iso_iec._24727.tech.schema.DIDScopeType fromValue(java.lang.String) -> fromValue
+    iso.std.iso_iec._24727.tech.schema.DIDScopeType[] $VALUES -> $VALUES
     iso.std.iso_iec._24727.tech.schema.DIDScopeType[] values() -> values
     iso.std.iso_iec._24727.tech.schema.DIDScopeType valueOf(java.lang.String) -> valueOf
+    java.lang.String value() -> value
+    iso.std.iso_iec._24727.tech.schema.DIDScopeType fromValue(java.lang.String) -> fromValue
 iso.std.iso_iec._24727.tech.schema.DataMaskType -> iso.std.iso_iec._24727.tech.schema.DataMaskType:
     byte[] tag -> tag
     iso.std.iso_iec._24727.tech.schema.MatchingDataType matchingData -> matchingData
@@ -1201,11 +1156,11 @@ iso.std.iso_iec._24727.tech.schema.MatchingRuleType -> iso.std.iso_iec._24727.te
     iso.std.iso_iec._24727.tech.schema.MatchingRuleType EQUALS -> EQUALS
     iso.std.iso_iec._24727.tech.schema.MatchingRuleType CONTAINS -> CONTAINS
     java.lang.String value -> value
-    iso.std.iso_iec._24727.tech.schema.MatchingRuleType[] ENUM$VALUES -> ENUM$VALUES
-    java.lang.String value() -> value
-    iso.std.iso_iec._24727.tech.schema.MatchingRuleType fromValue(java.lang.String) -> fromValue
+    iso.std.iso_iec._24727.tech.schema.MatchingRuleType[] $VALUES -> $VALUES
     iso.std.iso_iec._24727.tech.schema.MatchingRuleType[] values() -> values
     iso.std.iso_iec._24727.tech.schema.MatchingRuleType valueOf(java.lang.String) -> valueOf
+    java.lang.String value() -> value
+    iso.std.iso_iec._24727.tech.schema.MatchingRuleType fromValue(java.lang.String) -> fromValue
 iso.std.iso_iec._24727.tech.schema.ObjectFactory -> iso.std.iso_iec._24727.tech.schema.ObjectFactory:
     javax.xml.namespace.QName _DIDDeleteResponse_QNAME -> _DIDDeleteResponse_QNAME
     javax.xml.namespace.QName _CardCall_QNAME -> _CardCall_QNAME
@@ -1426,8 +1381,8 @@ liberty.paos._2006_08.package-info -> liberty.paos._2006_08.package-info:
 liberty.paos._2006_08.runtime.ZeroOneBooleanAdapter -> liberty.paos._2006_08.runtime.ZeroOneBooleanAdapter:
     java.lang.Boolean unmarshal(java.lang.String) -> a
     java.lang.String marshal(java.lang.Boolean) -> a
-    java.lang.Object unmarshal(java.lang.Object) -> unmarshal
     java.lang.Object marshal(java.lang.Object) -> marshal
+    java.lang.Object unmarshal(java.lang.Object) -> unmarshal
 oasis.names.tc.dss._1_0.core.schema.AnyType -> oasis.names.tc.dss._1_0.core.schema.AnyType:
     java.util.List any -> any
     java.util.List getAny() -> a
@@ -1724,6 +1679,7 @@ org.bouncycastle.asn1.DERBoolean -> org.a.a.R:
 org.bouncycastle.asn1.DEREnumerated -> org.a.a.S:
     byte[] bytes -> a
     org.bouncycastle.asn1.ASN1Enumerated[] cache -> a
+    org.bouncycastle.asn1.ASN1Enumerated getInstance(java.lang.Object) -> a
     boolean isConstructed() -> a
     int encodedLength() -> a
     void encode(org.bouncycastle.asn1.ASN1OutputStream) -> a
@@ -1985,7 +1941,7 @@ org.bouncycastle.asn1.nist.NISTNamedCurves -> org.a.a.a.a:
     java.util.Hashtable objIds -> a
     java.util.Hashtable names -> b
     void defineCurve(java.lang.String,org.bouncycastle.asn1.ASN1ObjectIdentifier) -> a
-    org.bouncycastle.asn1.x9.X9ECParameters getByOID(org.bouncycastle.asn1.ASN1ObjectIdentifier) -> a
+    org.bouncycastle.asn1.x9.X9ECParameters getByName(java.lang.String) -> a
 org.bouncycastle.asn1.nist.NISTObjectIdentifiers -> org.a.a.a.b:
     org.bouncycastle.asn1.ASN1ObjectIdentifier nistAlgorithm -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier hashAlgs -> b
@@ -1995,16 +1951,29 @@ org.bouncycastle.asn1.nist.NISTObjectIdentifiers -> org.a.a.a.b:
     org.bouncycastle.asn1.ASN1ObjectIdentifier id_sha224 -> f
     org.bouncycastle.asn1.ASN1ObjectIdentifier aes -> g
     org.bouncycastle.asn1.ASN1ObjectIdentifier id_dsa_with_sha2 -> h
-org.bouncycastle.asn1.oiw.ElGamalParameter -> org.a.a.b.a:
+org.bouncycastle.asn1.ocsp.OCSPResponse -> org.a.a.b.a:
+    org.bouncycastle.asn1.ocsp.OCSPResponseStatus responseStatus -> a
+    org.bouncycastle.asn1.ocsp.ResponseBytes responseBytes -> a
+    org.bouncycastle.asn1.ocsp.OCSPResponse getInstance(java.lang.Object) -> a
+    org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
+org.bouncycastle.asn1.ocsp.OCSPResponseStatus -> org.a.a.b.b:
+    org.bouncycastle.asn1.ASN1Enumerated value -> a
+    org.bouncycastle.asn1.ocsp.OCSPResponseStatus getInstance(java.lang.Object) -> a
+    org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
+org.bouncycastle.asn1.ocsp.ResponseBytes -> org.a.a.b.c:
+    org.bouncycastle.asn1.ASN1ObjectIdentifier responseType -> a
+    org.bouncycastle.asn1.ASN1OctetString response -> a
+    org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
+org.bouncycastle.asn1.oiw.ElGamalParameter -> org.a.a.c.a:
     org.bouncycastle.asn1.ASN1Integer p -> a
     org.bouncycastle.asn1.ASN1Integer g -> b
     java.math.BigInteger getP() -> a
     java.math.BigInteger getG() -> b
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.oiw.OIWObjectIdentifiers -> org.a.a.b.b:
+org.bouncycastle.asn1.oiw.OIWObjectIdentifiers -> org.a.a.c.b:
     org.bouncycastle.asn1.ASN1ObjectIdentifier dsaWithSHA1 -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier elGamalAlgorithm -> b
-org.bouncycastle.asn1.pkcs.DHParameter -> org.a.a.c.a:
+org.bouncycastle.asn1.pkcs.DHParameter -> org.a.a.d.a:
     org.bouncycastle.asn1.ASN1Integer p -> a
     org.bouncycastle.asn1.ASN1Integer g -> b
     org.bouncycastle.asn1.ASN1Integer l -> c
@@ -2013,7 +1982,7 @@ org.bouncycastle.asn1.pkcs.DHParameter -> org.a.a.c.a:
     java.math.BigInteger getG() -> b
     java.math.BigInteger getL() -> c
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers -> org.a.a.c.b:
+org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers -> org.a.a.d.b:
     org.bouncycastle.asn1.ASN1ObjectIdentifier pkcs_1 -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier rsaEncryption -> b
     org.bouncycastle.asn1.ASN1ObjectIdentifier dhKeyAgreement -> c
@@ -2027,25 +1996,26 @@ org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers -> org.a.a.c.b:
     org.bouncycastle.asn1.ASN1ObjectIdentifier pkcs_9_at_emailAddress -> k
     org.bouncycastle.asn1.ASN1ObjectIdentifier pkcs_9_at_unstructuredName -> l
     org.bouncycastle.asn1.ASN1ObjectIdentifier pkcs_9_at_unstructuredAddress -> m
-    org.bouncycastle.asn1.ASN1ObjectIdentifier certTypes -> n
-    org.bouncycastle.asn1.ASN1ObjectIdentifier id_ct -> o
-    org.bouncycastle.asn1.ASN1ObjectIdentifier id_cti -> p
-    org.bouncycastle.asn1.ASN1ObjectIdentifier id_aa -> q
-    org.bouncycastle.asn1.ASN1ObjectIdentifier id_aa_ets_sigPolicyId -> r
-    org.bouncycastle.asn1.ASN1ObjectIdentifier id_aa_ets_commitmentType -> s
-    org.bouncycastle.asn1.ASN1ObjectIdentifier id_aa_ets_signerLocation -> t
-    org.bouncycastle.asn1.ASN1ObjectIdentifier id_aa_ets_otherSigCert -> u
-    org.bouncycastle.asn1.ASN1ObjectIdentifier pkcs_12 -> v
-    org.bouncycastle.asn1.ASN1ObjectIdentifier bagtypes -> w
-    org.bouncycastle.asn1.ASN1ObjectIdentifier pkcs_12PbeIds -> x
-org.bouncycastle.asn1.pkcs.RSAPublicKey -> org.a.a.c.c:
+    org.bouncycastle.asn1.ASN1ObjectIdentifier id_smime -> n
+    org.bouncycastle.asn1.ASN1ObjectIdentifier certTypes -> o
+    org.bouncycastle.asn1.ASN1ObjectIdentifier id_ct -> p
+    org.bouncycastle.asn1.ASN1ObjectIdentifier id_cti -> q
+    org.bouncycastle.asn1.ASN1ObjectIdentifier id_aa -> r
+    org.bouncycastle.asn1.ASN1ObjectIdentifier id_aa_ets_sigPolicyId -> s
+    org.bouncycastle.asn1.ASN1ObjectIdentifier id_aa_ets_commitmentType -> t
+    org.bouncycastle.asn1.ASN1ObjectIdentifier id_aa_ets_signerLocation -> u
+    org.bouncycastle.asn1.ASN1ObjectIdentifier id_aa_ets_otherSigCert -> v
+    org.bouncycastle.asn1.ASN1ObjectIdentifier pkcs_12 -> w
+    org.bouncycastle.asn1.ASN1ObjectIdentifier bagtypes -> x
+    org.bouncycastle.asn1.ASN1ObjectIdentifier pkcs_12PbeIds -> y
+org.bouncycastle.asn1.pkcs.RSAPublicKey -> org.a.a.d.c:
     java.math.BigInteger modulus -> a
     java.math.BigInteger publicExponent -> b
     org.bouncycastle.asn1.pkcs.RSAPublicKey getInstance(java.lang.Object) -> a
     java.math.BigInteger getModulus() -> a
     java.math.BigInteger getPublicExponent() -> b
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.sec.SECNamedCurves -> org.a.a.d.a:
+org.bouncycastle.asn1.sec.SECNamedCurves -> org.a.a.e.a:
     org.bouncycastle.asn1.x9.X9ECParametersHolder secp112r1 -> a
     org.bouncycastle.asn1.x9.X9ECParametersHolder secp112r2 -> b
     org.bouncycastle.asn1.x9.X9ECParametersHolder secp128r1 -> c
@@ -2086,73 +2056,74 @@ org.bouncycastle.asn1.sec.SECNamedCurves -> org.a.a.d.a:
     org.bouncycastle.asn1.x9.X9ECParameters getByName(java.lang.String) -> a
     org.bouncycastle.asn1.x9.X9ECParameters getByOID(org.bouncycastle.asn1.ASN1ObjectIdentifier) -> a
     java.math.BigInteger access$000(java.lang.String) -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$1 -> org.a.a.d.b:
+    org.bouncycastle.math.ec.ECCurve access$100(org.bouncycastle.math.ec.ECCurve) -> a
+org.bouncycastle.asn1.sec.SECNamedCurves$1 -> org.a.a.e.b:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$10 -> org.a.a.d.c:
+org.bouncycastle.asn1.sec.SECNamedCurves$10 -> org.a.a.e.c:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$11 -> org.a.a.d.d:
+org.bouncycastle.asn1.sec.SECNamedCurves$11 -> org.a.a.e.d:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$12 -> org.a.a.d.e:
+org.bouncycastle.asn1.sec.SECNamedCurves$12 -> org.a.a.e.e:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$13 -> org.a.a.d.f:
+org.bouncycastle.asn1.sec.SECNamedCurves$13 -> org.a.a.e.f:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$14 -> org.a.a.d.g:
+org.bouncycastle.asn1.sec.SECNamedCurves$14 -> org.a.a.e.g:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$15 -> org.a.a.d.h:
+org.bouncycastle.asn1.sec.SECNamedCurves$15 -> org.a.a.e.h:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$16 -> org.a.a.d.i:
+org.bouncycastle.asn1.sec.SECNamedCurves$16 -> org.a.a.e.i:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$17 -> org.a.a.d.j:
+org.bouncycastle.asn1.sec.SECNamedCurves$17 -> org.a.a.e.j:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$18 -> org.a.a.d.k:
+org.bouncycastle.asn1.sec.SECNamedCurves$18 -> org.a.a.e.k:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$19 -> org.a.a.d.l:
+org.bouncycastle.asn1.sec.SECNamedCurves$19 -> org.a.a.e.l:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$2 -> org.a.a.d.m:
+org.bouncycastle.asn1.sec.SECNamedCurves$2 -> org.a.a.e.m:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$20 -> org.a.a.d.n:
+org.bouncycastle.asn1.sec.SECNamedCurves$20 -> org.a.a.e.n:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$21 -> org.a.a.d.o:
+org.bouncycastle.asn1.sec.SECNamedCurves$21 -> org.a.a.e.o:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$22 -> org.a.a.d.p:
+org.bouncycastle.asn1.sec.SECNamedCurves$22 -> org.a.a.e.p:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$23 -> org.a.a.d.q:
+org.bouncycastle.asn1.sec.SECNamedCurves$23 -> org.a.a.e.q:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$24 -> org.a.a.d.r:
+org.bouncycastle.asn1.sec.SECNamedCurves$24 -> org.a.a.e.r:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$25 -> org.a.a.d.s:
+org.bouncycastle.asn1.sec.SECNamedCurves$25 -> org.a.a.e.s:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$26 -> org.a.a.d.t:
+org.bouncycastle.asn1.sec.SECNamedCurves$26 -> org.a.a.e.t:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$27 -> org.a.a.d.u:
+org.bouncycastle.asn1.sec.SECNamedCurves$27 -> org.a.a.e.u:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$28 -> org.a.a.d.v:
+org.bouncycastle.asn1.sec.SECNamedCurves$28 -> org.a.a.e.v:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$29 -> org.a.a.d.w:
+org.bouncycastle.asn1.sec.SECNamedCurves$29 -> org.a.a.e.w:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$3 -> org.a.a.d.x:
+org.bouncycastle.asn1.sec.SECNamedCurves$3 -> org.a.a.e.x:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$30 -> org.a.a.d.y:
+org.bouncycastle.asn1.sec.SECNamedCurves$30 -> org.a.a.e.y:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$31 -> org.a.a.d.z:
+org.bouncycastle.asn1.sec.SECNamedCurves$31 -> org.a.a.e.z:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$32 -> org.a.a.d.A:
+org.bouncycastle.asn1.sec.SECNamedCurves$32 -> org.a.a.e.A:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$33 -> org.a.a.d.B:
+org.bouncycastle.asn1.sec.SECNamedCurves$33 -> org.a.a.e.B:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$4 -> org.a.a.d.C:
+org.bouncycastle.asn1.sec.SECNamedCurves$4 -> org.a.a.e.C:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$5 -> org.a.a.d.D:
+org.bouncycastle.asn1.sec.SECNamedCurves$5 -> org.a.a.e.D:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$6 -> org.a.a.d.E:
+org.bouncycastle.asn1.sec.SECNamedCurves$6 -> org.a.a.e.E:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$7 -> org.a.a.d.F:
+org.bouncycastle.asn1.sec.SECNamedCurves$7 -> org.a.a.e.F:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$8 -> org.a.a.d.G:
+org.bouncycastle.asn1.sec.SECNamedCurves$8 -> org.a.a.e.G:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECNamedCurves$9 -> org.a.a.d.H:
+org.bouncycastle.asn1.sec.SECNamedCurves$9 -> org.a.a.e.H:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.sec.SECObjectIdentifiers -> org.a.a.d.I:
+org.bouncycastle.asn1.sec.SECObjectIdentifiers -> org.a.a.e.I:
     org.bouncycastle.asn1.ASN1ObjectIdentifier ellipticCurve -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier sect163k1 -> b
     org.bouncycastle.asn1.ASN1ObjectIdentifier sect163r1 -> c
@@ -2187,7 +2158,7 @@ org.bouncycastle.asn1.sec.SECObjectIdentifiers -> org.a.a.d.I:
     org.bouncycastle.asn1.ASN1ObjectIdentifier sect571r1 -> F
     org.bouncycastle.asn1.ASN1ObjectIdentifier secp192r1 -> G
     org.bouncycastle.asn1.ASN1ObjectIdentifier secp256r1 -> H
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves -> org.a.a.e.a:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves -> org.a.a.f.a:
     org.bouncycastle.asn1.x9.X9ECParametersHolder brainpoolP160r1 -> a
     org.bouncycastle.asn1.x9.X9ECParametersHolder brainpoolP160t1 -> b
     org.bouncycastle.asn1.x9.X9ECParametersHolder brainpoolP192r1 -> c
@@ -2206,36 +2177,38 @@ org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves -> org.a.a.e.a:
     java.util.Hashtable curves -> b
     java.util.Hashtable names -> c
     void defineCurve(java.lang.String,org.bouncycastle.asn1.ASN1ObjectIdentifier,org.bouncycastle.asn1.x9.X9ECParametersHolder) -> a
+    org.bouncycastle.asn1.x9.X9ECParameters getByName(java.lang.String) -> a
     org.bouncycastle.asn1.x9.X9ECParameters getByOID(org.bouncycastle.asn1.ASN1ObjectIdentifier) -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$1 -> org.a.a.e.b:
+    org.bouncycastle.math.ec.ECCurve access$000(org.bouncycastle.math.ec.ECCurve) -> a
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$1 -> org.a.a.f.b:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$10 -> org.a.a.e.c:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$10 -> org.a.a.f.c:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$11 -> org.a.a.e.d:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$11 -> org.a.a.f.d:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$12 -> org.a.a.e.e:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$12 -> org.a.a.f.e:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$13 -> org.a.a.e.f:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$13 -> org.a.a.f.f:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$14 -> org.a.a.e.g:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$14 -> org.a.a.f.g:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$2 -> org.a.a.e.h:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$2 -> org.a.a.f.h:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$3 -> org.a.a.e.i:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$3 -> org.a.a.f.i:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$4 -> org.a.a.e.j:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$4 -> org.a.a.f.j:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$5 -> org.a.a.e.k:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$5 -> org.a.a.f.k:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$6 -> org.a.a.e.l:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$6 -> org.a.a.f.l:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$7 -> org.a.a.e.m:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$7 -> org.a.a.f.m:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$8 -> org.a.a.e.n:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$8 -> org.a.a.f.n:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$9 -> org.a.a.e.o:
+org.bouncycastle.asn1.teletrust.TeleTrusTNamedCurves$9 -> org.a.a.f.o:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.teletrust.TeleTrusTObjectIdentifiers -> org.a.a.e.p:
+org.bouncycastle.asn1.teletrust.TeleTrusTObjectIdentifiers -> org.a.a.f.p:
     org.bouncycastle.asn1.ASN1ObjectIdentifier teleTrusTAlgorithm -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier ripemd160 -> b
     org.bouncycastle.asn1.ASN1ObjectIdentifier ripemd128 -> c
@@ -2257,21 +2230,21 @@ org.bouncycastle.asn1.teletrust.TeleTrusTObjectIdentifiers -> org.a.a.e.p:
     org.bouncycastle.asn1.ASN1ObjectIdentifier brainpoolP384t1 -> s
     org.bouncycastle.asn1.ASN1ObjectIdentifier brainpoolP512r1 -> t
     org.bouncycastle.asn1.ASN1ObjectIdentifier brainpoolP512t1 -> u
-org.bouncycastle.asn1.x500.AttributeTypeAndValue -> org.a.a.f.a:
+org.bouncycastle.asn1.x500.AttributeTypeAndValue -> org.a.a.g.a:
     org.bouncycastle.asn1.ASN1ObjectIdentifier type -> a
     org.bouncycastle.asn1.ASN1Encodable value -> a
     org.bouncycastle.asn1.x500.AttributeTypeAndValue getInstance(java.lang.Object) -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier getType() -> a
     org.bouncycastle.asn1.ASN1Encodable getValue() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x500.RDN -> org.a.a.f.b:
+org.bouncycastle.asn1.x500.RDN -> org.a.a.g.b:
     org.bouncycastle.asn1.ASN1Set values -> a
     org.bouncycastle.asn1.x500.RDN getInstance(java.lang.Object) -> a
     boolean isMultiValued() -> a
     org.bouncycastle.asn1.x500.AttributeTypeAndValue getFirst() -> a
     org.bouncycastle.asn1.x500.AttributeTypeAndValue[] getTypesAndValues() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x500.X500Name -> org.a.a.f.c:
+org.bouncycastle.asn1.x500.X500Name -> org.a.a.g.c:
     org.bouncycastle.asn1.x500.X500NameStyle defaultStyle -> a
     boolean isHashCodeCalculated -> a
     int hashCodeValue -> a
@@ -2283,12 +2256,11 @@ org.bouncycastle.asn1.x500.X500Name -> org.a.a.f.c:
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
     java.lang.String toString() -> toString
-org.bouncycastle.asn1.x500.X500NameStyle -> org.a.a.f.d:
+org.bouncycastle.asn1.x500.X500NameStyle -> org.a.a.g.d:
     boolean areEqual(org.bouncycastle.asn1.x500.X500Name,org.bouncycastle.asn1.x500.X500Name) -> a
     int calculateHashCode(org.bouncycastle.asn1.x500.X500Name) -> a
     java.lang.String toString(org.bouncycastle.asn1.x500.X500Name) -> a
-org.bouncycastle.asn1.x500.style.BCStyle -> org.a.a.f.a.a:
-    org.bouncycastle.asn1.x500.X500NameStyle INSTANCE -> a
+org.bouncycastle.asn1.x500.style.BCStyle -> org.a.a.g.a.a:
     org.bouncycastle.asn1.ASN1ObjectIdentifier C -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier O -> b
     org.bouncycastle.asn1.ASN1ObjectIdentifier OU -> c
@@ -2324,11 +2296,14 @@ org.bouncycastle.asn1.x500.style.BCStyle -> org.a.a.f.a.a:
     org.bouncycastle.asn1.ASN1ObjectIdentifier UID -> G
     java.util.Hashtable DefaultSymbols -> a
     java.util.Hashtable DefaultLookUp -> b
+    org.bouncycastle.asn1.x500.X500NameStyle INSTANCE -> a
+    java.util.Hashtable defaultSymbols -> c
     boolean areEqual(org.bouncycastle.asn1.x500.X500Name,org.bouncycastle.asn1.x500.X500Name) -> a
     int calculateHashCode(org.bouncycastle.asn1.x500.X500Name) -> a
     int calcHashCode(org.bouncycastle.asn1.ASN1Encodable) -> a
     java.lang.String toString(org.bouncycastle.asn1.x500.X500Name) -> a
-org.bouncycastle.asn1.x509.AlgorithmIdentifier -> org.a.a.g.a:
+    java.util.Hashtable copyHashTable(java.util.Hashtable) -> a
+org.bouncycastle.asn1.x509.AlgorithmIdentifier -> org.a.a.h.a:
     org.bouncycastle.asn1.ASN1ObjectIdentifier objectId -> a
     org.bouncycastle.asn1.ASN1Encodable parameters -> a
     boolean parametersDefined -> a
@@ -2336,7 +2311,7 @@ org.bouncycastle.asn1.x509.AlgorithmIdentifier -> org.a.a.g.a:
     org.bouncycastle.asn1.ASN1ObjectIdentifier getAlgorithm() -> a
     org.bouncycastle.asn1.ASN1Encodable getParameters() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x509.Certificate -> org.a.a.g.b:
+org.bouncycastle.asn1.x509.Certificate -> org.a.a.h.b:
     org.bouncycastle.asn1.ASN1Sequence seq -> a
     org.bouncycastle.asn1.x509.TBSCertificate tbsCert -> a
     org.bouncycastle.asn1.x509.Certificate getInstance(java.lang.Object) -> a
@@ -2344,7 +2319,7 @@ org.bouncycastle.asn1.x509.Certificate -> org.a.a.g.b:
     org.bouncycastle.asn1.x500.X500Name getSubject() -> a
     org.bouncycastle.asn1.x509.SubjectPublicKeyInfo getSubjectPublicKeyInfo() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x509.DSAParameter -> org.a.a.g.c:
+org.bouncycastle.asn1.x509.DSAParameter -> org.a.a.h.c:
     org.bouncycastle.asn1.ASN1Integer p -> a
     org.bouncycastle.asn1.ASN1Integer q -> b
     org.bouncycastle.asn1.ASN1Integer g -> c
@@ -2353,11 +2328,11 @@ org.bouncycastle.asn1.x509.DSAParameter -> org.a.a.g.c:
     java.math.BigInteger getQ() -> b
     java.math.BigInteger getG() -> c
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x509.DigestInfo -> org.a.a.g.d:
+org.bouncycastle.asn1.x509.DigestInfo -> org.a.a.h.d:
     byte[] digest -> a
     org.bouncycastle.asn1.x509.AlgorithmIdentifier algId -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x509.Extension -> org.a.a.g.e:
+org.bouncycastle.asn1.x509.Extension -> org.a.a.h.e:
     org.bouncycastle.asn1.ASN1ObjectIdentifier keyUsage -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier extnId -> b
     boolean critical -> a
@@ -2369,26 +2344,26 @@ org.bouncycastle.asn1.x509.Extension -> org.a.a.g.e:
     boolean equals(java.lang.Object) -> equals
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
     org.bouncycastle.asn1.ASN1Primitive convertValueToObject(org.bouncycastle.asn1.x509.Extension) -> a
-org.bouncycastle.asn1.x509.Extensions -> org.a.a.g.f:
+org.bouncycastle.asn1.x509.Extensions -> org.a.a.h.f:
     java.util.Hashtable extensions -> a
     java.util.Vector ordering -> a
     org.bouncycastle.asn1.x509.Extensions getInstance(java.lang.Object) -> a
     org.bouncycastle.asn1.ASN1Encodable getExtensionParsedValue(org.bouncycastle.asn1.ASN1ObjectIdentifier) -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x509.KeyUsage -> org.a.a.g.g:
+org.bouncycastle.asn1.x509.KeyUsage -> org.a.a.h.g:
     org.bouncycastle.asn1.DERBitString bitString -> a
     org.bouncycastle.asn1.x509.KeyUsage fromExtensions(org.bouncycastle.asn1.x509.Extensions) -> a
     byte[] getBytes() -> b
     java.lang.String toString() -> toString
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x509.SubjectPublicKeyInfo -> org.a.a.g.h:
+org.bouncycastle.asn1.x509.SubjectPublicKeyInfo -> org.a.a.h.h:
     org.bouncycastle.asn1.x509.AlgorithmIdentifier algId -> a
     org.bouncycastle.asn1.DERBitString keyData -> a
     org.bouncycastle.asn1.x509.AlgorithmIdentifier getAlgorithm() -> a
     org.bouncycastle.asn1.ASN1Primitive parsePublicKey() -> a
     org.bouncycastle.asn1.DERBitString getPublicKeyData() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x509.TBSCertificate -> org.a.a.g.i:
+org.bouncycastle.asn1.x509.TBSCertificate -> org.a.a.h.i:
     org.bouncycastle.asn1.ASN1Sequence seq -> a
     org.bouncycastle.asn1.x500.X500Name subject -> a
     org.bouncycastle.asn1.x509.SubjectPublicKeyInfo subjectPublicKeyInfo -> a
@@ -2396,12 +2371,12 @@ org.bouncycastle.asn1.x509.TBSCertificate -> org.a.a.g.i:
     org.bouncycastle.asn1.x509.TBSCertificate getInstance(java.lang.Object) -> a
     org.bouncycastle.asn1.x509.Extensions getExtensions() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x509.Time -> org.a.a.g.j:
+org.bouncycastle.asn1.x509.Time -> org.a.a.h.j:
     org.bouncycastle.asn1.ASN1Primitive time -> a
     org.bouncycastle.asn1.x509.Time getInstance(java.lang.Object) -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
     java.lang.String toString() -> toString
-org.bouncycastle.asn1.x509.X509ObjectIdentifiers -> org.a.a.g.k:
+org.bouncycastle.asn1.x509.X509ObjectIdentifiers -> org.a.a.h.k:
     org.bouncycastle.asn1.ASN1ObjectIdentifier id_at_telephoneNumber -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier id_at_name -> b
     org.bouncycastle.asn1.ASN1ObjectIdentifier id_SHA1 -> c
@@ -2409,7 +2384,7 @@ org.bouncycastle.asn1.x509.X509ObjectIdentifiers -> org.a.a.g.k:
     org.bouncycastle.asn1.ASN1ObjectIdentifier id_pkix -> e
     org.bouncycastle.asn1.ASN1ObjectIdentifier id_ad -> f
     org.bouncycastle.asn1.ASN1ObjectIdentifier id_ad_caIssuers -> g
-org.bouncycastle.asn1.x9.DHDomainParameters -> org.a.a.h.a:
+org.bouncycastle.asn1.x9.DHDomainParameters -> org.a.a.i.a:
     org.bouncycastle.asn1.ASN1Integer p -> a
     org.bouncycastle.asn1.ASN1Integer g -> b
     org.bouncycastle.asn1.ASN1Integer q -> c
@@ -2423,18 +2398,18 @@ org.bouncycastle.asn1.x9.DHDomainParameters -> org.a.a.h.a:
     org.bouncycastle.asn1.ASN1Integer getJ() -> d
     org.bouncycastle.asn1.x9.DHValidationParms getValidationParms() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x9.DHPublicKey -> org.a.a.h.b:
+org.bouncycastle.asn1.x9.DHPublicKey -> org.a.a.i.b:
     org.bouncycastle.asn1.ASN1Integer y -> a
     org.bouncycastle.asn1.ASN1Integer getY() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x9.DHValidationParms -> org.a.a.h.c:
+org.bouncycastle.asn1.x9.DHValidationParms -> org.a.a.i.c:
     org.bouncycastle.asn1.DERBitString seed -> a
     org.bouncycastle.asn1.ASN1Integer pgenCounter -> a
     org.bouncycastle.asn1.x9.DHValidationParms getInstance(java.lang.Object) -> a
     org.bouncycastle.asn1.DERBitString getSeed() -> a
     org.bouncycastle.asn1.ASN1Integer getPgenCounter() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x9.X962NamedCurves -> org.a.a.h.d:
+org.bouncycastle.asn1.x9.X962NamedCurves -> org.a.a.i.d:
     org.bouncycastle.asn1.x9.X9ECParametersHolder prime192v1 -> a
     org.bouncycastle.asn1.x9.X9ECParametersHolder prime192v2 -> b
     org.bouncycastle.asn1.x9.X9ECParametersHolder prime192v3 -> c
@@ -2462,66 +2437,67 @@ org.bouncycastle.asn1.x9.X962NamedCurves -> org.a.a.h.d:
     java.util.Hashtable curves -> b
     java.util.Hashtable names -> c
     void defineCurve(java.lang.String,org.bouncycastle.asn1.ASN1ObjectIdentifier,org.bouncycastle.asn1.x9.X9ECParametersHolder) -> a
+    org.bouncycastle.asn1.x9.X9ECParameters getByName(java.lang.String) -> a
     org.bouncycastle.asn1.x9.X9ECParameters getByOID(org.bouncycastle.asn1.ASN1ObjectIdentifier) -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$1 -> org.a.a.h.e:
+org.bouncycastle.asn1.x9.X962NamedCurves$1 -> org.a.a.i.e:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$10 -> org.a.a.h.f:
+org.bouncycastle.asn1.x9.X962NamedCurves$10 -> org.a.a.i.f:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$11 -> org.a.a.h.g:
+org.bouncycastle.asn1.x9.X962NamedCurves$11 -> org.a.a.i.g:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$12 -> org.a.a.h.h:
+org.bouncycastle.asn1.x9.X962NamedCurves$12 -> org.a.a.i.h:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$13 -> org.a.a.h.i:
+org.bouncycastle.asn1.x9.X962NamedCurves$13 -> org.a.a.i.i:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$14 -> org.a.a.h.j:
+org.bouncycastle.asn1.x9.X962NamedCurves$14 -> org.a.a.i.j:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$15 -> org.a.a.h.k:
+org.bouncycastle.asn1.x9.X962NamedCurves$15 -> org.a.a.i.k:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$16 -> org.a.a.h.l:
+org.bouncycastle.asn1.x9.X962NamedCurves$16 -> org.a.a.i.l:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$17 -> org.a.a.h.m:
+org.bouncycastle.asn1.x9.X962NamedCurves$17 -> org.a.a.i.m:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$18 -> org.a.a.h.n:
+org.bouncycastle.asn1.x9.X962NamedCurves$18 -> org.a.a.i.n:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$19 -> org.a.a.h.o:
+org.bouncycastle.asn1.x9.X962NamedCurves$19 -> org.a.a.i.o:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$2 -> org.a.a.h.p:
+org.bouncycastle.asn1.x9.X962NamedCurves$2 -> org.a.a.i.p:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$20 -> org.a.a.h.q:
+org.bouncycastle.asn1.x9.X962NamedCurves$20 -> org.a.a.i.q:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$21 -> org.a.a.h.r:
+org.bouncycastle.asn1.x9.X962NamedCurves$21 -> org.a.a.i.r:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$22 -> org.a.a.h.s:
+org.bouncycastle.asn1.x9.X962NamedCurves$22 -> org.a.a.i.s:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$23 -> org.a.a.h.t:
+org.bouncycastle.asn1.x9.X962NamedCurves$23 -> org.a.a.i.t:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$3 -> org.a.a.h.u:
+org.bouncycastle.asn1.x9.X962NamedCurves$3 -> org.a.a.i.u:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$4 -> org.a.a.h.v:
+org.bouncycastle.asn1.x9.X962NamedCurves$4 -> org.a.a.i.v:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$5 -> org.a.a.h.w:
+org.bouncycastle.asn1.x9.X962NamedCurves$5 -> org.a.a.i.w:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$6 -> org.a.a.h.x:
+org.bouncycastle.asn1.x9.X962NamedCurves$6 -> org.a.a.i.x:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$7 -> org.a.a.h.y:
+org.bouncycastle.asn1.x9.X962NamedCurves$7 -> org.a.a.i.y:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$8 -> org.a.a.h.z:
+org.bouncycastle.asn1.x9.X962NamedCurves$8 -> org.a.a.i.z:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962NamedCurves$9 -> org.a.a.h.A:
+org.bouncycastle.asn1.x9.X962NamedCurves$9 -> org.a.a.i.A:
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
-org.bouncycastle.asn1.x9.X962Parameters -> org.a.a.h.B:
+org.bouncycastle.asn1.x9.X962Parameters -> org.a.a.i.B:
     org.bouncycastle.asn1.ASN1Primitive params -> a
     boolean isNamedCurve() -> a
     org.bouncycastle.asn1.ASN1Primitive getParameters() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x9.X9Curve -> org.a.a.h.C:
+org.bouncycastle.asn1.x9.X9Curve -> org.a.a.i.C:
     org.bouncycastle.math.ec.ECCurve curve -> a
     byte[] seed -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier fieldIdentifier -> O
     org.bouncycastle.math.ec.ECCurve getCurve() -> a
     byte[] getSeed() -> b
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x9.X9ECParameters -> org.a.a.h.D:
+org.bouncycastle.asn1.x9.X9ECParameters -> org.a.a.i.D:
     java.math.BigInteger ONE -> a
     org.bouncycastle.asn1.x9.X9FieldID fieldID -> a
     org.bouncycastle.math.ec.ECCurve curve -> a
@@ -2536,32 +2512,35 @@ org.bouncycastle.asn1.x9.X9ECParameters -> org.a.a.h.D:
     java.math.BigInteger getH() -> b
     byte[] getSeed() -> b
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x9.X9ECParametersHolder -> org.a.a.h.E:
+org.bouncycastle.asn1.x9.X9ECParametersHolder -> org.a.a.i.E:
     org.bouncycastle.asn1.x9.X9ECParameters params -> a
     org.bouncycastle.asn1.x9.X9ECParameters getParameters() -> b
     org.bouncycastle.asn1.x9.X9ECParameters createParameters() -> a
     int bigEndianToInt(byte[],int) -> a
+    void bigEndianToInt(byte[],int,int[]) -> a
     void intToBigEndian(int,byte[],int) -> a
+    void intToBigEndian(int[],byte[],int) -> a
     void longToBigEndian(long,byte[],int) -> a
-org.bouncycastle.asn1.x9.X9ECPoint -> org.a.a.h.F:
+    int littleEndianToInt(byte[],int) -> b
+    void intToLittleEndian(int[],byte[],int) -> b
+org.bouncycastle.asn1.x9.X9ECPoint -> org.a.a.i.F:
     org.bouncycastle.math.ec.ECPoint p -> a
     org.bouncycastle.math.ec.ECPoint getPoint() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x9.X9FieldElement -> org.a.a.h.G:
+org.bouncycastle.asn1.x9.X9FieldElement -> org.a.a.i.G:
     org.bouncycastle.math.ec.ECFieldElement f -> a
     org.bouncycastle.asn1.x9.X9IntegerConverter converter -> a
     org.bouncycastle.math.ec.ECFieldElement getValue() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x9.X9FieldID -> org.a.a.h.H:
+org.bouncycastle.asn1.x9.X9FieldID -> org.a.a.i.H:
     org.bouncycastle.asn1.ASN1ObjectIdentifier id -> O
     org.bouncycastle.asn1.ASN1Primitive parameters -> a
+    org.bouncycastle.asn1.x9.X9FieldID getInstance(java.lang.Object) -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier getIdentifier() -> a
     org.bouncycastle.asn1.ASN1Primitive getParameters() -> a
     org.bouncycastle.asn1.ASN1Primitive toASN1Primitive() -> b
-org.bouncycastle.asn1.x9.X9IntegerConverter -> org.a.a.h.I:
-    int getByteLength(org.bouncycastle.math.ec.ECFieldElement) -> a
-    byte[] integerToBytes(java.math.BigInteger,int) -> a
-org.bouncycastle.asn1.x9.X9ObjectIdentifiers -> org.a.a.h.J:
+org.bouncycastle.asn1.x9.X9IntegerConverter -> org.a.a.i.I:
+org.bouncycastle.asn1.x9.X9ObjectIdentifiers -> org.a.a.i.J:
     org.bouncycastle.asn1.ASN1ObjectIdentifier ansi_X9_62 -> a
     org.bouncycastle.asn1.ASN1ObjectIdentifier id_fieldType -> b
     org.bouncycastle.asn1.ASN1ObjectIdentifier prime_field -> c
@@ -2644,18 +2623,14 @@ org.bouncycastle.crypto.Mac -> org.a.b.l:
     void update(byte[],int,int) -> a
     int doFinal$49634b7a(byte[]) -> a
     void reset() -> a
-org.bouncycastle.crypto.OutputLengthException -> org.a.b.m:
-org.bouncycastle.crypto.RuntimeCryptoException -> org.a.b.n:
-org.bouncycastle.crypto.Signer -> org.a.b.o:
+org.bouncycastle.crypto.MaxBytesExceededException -> org.a.b.m:
+org.bouncycastle.crypto.OutputLengthException -> org.a.b.n:
+org.bouncycastle.crypto.RuntimeCryptoException -> org.a.b.o:
+org.bouncycastle.crypto.Signer -> org.a.b.p:
     void init$3ec1f385(org.bouncycastle.crypto.CipherParameters) -> a
-    void update(byte) -> a
-    void update(byte[],int,int) -> a
+    void update$1cf967a4(byte[],int) -> a
     boolean verifySignature(byte[]) -> a
-org.bouncycastle.crypto.StreamCipher -> org.a.b.p:
-    byte[] engineState -> a
-    int x -> a
-    int y -> b
-    byte[] workingKey -> b
+org.bouncycastle.crypto.StreamCipher -> org.a.b.q:
     void init$3ec1f385(org.bouncycastle.crypto.CipherParameters) -> a
     void processBytes(byte[],int,int,byte[],int) -> a
 org.bouncycastle.crypto.agreement.DHBasicAgreement -> org.a.b.a.a:
@@ -2919,14 +2894,21 @@ org.bouncycastle.crypto.engines.DESedeEngine -> org.a.b.d.d:
     int getBlockSize() -> a
     int processBlock(byte[],int,byte[],int) -> a
     void reset() -> a
-org.bouncycastle.crypto.engines.RSABlindedEngine -> org.a.b.d.e:
+org.bouncycastle.crypto.engines.RC4Engine -> org.a.b.d.e:
+    byte[] engineState -> a
+    int x -> a
+    int y -> b
+    byte[] workingKey -> b
+    void init$3ec1f385(org.bouncycastle.crypto.CipherParameters) -> a
+    void processBytes(byte[],int,int,byte[],int) -> a
+org.bouncycastle.crypto.engines.RSABlindedEngine -> org.a.b.d.f:
     org.bouncycastle.crypto.engines.RSACoreEngine core -> a
     org.bouncycastle.crypto.params.RSAKeyParameters key -> a
     void init(boolean,org.bouncycastle.crypto.CipherParameters) -> a
     int getInputBlockSize() -> a
     int getOutputBlockSize() -> b
     byte[] processBlock(byte[],int,int) -> a
-org.bouncycastle.crypto.engines.RSACoreEngine -> org.a.b.d.f:
+org.bouncycastle.crypto.engines.RSACoreEngine -> org.a.b.d.g:
     org.bouncycastle.crypto.params.RSAKeyParameters key -> a
     boolean forEncryption -> a
     void init(boolean,org.bouncycastle.crypto.CipherParameters) -> a
@@ -2935,7 +2917,7 @@ org.bouncycastle.crypto.engines.RSACoreEngine -> org.a.b.d.f:
     java.math.BigInteger convertInput(byte[],int,int) -> a
     byte[] convertOutput(java.math.BigInteger) -> a
     java.math.BigInteger processBlock(java.math.BigInteger) -> a
-org.bouncycastle.crypto.engines.SEEDEngine -> org.a.b.d.g:
+org.bouncycastle.crypto.engines.SEEDEngine -> org.a.b.d.h:
     int[] SS0 -> a
     int[] SS1 -> b
     int[] SS2 -> c
@@ -2952,6 +2934,24 @@ org.bouncycastle.crypto.engines.SEEDEngine -> org.a.b.d.g:
     int G(int) -> a
     long F(int,int,long) -> a
     int phaseCalc1(int,int,int,int) -> a
+org.bouncycastle.crypto.engines.Salsa20Engine -> org.a.b.d.i:
+    byte[] sigma -> a
+    byte[] tau -> b
+    int rounds -> a
+    int index -> b
+    int[] engineState -> a
+    int[] x -> b
+    byte[] keyStream -> c
+    boolean initialised -> a
+    int cW0 -> c
+    int cW1 -> d
+    int cW2 -> e
+    void init$3ec1f385(org.bouncycastle.crypto.CipherParameters) -> a
+    java.lang.String getAlgorithmName() -> a
+    void processBytes(byte[],int,int,byte[],int) -> a
+    void resetCounter() -> a
+    void salsaCore(int,int[],int[]) -> a
+    int rotl(int,int) -> a
 org.bouncycastle.crypto.generators.DHBasicKeyPairGenerator -> org.a.b.e.a:
     org.bouncycastle.crypto.params.DHKeyGenerationParameters param -> a
     void init(org.bouncycastle.crypto.KeyGenerationParameters) -> a
@@ -2967,11 +2967,19 @@ org.bouncycastle.crypto.generators.ECKeyPairGenerator -> org.a.b.e.c:
     java.security.SecureRandom random -> a
     void init(org.bouncycastle.crypto.KeyGenerationParameters) -> a
     org.bouncycastle.crypto.AsymmetricCipherKeyPair generateKeyPair() -> a
-org.bouncycastle.crypto.io.SignerInputStream -> org.a.b.f.a:
-    org.bouncycastle.crypto.Signer signer -> a
-    int read() -> read
-    int read(byte[],int,int) -> read
-org.bouncycastle.crypto.macs.HMac -> org.a.b.g.a:
+org.bouncycastle.crypto.macs.CBCBlockCipherMac -> org.a.b.f.a:
+    byte[] mac -> a
+    byte[] buf -> b
+    int bufOff -> a
+    org.bouncycastle.crypto.BlockCipher cipher -> a
+    int macSize -> b
+    void init(org.bouncycastle.crypto.CipherParameters) -> a
+    int getMacSize() -> a
+    void update(byte) -> a
+    void update(byte[],int,int) -> a
+    int doFinal$49634b7a(byte[]) -> a
+    void reset() -> a
+org.bouncycastle.crypto.macs.HMac -> org.a.b.f.b:
     org.bouncycastle.crypto.Digest digest -> a
     int digestSize -> a
     int blockLength -> b
@@ -2987,7 +2995,44 @@ org.bouncycastle.crypto.macs.HMac -> org.a.b.g.a:
     int doFinal$49634b7a(byte[]) -> a
     void reset() -> a
     void xorPad(byte[],int,byte) -> a
-org.bouncycastle.crypto.modes.AEADBlockCipher -> org.a.b.h.a:
+org.bouncycastle.crypto.modes.AEADBlockCipher -> org.a.b.g.a:
+    void init(boolean,org.bouncycastle.crypto.CipherParameters) -> a
+    int processBytes(byte[],int,int,byte[],int) -> a
+    int doFinal(byte[],int) -> a
+    int getOutputSize(int) -> a
+org.bouncycastle.crypto.modes.CBCBlockCipher -> org.a.b.g.b:
+    byte[] IV -> a
+    byte[] cbcV -> b
+    byte[] cbcNextV -> c
+    int blockSize -> a
+    org.bouncycastle.crypto.BlockCipher cipher -> a
+    boolean encrypting -> a
+    void init(boolean,org.bouncycastle.crypto.CipherParameters) -> a
+    int getBlockSize() -> a
+    int processBlock(byte[],int,byte[],int) -> a
+    void reset() -> a
+org.bouncycastle.crypto.modes.CCMBlockCipher -> org.a.b.g.c:
+    org.bouncycastle.crypto.BlockCipher cipher -> a
+    int blockSize -> a
+    boolean forEncryption -> a
+    byte[] nonce -> a
+    byte[] initialAssociatedText -> b
+    int macSize -> b
+    org.bouncycastle.crypto.CipherParameters keyParam -> a
+    byte[] macBlock -> c
+    org.bouncycastle.crypto.modes.CCMBlockCipher$ExposedByteArrayOutputStream associatedText -> a
+    org.bouncycastle.crypto.modes.CCMBlockCipher$ExposedByteArrayOutputStream data -> b
+    void init(boolean,org.bouncycastle.crypto.CipherParameters) -> a
+    int processBytes(byte[],int,int,byte[],int) -> a
+    int doFinal(byte[],int) -> a
+    void reset() -> a
+    int getOutputSize(int) -> a
+    int calculateMac(byte[],int,int,byte[]) -> a
+    int getAssociatedTextLength() -> a
+    boolean hasAssociatedText() -> a
+org.bouncycastle.crypto.modes.CCMBlockCipher$ExposedByteArrayOutputStream -> org.a.b.g.d:
+    byte[] getBuffer() -> a
+org.bouncycastle.crypto.modes.GCMBlockCipher -> org.a.b.g.e:
     org.bouncycastle.crypto.BlockCipher cipher -> a
     org.bouncycastle.crypto.modes.gcm.GCMMultiplier multiplier -> a
     org.bouncycastle.crypto.modes.gcm.GCMExponentiator exp -> a
@@ -3010,41 +3055,47 @@ org.bouncycastle.crypto.modes.AEADBlockCipher -> org.a.b.h.a:
     long atLength -> b
     long atLengthPre -> c
     void init(boolean,org.bouncycastle.crypto.CipherParameters) -> a
-    int processBytes(byte[],int,int,byte[],int) -> a
-    int doFinal(byte[],int) -> a
     int getOutputSize(int) -> a
     void processAADBytes$1cf967a4(byte[],int) -> a
     void initCipher() -> a
+    int processBytes(byte[],int,int,byte[],int) -> a
+    int doFinal(byte[],int) -> a
     void gHASH(byte[],byte[],int) -> a
     void gHASHBlock(byte[],byte[]) -> a
     void gHASHPartial(byte[],byte[],int,int) -> a
     byte[] getNextCounterBlock() -> a
     void xor(byte[],byte[]) -> b
     void xor(byte[],byte[],int,int) -> b
-org.bouncycastle.crypto.modes.CBCBlockCipher -> org.a.b.h.b:
-    byte[] IV -> a
-    byte[] cbcV -> b
-    byte[] cbcNextV -> c
-    int blockSize -> a
+org.bouncycastle.crypto.modes.SICBlockCipher -> org.a.b.g.f:
     org.bouncycastle.crypto.BlockCipher cipher -> a
-    boolean encrypting -> a
+    int blockSize -> a
+    byte[] IV -> a
+    byte[] counter -> b
+    byte[] counterOut -> c
     void init(boolean,org.bouncycastle.crypto.CipherParameters) -> a
     int getBlockSize() -> a
     int processBlock(byte[],int,byte[],int) -> a
     void reset() -> a
-org.bouncycastle.crypto.modes.gcm.GCMExponentiator -> org.a.b.h.a.a:
+org.bouncycastle.crypto.modes.gcm.GCMExponentiator -> org.a.b.g.a.a:
     java.util.Vector lookupPowX2 -> a
     void init(byte[]) -> a
     void exponentiateX(long,byte[]) -> a
-org.bouncycastle.crypto.modes.gcm.GCMMultiplier -> org.a.b.h.a.b:
+org.bouncycastle.crypto.modes.gcm.GCMMultiplier -> org.a.b.g.a.b:
     byte[] H -> a
     int[][][] M -> a
     void init(byte[]) -> a
     void multiplyH(byte[]) -> b
-org.bouncycastle.crypto.modes.gcm.GCMUtil -> org.a.b.h.a.c:
-    void multiply(byte[],byte[]) -> a
-    void multiplyP(int[],int[]) -> a
-org.bouncycastle.crypto.params.AEADParameters -> org.a.b.i.a:
+org.bouncycastle.crypto.modes.gcm.GCMUtil -> org.a.b.g.a.c:
+    int[] LOOKUP -> a
+    int[] oneAsInts() -> a
+    void asBytes(int[],byte[]) -> a
+    int[] asInts(byte[]) -> a
+    void asInts(byte[],int[]) -> a
+    void multiply(int[],int[]) -> a
+    void multiplyP(int[],int[]) -> b
+    void multiplyP8(int[],int[]) -> c
+    void xor(int[],int[],int[]) -> a
+org.bouncycastle.crypto.params.AEADParameters -> org.a.b.h.a:
     byte[] associatedText -> a
     byte[] nonce -> b
     org.bouncycastle.crypto.params.KeyParameter key -> a
@@ -3053,18 +3104,18 @@ org.bouncycastle.crypto.params.AEADParameters -> org.a.b.i.a:
     int getMacSize() -> a
     byte[] getAssociatedText() -> a
     byte[] getNonce() -> b
-org.bouncycastle.crypto.params.AsymmetricKeyParameter -> org.a.b.i.b:
+org.bouncycastle.crypto.params.AsymmetricKeyParameter -> org.a.b.h.b:
     boolean privateKey -> a
     boolean isPrivate() -> a
-org.bouncycastle.crypto.params.DHKeyGenerationParameters -> org.a.b.i.c:
+org.bouncycastle.crypto.params.DHKeyGenerationParameters -> org.a.b.h.c:
     org.bouncycastle.crypto.params.DHParameters params -> a
     org.bouncycastle.crypto.params.DHParameters getParameters() -> a
-org.bouncycastle.crypto.params.DHKeyParameters -> org.a.b.i.d:
+org.bouncycastle.crypto.params.DHKeyParameters -> org.a.b.h.d:
     org.bouncycastle.crypto.params.DHParameters params -> a
     org.bouncycastle.crypto.params.DHParameters getParameters() -> a
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-org.bouncycastle.crypto.params.DHParameters -> org.a.b.i.e:
+org.bouncycastle.crypto.params.DHParameters -> org.a.b.h.e:
     java.math.BigInteger g -> a
     java.math.BigInteger p -> b
     java.math.BigInteger q -> c
@@ -3077,25 +3128,25 @@ org.bouncycastle.crypto.params.DHParameters -> org.a.b.i.e:
     int getL() -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-org.bouncycastle.crypto.params.DHPrivateKeyParameters -> org.a.b.i.f:
+org.bouncycastle.crypto.params.DHPrivateKeyParameters -> org.a.b.h.f:
     java.math.BigInteger x -> a
     java.math.BigInteger getX() -> a
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
-org.bouncycastle.crypto.params.DHPublicKeyParameters -> org.a.b.i.g:
+org.bouncycastle.crypto.params.DHPublicKeyParameters -> org.a.b.h.g:
     java.math.BigInteger y -> a
     java.math.BigInteger getY() -> a
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
-org.bouncycastle.crypto.params.DHValidationParameters -> org.a.b.i.h:
+org.bouncycastle.crypto.params.DHValidationParameters -> org.a.b.h.h:
     byte[] seed -> a
     int counter -> a
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-org.bouncycastle.crypto.params.DSAKeyParameters -> org.a.b.i.i:
+org.bouncycastle.crypto.params.DSAKeyParameters -> org.a.b.h.i:
     org.bouncycastle.crypto.params.DSAParameters params -> a
     org.bouncycastle.crypto.params.DSAParameters getParameters() -> a
-org.bouncycastle.crypto.params.DSAParameters -> org.a.b.i.j:
+org.bouncycastle.crypto.params.DSAParameters -> org.a.b.h.j:
     java.math.BigInteger g -> a
     java.math.BigInteger q -> b
     java.math.BigInteger p -> c
@@ -3104,106 +3155,109 @@ org.bouncycastle.crypto.params.DSAParameters -> org.a.b.i.j:
     java.math.BigInteger getG() -> c
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-org.bouncycastle.crypto.params.DSAPublicKeyParameters -> org.a.b.i.k:
+org.bouncycastle.crypto.params.DSAPublicKeyParameters -> org.a.b.h.k:
     java.math.BigInteger y -> a
     java.math.BigInteger getY() -> a
-org.bouncycastle.crypto.params.ECDomainParameters -> org.a.b.i.l:
+org.bouncycastle.crypto.params.ECDomainParameters -> org.a.b.h.l:
     org.bouncycastle.math.ec.ECCurve curve -> a
     org.bouncycastle.math.ec.ECPoint G -> a
     java.math.BigInteger n -> e
     org.bouncycastle.math.ec.ECCurve getCurve() -> a
     org.bouncycastle.math.ec.ECPoint getG() -> a
     java.math.BigInteger getN() -> a
-org.bouncycastle.crypto.params.ECKeyGenerationParameters -> org.a.b.i.m:
+org.bouncycastle.crypto.params.ECKeyGenerationParameters -> org.a.b.h.m:
     org.bouncycastle.crypto.params.ECDomainParameters domainParams -> a
     org.bouncycastle.crypto.params.ECDomainParameters getDomainParameters() -> a
-org.bouncycastle.crypto.params.ECKeyParameters -> org.a.b.i.n:
+org.bouncycastle.crypto.params.ECKeyParameters -> org.a.b.h.n:
     org.bouncycastle.crypto.params.ECDomainParameters params -> a
     org.bouncycastle.crypto.params.ECDomainParameters getParameters() -> a
-org.bouncycastle.crypto.params.ECPrivateKeyParameters -> org.a.b.i.o:
+org.bouncycastle.crypto.params.ECPrivateKeyParameters -> org.a.b.h.o:
     java.math.BigInteger d -> a
     java.math.BigInteger getD() -> a
-org.bouncycastle.crypto.params.ECPublicKeyParameters -> org.a.b.i.p:
+org.bouncycastle.crypto.params.ECPublicKeyParameters -> org.a.b.h.p:
     org.bouncycastle.math.ec.ECPoint Q -> a
     org.bouncycastle.math.ec.ECPoint getQ() -> a
-org.bouncycastle.crypto.params.ElGamalKeyParameters -> org.a.b.i.q:
+org.bouncycastle.crypto.params.ElGamalKeyParameters -> org.a.b.h.q:
     org.bouncycastle.crypto.params.ElGamalParameters params -> a
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
-org.bouncycastle.crypto.params.ElGamalParameters -> org.a.b.i.r:
+org.bouncycastle.crypto.params.ElGamalParameters -> org.a.b.h.r:
     java.math.BigInteger g -> a
     java.math.BigInteger p -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-org.bouncycastle.crypto.params.ElGamalPublicKeyParameters -> org.a.b.i.s:
+org.bouncycastle.crypto.params.ElGamalPublicKeyParameters -> org.a.b.h.s:
     java.math.BigInteger y -> a
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
-org.bouncycastle.crypto.params.KeyParameter -> org.a.b.i.t:
+org.bouncycastle.crypto.params.KeyParameter -> org.a.b.h.t:
     byte[] key -> a
     byte[] getKey() -> a
-org.bouncycastle.crypto.params.ParametersWithIV -> org.a.b.i.u:
+org.bouncycastle.crypto.params.ParametersWithIV -> org.a.b.h.u:
     byte[] iv -> a
     org.bouncycastle.crypto.CipherParameters parameters -> a
     byte[] getIV() -> a
     org.bouncycastle.crypto.CipherParameters getParameters() -> a
-org.bouncycastle.crypto.params.ParametersWithRandom -> org.a.b.i.v:
+org.bouncycastle.crypto.params.ParametersWithRandom -> org.a.b.h.v:
     java.security.SecureRandom random -> a
     org.bouncycastle.crypto.CipherParameters parameters -> a
     java.security.SecureRandom getRandom() -> a
     org.bouncycastle.crypto.CipherParameters getParameters() -> a
-org.bouncycastle.crypto.params.RSAKeyParameters -> org.a.b.i.w:
+org.bouncycastle.crypto.params.RSAKeyParameters -> org.a.b.h.w:
     java.math.BigInteger modulus -> a
     java.math.BigInteger exponent -> b
     java.math.BigInteger getModulus() -> a
     java.math.BigInteger getExponent() -> b
-org.bouncycastle.crypto.params.RSAPrivateCrtKeyParameters -> org.a.b.i.x:
-org.bouncycastle.crypto.prng.ThreadedSeedGenerator -> org.a.b.j.a:
-    de.persoapp.core.card.ICardHandler eCardHandler -> a
-    de.persoapp.core.client.IMainView mainView -> a
+org.bouncycastle.crypto.params.RSAPrivateCrtKeyParameters -> org.a.b.h.x:
+org.bouncycastle.crypto.prng.ThreadedSeedGenerator -> org.a.b.i.a:
+    long chat -> a
+    de.persoapp.core.client.SecureHolder pin -> a
+    boolean approved -> a
     byte[] generateSeed$48701b37() -> a
-    java.lang.Object handleEvent(int,java.lang.Object[]) -> a
-    de.persoapp.core.card.TransportProvider getCard(boolean) -> a
-org.bouncycastle.crypto.prng.ThreadedSeedGenerator$SeedGenerator -> org.a.b.j.b:
+    long getCHAT() -> a
+    de.persoapp.core.client.SecureHolder getPIN() -> a
+    boolean isApproved() -> a
+org.bouncycastle.crypto.prng.ThreadedSeedGenerator$SeedGenerator -> org.a.b.i.b:
     int counter -> a
     boolean stop -> a
     void run() -> run
     byte[] generateSeed$48701b37() -> a
-org.bouncycastle.crypto.signers.DSADigestSigner -> org.a.b.k.a:
+org.bouncycastle.crypto.signers.DSADigestSigner -> org.a.b.j.a:
     org.bouncycastle.crypto.Digest digest -> a
     org.bouncycastle.crypto.DSA dsaSigner -> a
     void init$3ec1f385(org.bouncycastle.crypto.CipherParameters) -> a
-    void update(byte) -> a
-    void update(byte[],int,int) -> a
+    void update$1cf967a4(byte[],int) -> a
     boolean verifySignature(byte[]) -> a
-org.bouncycastle.crypto.signers.DSASigner -> org.a.b.k.b:
+org.bouncycastle.crypto.signers.DSASigner -> org.a.b.j.b:
     org.bouncycastle.crypto.params.DSAKeyParameters key -> a
     void init$3ec1f385(org.bouncycastle.crypto.CipherParameters) -> a
     boolean verifySignature(byte[],java.math.BigInteger,java.math.BigInteger) -> a
-org.bouncycastle.crypto.signers.ECDSASigner -> org.a.b.k.c:
+org.bouncycastle.crypto.signers.ECDSASigner -> org.a.b.j.c:
     org.bouncycastle.crypto.params.ECKeyParameters key -> a
     void init$3ec1f385(org.bouncycastle.crypto.CipherParameters) -> a
     boolean verifySignature(byte[],java.math.BigInteger,java.math.BigInteger) -> a
-org.bouncycastle.crypto.signers.GenericSigner -> org.a.b.k.d:
+org.bouncycastle.crypto.signers.GenericSigner -> org.a.b.j.d:
     org.bouncycastle.crypto.AsymmetricBlockCipher engine -> a
     org.bouncycastle.crypto.Digest digest -> a
     void init$3ec1f385(org.bouncycastle.crypto.CipherParameters) -> a
-    void update(byte) -> a
-    void update(byte[],int,int) -> a
+    void update$1cf967a4(byte[],int) -> a
     boolean verifySignature(byte[]) -> a
-org.bouncycastle.crypto.signers.RSADigestSigner -> org.a.b.k.e:
+org.bouncycastle.crypto.signers.RSADigestSigner -> org.a.b.j.e:
     org.bouncycastle.crypto.AsymmetricBlockCipher rsaEngine -> a
     org.bouncycastle.asn1.x509.AlgorithmIdentifier algId -> a
     org.bouncycastle.crypto.Digest digest -> a
     java.util.Hashtable oidMap -> a
     void init$3ec1f385(org.bouncycastle.crypto.CipherParameters) -> a
-    void update(byte) -> a
-    void update(byte[],int,int) -> a
+    void update$1cf967a4(byte[],int) -> a
     boolean verifySignature(byte[]) -> a
-org.bouncycastle.crypto.tls.AbstractTlsClient -> org.a.b.l.a:
+org.bouncycastle.crypto.signers.RandomDSAKCalculator -> org.a.b.j.f:
+org.bouncycastle.crypto.tls.AbstractTlsClient -> org.a.b.k.a:
     org.bouncycastle.crypto.tls.TlsCipherFactory cipherFactory -> a
     org.bouncycastle.crypto.tls.TlsContext context$2c57f394 -> a
     java.util.Vector supportedSignatureAlgorithms -> a
+    int[] namedCurves -> a
+    short[] clientECPointFormats -> a
+    short[] serverECPointFormats -> b
     int selectedCipherSuite -> a
     short selectedCompressionMethod -> a
     void init$63a97409(org.bouncycastle.crypto.tls.TlsContext) -> a
@@ -3217,7 +3271,7 @@ org.bouncycastle.crypto.tls.AbstractTlsClient -> org.a.b.l.a:
     void processServerExtensions(java.util.Hashtable) -> a
     void processServerSupplementalData(java.util.Vector) -> a
     org.bouncycastle.crypto.tls.TlsCompression getCompression() -> a
-org.bouncycastle.crypto.tls.AbstractTlsContext -> org.a.b.l.b:
+org.bouncycastle.crypto.tls.AbstractTlsContext -> org.a.b.k.b:
     java.security.SecureRandom secureRandom -> a
     org.bouncycastle.crypto.tls.SecurityParameters securityParameters -> a
     org.bouncycastle.crypto.tls.ProtocolVersion clientVersion -> a
@@ -3228,7 +3282,7 @@ org.bouncycastle.crypto.tls.AbstractTlsContext -> org.a.b.l.b:
     void setClientVersion(org.bouncycastle.crypto.tls.ProtocolVersion) -> a
     org.bouncycastle.crypto.tls.ProtocolVersion getServerVersion() -> b
     void setServerVersion(org.bouncycastle.crypto.tls.ProtocolVersion) -> b
-org.bouncycastle.crypto.tls.AbstractTlsKeyExchange -> org.a.b.l.c:
+org.bouncycastle.crypto.tls.AbstractTlsKeyExchange -> org.a.b.k.c:
     int keyExchange -> a
     java.util.Vector supportedSignatureAlgorithms -> a
     org.bouncycastle.crypto.tls.TlsContext context -> a
@@ -3237,19 +3291,21 @@ org.bouncycastle.crypto.tls.AbstractTlsKeyExchange -> org.a.b.l.c:
     boolean requiresServerKeyExchange() -> a
     void skipServerKeyExchange() -> a
     void processServerKeyExchange(java.io.InputStream) -> a
-org.bouncycastle.crypto.tls.AbstractTlsPeer -> org.a.b.l.d:
-org.bouncycastle.crypto.tls.AbstractTlsSigner -> org.a.b.l.e:
+org.bouncycastle.crypto.tls.AbstractTlsPeer -> org.a.b.k.d:
+    void notifySecureRenegotiation(boolean) -> a
+org.bouncycastle.crypto.tls.AbstractTlsSigner -> org.a.b.k.e:
     org.bouncycastle.crypto.tls.TlsContext context -> a
     void init(org.bouncycastle.crypto.tls.TlsContext) -> a
-org.bouncycastle.crypto.tls.ByteQueue -> org.a.b.l.f:
+org.bouncycastle.crypto.tls.ByteQueue -> org.a.b.k.f:
     byte[] databuf -> a
     int skipped -> a
     int available -> b
     void read(byte[],int,int,int) -> a
     void addData$1cf967a4(byte[],int) -> a
-    void removeData(int) -> a
+    void removeData(byte[],int,int,int) -> b
+    byte[] removeData(int,int) -> a
     int size() -> a
-org.bouncycastle.crypto.tls.Certificate -> org.a.b.l.g:
+org.bouncycastle.crypto.tls.Certificate -> org.a.b.k.g:
     org.bouncycastle.crypto.tls.Certificate EMPTY_CHAIN -> a
     org.bouncycastle.asn1.x509.Certificate[] certificateList -> a
     org.bouncycastle.asn1.x509.Certificate[] getCertificateList() -> a
@@ -3258,17 +3314,22 @@ org.bouncycastle.crypto.tls.Certificate -> org.a.b.l.g:
     boolean isEmpty() -> a
     void encode(java.io.OutputStream) -> a
     org.bouncycastle.crypto.tls.Certificate parse(java.io.InputStream) -> a
-org.bouncycastle.crypto.tls.CertificateRequest -> org.a.b.l.h:
+org.bouncycastle.crypto.tls.CertificateRequest -> org.a.b.k.h:
     short[] certificateTypes -> a
+    java.util.Vector supportedSignatureAlgorithms -> a
     short[] getCertificateTypes() -> a
-    org.bouncycastle.crypto.tls.CertificateRequest parse(java.io.InputStream) -> a
-org.bouncycastle.crypto.tls.CombinedHash -> org.a.b.l.i:
+    java.util.Vector getSupportedSignatureAlgorithms() -> a
+    org.bouncycastle.crypto.tls.CertificateRequest parse(org.bouncycastle.crypto.tls.TlsContext,java.io.InputStream) -> a
+org.bouncycastle.crypto.tls.CombinedHash -> org.a.b.k.i:
     org.bouncycastle.crypto.tls.TlsContext context -> a
     org.bouncycastle.crypto.Digest md5 -> a
     org.bouncycastle.crypto.Digest sha1 -> b
     void init(org.bouncycastle.crypto.tls.TlsContext) -> a
-    org.bouncycastle.crypto.tls.TlsHandshakeHash commit() -> a
-    org.bouncycastle.crypto.tls.TlsHandshakeHash fork() -> b
+    org.bouncycastle.crypto.tls.TlsHandshakeHash notifyPRFDetermined() -> a
+    void trackHashAlgorithm(short) -> a
+    void sealHashAlgorithms() -> b
+    org.bouncycastle.crypto.tls.TlsHandshakeHash stopTracking() -> b
+    org.bouncycastle.crypto.Digest forkPRFHash() -> a
     java.lang.String getAlgorithmName() -> a
     int getDigestSize() -> a
     void update(byte) -> a
@@ -3276,52 +3337,67 @@ org.bouncycastle.crypto.tls.CombinedHash -> org.a.b.l.i:
     int doFinal(byte[],int) -> a
     void reset() -> a
     void ssl3Complete(org.bouncycastle.crypto.Digest,byte[],byte[],int) -> a
-org.bouncycastle.crypto.tls.DefaultTlsCipherFactory -> org.a.b.l.j:
+org.bouncycastle.crypto.tls.DefaultTlsCipherFactory -> org.a.b.k.j:
     org.bouncycastle.crypto.tls.TlsCipher createCipher(org.bouncycastle.crypto.tls.TlsContext,int,int) -> a
     org.bouncycastle.crypto.tls.TlsBlockCipher createAESCipher(org.bouncycastle.crypto.tls.TlsContext,int,int) -> a
+    org.bouncycastle.crypto.tls.TlsAEADCipher createCipher_AES_CCM(org.bouncycastle.crypto.tls.TlsContext,int,int) -> a
     org.bouncycastle.crypto.tls.TlsAEADCipher createCipher_AES_GCM$2277fa8c(org.bouncycastle.crypto.tls.TlsContext,int) -> a
     org.bouncycastle.crypto.tls.TlsBlockCipher createCamelliaCipher(org.bouncycastle.crypto.tls.TlsContext,int,int) -> b
+    org.bouncycastle.crypto.tls.TlsStreamCipher createSalsa20Cipher$ae2dc7e(org.bouncycastle.crypto.tls.TlsContext,int,int) -> a
     org.bouncycastle.crypto.BlockCipher createAESBlockCipher() -> a
-    org.bouncycastle.crypto.modes.AEADBlockCipher createAEADBlockCipher_AES_GCM() -> a
+    org.bouncycastle.crypto.modes.AEADBlockCipher createAEADBlockCipher_AES_CCM() -> a
+    org.bouncycastle.crypto.modes.AEADBlockCipher createAEADBlockCipher_AES_GCM() -> b
     org.bouncycastle.crypto.BlockCipher createCamelliaBlockCipher() -> b
     org.bouncycastle.crypto.BlockCipher createDESedeBlockCipher() -> c
+    org.bouncycastle.crypto.StreamCipher createSalsa20StreamCipher(int) -> a
     org.bouncycastle.crypto.BlockCipher createSEEDBlockCipher() -> d
     org.bouncycastle.crypto.Digest createHMACDigest(int) -> a
-org.bouncycastle.crypto.tls.DefaultTlsClient -> org.a.b.l.k:
-    int[] namedCurves -> a
-    short[] clientECPointFormats -> a
-    short[] serverECPointFormats -> b
+org.bouncycastle.crypto.tls.DefaultTlsClient -> org.a.b.k.k:
     int[] getCipherSuites() -> a
-    java.util.Hashtable getClientExtensions() -> a
-    void processServerExtensions(java.util.Hashtable) -> a
     org.bouncycastle.crypto.tls.TlsKeyExchange getKeyExchange() -> a
     org.bouncycastle.crypto.tls.TlsCipher getCipher() -> a
     org.bouncycastle.crypto.tls.TlsKeyExchange createDHKeyExchange(int) -> a
     org.bouncycastle.crypto.tls.TlsKeyExchange createDHEKeyExchange(int) -> b
     org.bouncycastle.crypto.tls.TlsKeyExchange createECDHKeyExchange(int) -> c
     org.bouncycastle.crypto.tls.TlsKeyExchange createECDHEKeyExchange(int) -> d
-org.bouncycastle.crypto.tls.DeferredHash -> org.a.b.l.l:
+org.bouncycastle.crypto.tls.DeferredHash -> org.a.b.k.l:
     org.bouncycastle.crypto.tls.TlsContext context -> a
-    java.io.ByteArrayOutputStream buf -> a
-    int prfAlgorithm -> a
-    org.bouncycastle.crypto.Digest hash -> a
+    org.bouncycastle.crypto.tls.DigestInputBuffer buf -> a
+    java.util.Hashtable hashes -> a
+    java.lang.Short prfHashAlgorithm -> a
     void init(org.bouncycastle.crypto.tls.TlsContext) -> a
-    org.bouncycastle.crypto.tls.TlsHandshakeHash commit() -> a
-    org.bouncycastle.crypto.tls.TlsHandshakeHash fork() -> b
+    org.bouncycastle.crypto.tls.TlsHandshakeHash notifyPRFDetermined() -> a
+    void trackHashAlgorithm(short) -> a
+    void sealHashAlgorithms() -> b
+    org.bouncycastle.crypto.tls.TlsHandshakeHash stopTracking() -> b
+    org.bouncycastle.crypto.Digest forkPRFHash() -> a
     java.lang.String getAlgorithmName() -> a
     int getDigestSize() -> a
     void update(byte) -> a
     void update(byte[],int,int) -> a
     int doFinal(byte[],int) -> a
     void reset() -> a
-    void checkHash() -> b
-org.bouncycastle.crypto.tls.PSKTlsClient -> org.a.b.l.m:
+    void checkStopBuffering() -> c
+    void checkTrackingHash(java.lang.Short) -> a
+org.bouncycastle.crypto.tls.DigestInputBuffer -> org.a.b.k.m:
+    void updateDigest(org.bouncycastle.crypto.Digest) -> a
+org.bouncycastle.crypto.tls.DigitallySigned -> org.a.b.k.n:
+    org.bouncycastle.crypto.tls.SignatureAndHashAlgorithm algorithm -> a
+    byte[] signature -> a
+    org.bouncycastle.crypto.tls.SignatureAndHashAlgorithm getAlgorithm() -> a
+    byte[] getSignature() -> a
+    org.bouncycastle.crypto.tls.DigitallySigned parse(org.bouncycastle.crypto.tls.TlsContext,java.io.InputStream) -> a
+org.bouncycastle.crypto.tls.MaxFragmentLength -> org.a.b.k.o:
+    short pow2_9 -> a
+    short pow2_12 -> b
+    boolean isValid(short) -> a
+org.bouncycastle.crypto.tls.PSKTlsClient -> org.a.b.k.p:
     org.bouncycastle.crypto.tls.TlsPSKIdentity pskIdentity -> a
     int[] getCipherSuites() -> a
     org.bouncycastle.crypto.tls.TlsKeyExchange getKeyExchange() -> a
     org.bouncycastle.crypto.tls.TlsCipher getCipher() -> a
     org.bouncycastle.crypto.tls.TlsKeyExchange createPSKKeyExchange(int) -> a
-org.bouncycastle.crypto.tls.ProtocolVersion -> org.a.b.l.n:
+org.bouncycastle.crypto.tls.ProtocolVersion -> org.a.b.k.q:
     org.bouncycastle.crypto.tls.ProtocolVersion SSLv3 -> d
     org.bouncycastle.crypto.tls.ProtocolVersion TLSv10 -> a
     org.bouncycastle.crypto.tls.ProtocolVersion TLSv11 -> b
@@ -3340,10 +3416,8 @@ org.bouncycastle.crypto.tls.ProtocolVersion -> org.a.b.l.n:
     int hashCode() -> hashCode
     org.bouncycastle.crypto.tls.ProtocolVersion get(int,int) -> a
     java.lang.String toString() -> toString
-org.bouncycastle.crypto.tls.RecordStream -> org.a.b.l.o:
-    int PLAINTEXT_LIMIT -> a
-    int COMPRESSED_LIMIT -> b
-    int CIPHERTEXT_LIMIT -> c
+org.bouncycastle.crypto.tls.RecordStream -> org.a.b.k.r:
+    int DEFAULT_PLAINTEXT_LIMIT -> a
     org.bouncycastle.crypto.tls.TlsProtocol handler -> a
     java.io.InputStream input -> a
     java.io.OutputStream output -> a
@@ -3357,28 +3431,34 @@ org.bouncycastle.crypto.tls.RecordStream -> org.a.b.l.o:
     long writeSeqNo -> b
     java.io.ByteArrayOutputStream buffer -> a
     org.bouncycastle.crypto.tls.TlsContext context -> a
-    org.bouncycastle.crypto.tls.TlsHandshakeHash hash -> a
+    org.bouncycastle.crypto.tls.TlsHandshakeHash handshakeHash -> a
     org.bouncycastle.crypto.tls.ProtocolVersion readVersion -> a
     org.bouncycastle.crypto.tls.ProtocolVersion writeVersion -> b
     boolean restrictReadVersion -> a
+    int plaintextLimit -> b
+    int compressedLimit -> c
+    int ciphertextLimit -> d
     void init(org.bouncycastle.crypto.tls.TlsContext) -> a
+    int getPlaintextLimit() -> a
+    void setPlaintextLimit(int) -> a
     org.bouncycastle.crypto.tls.ProtocolVersion getReadVersion() -> a
     void setWriteVersion(org.bouncycastle.crypto.tls.ProtocolVersion) -> a
-    void notifyHelloComplete() -> a
     void setPendingConnectionState(org.bouncycastle.crypto.tls.TlsCompression,org.bouncycastle.crypto.tls.TlsCipher) -> a
-    void sentWriteCipherSpec() -> b
-    void receivedReadCipherSpec() -> c
-    void finaliseHandshake() -> d
-    void readRecord() -> e
+    void sentWriteCipherSpec() -> a
+    void receivedReadCipherSpec() -> b
+    void finaliseHandshake() -> c
+    boolean readRecord() -> a
     void writeRecord(short,byte[],int,int) -> a
+    void notifyHelloComplete() -> d
+    org.bouncycastle.crypto.tls.TlsHandshakeHash getHandshakeHash() -> a
+    org.bouncycastle.crypto.tls.TlsHandshakeHash prepareToFinish() -> b
     void updateHandshakeData(byte[],int,int) -> a
-    byte[] getCurrentHash(byte[]) -> a
-    void close() -> f
-    void flush() -> g
+    void safeClose() -> e
+    void flush() -> f
     byte[] getBufferContents() -> a
     void checkType(short,short) -> a
     void checkLength(int,int,short) -> a
-org.bouncycastle.crypto.tls.SSL3Mac -> org.a.b.l.p:
+org.bouncycastle.crypto.tls.SSL3Mac -> org.a.b.k.s:
     byte[] IPAD -> a
     byte[] OPAD -> b
     org.bouncycastle.crypto.Digest digest -> a
@@ -3391,20 +3471,56 @@ org.bouncycastle.crypto.tls.SSL3Mac -> org.a.b.l.p:
     int doFinal$49634b7a(byte[]) -> a
     void reset() -> a
     byte[] genPad$4805bc61(byte) -> a
-org.bouncycastle.crypto.tls.SecurityParameters -> org.a.b.l.q:
-    int prfAlgorithm -> a
-    int verifyDataLength -> b
+org.bouncycastle.crypto.tls.SecurityParameters -> org.a.b.k.t:
+    int cipherSuite -> a
+    short compressionAlgorithm -> a
+    int prfAlgorithm -> b
+    int verifyDataLength -> c
     byte[] masterSecret -> a
     byte[] clientRandom -> b
     byte[] serverRandom -> c
-org.bouncycastle.crypto.tls.SignatureAndHashAlgorithm -> org.a.b.l.r:
+    short maxFragmentLength -> b
+    boolean truncatedHMac -> a
+org.bouncycastle.crypto.tls.ServerDHParams -> org.a.b.k.u:
+    org.bouncycastle.crypto.params.DHPublicKeyParameters publicKey -> a
+    org.bouncycastle.crypto.params.DHPublicKeyParameters getPublicKey() -> a
+    org.bouncycastle.crypto.tls.ServerDHParams parse(java.io.InputStream) -> a
+org.bouncycastle.crypto.tls.SessionParameters -> org.a.b.k.v:
+    int cipherSuite -> a
+    short compressionAlgorithm -> a
+    byte[] masterSecret -> a
+    byte[] encodedServerExtensions -> b
+    void clear() -> a
+    int getCipherSuite() -> a
+    short getCompressionAlgorithm() -> a
+    byte[] getMasterSecret() -> a
+    java.util.Hashtable readServerExtensions() -> a
+org.bouncycastle.crypto.tls.SessionParameters$Builder -> org.a.b.k.w:
+    int cipherSuite -> a
+    short compressionAlgorithm -> a
+    byte[] masterSecret -> a
+    org.bouncycastle.crypto.tls.Certificate peerCertificate -> a
+    byte[] encodedServerExtensions -> b
+    org.bouncycastle.crypto.tls.SessionParameters build() -> a
+    org.bouncycastle.crypto.tls.SessionParameters$Builder setCipherSuite(int) -> a
+    org.bouncycastle.crypto.tls.SessionParameters$Builder setCompressionAlgorithm(short) -> a
+    org.bouncycastle.crypto.tls.SessionParameters$Builder setMasterSecret(byte[]) -> a
+    org.bouncycastle.crypto.tls.SessionParameters$Builder setPeerCertificate(org.bouncycastle.crypto.tls.Certificate) -> a
+    org.bouncycastle.crypto.tls.SessionParameters$Builder setServerExtensions(java.util.Hashtable) -> a
+    void validate(boolean,java.lang.String) -> a
+org.bouncycastle.crypto.tls.SignatureAndHashAlgorithm -> org.a.b.k.x:
     short hash -> a
     short signature -> b
+    short getHash() -> a
+    short getSignature() -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     void encode(java.io.OutputStream) -> a
-org.bouncycastle.crypto.tls.SupplementalDataEntry -> org.a.b.l.s:
-org.bouncycastle.crypto.tls.TlsAEADCipher -> org.a.b.l.t:
+    org.bouncycastle.crypto.tls.SignatureAndHashAlgorithm parse(java.io.InputStream) -> a
+org.bouncycastle.crypto.tls.SignerInputBuffer -> org.a.b.k.y:
+    void updateSigner(org.bouncycastle.crypto.Signer) -> a
+org.bouncycastle.crypto.tls.SupplementalDataEntry -> org.a.b.k.z:
+org.bouncycastle.crypto.tls.TlsAEADCipher -> org.a.b.k.A:
     org.bouncycastle.crypto.tls.TlsContext context -> a
     int macSize -> a
     int nonce_explicit_length -> b
@@ -3415,9 +3531,9 @@ org.bouncycastle.crypto.tls.TlsAEADCipher -> org.a.b.l.t:
     byte[] encodePlaintext(long,short,byte[],int,int) -> a
     byte[] decodeCiphertext(long,short,byte[],int,int) -> b
     byte[] getAdditionalData(long,short,int) -> a
-org.bouncycastle.crypto.tls.TlsAuthentication -> org.a.b.l.u:
+org.bouncycastle.crypto.tls.TlsAuthentication -> org.a.b.k.B:
     void notifyServerCertificate(org.bouncycastle.crypto.tls.Certificate) -> a
-org.bouncycastle.crypto.tls.TlsBlockCipher -> org.a.b.l.v:
+org.bouncycastle.crypto.tls.TlsBlockCipher -> org.a.b.k.C:
     org.bouncycastle.crypto.tls.TlsContext context -> a
     byte[] randomData -> a
     boolean useExplicitIV -> a
@@ -3427,12 +3543,12 @@ org.bouncycastle.crypto.tls.TlsBlockCipher -> org.a.b.l.v:
     org.bouncycastle.crypto.tls.TlsMac readMac -> b
     byte[] encodePlaintext(long,short,byte[],int,int) -> a
     byte[] decodeCiphertext(long,short,byte[],int,int) -> b
-org.bouncycastle.crypto.tls.TlsCipher -> org.a.b.l.w:
+org.bouncycastle.crypto.tls.TlsCipher -> org.a.b.k.D:
     byte[] encodePlaintext(long,short,byte[],int,int) -> a
     byte[] decodeCiphertext(long,short,byte[],int,int) -> b
-org.bouncycastle.crypto.tls.TlsCipherFactory -> org.a.b.l.x:
+org.bouncycastle.crypto.tls.TlsCipherFactory -> org.a.b.k.E:
     org.bouncycastle.crypto.tls.TlsCipher createCipher(org.bouncycastle.crypto.tls.TlsContext,int,int) -> a
-org.bouncycastle.crypto.tls.TlsClient -> org.a.b.l.y:
+org.bouncycastle.crypto.tls.TlsClient -> org.a.b.k.F:
     void init$63a97409(org.bouncycastle.crypto.tls.TlsContext) -> a
     org.bouncycastle.crypto.tls.ProtocolVersion getClientHelloRecordLayerVersion() -> a
     org.bouncycastle.crypto.tls.ProtocolVersion getClientVersion() -> b
@@ -3446,35 +3562,30 @@ org.bouncycastle.crypto.tls.TlsClient -> org.a.b.l.y:
     void processServerSupplementalData(java.util.Vector) -> a
     org.bouncycastle.crypto.tls.TlsKeyExchange getKeyExchange() -> a
     org.bouncycastle.crypto.tls.TlsAuthentication getAuthentication() -> a
-    org.bouncycastle.crypto.tls.TlsCompression getCompression() -> a
-    org.bouncycastle.crypto.tls.TlsCipher getCipher() -> a
-org.bouncycastle.crypto.tls.TlsClientContextImpl -> org.a.b.l.z:
-org.bouncycastle.crypto.tls.TlsClientProtocol -> org.a.b.l.A:
+org.bouncycastle.crypto.tls.TlsClientContextImpl -> org.a.b.k.G:
+org.bouncycastle.crypto.tls.TlsClientProtocol -> org.a.b.k.H:
     org.bouncycastle.crypto.tls.TlsClient tlsClient -> a
     org.bouncycastle.crypto.tls.TlsClientContextImpl tlsClientContext -> a
-    int[] offeredCipherSuites -> a
-    short[] offeredCompressionMethods -> a
-    java.util.Hashtable clientExtensions -> a
-    int selectedCipherSuite -> a
+    byte[] selectedSessionID -> a
     org.bouncycastle.crypto.tls.TlsKeyExchange keyExchange -> a
     org.bouncycastle.crypto.tls.TlsAuthentication authentication -> a
     org.bouncycastle.crypto.tls.CertificateRequest certificateRequest -> a
     void connect(org.bouncycastle.crypto.tls.TlsClient) -> a
+    void cleanupHandshake() -> a
     org.bouncycastle.crypto.tls.AbstractTlsContext getContext() -> a
-    org.bouncycastle.crypto.CipherParameters getPeer$25b30c25() -> a
-    void handleChangeCipherSpecMessage() -> a
+    org.bouncycastle.crypto.tls.TlsPeer getPeer() -> a
     void handleHandshakeMessage(short,byte[]) -> a
     void handleSupplementalData(java.util.Vector) -> a
     void receiveServerHelloMessage(java.io.ByteArrayInputStream) -> c
-org.bouncycastle.crypto.tls.TlsCompression -> org.a.b.l.B:
-org.bouncycastle.crypto.tls.TlsContext -> org.a.b.l.C:
+org.bouncycastle.crypto.tls.TlsCompression -> org.a.b.k.I:
+org.bouncycastle.crypto.tls.TlsContext -> org.a.b.k.J:
     java.security.SecureRandom getSecureRandom() -> a
     org.bouncycastle.crypto.tls.SecurityParameters getSecurityParameters() -> a
     org.bouncycastle.crypto.tls.ProtocolVersion getClientVersion() -> a
     org.bouncycastle.crypto.tls.ProtocolVersion getServerVersion() -> b
-org.bouncycastle.crypto.tls.TlsDHEKeyExchange -> org.a.b.l.D:
+org.bouncycastle.crypto.tls.TlsDHEKeyExchange -> org.a.b.k.K:
     void processServerKeyExchange(java.io.InputStream) -> a
-org.bouncycastle.crypto.tls.TlsDHKeyExchange -> org.a.b.l.E:
+org.bouncycastle.crypto.tls.TlsDHKeyExchange -> org.a.b.k.L:
     org.bouncycastle.crypto.tls.TlsSigner tlsSigner -> a
     org.bouncycastle.crypto.params.AsymmetricKeyParameter serverPublicKey -> a
     org.bouncycastle.crypto.params.DHPublicKeyParameters dhAgreeServerPublicKey -> a
@@ -3486,20 +3597,22 @@ org.bouncycastle.crypto.tls.TlsDHKeyExchange -> org.a.b.l.E:
     void validateCertificateRequest(org.bouncycastle.crypto.tls.CertificateRequest) -> a
     void generateClientKeyExchange(java.io.OutputStream) -> a
     byte[] generatePremasterSecret() -> a
-org.bouncycastle.crypto.tls.TlsDHUtils -> org.a.b.l.F:
+org.bouncycastle.crypto.tls.TlsDHUtils -> org.a.b.k.M:
     java.math.BigInteger ONE -> a
     java.math.BigInteger TWO -> b
     byte[] calculateDHBasicAgreement(org.bouncycastle.crypto.params.DHPublicKeyParameters,org.bouncycastle.crypto.params.DHPrivateKeyParameters) -> a
     org.bouncycastle.crypto.params.DHPrivateKeyParameters generateEphemeralClientKeyExchange(java.security.SecureRandom,org.bouncycastle.crypto.params.DHParameters,java.io.OutputStream) -> a
     org.bouncycastle.crypto.params.DHPublicKeyParameters validateDHPublicKey(org.bouncycastle.crypto.params.DHPublicKeyParameters) -> a
     java.math.BigInteger readDHParameter(java.io.InputStream) -> a
-org.bouncycastle.crypto.tls.TlsDSASigner -> org.a.b.l.G:
-    org.bouncycastle.crypto.Signer createVerifyer(org.bouncycastle.crypto.params.AsymmetricKeyParameter) -> a
+org.bouncycastle.crypto.tls.TlsDSASigner -> org.a.b.k.N:
+    org.bouncycastle.crypto.Signer createVerifyer(org.bouncycastle.crypto.tls.SignatureAndHashAlgorithm,org.bouncycastle.crypto.params.AsymmetricKeyParameter) -> a
+    short getSignatureAlgorithm() -> a
     org.bouncycastle.crypto.DSA createDSAImpl() -> a
-org.bouncycastle.crypto.tls.TlsDSSSigner -> org.a.b.l.H:
+org.bouncycastle.crypto.tls.TlsDSSSigner -> org.a.b.k.O:
     boolean isValidPublicKey(org.bouncycastle.crypto.params.AsymmetricKeyParameter) -> a
     org.bouncycastle.crypto.DSA createDSAImpl() -> a
-org.bouncycastle.crypto.tls.TlsECCUtils -> org.a.b.l.I:
+    short getSignatureAlgorithm() -> a
+org.bouncycastle.crypto.tls.TlsECCUtils -> org.a.b.k.P:
     java.lang.Integer EXT_elliptic_curves -> a
     java.lang.Integer EXT_ec_point_formats -> b
     java.lang.String[] curveNames -> a
@@ -3510,26 +3623,26 @@ org.bouncycastle.crypto.tls.TlsECCUtils -> org.a.b.l.I:
     boolean containsECCCipherSuites(int[]) -> a
     boolean isECCCipherSuite(int) -> a
     boolean isCompressionPreferred(short[],short) -> a
-    byte[] serializeECPublicKey(short[],org.bouncycastle.crypto.params.ECPublicKeyParameters) -> a
     org.bouncycastle.crypto.params.ECPublicKeyParameters deserializeECPublicKey$11c972ea(org.bouncycastle.crypto.params.ECDomainParameters,byte[]) -> a
     byte[] calculateECDHBasicAgreement(org.bouncycastle.crypto.params.ECPublicKeyParameters,org.bouncycastle.crypto.params.ECPrivateKeyParameters) -> a
-    org.bouncycastle.crypto.AsymmetricCipherKeyPair generateECKeyPair(java.security.SecureRandom,org.bouncycastle.crypto.params.ECDomainParameters) -> a
+    org.bouncycastle.crypto.params.ECPrivateKeyParameters generateEphemeralClientKeyExchange(java.security.SecureRandom,short[],org.bouncycastle.crypto.params.ECDomainParameters,java.io.OutputStream) -> a
     org.bouncycastle.crypto.params.ECPublicKeyParameters validateECPublicKey(org.bouncycastle.crypto.params.ECPublicKeyParameters) -> a
     int readECExponent(int,java.io.InputStream) -> a
     java.math.BigInteger readECFieldElement(int,java.io.InputStream) -> a
     java.math.BigInteger readECParameter(java.io.InputStream) -> a
     org.bouncycastle.crypto.params.ECDomainParameters readECParameters$11aec62e(int[],java.io.InputStream) -> a
-org.bouncycastle.crypto.tls.TlsECDHEKeyExchange -> org.a.b.l.J:
+    void checkNamedCurve(int[],int) -> a
+org.bouncycastle.crypto.tls.TlsECDHEKeyExchange -> org.a.b.k.Q:
     void processServerKeyExchange(java.io.InputStream) -> a
     void validateCertificateRequest(org.bouncycastle.crypto.tls.CertificateRequest) -> a
-org.bouncycastle.crypto.tls.TlsECDHKeyExchange -> org.a.b.l.K:
+org.bouncycastle.crypto.tls.TlsECDHKeyExchange -> org.a.b.k.R:
     org.bouncycastle.crypto.tls.TlsSigner tlsSigner -> a
     int[] namedCurves -> a
     short[] clientECPointFormats -> a
     short[] serverECPointFormats -> b
     org.bouncycastle.crypto.params.AsymmetricKeyParameter serverPublicKey -> a
-    org.bouncycastle.crypto.params.ECPublicKeyParameters ecAgreeServerPublicKey -> a
-    org.bouncycastle.crypto.params.ECPrivateKeyParameters ecAgreeClientPrivateKey -> a
+    org.bouncycastle.crypto.params.ECPrivateKeyParameters ecAgreePrivateKey -> a
+    org.bouncycastle.crypto.params.ECPublicKeyParameters ecAgreePublicKey -> a
     void init(org.bouncycastle.crypto.tls.TlsContext) -> a
     void skipServerCredentials() -> b
     void processServerCertificate(org.bouncycastle.crypto.tls.Certificate) -> a
@@ -3537,23 +3650,34 @@ org.bouncycastle.crypto.tls.TlsECDHKeyExchange -> org.a.b.l.K:
     void validateCertificateRequest(org.bouncycastle.crypto.tls.CertificateRequest) -> a
     void generateClientKeyExchange(java.io.OutputStream) -> a
     byte[] generatePremasterSecret() -> a
-org.bouncycastle.crypto.tls.TlsECDSASigner -> org.a.b.l.L:
+org.bouncycastle.crypto.tls.TlsECDSASigner -> org.a.b.k.S:
     boolean isValidPublicKey(org.bouncycastle.crypto.params.AsymmetricKeyParameter) -> a
     org.bouncycastle.crypto.DSA createDSAImpl() -> a
-org.bouncycastle.crypto.tls.TlsFatalAlert -> org.a.b.l.M:
+    short getSignatureAlgorithm() -> a
+org.bouncycastle.crypto.tls.TlsExtensionsUtils -> org.a.b.k.T:
+    java.lang.Integer EXT_max_fragment_length -> b
+    java.lang.Integer EXT_status_request -> a
+    java.lang.Integer EXT_truncated_hmac -> c
+    java.util.Hashtable ensureExtensionsInitialised(java.util.Hashtable) -> a
+    short getMaxFragmentLengthExtension(java.util.Hashtable) -> a
+    boolean hasTruncatedHMacExtension(java.util.Hashtable) -> a
+org.bouncycastle.crypto.tls.TlsFatalAlert -> org.a.b.k.U:
     short alertDescription -> a
     short getAlertDescription() -> a
-org.bouncycastle.crypto.tls.TlsHandshakeHash -> org.a.b.l.N:
+org.bouncycastle.crypto.tls.TlsHandshakeHash -> org.a.b.k.V:
     void init(org.bouncycastle.crypto.tls.TlsContext) -> a
-    org.bouncycastle.crypto.tls.TlsHandshakeHash commit() -> a
-    org.bouncycastle.crypto.tls.TlsHandshakeHash fork() -> b
-org.bouncycastle.crypto.tls.TlsInputStream -> org.a.b.l.O:
+    org.bouncycastle.crypto.tls.TlsHandshakeHash notifyPRFDetermined() -> a
+    void trackHashAlgorithm(short) -> a
+    void sealHashAlgorithms() -> b
+    org.bouncycastle.crypto.tls.TlsHandshakeHash stopTracking() -> b
+    org.bouncycastle.crypto.Digest forkPRFHash() -> a
+org.bouncycastle.crypto.tls.TlsInputStream -> org.a.b.k.W:
     byte[] buf -> a
     org.bouncycastle.crypto.tls.TlsProtocol handler -> a
     int read(byte[],int,int) -> read
     int read() -> read
     void close() -> close
-org.bouncycastle.crypto.tls.TlsKeyExchange -> org.a.b.l.P:
+org.bouncycastle.crypto.tls.TlsKeyExchange -> org.a.b.k.X:
     void init(org.bouncycastle.crypto.tls.TlsContext) -> a
     void skipServerCredentials() -> b
     void processServerCertificate(org.bouncycastle.crypto.tls.Certificate) -> a
@@ -3562,36 +3686,37 @@ org.bouncycastle.crypto.tls.TlsKeyExchange -> org.a.b.l.P:
     void validateCertificateRequest(org.bouncycastle.crypto.tls.CertificateRequest) -> a
     void generateClientKeyExchange(java.io.OutputStream) -> a
     byte[] generatePremasterSecret() -> a
-org.bouncycastle.crypto.tls.TlsMac -> org.a.b.l.Q:
+org.bouncycastle.crypto.tls.TlsMac -> org.a.b.k.Y:
     org.bouncycastle.crypto.tls.TlsContext context -> a
     org.bouncycastle.crypto.Mac mac -> a
     int digestBlockSize -> a
     int digestOverhead -> b
+    int macLength -> c
     int getSize() -> a
     byte[] calculateMac(long,short,byte[],int,int) -> a
     byte[] calculateMacConstantTime(long,short,byte[],int,int,int,byte[]) -> a
     int getDigestBlockCount(int) -> a
-org.bouncycastle.crypto.tls.TlsNullCipher -> org.a.b.l.R:
+org.bouncycastle.crypto.tls.TlsNullCipher -> org.a.b.k.Z:
     org.bouncycastle.crypto.tls.TlsMac writeMac -> a
     org.bouncycastle.crypto.tls.TlsMac readMac -> b
     byte[] encodePlaintext(long,short,byte[],int,int) -> a
     byte[] decodeCiphertext(long,short,byte[],int,int) -> b
-org.bouncycastle.crypto.tls.TlsOutputStream -> org.a.b.l.S:
+org.bouncycastle.crypto.tls.TlsOutputStream -> org.a.b.k.aa:
     byte[] buf -> a
     org.bouncycastle.crypto.tls.TlsProtocol handler -> a
     void write(byte[],int,int) -> write
     void write(int) -> write
     void close() -> close
     void flush() -> flush
-org.bouncycastle.crypto.tls.TlsPSKIdentity -> org.a.b.l.T:
+org.bouncycastle.crypto.tls.TlsPSKIdentity -> org.a.b.k.ab:
     void notifyIdentityHint(byte[]) -> a
     byte[] getPSKIdentity() -> a
     byte[] getPSK() -> b
-org.bouncycastle.crypto.tls.TlsPSKKeyExchange -> org.a.b.l.U:
+org.bouncycastle.crypto.tls.TlsPSKKeyExchange -> org.a.b.k.ac:
     org.bouncycastle.crypto.tls.TlsPSKIdentity pskIdentity -> a
     byte[] psk_identity_hint -> a
-    org.bouncycastle.crypto.params.DHPublicKeyParameters dhAgreeServerPublicKey -> a
-    org.bouncycastle.crypto.params.DHPrivateKeyParameters dhAgreeClientPrivateKey -> a
+    org.bouncycastle.crypto.params.DHPrivateKeyParameters dhAgreePrivateKey -> a
+    org.bouncycastle.crypto.params.DHPublicKeyParameters dhAgreePublicKey -> a
     org.bouncycastle.crypto.params.AsymmetricKeyParameter serverPublicKey -> a
     org.bouncycastle.crypto.params.RSAKeyParameters rsaServerPublicKey -> a
     byte[] premasterSecret -> b
@@ -3602,57 +3727,76 @@ org.bouncycastle.crypto.tls.TlsPSKKeyExchange -> org.a.b.l.U:
     void validateCertificateRequest(org.bouncycastle.crypto.tls.CertificateRequest) -> a
     void generateClientKeyExchange(java.io.OutputStream) -> a
     byte[] generatePremasterSecret() -> a
-org.bouncycastle.crypto.tls.TlsProtocol -> org.a.b.l.V:
+org.bouncycastle.crypto.tls.TlsPeer -> org.a.b.k.ad:
+    void notifySecureRenegotiation(boolean) -> a
+    org.bouncycastle.crypto.tls.TlsCompression getCompression() -> a
+    org.bouncycastle.crypto.tls.TlsCipher getCipher() -> a
+org.bouncycastle.crypto.tls.TlsProtocol -> org.a.b.k.ae:
     java.lang.Integer EXT_RenegotiationInfo -> a
     java.lang.Integer EXT_SessionTicket -> b
     org.bouncycastle.crypto.tls.ByteQueue applicationDataQueue -> a
-    org.bouncycastle.crypto.tls.ByteQueue changeCipherSpecQueue -> b
-    org.bouncycastle.crypto.tls.ByteQueue alertQueue -> c
-    org.bouncycastle.crypto.tls.ByteQueue handshakeQueue -> d
+    org.bouncycastle.crypto.tls.ByteQueue alertQueue -> b
+    org.bouncycastle.crypto.tls.ByteQueue handshakeQueue -> c
     org.bouncycastle.crypto.tls.RecordStream recordStream -> a
     java.security.SecureRandom secureRandom -> a
     org.bouncycastle.crypto.tls.TlsInputStream tlsInputStream -> a
     org.bouncycastle.crypto.tls.TlsOutputStream tlsOutputStream -> a
-    boolean closed -> c
-    boolean failedWithError -> d
-    boolean appDataReady -> e
-    boolean writeExtraEmptyRecords -> f
+    boolean closed -> e
+    boolean failedWithError -> f
+    boolean appDataReady -> g
+    boolean splitApplicationDataRecords -> h
     byte[] expected_verify_data -> a
+    org.bouncycastle.crypto.tls.TlsSession tlsSession -> a
+    org.bouncycastle.crypto.tls.SessionParameters sessionParameters -> a
     org.bouncycastle.crypto.tls.SecurityParameters securityParameters -> a
+    org.bouncycastle.crypto.tls.Certificate peerCertificate -> a
+    int[] offeredCipherSuites -> a
+    short[] offeredCompressionMethods -> a
+    java.util.Hashtable clientExtensions -> a
+    java.util.Hashtable serverExtensions -> b
     short connection_state -> a
-    boolean secure_renegotiation -> a
-    boolean expectSessionTicket -> b
+    boolean resumedSession -> a
+    boolean receivedChangeCipherSpec -> i
+    boolean secure_renegotiation -> b
+    boolean allowCertificateStatus -> c
+    boolean expectSessionTicket -> d
     org.bouncycastle.crypto.tls.AbstractTlsContext getContext() -> a
-    org.bouncycastle.crypto.CipherParameters getPeer$25b30c25() -> a
-    void handleChangeCipherSpecMessage() -> a
+    org.bouncycastle.crypto.tls.TlsPeer getPeer() -> a
     void handleHandshakeMessage(short,byte[]) -> a
+    void cleanupHandshake() -> a
     void completeHandshake() -> b
     void processRecord$e18f1f(short,byte[],int) -> a
-    void processHandshake() -> h
+    void processHandshake() -> i
+    void processChangeCipherSpec$1cf967a4(byte[],int) -> a
     int readApplicationData(byte[],int,int) -> a
-    void safeReadRecord() -> i
+    void safeReadRecord() -> j
     void safeWriteRecord(short,byte[],int,int) -> a
     void writeData(byte[],int,int) -> a
+    void writeHandshakeMessage(byte[],int,int) -> b
     java.io.OutputStream getOutputStream() -> a
     java.io.InputStream getInputStream() -> a
-    void failWithError(short,short) -> a
+    void failWithError$261ff279(short,short) -> a
+    void invalidateSession() -> c
     void processFinishedMessage(java.io.ByteArrayInputStream) -> a
     void raiseAlert$261ff279(short,short) -> b
-    void raiseWarning$3295e87e$136bb8() -> c
+    void raiseWarning$3295e87e$136bb8() -> d
     void sendCertificateMessage(org.bouncycastle.crypto.tls.Certificate) -> a
-    void sendChangeCipherSpecMessage() -> d
-    void sendFinishedMessage() -> e
+    void sendChangeCipherSpecMessage() -> e
+    void sendFinishedMessage() -> f
     byte[] createVerifyData(boolean) -> a
-    void close() -> f
+    void close() -> g
     void handleClose(boolean) -> a
-    void flush() -> g
-    boolean arrayContains(short[],short) -> a
-    boolean arrayContains(int[],int) -> a
+    void flush() -> h
+    short processMaxFragmentLengthExtension$cae74ab(java.util.Hashtable,java.util.Hashtable) -> a
     void assertEmpty(java.io.ByteArrayInputStream) -> b
+    byte[] getCurrentPRFHash(org.bouncycastle.crypto.tls.TlsContext,org.bouncycastle.crypto.tls.TlsHandshakeHash,byte[]) -> a
     java.util.Hashtable readExtensions(java.io.ByteArrayInputStream) -> a
     java.util.Vector readSupplementalDataMessage(java.io.ByteArrayInputStream) -> a
     void writeExtensions(java.io.OutputStream,java.util.Hashtable) -> a
-org.bouncycastle.crypto.tls.TlsRSAKeyExchange -> org.a.b.l.W:
+org.bouncycastle.crypto.tls.TlsProtocol$HandshakeMessage -> org.a.b.k.af:
+    org.bouncycastle.crypto.tls.TlsProtocol this$0 -> a
+    void writeToRecordStream() -> a
+org.bouncycastle.crypto.tls.TlsRSAKeyExchange -> org.a.b.k.ag:
     org.bouncycastle.crypto.params.AsymmetricKeyParameter serverPublicKey -> a
     org.bouncycastle.crypto.params.RSAKeyParameters rsaServerPublicKey -> a
     byte[] premasterSecret -> a
@@ -3661,62 +3805,83 @@ org.bouncycastle.crypto.tls.TlsRSAKeyExchange -> org.a.b.l.W:
     void validateCertificateRequest(org.bouncycastle.crypto.tls.CertificateRequest) -> a
     void generateClientKeyExchange(java.io.OutputStream) -> a
     byte[] generatePremasterSecret() -> a
-org.bouncycastle.crypto.tls.TlsRSASigner -> org.a.b.l.X:
-    org.bouncycastle.crypto.Signer createVerifyer(org.bouncycastle.crypto.params.AsymmetricKeyParameter) -> a
+org.bouncycastle.crypto.tls.TlsRSASigner -> org.a.b.k.ah:
+    org.bouncycastle.crypto.Signer createVerifyer(org.bouncycastle.crypto.tls.SignatureAndHashAlgorithm,org.bouncycastle.crypto.params.AsymmetricKeyParameter) -> a
     boolean isValidPublicKey(org.bouncycastle.crypto.params.AsymmetricKeyParameter) -> a
-org.bouncycastle.crypto.tls.TlsRuntimeException -> org.a.b.l.Y:
+org.bouncycastle.crypto.tls.TlsRuntimeException -> org.a.b.k.ai:
     java.lang.Throwable getCause() -> getCause
-org.bouncycastle.crypto.tls.TlsSigner -> org.a.b.l.Z:
+org.bouncycastle.crypto.tls.TlsSession -> org.a.b.k.aj:
+    byte[] sessionID -> a
+    org.bouncycastle.crypto.tls.SessionParameters sessionParameters -> a
+    byte[] getSessionID() -> a
+    void invalidate() -> a
+org.bouncycastle.crypto.tls.TlsSigner -> org.a.b.k.ak:
     void init(org.bouncycastle.crypto.tls.TlsContext) -> a
-    org.bouncycastle.crypto.Signer createVerifyer(org.bouncycastle.crypto.params.AsymmetricKeyParameter) -> a
+    org.bouncycastle.crypto.Signer createVerifyer(org.bouncycastle.crypto.tls.SignatureAndHashAlgorithm,org.bouncycastle.crypto.params.AsymmetricKeyParameter) -> a
     boolean isValidPublicKey(org.bouncycastle.crypto.params.AsymmetricKeyParameter) -> a
-org.bouncycastle.crypto.tls.TlsStreamCipher -> org.a.b.l.aa:
+org.bouncycastle.crypto.tls.TlsStreamCipher -> org.a.b.k.al:
     org.bouncycastle.crypto.StreamCipher encryptCipher -> a
     org.bouncycastle.crypto.StreamCipher decryptCipher -> b
     org.bouncycastle.crypto.tls.TlsMac writeMac -> a
     org.bouncycastle.crypto.tls.TlsMac readMac -> b
     byte[] encodePlaintext(long,short,byte[],int,int) -> a
     byte[] decodeCiphertext(long,short,byte[],int,int) -> b
-org.bouncycastle.crypto.tls.TlsUtils -> org.a.b.l.ab:
+org.bouncycastle.crypto.tls.TlsUtils -> org.a.b.k.am:
     byte[] EMPTY_BYTES -> a
     java.lang.Integer EXT_signature_algorithms -> a
     byte[] SSL_CLIENT -> b
     byte[] SSL_SERVER -> c
     byte[][] SSL3_CONST -> a
+    void checkUint8(int) -> c
+    void checkUint16(int) -> a
+    void checkUint24(int) -> b
     boolean isValidUint8(short) -> a
+    boolean isSSL(org.bouncycastle.crypto.tls.TlsContext) -> a
+    boolean isTLSv11(org.bouncycastle.crypto.tls.TlsContext) -> b
+    boolean isTLSv12(org.bouncycastle.crypto.tls.TlsContext) -> c
     void writeUint8(short,java.io.OutputStream) -> a
     void writeUint8(short,byte[],int) -> a
     void writeUint16(int,java.io.OutputStream) -> a
     void writeUint16(int,byte[],int) -> a
     void writeUint24(int,java.io.OutputStream) -> b
     void writeUint24$3a5385d2(int,byte[]) -> a
-    void writeUint64(long,java.io.OutputStream) -> a
     void writeUint64(long,byte[],int) -> a
     void writeOpaque8(byte[],java.io.OutputStream) -> a
     void writeOpaque16(byte[],java.io.OutputStream) -> b
     void writeOpaque24(byte[],java.io.OutputStream) -> c
-    void writeUint8Array(short[],java.io.OutputStream) -> a
-    void writeUint16Array(int[],java.io.OutputStream) -> a
+    void writeUint8ArrayWithUint8Length(short[],java.io.OutputStream) -> a
+    void writeUint16ArrayWithUint16Length(int[],java.io.OutputStream) -> a
+    byte[] encodeOpaque8(byte[]) -> a
+    byte[] encodeUint8ArrayWithUint8Length(short[]) -> a
+    byte[] encodeUint16ArrayWithUint16Length(int[]) -> a
     short readUint8(java.io.InputStream) -> a
+    short readUint8(byte[],int) -> a
     int readUint16(java.io.InputStream) -> a
+    int readUint16$49634b7a(byte[]) -> a
     int readUint24(java.io.InputStream) -> b
     long readUint32(java.io.InputStream) -> a
+    byte[] readAllOrNothing$757d858(java.io.InputStream) -> a
     byte[] readFully(int,java.io.InputStream) -> a
-    byte[] readOpaque8(java.io.InputStream) -> a
-    byte[] readOpaque16(java.io.InputStream) -> b
-    byte[] readOpaque24(java.io.InputStream) -> c
+    byte[] readOpaque8(java.io.InputStream) -> b
+    byte[] readOpaque16(java.io.InputStream) -> c
+    byte[] readOpaque24(java.io.InputStream) -> d
     short[] readUint8Array(int,java.io.InputStream) -> a
     int[] readUint16Array(int,java.io.InputStream) -> a
+    org.bouncycastle.crypto.tls.ProtocolVersion readVersion$a5cee2a(byte[]) -> a
     org.bouncycastle.crypto.tls.ProtocolVersion readVersion(java.io.InputStream) -> a
-    int readVersionRaw(java.io.InputStream) -> c
-    void writeGMTUnixTime$49634b87(byte[]) -> a
+    int readVersionRaw$49634b7a(byte[]) -> b
+    org.bouncycastle.asn1.ASN1Primitive readDERObject(byte[]) -> a
     void writeVersion(org.bouncycastle.crypto.tls.ProtocolVersion,java.io.OutputStream) -> a
     void writeVersion(org.bouncycastle.crypto.tls.ProtocolVersion,byte[],int) -> a
     java.util.Vector getDefaultDSSSignatureAlgorithms() -> a
     java.util.Vector getDefaultECDSASignatureAlgorithms() -> b
     java.util.Vector getDefaultRSASignatureAlgorithms() -> c
+    byte[] getExtensionData(java.util.Hashtable,java.lang.Integer) -> a
+    boolean hasExpectedEmptyExtensionData$260b52c6(java.util.Hashtable,java.lang.Integer) -> a
     boolean isSignatureAlgorithmsExtensionAllowed(org.bouncycastle.crypto.tls.ProtocolVersion) -> a
     void addSignatureAlgorithmsExtension(java.util.Hashtable,java.util.Vector) -> a
+    void encodeSupportedSignatureAlgorithms$3fb2bfb(java.util.Vector,java.io.OutputStream) -> a
+    java.util.Vector parseSupportedSignatureAlgorithms$7aaf004e(java.io.InputStream) -> a
     byte[] PRF(org.bouncycastle.crypto.tls.TlsContext,byte[],java.lang.String,byte[],int) -> a
     byte[] PRF_legacy$7d111f7c(byte[],byte[],int) -> a
     byte[] concat(byte[],byte[]) -> a
@@ -3725,42 +3890,100 @@ org.bouncycastle.crypto.tls.TlsUtils -> org.a.b.l.ab:
     byte[] calculateKeyBlock(org.bouncycastle.crypto.tls.TlsContext,int) -> a
     byte[] calculateMasterSecret(org.bouncycastle.crypto.tls.TlsContext,byte[]) -> a
     byte[] calculateVerifyData(org.bouncycastle.crypto.tls.TlsContext,java.lang.String,byte[]) -> a
-    org.bouncycastle.crypto.Digest createHash(int) -> a
-    org.bouncycastle.crypto.Digest cloneHash(int,org.bouncycastle.crypto.Digest) -> a
-    org.bouncycastle.crypto.Digest createPRFHash(int) -> b
-    org.bouncycastle.crypto.Digest clonePRFHash(int,org.bouncycastle.crypto.Digest) -> b
+    org.bouncycastle.crypto.Digest createHash(short) -> a
+    org.bouncycastle.crypto.Digest cloneHash(short,org.bouncycastle.crypto.Digest) -> a
     short getHashAlgorithmForPRFAlgorithm(int) -> a
+    org.bouncycastle.asn1.ASN1ObjectIdentifier getOIDForHashAlgorithm(short) -> a
+    void trackHashAlgorithms(org.bouncycastle.crypto.tls.TlsHandshakeHash,java.util.Vector) -> a
     java.util.Vector vectorOfOne(java.lang.Object) -> a
-org.bouncycastle.math.ec.ECConstants -> org.a.c.a.a:
+org.bouncycastle.math.ec.ECAlgorithms -> org.a.c.a.a:
+    de.persoapp.core.client.SecureHolder pinOld -> a
+    de.persoapp.core.client.SecureHolder pinNew -> b
+    org.bouncycastle.math.ec.ECPoint sumOfTwoMultiplies(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger,org.bouncycastle.math.ec.ECPoint,java.math.BigInteger) -> a
+    void implMontgomeryTrick$16065687(org.bouncycastle.math.ec.ECFieldElement[],int) -> a
+    org.bouncycastle.math.ec.ECPoint implShamirsTrick(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger,org.bouncycastle.math.ec.ECPoint,java.math.BigInteger) -> b
+    de.persoapp.core.client.SecureHolder getPINNew() -> a
+    de.persoapp.core.client.SecureHolder getPINOld() -> b
+    byte[] arrayconcat(byte[],byte[]) -> a
+    byte[] subArray(byte[],int,int) -> a
+    boolean arrayequal(byte[],byte[]) -> a
+    void val2dst(byte[],int,int,byte) -> a
+    byte[] build(int,byte[]) -> a
+    byte[] buildOID(java.lang.String,byte[]) -> a
+    byte[] get(byte[],byte[]) -> b
+    byte[] get(byte[],byte) -> a
+    byte[] get(byte[],short) -> a
+    java.lang.String getString(byte[]) -> a
+    java.util.List getM(byte[],byte[]) -> a
+    java.util.List getM(byte[],byte) -> a
+    java.net.URL getResourceUrl(java.lang.String) -> a
+    java.awt.image.BufferedImage getImage(java.lang.String) -> a
+    void appendRDN(java.lang.StringBuffer,org.bouncycastle.asn1.x500.RDN,java.util.Hashtable) -> a
+    void appendTypeAndValue(java.lang.StringBuffer,org.bouncycastle.asn1.x500.AttributeTypeAndValue,java.util.Hashtable) -> a
+    java.lang.String valueToString(org.bouncycastle.asn1.ASN1Encodable) -> a
+    java.lang.String bytesToString(byte[]) -> c
+    java.lang.String canonicalize(java.lang.String) -> a
+    org.bouncycastle.asn1.ASN1Primitive decodeObject(java.lang.String) -> a
+    boolean rDNAreEqual(org.bouncycastle.asn1.x500.RDN,org.bouncycastle.asn1.x500.RDN) -> a
+    boolean atvAreEqual(org.bouncycastle.asn1.x500.AttributeTypeAndValue,org.bouncycastle.asn1.x500.AttributeTypeAndValue) -> a
+    byte[] generateEncryptedPreMasterSecret(org.bouncycastle.crypto.tls.TlsContext,org.bouncycastle.crypto.params.RSAKeyParameters,java.io.OutputStream) -> a
+    org.bouncycastle.crypto.params.AsymmetricKeyParameter createKey(org.bouncycastle.asn1.x509.SubjectPublicKeyInfo) -> a
+    boolean areEqual(byte[],byte[]) -> b
+    boolean constantTimeAreEqual(byte[],byte[]) -> c
+    boolean areEqual(int[],int[]) -> a
+    boolean contains(short[],short) -> a
+    boolean contains(int[],int) -> a
+    void fill(byte[],byte) -> a
+    int hashCode(byte[]) -> a
+    byte[] clone(byte[]) -> a
+    int[] clone(int[]) -> a
+    byte[] copyOfRange(byte[],int,int) -> b
+    java.lang.String toLowerCase(java.lang.String) -> b
+    byte[] toByteArray(java.lang.String) -> a
+    java.lang.String fromByteArray(byte[]) -> b
+    char[] asCharArray(byte[]) -> a
+org.bouncycastle.math.ec.ECConstants -> org.a.c.a.b:
     java.math.BigInteger ZERO -> a
     java.math.BigInteger ONE -> b
     java.math.BigInteger TWO -> c
     java.math.BigInteger THREE -> d
-org.bouncycastle.math.ec.ECCurve -> org.a.c.a.b:
+org.bouncycastle.math.ec.ECCurve -> org.a.c.a.c:
     org.bouncycastle.math.ec.ECFieldElement a -> a
     org.bouncycastle.math.ec.ECFieldElement b -> b
+    int coord -> a
+    org.bouncycastle.math.ec.ECMultiplier multiplier -> a
     int getFieldSize() -> a
     org.bouncycastle.math.ec.ECFieldElement fromBigInteger(java.math.BigInteger) -> a
-    org.bouncycastle.math.ec.ECPoint createPoint$7d50fcbc(java.math.BigInteger,java.math.BigInteger) -> a
+    org.bouncycastle.math.ec.ECPoint createPoint(java.math.BigInteger,java.math.BigInteger,boolean) -> a
+    org.bouncycastle.math.ec.ECPoint createRawPoint(org.bouncycastle.math.ec.ECFieldElement,org.bouncycastle.math.ec.ECFieldElement,boolean) -> a
+    org.bouncycastle.math.ec.ECMultiplier createDefaultMultiplier() -> a
+    org.bouncycastle.crypto.CipherParameters getPreCompInfo$2952934d(org.bouncycastle.math.ec.ECPoint) -> a
+    void setPreCompInfo$3399af4b(org.bouncycastle.math.ec.ECPoint,org.bouncycastle.crypto.CipherParameters) -> a
+    org.bouncycastle.math.ec.ECPoint importPoint(org.bouncycastle.math.ec.ECPoint) -> a
+    void normalizeAll(org.bouncycastle.math.ec.ECPoint[]) -> a
     org.bouncycastle.math.ec.ECPoint getInfinity() -> a
     org.bouncycastle.math.ec.ECFieldElement getA() -> a
     org.bouncycastle.math.ec.ECFieldElement getB() -> b
+    int getCoordinateSystem() -> b
     org.bouncycastle.math.ec.ECPoint decompressPoint(int,java.math.BigInteger) -> a
+    org.bouncycastle.math.ec.ECMultiplier getMultiplier() -> b
     org.bouncycastle.math.ec.ECPoint decodePoint(byte[]) -> a
-    java.math.BigInteger fromArray(byte[],int,int) -> a
-org.bouncycastle.math.ec.ECCurve$F2m -> org.a.c.a.c:
-    int m -> a
-    int k1 -> b
-    int k2 -> c
-    int k3 -> d
+    void checkPoint(org.bouncycastle.math.ec.ECPoint) -> a
+org.bouncycastle.math.ec.ECCurve$F2m -> org.a.c.a.d:
+    int m -> b
+    int k1 -> c
+    int k2 -> d
+    int k3 -> e
     java.math.BigInteger n -> a
     java.math.BigInteger h -> b
     org.bouncycastle.math.ec.ECPoint$F2m infinity -> a
     byte mu -> a
     java.math.BigInteger[] si -> a
+    org.bouncycastle.math.ec.ECMultiplier createDefaultMultiplier() -> a
     int getFieldSize() -> a
     org.bouncycastle.math.ec.ECFieldElement fromBigInteger(java.math.BigInteger) -> a
-    org.bouncycastle.math.ec.ECPoint createPoint$7d50fcbc(java.math.BigInteger,java.math.BigInteger) -> a
+    org.bouncycastle.math.ec.ECPoint createPoint(java.math.BigInteger,java.math.BigInteger,boolean) -> a
+    org.bouncycastle.math.ec.ECPoint createRawPoint(org.bouncycastle.math.ec.ECFieldElement,org.bouncycastle.math.ec.ECFieldElement,boolean) -> a
     org.bouncycastle.math.ec.ECPoint getInfinity() -> a
     boolean isKoblitz() -> a
     byte getMu() -> a
@@ -3768,137 +3991,185 @@ org.bouncycastle.math.ec.ECCurve$F2m -> org.a.c.a.c:
     org.bouncycastle.math.ec.ECPoint decompressPoint(int,java.math.BigInteger) -> a
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-    int getM() -> b
-    int getK1() -> c
-    int getK2() -> d
-    int getK3() -> e
+    int getM() -> c
+    int getK1() -> d
+    int getK2() -> e
+    int getK3() -> f
     java.math.BigInteger getH() -> a
-org.bouncycastle.math.ec.ECCurve$Fp -> org.a.c.a.d:
+org.bouncycastle.math.ec.ECCurve$Fp -> org.a.c.a.e:
     java.math.BigInteger q -> a
+    java.math.BigInteger r -> b
     org.bouncycastle.math.ec.ECPoint$Fp infinity -> a
     java.math.BigInteger getQ() -> a
     int getFieldSize() -> a
     org.bouncycastle.math.ec.ECFieldElement fromBigInteger(java.math.BigInteger) -> a
-    org.bouncycastle.math.ec.ECPoint createPoint$7d50fcbc(java.math.BigInteger,java.math.BigInteger) -> a
+    org.bouncycastle.math.ec.ECPoint createRawPoint(org.bouncycastle.math.ec.ECFieldElement,org.bouncycastle.math.ec.ECFieldElement,boolean) -> a
+    org.bouncycastle.math.ec.ECPoint importPoint(org.bouncycastle.math.ec.ECPoint) -> a
     org.bouncycastle.math.ec.ECPoint decompressPoint(int,java.math.BigInteger) -> a
     org.bouncycastle.math.ec.ECPoint getInfinity() -> a
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-org.bouncycastle.math.ec.ECFieldElement -> org.a.c.a.e:
+org.bouncycastle.math.ec.ECFieldElement -> org.a.c.a.f:
     java.math.BigInteger toBigInteger() -> a
     int getFieldSize() -> a
     org.bouncycastle.math.ec.ECFieldElement add(org.bouncycastle.math.ec.ECFieldElement) -> a
+    org.bouncycastle.math.ec.ECFieldElement addOne() -> a
     org.bouncycastle.math.ec.ECFieldElement subtract(org.bouncycastle.math.ec.ECFieldElement) -> b
     org.bouncycastle.math.ec.ECFieldElement multiply(org.bouncycastle.math.ec.ECFieldElement) -> c
     org.bouncycastle.math.ec.ECFieldElement divide(org.bouncycastle.math.ec.ECFieldElement) -> d
-    org.bouncycastle.math.ec.ECFieldElement negate() -> a
-    org.bouncycastle.math.ec.ECFieldElement square() -> b
-    org.bouncycastle.math.ec.ECFieldElement invert() -> c
-    org.bouncycastle.math.ec.ECFieldElement sqrt() -> d
+    org.bouncycastle.math.ec.ECFieldElement negate() -> b
+    org.bouncycastle.math.ec.ECFieldElement square() -> c
+    org.bouncycastle.math.ec.ECFieldElement invert() -> d
+    org.bouncycastle.math.ec.ECFieldElement sqrt() -> e
+    int bitLength() -> b
+    boolean isZero() -> a
+    boolean testBitZero() -> b
     java.lang.String toString() -> toString
-org.bouncycastle.math.ec.ECFieldElement$F2m -> org.a.c.a.f:
+    byte[] getEncoded() -> a
+org.bouncycastle.math.ec.ECFieldElement$F2m -> org.a.c.a.g:
     int representation -> a
     int m -> b
-    int k1 -> c
-    int k2 -> d
-    int k3 -> e
-    org.bouncycastle.math.ec.IntArray x -> a
-    int t -> f
+    int[] ks -> a
+    org.bouncycastle.math.ec.LongArray x -> a
+    int bitLength() -> b
+    boolean isZero() -> a
+    boolean testBitZero() -> b
     java.math.BigInteger toBigInteger() -> a
     int getFieldSize() -> a
     void checkFieldElements(org.bouncycastle.math.ec.ECFieldElement,org.bouncycastle.math.ec.ECFieldElement) -> a
     org.bouncycastle.math.ec.ECFieldElement add(org.bouncycastle.math.ec.ECFieldElement) -> a
+    org.bouncycastle.math.ec.ECFieldElement addOne() -> a
     org.bouncycastle.math.ec.ECFieldElement subtract(org.bouncycastle.math.ec.ECFieldElement) -> b
     org.bouncycastle.math.ec.ECFieldElement multiply(org.bouncycastle.math.ec.ECFieldElement) -> c
     org.bouncycastle.math.ec.ECFieldElement divide(org.bouncycastle.math.ec.ECFieldElement) -> d
-    org.bouncycastle.math.ec.ECFieldElement negate() -> a
-    org.bouncycastle.math.ec.ECFieldElement square() -> b
-    org.bouncycastle.math.ec.ECFieldElement invert() -> c
-    org.bouncycastle.math.ec.ECFieldElement sqrt() -> d
+    org.bouncycastle.math.ec.ECFieldElement negate() -> b
+    org.bouncycastle.math.ec.ECFieldElement square() -> c
+    org.bouncycastle.math.ec.ECFieldElement invert() -> d
+    org.bouncycastle.math.ec.ECFieldElement sqrt() -> e
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-org.bouncycastle.math.ec.ECFieldElement$Fp -> org.a.c.a.g:
-    java.math.BigInteger x -> e
-    java.math.BigInteger q -> f
+org.bouncycastle.math.ec.ECFieldElement$Fp -> org.a.c.a.h:
+    java.math.BigInteger q -> e
+    java.math.BigInteger r -> f
+    java.math.BigInteger x -> g
+    java.math.BigInteger calculateResidue(java.math.BigInteger) -> a
     java.math.BigInteger toBigInteger() -> a
     int getFieldSize() -> a
     org.bouncycastle.math.ec.ECFieldElement add(org.bouncycastle.math.ec.ECFieldElement) -> a
+    org.bouncycastle.math.ec.ECFieldElement addOne() -> a
     org.bouncycastle.math.ec.ECFieldElement subtract(org.bouncycastle.math.ec.ECFieldElement) -> b
     org.bouncycastle.math.ec.ECFieldElement multiply(org.bouncycastle.math.ec.ECFieldElement) -> c
     org.bouncycastle.math.ec.ECFieldElement divide(org.bouncycastle.math.ec.ECFieldElement) -> d
-    org.bouncycastle.math.ec.ECFieldElement negate() -> a
-    org.bouncycastle.math.ec.ECFieldElement square() -> b
-    org.bouncycastle.math.ec.ECFieldElement invert() -> c
-    org.bouncycastle.math.ec.ECFieldElement sqrt() -> d
-    java.math.BigInteger[] lucasSequence(java.math.BigInteger,java.math.BigInteger,java.math.BigInteger,java.math.BigInteger) -> a
+    org.bouncycastle.math.ec.ECFieldElement negate() -> b
+    org.bouncycastle.math.ec.ECFieldElement square() -> c
+    org.bouncycastle.math.ec.ECFieldElement invert() -> d
+    org.bouncycastle.math.ec.ECFieldElement sqrt() -> e
+    java.math.BigInteger[] lucasSequence(java.math.BigInteger,java.math.BigInteger,java.math.BigInteger) -> a
+    java.math.BigInteger modDouble(java.math.BigInteger) -> b
+    java.math.BigInteger modMult(java.math.BigInteger,java.math.BigInteger) -> a
+    java.math.BigInteger modReduce(java.math.BigInteger) -> c
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-org.bouncycastle.math.ec.ECMultiplier -> org.a.c.a.h:
-    org.bouncycastle.math.ec.ECPoint multiply(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger,org.bouncycastle.math.ec.PreCompInfo) -> a
-org.bouncycastle.math.ec.ECPoint -> org.a.c.a.i:
+org.bouncycastle.math.ec.ECMultiplier -> org.a.c.a.i:
+    org.bouncycastle.math.ec.ECPoint multiply(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger) -> a
+    org.bouncycastle.math.ec.ECPoint multiplyPositive(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger) -> b
+org.bouncycastle.math.ec.ECPoint -> org.a.c.a.j:
+    org.bouncycastle.math.ec.ECFieldElement[] EMPTY_ZS -> b
     org.bouncycastle.math.ec.ECCurve curve -> a
     org.bouncycastle.math.ec.ECFieldElement x -> a
     org.bouncycastle.math.ec.ECFieldElement y -> b
+    org.bouncycastle.math.ec.ECFieldElement[] zs -> a
     boolean withCompression -> a
-    org.bouncycastle.math.ec.ECMultiplier multiplier -> a
-    org.bouncycastle.math.ec.PreCompInfo preCompInfo -> a
-    org.bouncycastle.asn1.x9.X9IntegerConverter converter -> a
+    org.bouncycastle.crypto.CipherParameters preCompInfo$64215c69 -> a
     org.bouncycastle.math.ec.ECCurve getCurve() -> a
-    org.bouncycastle.math.ec.ECFieldElement getX() -> a
-    org.bouncycastle.math.ec.ECFieldElement getY() -> b
-    boolean isInfinity() -> a
-    boolean isCompressed() -> b
+    int getCurveCoordinateSystem() -> a
+    org.bouncycastle.math.ec.ECFieldElement getAffineXCoord() -> a
+    org.bouncycastle.math.ec.ECFieldElement getAffineYCoord() -> b
+    org.bouncycastle.math.ec.ECFieldElement getXCoord() -> c
+    org.bouncycastle.math.ec.ECFieldElement getYCoord() -> d
+    org.bouncycastle.math.ec.ECFieldElement getZCoord(int) -> a
+    org.bouncycastle.math.ec.ECFieldElement getRawXCoord() -> e
+    org.bouncycastle.math.ec.ECFieldElement getRawYCoord() -> f
+    void checkNormalized() -> a
+    boolean isNormalized() -> a
+    org.bouncycastle.math.ec.ECPoint normalize() -> a
+    org.bouncycastle.math.ec.ECPoint normalize(org.bouncycastle.math.ec.ECFieldElement) -> a
+    org.bouncycastle.math.ec.ECPoint createScaledPoint(org.bouncycastle.math.ec.ECFieldElement,org.bouncycastle.math.ec.ECFieldElement) -> a
+    boolean isInfinity() -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-    void setPreCompInfo(org.bouncycastle.math.ec.PreCompInfo) -> a
+    java.lang.String toString() -> toString
     byte[] getEncoded() -> a
     byte[] getEncoded(boolean) -> a
+    boolean getCompressionYTilde() -> c
     org.bouncycastle.math.ec.ECPoint add(org.bouncycastle.math.ec.ECPoint) -> a
+    org.bouncycastle.math.ec.ECPoint negate() -> b
     org.bouncycastle.math.ec.ECPoint subtract(org.bouncycastle.math.ec.ECPoint) -> b
-    org.bouncycastle.math.ec.ECPoint negate() -> a
-    org.bouncycastle.math.ec.ECPoint twice() -> b
-    void assertECMultiplier() -> a
+    org.bouncycastle.math.ec.ECPoint twice() -> c
+    org.bouncycastle.math.ec.ECPoint twicePlus(org.bouncycastle.math.ec.ECPoint) -> c
+    org.bouncycastle.math.ec.ECPoint threeTimes() -> d
     org.bouncycastle.math.ec.ECPoint multiply(java.math.BigInteger) -> a
-    org.bouncycastle.asn1.x9.X9IntegerConverter access$000() -> a
-org.bouncycastle.math.ec.ECPoint$F2m -> org.a.c.a.j:
-    byte[] getEncoded(boolean) -> a
+org.bouncycastle.math.ec.ECPoint$F2m -> org.a.c.a.k:
+    org.bouncycastle.math.ec.ECFieldElement getYCoord() -> d
+    boolean getCompressionYTilde() -> c
     void checkPoints(org.bouncycastle.math.ec.ECPoint,org.bouncycastle.math.ec.ECPoint) -> a
     org.bouncycastle.math.ec.ECPoint add(org.bouncycastle.math.ec.ECPoint) -> a
     org.bouncycastle.math.ec.ECPoint$F2m addSimple(org.bouncycastle.math.ec.ECPoint$F2m) -> a
     org.bouncycastle.math.ec.ECPoint subtract(org.bouncycastle.math.ec.ECPoint) -> b
     org.bouncycastle.math.ec.ECPoint$F2m subtractSimple(org.bouncycastle.math.ec.ECPoint$F2m) -> b
-    org.bouncycastle.math.ec.ECPoint twice() -> b
-    org.bouncycastle.math.ec.ECPoint negate() -> a
-    void assertECMultiplier() -> a
-org.bouncycastle.math.ec.ECPoint$Fp -> org.a.c.a.k:
-    byte[] getEncoded(boolean) -> a
+    org.bouncycastle.math.ec.ECPoint$F2m tau() -> a
+    org.bouncycastle.math.ec.ECPoint twice() -> c
+    org.bouncycastle.math.ec.ECPoint twicePlus(org.bouncycastle.math.ec.ECPoint) -> c
+    org.bouncycastle.math.ec.ECPoint negate() -> b
+org.bouncycastle.math.ec.ECPoint$Fp -> org.a.c.a.l:
+    boolean getCompressionYTilde() -> c
+    org.bouncycastle.math.ec.ECFieldElement getZCoord(int) -> a
     org.bouncycastle.math.ec.ECPoint add(org.bouncycastle.math.ec.ECPoint) -> a
-    org.bouncycastle.math.ec.ECPoint twice() -> b
+    org.bouncycastle.math.ec.ECPoint twice() -> c
+    org.bouncycastle.math.ec.ECPoint twicePlus(org.bouncycastle.math.ec.ECPoint) -> c
+    org.bouncycastle.math.ec.ECPoint threeTimes() -> d
+    org.bouncycastle.math.ec.ECFieldElement three(org.bouncycastle.math.ec.ECFieldElement) -> a
+    org.bouncycastle.math.ec.ECFieldElement eight(org.bouncycastle.math.ec.ECFieldElement) -> b
+    org.bouncycastle.math.ec.ECFieldElement doubleProductFromSquares(org.bouncycastle.math.ec.ECFieldElement,org.bouncycastle.math.ec.ECFieldElement,org.bouncycastle.math.ec.ECFieldElement,org.bouncycastle.math.ec.ECFieldElement) -> a
     org.bouncycastle.math.ec.ECPoint subtract(org.bouncycastle.math.ec.ECPoint) -> b
-    org.bouncycastle.math.ec.ECPoint negate() -> a
-    void assertECMultiplier() -> a
-org.bouncycastle.math.ec.FpNafMultiplier -> org.a.c.a.l:
-    org.bouncycastle.math.ec.ECPoint multiply(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger,org.bouncycastle.math.ec.PreCompInfo) -> a
-org.bouncycastle.math.ec.IntArray -> org.a.c.a.m:
-    int[] m_ints -> a
+    org.bouncycastle.math.ec.ECPoint negate() -> b
+    org.bouncycastle.math.ec.ECFieldElement calculateJacobianModifiedW(org.bouncycastle.math.ec.ECFieldElement,org.bouncycastle.math.ec.ECFieldElement) -> a
+    org.bouncycastle.math.ec.ECFieldElement getJacobianModifiedW() -> g
+    org.bouncycastle.math.ec.ECPoint$Fp twiceJacobianModified(boolean) -> a
+org.bouncycastle.math.ec.LongArray -> org.a.c.a.m:
+    int[] INTERLEAVE2_TABLE -> a
+    byte[] bitLengths -> a
+    long[] m_ints -> a
     boolean isZero() -> a
     int getUsedLength() -> b
-    int bitLength() -> a
-    int[] resizedInts(int) -> a
+    int degree() -> a
+    int degreeFrom(int) -> a
+    int bitLength(long) -> a
+    long[] resizedInts(int) -> a
     java.math.BigInteger toBigInteger() -> a
-    org.bouncycastle.math.ec.IntArray shiftLeft(int) -> a
-    void addShifted(org.bouncycastle.math.ec.IntArray,int) -> a
-    void flipBit(int) -> b
-    void setBit(int) -> a
-    org.bouncycastle.math.ec.IntArray multiply(org.bouncycastle.math.ec.IntArray,int) -> a
-    void reduce(int,int[]) -> a
-    org.bouncycastle.math.ec.IntArray square(int) -> b
+    long shiftUp(long[],int,long[],int,int,int) -> a
+    org.bouncycastle.math.ec.LongArray addOne() -> a
+    void addShiftedByBitsSafe(org.bouncycastle.math.ec.LongArray,int,int) -> a
+    long addShiftedUp(long[],int,long[],int,int,int) -> b
+    void addShiftedByWords$78569442(org.bouncycastle.math.ec.LongArray) -> a
+    void add(long[],int,long[],int,int) -> a
+    void flipWord$748c5120(long[],int,long) -> a
+    boolean testBitZero() -> b
+    void flipBit$1c88ab9c(long[],int) -> a
+    org.bouncycastle.math.ec.LongArray modMultiply(org.bouncycastle.math.ec.LongArray,int,int[]) -> a
+    org.bouncycastle.math.ec.LongArray reduceResult$2abbe0f5(long[],int,int,int[]) -> a
+    int reduceInPlace$7d4bee60(long[],int,int,int[]) -> a
+    void reduceBit$7d4bee6d(long[],int,int,int[]) -> a
+    void reduceWord$2cf1b271(long[],int,long,int,int[]) -> a
+    void flipVector$1ae651ab(long[],long[],int,int,int) -> a
+    org.bouncycastle.math.ec.LongArray modSquare(int,int[]) -> a
+    long interleave2_32to64(int) -> a
+    org.bouncycastle.math.ec.LongArray modInverse(int,int[]) -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
     java.lang.Object clone() -> clone
     java.lang.String toString() -> toString
-org.bouncycastle.math.ec.PreCompInfo -> org.a.c.a.n:
-org.bouncycastle.math.ec.SimpleBigDecimal -> org.a.c.a.o:
+org.bouncycastle.math.ec.SimpleBigDecimal -> org.a.c.a.n:
     java.math.BigInteger bigInt -> a
     int scale -> a
     org.bouncycastle.math.ec.SimpleBigDecimal add(org.bouncycastle.math.ec.SimpleBigDecimal) -> a
@@ -3911,7 +4182,7 @@ org.bouncycastle.math.ec.SimpleBigDecimal -> org.a.c.a.o:
     java.lang.String toString() -> toString
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-org.bouncycastle.math.ec.Tnaf -> org.a.c.a.p:
+org.bouncycastle.math.ec.Tnaf -> org.a.c.a.o:
     java.math.BigInteger MINUS_ONE -> a
     java.math.BigInteger MINUS_TWO -> b
     java.math.BigInteger MINUS_THREE -> c
@@ -3928,18 +4199,29 @@ org.bouncycastle.math.ec.Tnaf -> org.a.c.a.p:
     org.bouncycastle.math.ec.ZTauElement partModReduction$278b6536(java.math.BigInteger,int,byte,java.math.BigInteger[],byte) -> a
     byte[] tauAdicWNaf$227fa395(byte,org.bouncycastle.math.ec.ZTauElement,java.math.BigInteger,java.math.BigInteger,org.bouncycastle.math.ec.ZTauElement[]) -> a
     org.bouncycastle.math.ec.ECPoint$F2m[] getPreComp(org.bouncycastle.math.ec.ECPoint$F2m,byte) -> a
-org.bouncycastle.math.ec.WNafMultiplier -> org.a.c.a.q:
-    org.bouncycastle.math.ec.ECPoint multiply(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger,org.bouncycastle.math.ec.PreCompInfo) -> a
-org.bouncycastle.math.ec.WNafPreCompInfo -> org.a.c.a.r:
+org.bouncycastle.math.ec.WNafL2RMultiplier -> org.a.c.a.p:
+    org.bouncycastle.math.ec.ECPoint multiplyPositive(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger) -> b
+org.bouncycastle.math.ec.WNafPreCompInfo -> org.a.c.a.q:
     org.bouncycastle.math.ec.ECPoint[] preComp -> a
+    org.bouncycastle.math.ec.ECPoint[] preCompNeg -> b
     org.bouncycastle.math.ec.ECPoint twiceP -> a
     org.bouncycastle.math.ec.ECPoint[] getPreComp() -> a
+    org.bouncycastle.math.ec.ECPoint[] getPreCompNeg() -> b
     void setPreComp(org.bouncycastle.math.ec.ECPoint[]) -> a
+    void setPreCompNeg(org.bouncycastle.math.ec.ECPoint[]) -> b
     org.bouncycastle.math.ec.ECPoint getTwiceP() -> a
     void setTwiceP(org.bouncycastle.math.ec.ECPoint) -> a
+org.bouncycastle.math.ec.WNafUtil -> org.a.c.a.r:
+    int[] DEFAULT_WINDOW_SIZE_CUTOFFS -> a
+    int[] generateCompactWindowNaf(int,java.math.BigInteger) -> a
+    byte[] generateJSF(java.math.BigInteger,java.math.BigInteger) -> a
+    int getWindowSize(int) -> a
+    org.bouncycastle.math.ec.WNafPreCompInfo precompute$69065e22(org.bouncycastle.math.ec.ECPoint,int) -> a
+    int[] trim(int[],int) -> a
+    org.bouncycastle.math.ec.ECPoint[] resizeTable(org.bouncycastle.math.ec.ECPoint[],int) -> a
 org.bouncycastle.math.ec.WTauNafMultiplier -> org.a.c.a.s:
-    org.bouncycastle.math.ec.ECPoint multiply(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger,org.bouncycastle.math.ec.PreCompInfo) -> a
-    org.bouncycastle.math.ec.ECPoint$F2m multiplyFromWTnaf(org.bouncycastle.math.ec.ECPoint$F2m,byte[],org.bouncycastle.math.ec.PreCompInfo) -> a
+    org.bouncycastle.math.ec.ECPoint multiplyPositive(org.bouncycastle.math.ec.ECPoint,java.math.BigInteger) -> b
+    org.bouncycastle.math.ec.ECPoint$F2m multiplyFromWTnaf$4b213d6f(org.bouncycastle.math.ec.ECPoint$F2m,byte[],org.bouncycastle.crypto.CipherParameters) -> a
 org.bouncycastle.math.ec.WTauNafPreCompInfo -> org.a.c.a.t:
     org.bouncycastle.math.ec.ECPoint$F2m[] preComp -> a
     org.bouncycastle.math.ec.ECPoint$F2m[] getPreComp() -> a
@@ -3951,6 +4233,7 @@ org.bouncycastle.util.BigIntegers -> org.a.d.a:
     byte[] asUnsignedByteArray(java.math.BigInteger) -> a
     byte[] asUnsignedByteArray(int,java.math.BigInteger) -> a
     java.math.BigInteger createRandomInRange(java.math.BigInteger,java.math.BigInteger,java.security.SecureRandom) -> a
+    java.math.BigInteger fromUnsignedByteArray(byte[],int,int) -> a
 org.bouncycastle.util.Memoable -> org.a.d.b:
     org.bouncycastle.util.Memoable copy() -> a
     void reset(org.bouncycastle.util.Memoable) -> a
@@ -3977,6 +4260,13 @@ org.bouncycastle.util.io.Streams -> org.a.d.b.a:
     byte[] readAll(java.io.InputStream) -> a
     int readFully(java.io.InputStream,byte[]) -> a
     void pipeAll(java.io.InputStream,java.io.OutputStream) -> a
+org.bouncycastle.util.io.TeeInputStream -> org.a.d.b.b:
+    java.io.InputStream input -> a
+    java.io.OutputStream output -> a
+    int read(byte[]) -> read
+    int read(byte[],int,int) -> read
+    int read() -> read
+    void close() -> close
 org.w3._2005._03.addressing.AttributedNonNegativeIntegerType -> org.w3._2005._03.addressing.AttributedNonNegativeIntegerType:
     java.math.BigInteger value -> value
     java.util.Map otherAttributes -> otherAttributes

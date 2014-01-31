@@ -334,7 +334,7 @@ public final class ECApiHttpHandler implements HttpHandler {
 		}
 
 		if (pathSecurityParams != null) {
-			pathSecurityParams = pathSecurityParams.replace("<PSK>", "").replace("</PSK>", "");
+			pathSecurityParams = pathSecurityParams.replace("<PSK>", "").replace("</PSK>", "").trim();
 		}
 
 		final Object[] callbackResult = ECardWorker.start(ch,

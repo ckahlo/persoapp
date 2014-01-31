@@ -56,17 +56,15 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * @author ckahlo
  * 
+ * @author ckahlo
  */
 public class EcApi_TCTokenHandler implements ContentHandler {
 
-	private static final String			PARAM_TAG			= "param";
-	private static final String			NAME_ATTR			= "name";
-	private static final String			VALUE_ATTR			= "value";
 	private final Map<String, String>	props				= new HashMap<String, String>();
 
 	private String						currentElementName	= null;
+	private StringBuffer				currentValue;
 
 	public Map<String, String> getProperties() {
 		return props;
@@ -102,21 +100,25 @@ public class EcApi_TCTokenHandler implements ContentHandler {
 
 		if (currentElementName == null) {
 			currentElementName = localName;
+			currentValue = new StringBuffer();
 		}
 	}
 
 	@Override
 	public void endElement(final String uri, final String localName, final String qName) throws SAXException {
 		if (localName.equals(currentElementName)) {
+			if (currentValue != null) {
+				props.put(currentElementName, currentValue.toString().trim());
+				currentValue = null;
+			}
 			currentElementName = null;
 		}
 	}
 
 	@Override
 	public void characters(final char[] ch, final int start, final int length) throws SAXException {
-		if (currentElementName != null) {
-			props.put(currentElementName, new String(ch, start, length));
-			//System.out.println(currentElementName + " = " + props.get(currentElementName));    		
+		if (currentValue != null) {
+			currentValue.append(ch, start, length);
 		}
 	}
 

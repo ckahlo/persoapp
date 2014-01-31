@@ -417,6 +417,7 @@ de.persoapp.core.util.ChunkingInputStream -> de.persoapp.a.e.a:
 de.persoapp.core.util.EcApi_TCTokenHandler -> de.persoapp.a.e.b:
     java.util.Map props -> a
     java.lang.String currentElementName -> a
+    java.lang.StringBuffer currentValue -> a
     java.util.Map getProperties() -> a
     void setDocumentLocator(org.xml.sax.Locator) -> setDocumentLocator
     void startDocument() -> startDocument

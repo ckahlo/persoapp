@@ -47,10 +47,14 @@
  */
 package de.persoapp.core.tls;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 
+import org.bouncycastle.crypto.tls.ExtensionType;
 import org.bouncycastle.crypto.tls.PSKTlsClient;
+import org.bouncycastle.crypto.tls.ProtocolVersion;
 import org.bouncycastle.crypto.tls.TlsAuthentication;
 import org.bouncycastle.crypto.tls.TlsPSKIdentity;
 
@@ -61,6 +65,8 @@ import org.bouncycastle.crypto.tls.TlsPSKIdentity;
 public class TLSPSKClient extends PSKTlsClient {
 
 	private final TlsAuthentication	authentication	= new BCTlsAuthentication();
+
+	private final String			hostname;
 
 	private static final int[]		defaultCS		= new int[] {
 													//
@@ -73,7 +79,7 @@ public class TLSPSKClient extends PSKTlsClient {
 		return defaultCS;
 	}
 
-	public TLSPSKClient(final byte[] pskId, final byte[] pskSecret) {
+	public TLSPSKClient(final String hostname, final byte[] pskId, final byte[] pskSecret) {
 		super(new TlsPSKIdentity() {
 			@Override
 			public void skipIdentityHint() {
@@ -94,11 +100,21 @@ public class TLSPSKClient extends PSKTlsClient {
 				return pskSecret;
 			}
 		});
+		this.hostname = hostname;
+	}
+
+	public TLSPSKClient(final byte[] pskId, final byte[] pskSecret) {
+		this(null, pskId, pskSecret);
 	}
 
 	@Override
 	public TlsAuthentication getAuthentication() throws IOException {
 		return this.authentication;
+	}
+
+	@Override
+	public ProtocolVersion getMinimumVersion() {
+		return ProtocolVersion.TLSv11;
 	}
 
 	@Override
@@ -109,7 +125,27 @@ public class TLSPSKClient extends PSKTlsClient {
 			clientExtensions = new Hashtable<Integer, byte[]>();
 		}
 
-		// clientExtensions.put(ExtensionType.server_name, new byte[] { 0x00, 0x00 });
+		final ByteArrayOutputStream extBaos = new ByteArrayOutputStream();
+		final DataOutputStream extOS = new DataOutputStream(extBaos);
+
+		if (this.hostname != null) {
+			final byte[] hostnameBytes = this.hostname.getBytes();
+			final int snl = hostnameBytes.length;
+
+			// OpenSSL breaks if an extension with length "0" sent, they expect at least
+			// an entry with length "0"
+			extOS.writeShort(snl == 0 ? 0 : snl + 3); // entry size
+			if (snl > 0) {
+				extOS.writeByte(0); // name type = hostname
+				extOS.writeShort(snl); // name size
+				if (snl > 0) {
+					extOS.write(hostnameBytes);
+				}
+			}
+
+			extOS.close();
+			clientExtensions.put(ExtensionType.server_name, extBaos.toByteArray());
+		}
 
 		return clientExtensions;
 	}

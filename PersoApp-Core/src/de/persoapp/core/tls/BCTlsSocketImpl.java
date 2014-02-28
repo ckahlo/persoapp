@@ -79,11 +79,12 @@ public final class BCTlsSocketImpl extends SSLSocket {
 		tls = new TlsClientProtocol(netSocket.getInputStream(), netSocket.getOutputStream());
 		final byte[][] pskParams = factory.getPSKParameters();
 
+		final String hostname = netSocket.getInetAddress().getCanonicalHostName();
 		if (!serverMode) {
 			if (pskParams != null) {
-				peerHandler = new TLSPSKClient(pskParams[0], pskParams[1]);
+				peerHandler = new TLSPSKClient(hostname, pskParams[0], pskParams[1]);
 			} else {
-				peerHandler = new TLSClient();
+				peerHandler = new TLSClient(hostname);
 			}
 
 			((TlsClientProtocol) tls).connect((TlsClient) peerHandler);

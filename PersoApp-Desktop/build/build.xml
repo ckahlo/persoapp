@@ -6,11 +6,10 @@
     <target name="create_run_jar" depends="compile">
         
         <!-- refactor? would require some current SVN installation in the path -->
-        <!--
         <exec executable="svn" output="svn.properties">
 			<arg value="info" />
 		</exec>
-		-->
+
 		<property prefix="svn" file="svn.properties" />
 
 		<propertyfile file="version.properties" comment="Build version info">

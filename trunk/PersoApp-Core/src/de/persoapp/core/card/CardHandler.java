@@ -179,15 +179,17 @@ public class CardHandler implements ICardHandler {
 	public TransportProvider getECard() {
 		if (this.tp0 != null) {
 			final CardChannel cc = (CardChannel) tp0.getParent();
-			try {
-				// send 00 00 00 00 command to card to test connection
-				// XXX: exchange with DF AID_NPA for selection ...
-				if (cc.transmit(new CommandAPDU(new byte[4])) != null) {
-					return this.tp0;
+			if (cc != null) {
+				try {
+					// send 00 00 00 00 command to card to test connection
+					// exchange with DF AID_NPA for selection ...
+					if (cc.transmit(new CommandAPDU(new byte[4])) != null) {
+						return this.tp0;
+					}
+				} catch (final CardException e) {
+					this.tp0 = null;
+					e.printStackTrace();
 				}
-			} catch (final CardException e) {
-				this.tp0 = null;
-				e.printStackTrace();
 			}
 		}
 
@@ -195,6 +197,21 @@ public class CardHandler implements ICardHandler {
 		try {
 			tpNew = JSCIOTransport.open(Hex.fromString(AID_NPA));
 		} catch (final Exception e) {
+		}
+
+		if (tpNew == null) {
+			tpNew = PersoSimTransport.getInstance("localhost", 9876);
+
+			if (tpNew != null) {
+				final byte[] aid = Hex.fromString(AID_NPA);
+				final byte[] selectAID = { (byte) 0x00, (byte) 0xA4, (byte) 0x04, (byte) 0x0C, (byte) aid.length };
+				tpNew.transmit(ArrayTool.arrayconcat(selectAID, aid));
+				if (tpNew.lastSW() == 0x9000 || tpNew.lastSW() == 0x6982) {
+					//	tpNew = tpNew;
+				} else {
+					tpNew = null;
+				}
+			}
 		}
 
 		if (tpNew != null) {

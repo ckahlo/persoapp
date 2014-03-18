@@ -50,18 +50,33 @@ package de.persoapp.core;
 import iso.std.iso_iec._24727.tech.schema.ChannelHandleType;
 import iso.std.iso_iec._24727.tech.schema.ResponseType;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.security.MessageDigest;
 import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Exchanger;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import de.persoapp.core.card.ICardHandler;
+import de.persoapp.core.client.EAC_Info;
 import de.persoapp.core.client.ECardSession;
 import de.persoapp.core.client.IMainView;
 import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.core.paos.PAOSInitiator;
+import de.persoapp.core.util.ArrayTool;
+import de.persoapp.core.util.Hex;
+import de.persoapp.core.util.Util;
 import de.persoapp.core.ws.EcAPIProvider;
 import de.persoapp.core.ws.engine.WSContainer;
 
@@ -74,6 +89,13 @@ public final class ECardWorker {
 	 * constants
 	 */
 	private static final String	SCHEME_HTTPS	= "https://";
+
+	private static final String	TLS_PSK_USR		= "SessionIdentifier";
+	private static final String	TLS_PSK_KEY		= "PathSecurity-Parameters";
+	private static final String	TLS_PSK_SVR		= "ServerAddress";
+	private static final String	PATH_PROTOCOL	= "PathSecurity-Protocol";
+	private static final String	PATH_BINDING	= "Binding";
+	private static final String	REFRESH_ADDR	= "RefreshAddress";
 
 	/*
 	 * 
@@ -119,6 +141,210 @@ public final class ECardWorker {
 			ECardWorker.mainView = mainView;
 			ECardWorker.wsCtx = wsCtx;
 			ECardWorker.eCardHandler = eCardHandler;
+		}
+	}
+
+	private static final X509Certificate checkCertificate(final URLConnection uc) throws IOException,
+			URISyntaxException {
+		X509Certificate cert = null;
+		final URI uri = uc.getURL().toURI();
+		if (uc == null
+				|| !(uc instanceof HttpsURLConnection)
+				|| !Util.validateIdentity(
+						cert = (X509Certificate) ((HttpsURLConnection) uc).getServerCertificates()[0], uri)) {
+			throw new IllegalArgumentException("invalid identity: " + uri + " / " + cert);
+		}
+		System.out.println("Read from: " + cert.getSubjectDN().getName());
+
+		return cert;
+	}
+
+	// TODO: continue re-work, clean-up and simplification
+
+	/*
+	 * start an eCardWorker with supplied tcTokenURL
+	 */
+
+	public static final String start(final URL tcTokenURL) throws Exception {
+		final List<Certificate> sourceCerts = new ArrayList<Certificate>();
+		HttpURLConnection uc = null;
+		Map<String, String> params = null;
+
+		URL tc = tcTokenURL;
+
+		while (true) {
+			if (!"https".equalsIgnoreCase(tc.getProtocol())) {
+				throw new IllegalArgumentException("no https-URL");
+			}
+
+			uc = (HttpURLConnection) Util.openURL(tc);
+			// do connect
+			uc.connect();
+			// check certificate after opening connection, beware of Android 4.0.x bug
+			sourceCerts.add(checkCertificate(uc));
+			// read response-code and store it
+			final int responseCode = uc.getResponseCode();
+
+			// check response code
+			if (responseCode == 302 || responseCode == 303 || responseCode == 307) {
+				final String location = uc.getHeaderField("Location");
+				tc = new URL(location);
+				// disconnect for possible re-use of TLS-channel
+				uc.disconnect();
+			} else {
+				break;
+			}
+		}
+
+		if (uc.getResponseCode() == 200) {
+			final String tcData = Util.readStream(uc.getInputStream());
+			// disconnect for possible re-use of TLS-channel
+			uc.disconnect();
+
+			params = Util.getEcApiParams(tcData);
+			if (params != null && params.size() > 0) {
+				return startECardWorker(params, sourceCerts, tcTokenURL.toURI());
+			} else {
+				throw new FileNotFoundException("No parameters");
+			}
+		} else {
+			throw new FileNotFoundException(uc.getResponseCode() + " " + uc.getResponseMessage());
+		}
+	}
+
+	/*
+	 * helper to add params to URI
+	 */
+	private static URI addParam(final URI uri, final String... params) {
+		final StringBuffer uriBuffer = new StringBuffer(uri.toString());
+		boolean first = !uri.toString().contains("?");
+
+		for (final String param : params) {
+			uriBuffer.append((first ? '?' : '&') + param);
+			first = false;
+		}
+
+		return URI.create(uriBuffer.toString());
+	}
+
+	/*
+	 * start eCardWorker with retrieved connection handle parameters
+	 */
+
+	private static String startECardWorker(final Map<String, String> params, final List<Certificate> serverCerts,
+			final URI tcTokenURL) throws Exception {
+
+		System.out.println("Params: " + params);
+
+		/*
+		 * launch ECardWorker thread and wait for terminal authentication
+		 */
+		final ChannelHandleType ch = new ChannelHandleType();
+		ch.setProtocolTerminationPoint(params.get(TLS_PSK_SVR));
+		ch.setSessionIdentifier(params.get(TLS_PSK_USR));
+
+		String pathSecurityParams = params.get(TLS_PSK_KEY);
+		// fix for bos Governikus
+		if (pathSecurityParams == null) {
+			pathSecurityParams = params.get("PathSecurity-Parameter");
+		}
+
+		if (pathSecurityParams != null) {
+			pathSecurityParams = pathSecurityParams.replace("<PSK>", "").replace("</PSK>", "").trim();
+		}
+
+		final Object[] callbackResult = ECardWorker.start(ch,
+				pathSecurityParams != null ? Hex.fromString(pathSecurityParams) : null, tcTokenURL,
+				serverCerts.toArray(new Certificate[0]));
+
+		final Object stateInfo = callbackResult != null && callbackResult.length > 0 ? callbackResult[0] : null;
+
+		URI refreshURI = new URI(params.get(REFRESH_ADDR));
+
+		if (stateInfo == ECardWorker.CALLBACK_RESULT.TA_OK) {
+			final EAC_Info eacInfo = (EAC_Info) callbackResult[1];
+			final byte[][] certHashes = eacInfo.getCertificateHashes();
+			final MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+
+			final URI origin = tcTokenURL.resolve("/");
+
+			while (refreshURI != null && !refreshURI.resolve("/").equals(origin)) {
+				System.out.println("connecting to " + refreshURI);
+				if (!"https".equalsIgnoreCase(refreshURI.getScheme())) {
+					throw new IllegalArgumentException("no https-URL");
+				}
+
+				// open connection to URI
+				final HttpURLConnection uc = (HttpURLConnection) Util.openURL(refreshURI.toURL());
+				// reset refreshURI
+				refreshURI = null;
+				// connect to current URI
+				uc.connect();
+				// check certificate
+				final byte[] certHash = sha256.digest(checkCertificate(uc).getEncoded());
+
+				for (final byte[] cdHash : certHashes) {
+					if (ArrayTool.arrayequal(certHash, cdHash)) {
+						final int responseCode = uc.getResponseCode();
+						if (responseCode == 302 || responseCode == 303 || responseCode == 307) {
+							// set new value
+							refreshURI = new URL(uc.getHeaderField("Location")).toURI();
+							// disconnect for possible re-use of TLS-channel
+							uc.disconnect();
+
+							continue;
+						}
+
+						System.out.println("cert matched, wrong status code: " + responseCode);
+					}
+					System.out.println("cert didn't match");
+				}
+			}
+
+			if (refreshURI != null) {
+				// open connection to URI
+				final HttpURLConnection uc = (HttpURLConnection) Util.openURL(refreshURI.toURL());
+				uc.connect();
+				// check certificate
+				try {
+					final X509Certificate cert = checkCertificate(uc);
+					// disconnect after certificate check, don't read
+					uc.disconnect();
+
+					System.out.println("### valid identity");
+					final byte[] certHash = sha256.digest(cert.getEncoded());
+					for (final byte[] cdHash : certHashes) {
+						if (ArrayTool.arrayequal(certHash, cdHash)) {
+							//sendResponse(he, 303, addParam(refreshURI, "ResultMajor=ok"), null);
+							return addParam(refreshURI, "ResultMajor=ok").toString();
+						}
+					}
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
+
+				System.out.println("certificate not matched");
+			}
+
+			final String message = "Fehler bei Weiterleitung.";
+			return message;
+		} else {
+			// XXX: distinguish cancel and subjectURL verification error
+			// cancel = redirect to refreshAdress ( o == null )
+			// verification error = send 400 ( o == false )
+			System.out.println("## cancel / error: stateInfo=" + stateInfo);
+			final Exception e = stateInfo instanceof Exception ? (Exception) stateInfo : null;
+
+			final String message = "Error\n" + (e != null ? e.toString() : "Authentisierung abgebrochen");
+			System.out.println(message);
+
+			// (strictMode && subjectURL verification failed) || TAVerification failed
+			if (stateInfo instanceof Boolean && (Boolean) stateInfo == false) {
+				final String _msg = "Terminal Authentication oder subject-URL Verification fehlgeschlagen.";
+				return message;
+			} else {
+				return addParam(refreshURI, "ResultMajor=error").toString();
+			}
 		}
 	}
 

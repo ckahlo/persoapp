@@ -47,36 +47,19 @@
  */
 package de.persoapp.core;
 
-import iso.std.iso_iec._24727.tech.schema.ChannelHandleType;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLDecoder;
-import java.security.MessageDigest;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import de.persoapp.core.client.EAC_Info;
 import de.persoapp.core.client.PropertyResolver;
-import de.persoapp.core.util.ArrayTool;
-import de.persoapp.core.util.Hex;
-import de.persoapp.core.util.Util;
 
 /**
  * @author ckahlo
@@ -94,27 +77,6 @@ public final class ECApiHttpHandler implements HttpHandler {
 	private static final String	TC_TOKEN_REQ	= "/eID-Client";
 	private static final String	TC_TOKEN_URL	= "tcTokenURL=";
 
-	private static final String	TLS_PSK_USR		= "SessionIdentifier";
-	private static final String	TLS_PSK_KEY		= "PathSecurity-Parameters";
-	private static final String	TLS_PSK_SVR		= "ServerAddress";
-	private static final String	PATH_PROTOCOL	= "PathSecurity-Protocol";
-	private static final String	PATH_BINDING	= "Binding";
-	private static final String	REFRESH_ADDR	= "RefreshAddress";
-
-	private final X509Certificate checkCertificate(final URLConnection uc) throws IOException, URISyntaxException {
-		X509Certificate cert = null;
-		final URI uri = uc.getURL().toURI();
-		if (uc == null
-				|| !(uc instanceof HttpsURLConnection)
-				|| !Util.validateIdentity(
-						cert = (X509Certificate) ((HttpsURLConnection) uc).getServerCertificates()[0], uri)) {
-			throw new IllegalArgumentException("invalid identity: " + uri + " / " + cert);
-		}
-		System.out.println("Read from: " + cert.getSubjectDN().getName());
-
-		return cert;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -125,7 +87,7 @@ public final class ECApiHttpHandler implements HttpHandler {
 	@Override
 	public final void handle(final HttpExchange he) throws IOException {
 		Throwable exception = null;
-		String tcData = null;
+		final String tcData = null;
 
 		final String requestMethod = he.getRequestMethod();
 		String qs = he.getRequestURI().getQuery();
@@ -158,59 +120,32 @@ public final class ECApiHttpHandler implements HttpHandler {
 			he.close();
 			return;
 		} else if (HTTP_METH_GET.equals(requestMethod)) {
-			try {
-				if (tcTokenURL != null) {
-					final List<Certificate> sourceCerts = new ArrayList<Certificate>();
-					HttpURLConnection uc = null;
-					Map<String, String> params = null;
+			he.getResponseHeaders().add("Server", HTTP_USER_AGENT);
+			he.getResponseHeaders().set("Connection", "close");
+			// he.getResponseHeaders().set("Content-Length", String.valueOf(0));
+			// he.sendResponseHeaders(102, -1);
 
-					URL tc = tcTokenURL;
-
-					while (true) {
-						if (!"https".equalsIgnoreCase(tc.getProtocol())) {
-							throw new IllegalArgumentException("no https-URL");
-						}
-
-						uc = (HttpURLConnection) Util.openURL(tc);
-						// do connect
-						uc.connect();
-						// check certificate after opening connection, beware of Android 4.0.x bug
-						sourceCerts.add(checkCertificate(uc));
-						// read response-code and store it
-						final int responseCode = uc.getResponseCode();
-
-						// check response code
-						if (responseCode == 302 || responseCode == 303 || responseCode == 307) {
-							final String location = uc.getHeaderField("Location");
-							tc = new URL(location);
-							// disconnect for possible re-use of TLS-channel
-							uc.disconnect();
+			URL refreshURL = null;
+			if (tcTokenURL != null) {
+				try {
+					final String result = ECardWorker.start(tcTokenURL);
+					if (result != null) {
+						if (result.toLowerCase().startsWith("https://")) {
+							refreshURL = new URL(result);
+							sendResponse(he, 303, refreshURL.toURI(), null);
 						} else {
-							break;
-						}
-					}
-
-					if (uc.getResponseCode() == 200) {
-						tcData = Util.readStream(uc.getInputStream());
-						// disconnect for possible re-use of TLS-channel
-						uc.disconnect();
-
-						params = Util.getEcApiParams(tcData);
-						if (params != null && params.size() > 0) {
-							startECardWorker(params, sourceCerts, tcTokenURL.toURI(), he);
-							he.close();
-							return;
-						} else {
-							exception = new FileNotFoundException("No parameters");
+							sendResponse(he, 400, null, result);
 						}
 					} else {
-						exception = new FileNotFoundException(uc.getResponseCode() + " " + uc.getResponseMessage());
+						System.out.println("Warning to result!");
+						throw new FileNotFoundException("missing result");
 					}
+				} catch (final Exception e) {
+					e.printStackTrace();
+					exception = e;
 				}
-			} catch (final Exception e) {
-				e.printStackTrace();
-				exception = e;
 			}
+
 		}
 
 		he.getResponseHeaders().add("Content-Type", "text/html");
@@ -307,132 +242,6 @@ public final class ECApiHttpHandler implements HttpHandler {
 	}
 
 	/*
-	 * start eCardWorker with retrieved connection handle parameters
-	 */
-
-	private void startECardWorker(final Map<String, String> params, final List<Certificate> serverCerts,
-			final URI tcTokenURL, final HttpExchange he) throws Exception {
-
-		System.out.println("Params: " + params);
-
-		he.getResponseHeaders().add("Server", HTTP_USER_AGENT);
-		he.getResponseHeaders().set("Connection", "close");
-		// he.getResponseHeaders().set("Content-Length", String.valueOf(0));
-		// he.sendResponseHeaders(102, -1);
-
-		/*
-		 * launch ECardWorker thread and wait for terminal authentication
-		 */
-		final ChannelHandleType ch = new ChannelHandleType();
-		ch.setProtocolTerminationPoint(params.get(TLS_PSK_SVR));
-		ch.setSessionIdentifier(params.get(TLS_PSK_USR));
-
-		String pathSecurityParams = params.get(TLS_PSK_KEY);
-		// fix for bos Governikus
-		if (pathSecurityParams == null) {
-			pathSecurityParams = params.get("PathSecurity-Parameter");
-		}
-
-		if (pathSecurityParams != null) {
-			pathSecurityParams = pathSecurityParams.replace("<PSK>", "").replace("</PSK>", "").trim();
-		}
-
-		final Object[] callbackResult = ECardWorker.start(ch,
-				pathSecurityParams != null ? Hex.fromString(pathSecurityParams) : null, tcTokenURL,
-				serverCerts.toArray(new Certificate[0]));
-
-		final Object stateInfo = callbackResult != null && callbackResult.length > 0 ? callbackResult[0] : null;
-
-		URI refreshURI = new URI(params.get(REFRESH_ADDR));
-
-		if (stateInfo == ECardWorker.CALLBACK_RESULT.TA_OK) {
-			final EAC_Info eacInfo = (EAC_Info) callbackResult[1];
-			final byte[][] certHashes = eacInfo.getCertificateHashes();
-			final MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-
-			final URI origin = tcTokenURL.resolve("/");
-
-			while (refreshURI != null && !refreshURI.resolve("/").equals(origin)) {
-				System.out.println("connecting to " + refreshURI);
-				if (!"https".equalsIgnoreCase(refreshURI.getScheme())) {
-					throw new IllegalArgumentException("no https-URL");
-				}
-
-				// open connection to URI
-				final HttpURLConnection uc = (HttpURLConnection) Util.openURL(refreshURI.toURL());
-				// reset refreshURI
-				refreshURI = null;
-				// connect to current URI
-				uc.connect();
-				// check certificate
-				final byte[] certHash = sha256.digest(checkCertificate(uc).getEncoded());
-
-				for (final byte[] cdHash : certHashes) {
-					if (ArrayTool.arrayequal(certHash, cdHash)) {
-						final int responseCode = uc.getResponseCode();
-						if (responseCode == 302 || responseCode == 303 || responseCode == 307) {
-							// set new value
-							refreshURI = new URL(uc.getHeaderField("Location")).toURI();
-							// disconnect for possible re-use of TLS-channel
-							uc.disconnect();
-
-							continue;
-						}
-
-						System.out.println("cert matched, wrong status code: " + responseCode);
-					}
-					System.out.println("cert didn't match");
-				}
-			}
-
-			if (refreshURI != null) {
-				// open connection to URI
-				final HttpURLConnection uc = (HttpURLConnection) Util.openURL(refreshURI.toURL());
-				uc.connect();
-				// check certificate
-				try {
-					final X509Certificate cert = checkCertificate(uc);
-					// disconnect after certificate check, don't read
-					uc.disconnect();
-
-					System.out.println("### valid identity");
-					final byte[] certHash = sha256.digest(cert.getEncoded());
-					for (final byte[] cdHash : certHashes) {
-						if (ArrayTool.arrayequal(certHash, cdHash)) {
-							sendResponse(he, 303, addParam(refreshURI, "ResultMajor=ok"), null);
-							return;
-						}
-					}
-				} catch (final Exception e) {
-					e.printStackTrace();
-				}
-
-				System.out.println("certificate not matched");
-			}
-
-			final String message = "Fehler bei Weiterleitung.";
-			sendResponse(he, 400, null, message);
-		} else {
-			// XXX: distinguish cancel and subjectURL verification error
-			// cancel = redirect to refreshAdress ( o == null )
-			// verification error = send 400 ( o == false )
-			System.out.println("## cancel / error: stateInfo=" + stateInfo);
-			final Exception e = stateInfo instanceof Exception ? (Exception) stateInfo : null;
-
-			final String message = "Error\n" + (e != null ? e.toString() : "Authentisierung abgebrochen");
-			System.out.println(message);
-
-			// (strictMode && subjectURL verification failed) || TAVerification failed
-			if (stateInfo instanceof Boolean && (Boolean) stateInfo == false) {
-				final String _msg = "Terminal Authentication oder subject-URL Verification fehlgeschlagen.";
-				sendResponse(he, 400, null, _msg);
-			} else {
-				sendResponse(he, 303, addParam(refreshURI, "ResultMajor=error"), null);
-			}
-		}
-	}
-
-	/*
 	 * write response
 	 */
 	private void sendResponse(final HttpExchange he, final int code, final URI refreshURI, final String message)
@@ -462,18 +271,4 @@ public final class ECApiHttpHandler implements HttpHandler {
 		}
 	}
 
-	/*
-	 * helper to add params to URI
-	 */
-	private URI addParam(final URI uri, final String... params) {
-		final StringBuffer uriBuffer = new StringBuffer(uri.toString());
-		boolean first = !uri.toString().contains("?");
-
-		for (final String param : params) {
-			uriBuffer.append((first ? '?' : '&') + param);
-			first = false;
-		}
-
-		return URI.create(uriBuffer.toString());
-	}
 }

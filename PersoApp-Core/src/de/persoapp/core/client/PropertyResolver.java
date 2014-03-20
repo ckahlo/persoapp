@@ -60,149 +60,215 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 /**
- * Bietet statische Methoden für den Zugriff auf Property Dateien und Properties
- * 
- * @author sgruen
- * 
+ * Bietet statische Methoden für den Zugriff auf Property Dateien und Properties (
+ *
+ * @author Ralf Wondratschek
+ *
  */
 public class PropertyResolver {
-	private static final Map<String, Properties>		propertiesCache			= new HashMap<String, Properties>();
 
-	private static final Map<String, ResourceBundle>	resourceBundlesCache	= new HashMap<String, ResourceBundle>();
+    private final Map<String, Properties> mPropertiesMap;
+    private final Map<String, Bundle> mBundleMap;
 
-	/**
-	 * Gibt den Wert einer Property zurück. Als Eingabe wird der Name des Files
-	 * in dem die Property steht und der Name der Property erwartet. Der
-	 * Dateiname ist ohne Dateiendung anzugeben.
-	 * 
-	 * @param file
-	 * @param property
-	 * @return
-	 */
-	public static Properties getProperties(final String fileName) {
-		Properties props = propertiesCache.get(fileName);
+    public PropertyResolver() {
+        mPropertiesMap = new HashMap<String, Properties>();
+        mBundleMap = new HashMap<String, Bundle>();
+    }
 
-		if (props == null) {
-			synchronized (propertiesCache) {
-				if (propertiesCache.get(fileName) == null) {
-					try {
-						props = new Properties();
-						final InputStream in = PropertyResolver.class.getResourceAsStream("/resources/" + fileName);
-						if (in != null) {
-							props.load(new InputStreamReader(in, "UTF-8"));
-							in.close();
-						}
-					} catch (final IOException e) {
-						e.printStackTrace();
-					}
-					propertiesCache.put(fileName, props);
-				}
-			}
-		}
+    public Properties putProperties(String key, Properties properties) {
+        if (key == null) {
+            throw new IllegalArgumentException("The key must not be null!");
+        }
+        return mPropertiesMap.put(key, properties);
+    }
 
-		return props;
-	}
+    public Properties putProperties(String fileName) {
+        if (fileName == null) {
+            throw new IllegalArgumentException("The fileName must not be null!");
+        }
 
-	// XXX: TODO: shall return a null-value or a non-null value?
-	// There is code that reads the config.properties which is irritated with
-	// non-null but invalid values. Implement a second function for this?
-	public static String getProperty(final String file, final String property) {
-		if (file == null || property == null) {
-			return null;
-		}
 
-		final String value = getProperties(file + ".properties").getProperty(property);
-		//		if(value == null) {
-		//			value = "??? " + property + " ???";
-		//		}
-		return value;
-	}
+        InputStream inputStream = null;
+        try {
+            Properties properties = new Properties();
 
-	/*
-	 * use localizable resource bundles under /resources/ tree
-	 */
+            inputStream = PropertyResolver.class.getResourceAsStream(fileName);
+            properties.load(new InputStreamReader(inputStream, "UTF-8"));
+            putProperties(fileName, properties);
 
-	private static ResourceBundle.Control	utf8Control	= new ResourceBundle.Control() {
-															@Override
-															public ResourceBundle newBundle(final String baseName,
-																	final Locale locale, final String format,
-																	final ClassLoader loader, final boolean reload)
-																	throws IllegalAccessException,
-																	InstantiationException, IOException {
+            return properties;
 
-																// The below is a copy of the default implementation.
-																final String bundleName = toBundleName(baseName, locale);
-																final String resourceName = toResourceName(bundleName,
-																		"properties");
-																ResourceBundle bundle = null;
-																InputStream stream = null;
-																if (reload) {
-																	final URL url = loader.getResource(resourceName);
-																	if (url != null) {
-																		final URLConnection connection = url
-																				.openConnection();
-																		if (connection != null) {
-																			connection.setUseCaches(false);
-																			stream = connection.getInputStream();
-																		}
-																	}
-																} else {
-																	stream = loader.getResourceAsStream(resourceName);
-																}
-																if (stream != null) {
-																	try {
-																		// Only this line is changed to make it to read properties files as UTF-8.
-																		bundle = new PropertyResourceBundle(
-																				new InputStreamReader(stream, "UTF-8"));
-																	} finally {
-																		stream.close();
-																	}
-																}
-																return bundle;
-															}
-														};
+        } catch (IOException e) {
+            e.printStackTrace();
 
-	private static ResourceBundle getResourceBundle(final String name) {
-		ResourceBundle resBundle = resourceBundlesCache.get(name);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
 
-		if (resBundle == null) {
-			synchronized (resourceBundlesCache) {
-				if (resourceBundlesCache.get(name) == null) {
-					resBundle = ResourceBundle.getBundle("resources." + name, Locale.getDefault(),
-							PropertyResolver.class.getClassLoader(), utf8Control);
-					resourceBundlesCache.put(name, resBundle);
-				}
-			}
-		}
+        return null;
+    }
 
-		return resBundle;
-	}
+    public Properties getPropertiesAll(String key) {
+        if (key == null) {
+            throw new IllegalArgumentException("The key must not be null!");
+        }
+        return mPropertiesMap.get(key);
+    }
 
-	public static String getString(final String resource, final String key) {
-		if (resource == null || key == null) {
-			return null;
-		}
+    public String getPropertySingle(String key, String concreteProperty) {
+        if (concreteProperty == null) {
+            throw new IllegalArgumentException("The concreteProperty must not be null!");
+        }
+        return getPropertiesAll(key).getProperty(concreteProperty);
+    }
 
-		if (getResourceBundle(resource).getObject(key) == null) {
-			return "??? " + key + " ???";
-		}
+    public Bundle putBundle(String key, Bundle bundle) {
+        if (key == null) {
+            throw new IllegalArgumentException("The key must not be null!");
+        }
+        return mBundleMap.put(key, bundle);
+    }
 
-		return getResourceBundle(resource).getString(key);
-	}
+    public Bundle getBundleAll(String key) {
+        if (key == null) {
+            throw new IllegalArgumentException("The key must not be null!");
+        }
+        return mBundleMap.get(key);
+    }
 
-	public static Bundle getBundle(final String resource) {
-		return new Bundle(getResourceBundle(resource));
-	}
+    public String getBundleString(String key, String concreteString) {
+        if (concreteString == null) {
+            throw new IllegalArgumentException("The concreteString must not be null!");
+        }
+        return getBundleAll(key).get(concreteString);
+    }
 
-	public static class Bundle {
-		private final ResourceBundle	resBundle;
+    /*
+     * Old support interface
+     */
 
-		private Bundle(final ResourceBundle resBundle) {
-			this.resBundle = resBundle;
-		}
+    private static final PropertyResolver DEFAULT_PROPERTY_RESOLVER = new PropertyResolver();
 
-		public String get(final String key) {
-			return this.resBundle.getString(key);
-		}
-	}
+    public static PropertyResolver getDefaultPropertyResolver() {
+        return DEFAULT_PROPERTY_RESOLVER;
+    }
+
+    public static Properties getProperties(final String fileName) {
+        Properties properties = DEFAULT_PROPERTY_RESOLVER.getPropertiesAll(fileName);
+        if (properties == null) {
+            synchronized (DEFAULT_PROPERTY_RESOLVER) {
+                properties = DEFAULT_PROPERTY_RESOLVER.getPropertiesAll(fileName);
+                if (properties == null) {
+                    final String key = "/resources/" + fileName;
+                    DEFAULT_PROPERTY_RESOLVER.putProperties(key);
+                    properties = DEFAULT_PROPERTY_RESOLVER.getPropertiesAll(key);
+                }
+            }
+        }
+
+        return properties;
+    }
+
+    // XXX: TODO: shall return a null-value or a non-null value?
+    // There is code that reads the config.properties which is irritated with
+    // non-null but invalid values. Implement a second function for this?
+    public static String getProperty(final String file, final String property) {
+        Properties properties = getProperties(file + ".properties");
+        return properties == null ? null : properties.getProperty(property);
+    }
+
+    public static Bundle getBundle(String name) {
+        Bundle bundle = DEFAULT_PROPERTY_RESOLVER.getBundleAll(name);
+        if (bundle == null) {
+            synchronized (DEFAULT_PROPERTY_RESOLVER) {
+                bundle = DEFAULT_PROPERTY_RESOLVER.getBundleAll(name);
+                if (bundle == null) {
+                    ResourceBundle resourceBundle = ResourceBundle.getBundle("resources." + name, Locale.getDefault(), PropertyResolver.class.getClassLoader(), UTF8_CONTROL);
+                    bundle = new ResourceBundleImplementation(resourceBundle);
+                    DEFAULT_PROPERTY_RESOLVER.putBundle(name, bundle);
+                }
+            }
+        }
+
+        return bundle;
+    }
+
+    public static String getString(String resource, String key) {
+        Bundle bundle = getBundle(resource);
+        return bundle == null ? null : bundle.get(key);
+    }
+
+    public static interface Bundle {
+        public String get(String key);
+    }
+
+    public static class ResourceBundleImplementation implements Bundle {
+
+        private final ResourceBundle mResourceBundle;
+
+        private ResourceBundleImplementation(ResourceBundle resourceBundle) {
+            if (resourceBundle == null) {
+                throw new IllegalArgumentException("A resource bundle must not be null!");
+            }
+            mResourceBundle = resourceBundle;
+        }
+
+        @Override
+        public String get(String key) {
+            return mResourceBundle.getString(key);
+        }
+    }
+
+    public static class PropertyBundleImplementation implements Bundle {
+
+        private final Properties mProperties;
+
+        public PropertyBundleImplementation(Properties properties) {
+            mProperties = properties;
+        }
+
+        @Override
+        public String get(String key) {
+            return mProperties.getProperty(key);
+        }
+    }
+
+    private static final ResourceBundle.Control UTF8_CONTROL = new ResourceBundle.Control() {
+        @Override
+        public ResourceBundle newBundle(final String baseName, final Locale locale, final String format, final ClassLoader loader, final boolean reload) throws IllegalAccessException, InstantiationException, IOException {
+
+            // The below is a copy of the default implementation.
+            final String bundleName = toBundleName(baseName, locale);
+            final String resourceName = toResourceName(bundleName, "properties");
+            ResourceBundle bundle = null;
+            InputStream stream = null;
+            if (reload) {
+                final URL url = loader.getResource(resourceName);
+                if (url != null) {
+                    final URLConnection connection = url.openConnection();
+                    if (connection != null) {
+                        connection.setUseCaches(false);
+                        stream = connection.getInputStream();
+                    }
+                }
+            } else {
+                stream = loader.getResourceAsStream(resourceName);
+            }
+            if (stream != null) {
+                try {
+                    // Only this line is changed to make it to read properties files as UTF-8.
+                    bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
+                } finally {
+                    stream.close();
+                }
+            }
+
+            return bundle;
+        }
+    };
 }

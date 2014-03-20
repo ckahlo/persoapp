@@ -173,9 +173,9 @@ public final class PersoApp implements Runnable {
 				mainView.shutdown();
 				return;
 			}
-
+			
 			try {
-				final ICardHandler eCardHandler = CardHandler.getInstance(mainView);
+				final ICardHandler eCardHandler = new CardHandler(mainView);
 
 				// view and cardHandler for offline events, pin change, etc.
 				mainView.setEventLister(new MainViewEventListener(eCardHandler, mainView));

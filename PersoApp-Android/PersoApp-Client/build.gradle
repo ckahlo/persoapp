@@ -1,0 +1,21 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.9.1'
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.0.1'
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'https://raw.github.com/vRallev/mvn-repo/master/'
+        }
+        maven {
+            url '../../mvn-repo'
+        }
+    }
+}

@@ -3,4 +3,13 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="card_padding">8dp</dimen>
+    <dimen name="card_padding_inner">8dp</dimen>
+    <dimen name="card_padding_inner_additional">24dp</dimen>
+    <dimen name="card_description_padding">4dp</dimen>
+
+    <dimen name="large_text">20.0sp</dimen>
+    <dimen name="small_text">16.0sp</dimen>
+    <dimen name="stack_title_text">24.0sp</dimen>
+
 </resources>

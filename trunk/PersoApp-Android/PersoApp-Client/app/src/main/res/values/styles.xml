@@ -1,6 +1,67 @@
 <resources>
 
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="CardStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/card_background_selector</item>
+        <item name="android:padding">@dimen/card_padding_inner</item>
+        <item name="android:layout_marginLeft">@dimen/card_padding</item>
+        <item name="android:layout_marginRight">@dimen/card_padding</item>
+    </style>
+
+    <style name="StackTitle">
+        <item name="android:textSize">@dimen/stack_title_text</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/stack_title_text</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+    </style>
+
+    <style name="CardTitle">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">2</item>
+
+        <item name="android:textSize">@dimen/large_text</item>
+        <item name="android:textColor">@color/card_title_text</item>
+
+        <item name="android:layout_marginLeft">12dp</item>
+        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
+    <style name="CardDescription">
+        <item name="android:textSize">@dimen/small_text</item>
+        <item name="android:textColor">@color/card_text_selector</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:lineSpacingMultiplier">0.9</item>
+    </style>
+
+    <style name="CardInnerText">
+        <item name="android:layout_marginLeft">@dimen/card_padding_inner_additional</item>
+        <item name="android:layout_marginRight">@dimen/card_padding_inner_additional</item>
+        <item name="android:textColor">@color/card_text_selector</item>
+        <item name="android:textSize">@dimen/small_text</item>
+    </style>
+
+    <style name="Widget.Button.More" parent="android:Widget.Button">
+        <item name="android:background">@drawable/button_more_selector</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmallInverse</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
+    </style>
+
+    <style name="ButtonBottom">
+        <item name="android:background">@drawable/pin_options_item_background</item>
+        <item name="android:minHeight">?android:attr/actionBarSize</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/button_bottom_text_selector</item>
+        <item name="android:textSize">@dimen/small_text</item>
     </style>
 
 </resources>

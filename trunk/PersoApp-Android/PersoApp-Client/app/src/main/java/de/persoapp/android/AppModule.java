@@ -12,7 +12,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import de.greenrobot.event.EventBus;
-import de.persoapp.android.activity.MainActivity;
 import de.persoapp.android.core.adapter.MainViewFacade;
 import de.persoapp.android.core.adapter.MainViewFragment;
 import de.persoapp.android.core.adapter.NfcTransportProvider;
@@ -29,7 +28,6 @@ import de.persoapp.android.core.adapter.NfcTransportProvider;
         injects = {
                 AppExtension.class,
 
-                MainActivity.class,
                 MainViewFragment.class
         }
 )

@@ -1,15 +1,15 @@
 package de.persoapp.android.core.adapter;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.provider.Browser;
+import android.support.v4.app.Fragment;
 
-import net.vrallev.android.base.BaseActivity;
+import net.vrallev.android.base.BaseActivitySupport;
 import net.vrallev.android.base.LooperMain;
 import net.vrallev.android.base.util.Cat;
 import net.vrallev.android.lib.crouton.extension.CroutonBuilder;
@@ -38,13 +38,13 @@ public class MainViewFragment extends Fragment implements IMainView {
 
     public static final String TAG = "MainViewFragmentTag";
 
-    public static MainViewFragment findOrCreateFragment(BaseActivity activity) {
-        Fragment fragment = activity.getFragmentManager().findFragmentByTag(TAG);
+    public static MainViewFragment findOrCreateFragment(BaseActivitySupport activity) {
+        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(TAG);
 
         if (!(fragment instanceof MainViewFragment)) {
             MainViewFragment mainViewFragment = new MainViewFragment();
             activity.inject(mainViewFragment);
-            activity.getFragmentManager().beginTransaction().add(mainViewFragment, TAG).commit();
+            activity.getSupportFragmentManager().beginTransaction().add(mainViewFragment, TAG).commit();
 
             return mainViewFragment;
         }
@@ -137,7 +137,7 @@ public class MainViewFragment extends Fragment implements IMainView {
     @Override
     @DebugLog
     public boolean showQuestion(String title, String message) {
-        return new QuestionDialog().askForResult((BaseActivity) getActivity(), title, message);
+        return new QuestionDialog().askForResult((BaseActivitySupport) getActivity(), title, message);
     }
 
     @Override

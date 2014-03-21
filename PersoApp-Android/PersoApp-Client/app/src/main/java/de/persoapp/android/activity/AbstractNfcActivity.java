@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import net.vrallev.android.base.BaseActivity;
+import net.vrallev.android.base.BaseActivitySupport;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import de.persoapp.android.view.MenuHelper;
 /**
  * @author Ralf Wondratschek
  */
-public abstract class AbstractNfcActivity extends BaseActivity {
+public abstract class AbstractNfcActivity extends BaseActivitySupport {
 
     @Inject
     protected NfcTransportProvider mNfcTransportProvider;

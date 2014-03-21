@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import net.vrallev.android.base.BaseActivity;
+import net.vrallev.android.base.BaseActivitySupport;
 
 import javax.inject.Inject;
 
@@ -28,12 +28,12 @@ public class ConfirmPinFragment extends PinFragment {
 
     private PinRow mPinRow;
 
-    private BaseActivity mActivity;
+    private BaseActivitySupport mActivity;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = (BaseActivity) activity;
+        mActivity = (BaseActivitySupport) activity;
         mActivity.inject(this);
     }
 

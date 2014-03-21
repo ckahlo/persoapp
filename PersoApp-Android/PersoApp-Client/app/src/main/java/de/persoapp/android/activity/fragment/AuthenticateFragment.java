@@ -1,32 +1,31 @@
-package de.persoapp.android.activity;
+package de.persoapp.android.activity.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import net.vrallev.android.base.BaseActivitySupport;
 import net.vrallev.android.base.view.ViewHelper;
 
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import de.persoapp.android.R;
-import de.persoapp.android.activity.fragment.CurrentPinFragment;
-import de.persoapp.android.activity.fragment.NewPinFragment;
-import de.persoapp.android.activity.fragment.PinFragment;
 import de.persoapp.android.view.PinRow;
 
 /**
  * @author Ralf Wondratschek
- *
- * TODO: move buttons to the top
- *
  */
-public class ActivatePinActivity extends AbstractNfcActivity {
+public class AuthenticateFragment extends Fragment {
 
     @Inject
     EventBus mEventBus;
@@ -38,23 +37,31 @@ public class ActivatePinActivity extends AbstractNfcActivity {
     private View mViewConfirm;
     private View mViewCancel;
 
+    private BaseActivitySupport mActivity;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activate_pin);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity = (BaseActivitySupport) activity;
+        mActivity.inject(this);
+    }
 
-        mFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_authenticate, container, false);
 
-        mViewConfirm = findViewById(R.id.textView_confirm);
+        mFragmentPagerAdapter = new MyFragmentPagerAdapter(getChildFragmentManager());
+
+        mViewConfirm = view.findViewById(R.id.textView_confirm);
         mViewConfirm.setVisibility(View.INVISIBLE);
-//        mViewConfirm.setEnabled(false);
 
-        mViewCancel = findViewById(R.id.textView_cancel);
+        mViewCancel = view.findViewById(R.id.textView_cancel);
 
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mViewPager.setAdapter(mFragmentPagerAdapter);
 
-        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.pagerSlidingTabStrip);
+        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) view.findViewById(R.id.pagerSlidingTabStrip);
         tabStrip.setViewPager(mViewPager);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -63,11 +70,11 @@ public class ActivatePinActivity extends AbstractNfcActivity {
                 switch (v.getId()) {
                     case R.id.textView_confirm:
                         // TODO:
-                        Toast.makeText(ActivatePinActivity.this, "Confirm", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "Confirm", Toast.LENGTH_SHORT).show();
                         break;
 
                     case R.id.textView_cancel:
-                        finish();
+                        mActivity.finish();
                         break;
                 }
             }
@@ -76,27 +83,17 @@ public class ActivatePinActivity extends AbstractNfcActivity {
         mViewConfirm.setOnClickListener(onClickListener);
         mViewCancel.setOnClickListener(onClickListener);
 
-        tabStrip.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                // this is needed for the focus switch
-                if (position == 0) {
-                    mEventBus.unregister(mFragmentPagerAdapter.findFragment(1));
-                } else {
-                    mEventBus.register(mFragmentPagerAdapter.findFragment(1));
-                }
-            }
-        });
+        return view;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         mEventBus.register(this);
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         mEventBus.unregister(this);
         super.onPause();
     }
@@ -104,14 +101,7 @@ public class ActivatePinActivity extends AbstractNfcActivity {
     @SuppressWarnings("UnusedDeclaration")
     public void onEvent(PinRow.InputEvent event) {
         switch (event) {
-            case FINISHED:
-                if (mViewPager.getCurrentItem() == 0) {
-                    mViewPager.setCurrentItem(1);
-                }
-                break;
-
             case NEW_INPUT:
-//                mViewConfirm.setEnabled(isInputComplete());
                 if (isInputComplete() && mViewConfirm.getVisibility() != View.VISIBLE) {
                     ViewHelper.setVisibility(mViewConfirm, View.VISIBLE);
                 } else if (!isInputComplete() && mViewConfirm.getVisibility() == View.VISIBLE) {
@@ -121,8 +111,9 @@ public class ActivatePinActivity extends AbstractNfcActivity {
         }
     }
 
+
     protected boolean isInputComplete() {
-        return mFragmentPagerAdapter.findFragment(0).isInputComplete() && mFragmentPagerAdapter.findFragment(1).isInputComplete();
+        return ((PinFragment) mFragmentPagerAdapter.findFragment(2)).isInputComplete();
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -131,29 +122,33 @@ public class ActivatePinActivity extends AbstractNfcActivity {
             super(fm);
         }
 
-        public PinFragment findFragment(int index) {
-            return (PinFragment) getSupportFragmentManager().findFragmentByTag(makeFragmentName(R.id.viewPager, index));
+        public Fragment findFragment(int index) {
+            return getChildFragmentManager().findFragmentByTag(makeFragmentName(R.id.viewPager, index));
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return getString(R.string.transport_pin);
+                    return getString(R.string.certificate_information);
                 case 1:
-                    return getString(R.string.new_pin);
+                    return getString(R.string.read_data);
+                case 2:
+                    return getString(R.string.pin_enter);
                 default:
                     throw new IndexOutOfBoundsException();
             }
         }
 
         @Override
-        public PinFragment getItem(int position) {
+        public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new CurrentPinFragment();
+                    return new CertificateFragment();
                 case 1:
-                    return new NewPinFragment();
+                    return new DataFragment();
+                case 2:
+                    return new ConfirmPinFragment();
                 default:
                     throw new IndexOutOfBoundsException();
             }
@@ -161,7 +156,7 @@ public class ActivatePinActivity extends AbstractNfcActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
     }
 

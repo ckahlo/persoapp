@@ -15,7 +15,7 @@ dependencies {
 
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
-    compile 'com.android.support:support-v13:+'
+    compile 'com.android.support:support-v4:+'
 
 //    compile 'de.persoapp:persoapp-core:1.0.0-SNAPSHOT'
 }

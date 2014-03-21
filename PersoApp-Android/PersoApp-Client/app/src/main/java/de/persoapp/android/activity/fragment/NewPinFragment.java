@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
-import net.vrallev.android.base.BaseActivity;
+import net.vrallev.android.base.BaseActivitySupport;
 import net.vrallev.android.base.util.Cat;
 
 import javax.inject.Inject;
@@ -23,7 +23,7 @@ import de.persoapp.android.view.PinRow;
  */
 public class NewPinFragment extends PinFragment {
 
-    private BaseActivity mActivity;
+    private BaseActivitySupport mActivity;
 
     private PinRow mPinRow;
     private PinRow mPinRowConfirm;
@@ -34,7 +34,7 @@ public class NewPinFragment extends PinFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = (BaseActivity) activity;
+        mActivity = (BaseActivitySupport) activity;
         mActivity.inject(this);
     }
 

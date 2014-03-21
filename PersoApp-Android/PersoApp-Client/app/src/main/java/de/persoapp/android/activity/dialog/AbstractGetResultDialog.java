@@ -1,11 +1,11 @@
 package de.persoapp.android.activity.dialog;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v4.app.DialogFragment;
 
-import net.vrallev.android.base.BaseActivity;
+import net.vrallev.android.base.BaseActivitySupport;
 import net.vrallev.android.base.util.Cat;
 
 import java.util.concurrent.CountDownLatch;
@@ -34,7 +34,7 @@ public abstract class AbstractGetResultDialog<T> extends DialogFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        ((BaseActivity) activity).inject(this);
+        ((BaseActivitySupport) activity).inject(this);
 
         mEventBus.register(mWaiter);
     }
@@ -95,7 +95,7 @@ public abstract class AbstractGetResultDialog<T> extends DialogFragment {
         }
     }
 
-    public T askForResult(final BaseActivity activity, String title, String message) {
+    public T askForResult(final BaseActivitySupport activity, String title, String message) {
         if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
             throw new IllegalThreadStateException("You are on the UI thread!");
         }

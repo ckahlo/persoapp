@@ -12,4 +12,6 @@
     <dimen name="small_text">16.0sp</dimen>
     <dimen name="stack_title_text">24.0sp</dimen>
 
+    <dimen name="data_field_margin">16dp</dimen>
+
 </resources>

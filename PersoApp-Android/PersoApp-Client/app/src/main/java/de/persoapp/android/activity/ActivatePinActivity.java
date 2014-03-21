@@ -22,6 +22,9 @@ import de.persoapp.android.view.PinRow;
 
 /**
  * @author Ralf Wondratschek
+ *
+ * TODO: move buttons to the top
+ *
  */
 public class ActivatePinActivity extends AbstractNfcActivity {
 
@@ -128,10 +131,6 @@ public class ActivatePinActivity extends AbstractNfcActivity {
             super(fm);
         }
 
-        private String makeFragmentName(int viewId, int index) {
-            return "android:switcher:" + viewId + ":" + index;
-        }
-
         public PinFragment findFragment(int index) {
             return (PinFragment) getFragmentManager().findFragmentByTag(makeFragmentName(R.id.viewPager, index));
         }
@@ -164,5 +163,9 @@ public class ActivatePinActivity extends AbstractNfcActivity {
         public int getCount() {
             return 2;
         }
+    }
+
+    private static String makeFragmentName(int viewId, int index) {
+        return "android:switcher:" + viewId + ":" + index;
     }
 }

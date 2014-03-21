@@ -24,7 +24,8 @@
         <activity
                 android:name="de.persoapp.android.activity.AuthenticateActivity"
                 android:label="@string/app_name"
-                android:launchMode="singleTop">
+                android:launchMode="singleInstance">
+
             <intent-filter>
                 <data
                         android:host="127.0.0.1"
@@ -44,8 +45,8 @@
                 android:label="@string/app_name" />
         <activity
                 android:name="de.persoapp.android.activity.ActivatePinActivity"
-                android:windowSoftInputMode="stateHidden|adjustResize"
-                android:label="@string/app_name" />
+                android:label="@string/app_name"
+                android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
                 android:name="de.persoapp.android.activity.ChangePinActivity"
                 android:label="@string/app_name" />

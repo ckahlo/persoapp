@@ -1,6 +1,7 @@
 package de.persoapp.android.view;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -25,7 +26,8 @@ import de.persoapp.android.R;
 /**
  * @author Ralf Wondratschek
  *
- * TODO: delete
+ * TODO: delete button
+ * TODO: Sony devices fix
  */
 @SuppressWarnings({"UnusedParameters", "UnusedDeclaration"})
 public class PinRow extends LinearLayout {
@@ -82,10 +84,13 @@ public class PinRow extends LinearLayout {
             mEditTexts[i].setOnKeyListener(mOnKeyListener);
             mEditTexts[i].setImeOptions(i < (mEditTexts.length - 1) ? EditorInfo.IME_ACTION_NEXT : EditorInfo.IME_ACTION_DONE);
             mEditTexts[i].addTextChangedListener(mTextWatcher);
+            mEditTexts[i].setRawInputType(Configuration.KEYBOARD_12KEY);
         }
 
         if (context instanceof BaseActivity) {
             ((BaseActivity) context).inject(this);
+        } else if (isInEditMode()) {
+            mEventBus = EventBus.getDefault();
         } else {
             ((AppExtension)context.getApplicationContext()).inject(this);
         }

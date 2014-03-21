@@ -4,15 +4,23 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.Browser;
 
 import net.vrallev.android.base.BaseActivity;
+import net.vrallev.android.base.LooperMain;
 import net.vrallev.android.base.util.Cat;
+import net.vrallev.android.lib.crouton.extension.CroutonBuilder;
 
 import java.net.URL;
 
 import javax.inject.Inject;
 
+import de.keyboardsurfer.android.widget.crouton.Configuration;
+import de.keyboardsurfer.android.widget.crouton.Style;
+import de.persoapp.android.activity.dialog.QuestionDialog;
 import de.persoapp.core.ECardWorker;
 import de.persoapp.core.client.IEAC_Info;
 import de.persoapp.core.client.IMainView;
@@ -21,6 +29,9 @@ import hugo.weaving.DebugLog;
 
 /**
  * @author Ralf Wondratschek
+ *
+ * TODO: add support for intent library
+ *
  */
 @SuppressWarnings("ConstantConditions")
 public class MainViewFragment extends Fragment implements IMainView {
@@ -41,25 +52,25 @@ public class MainViewFragment extends Fragment implements IMainView {
         return (MainViewFragment) fragment;
     }
 
+    @Inject
+    NfcTransportProvider mNfcTransportProvider;
+
+    @Inject
+    @LooperMain
+    Looper mMainLooper;
+
+    private Handler mMainHandler;
+
+    private String mTcTokenUrl;
+    private String mRefreshAddress;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setRetainInstance(true);
+
+        mMainHandler = new MyHandler(mMainLooper);
     }
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setRetainInstance(true);
-////
-////        ((BaseActivity) activity).inject(this);
-//    }
-
-    @Inject
-    NfcTransportProvider mNfcTransportProvider;
-
-    private String mTcTokenUrl;
-    private String mRefreshAddress;
 
     public void setTcTokenUrl(String tcTokenUrl) {
         mTcTokenUrl = tcTokenUrl;
@@ -126,19 +137,34 @@ public class MainViewFragment extends Fragment implements IMainView {
     @Override
     @DebugLog
     public boolean showQuestion(String title, String message) {
-        return false;
+        return new QuestionDialog().askForResult((BaseActivity) getActivity(), title, message);
     }
 
     @Override
     @DebugLog
-    public void showError(String title, String message) {
-
+    public void showError(final String title, final String message) {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                CroutonBuilder.showError(getActivity(), title, message);
+            }
+        });
     }
 
     @Override
     @DebugLog
-    public void showMessage(String msg, int type) {
-
+    public void showMessage(final String msg, int type) {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                new CroutonBuilder(getActivity())
+                        .setColor(Style.holoBlueLight)
+                        .setDuration(Configuration.DURATION_LONG)
+                        .setHideOnClick(true)
+                        .setMessage(msg)
+                        .show();
+            }
+        });
     }
 
     @Override
@@ -198,5 +224,17 @@ public class MainViewFragment extends Fragment implements IMainView {
     @DebugLog
     public void shutdown() {
 
+    }
+
+    private class MyHandler extends Handler {
+
+        public MyHandler(Looper looper) {
+            super(looper);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
     }
 }

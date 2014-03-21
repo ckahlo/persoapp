@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/card_padding"
+        tools:context="de.persoapp.android.activity.AuthenticateActivity">
+
+    <TextView
+            style="@style/StackTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/certificate_service_provider" />
+
+    <TextView
+            android:id="@+id/textView_certificate_service_provider"
+            style="@style/CardDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/card_padding"
+            android:background="@drawable/card_background"
+            android:padding="@dimen/card_padding_inner"
+            tools:text="@string/landing_page_description" />
+
+    <TextView
+            style="@style/StackTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/certificate_issuer" />
+
+    <TextView
+            android:id="@+id/textView_certificate_issuer"
+            style="@style/CardDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/card_padding"
+            android:background="@drawable/card_background"
+            android:padding="@dimen/card_padding_inner"
+            tools:text="@string/landing_page_description" />
+
+</LinearLayout>

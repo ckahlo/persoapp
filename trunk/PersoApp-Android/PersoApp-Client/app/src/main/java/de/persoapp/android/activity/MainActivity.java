@@ -1,7 +1,7 @@
 package de.persoapp.android.activity;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import net.vrallev.android.base.settings.SettingsMgr;
@@ -45,7 +45,7 @@ public class MainActivity extends AbstractNfcActivity {
     }
 
     private void updateContentFragment() {
-        Fragment contentFragment = getFragmentManager().findFragmentById(android.R.id.content);
+        Fragment contentFragment = getSupportFragmentManager().findFragmentById(android.R.id.content);
 
         if (mSettingsMgr.getBoolean(APP_NPA_CAPABLE, false)) {
             if (!(contentFragment instanceof MainFragment)) {

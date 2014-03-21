@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import net.vrallev.android.base.BaseActivity;
+import net.vrallev.android.base.BaseActivitySupport;
 
 import de.persoapp.android.R;
 import de.persoapp.android.activity.dialog.AboutDialog;
@@ -16,9 +16,9 @@ import de.persoapp.android.activity.dialog.AboutDialog;
  */
 public class MenuHelper {
 
-    private final BaseActivity mActivity;
+    private final BaseActivitySupport mActivity;
 
-    public MenuHelper(BaseActivity activity) {
+    public MenuHelper(BaseActivitySupport activity) {
         mActivity = activity;
     }
 

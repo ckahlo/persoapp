@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import net.vrallev.android.base.BaseActivity;
+import net.vrallev.android.base.BaseActivitySupport;
 
 import javax.inject.Inject;
 
@@ -87,8 +87,8 @@ public class PinRow extends LinearLayout {
             mEditTexts[i].setRawInputType(Configuration.KEYBOARD_12KEY);
         }
 
-        if (context instanceof BaseActivity) {
-            ((BaseActivity) context).inject(this);
+        if (context instanceof BaseActivitySupport) {
+            ((BaseActivitySupport) context).inject(this);
         } else if (isInEditMode()) {
             mEventBus = EventBus.getDefault();
         } else {

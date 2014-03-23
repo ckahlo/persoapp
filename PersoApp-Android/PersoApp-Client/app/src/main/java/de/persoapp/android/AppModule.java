@@ -22,6 +22,7 @@ import de.persoapp.android.core.adapter.NfcTransportProvider;
 @SuppressWarnings("UnusedDeclaration")
 @Module(
         overrides = true,
+        library = true,
         includes = {
                 BaseAppModule.class
         },

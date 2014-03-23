@@ -1,12 +1,13 @@
 apply plugin: 'android'
 apply plugin: 'hugo'
+apply plugin: 'jarjar'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile 'de.greenrobot:eventbus:2.0.2'
 
-    compile 'net.vrallev.android.library:android-base:1.4.6'
+    compile 'net.vrallev.android.library:android-base:1.5.0'
     compile 'net.vrallev.android.library:crouton-extension:1.0.3'
 //    compile 'com.facebook.crypto:conceal:1.0.0'
 
@@ -17,7 +18,40 @@ dependencies {
 
     compile 'com.android.support:support-v4:+'
 
-//    compile 'de.persoapp:persoapp-core:1.0.0-SNAPSHOT'
+    jarjar 'de.persoapp:persoapp-core:1.0.0-SNAPSHOT'
+    jarjar 'de.persoapp:persoapp-jaxb:1.0.0-SNAPSHOT'
+    jarjar 'org.bouncycastle:bcprov-jdk15on:1.50'
+    jarjar ('javax.xml.bind:jaxb-api:2.2.1') {
+        exclude module: 'stax-api'
+        exclude module: 'activation'
+    }
+    jarjar ('javax.xml.ws:jaxws-api:2.2') {
+        exclude module: 'jaxb-api'
+        exclude module: 'saaj-api'
+        exclude module: 'jsr250-api'
+        exclude module: 'jsr181-api'
+    }
+    jarjar 'javax.jws:jsr181-api:1.0-MR1'
+    jarjar 'javax.annotation:jsr250-api:1.0'
+}
+
+jarjar {
+    jarJarFile '../../tools/jarjar-1.4.jar'
+
+    rules = [
+            'rule javax.xml.bind.** com.sun.javax.xml.bind.@1',
+            'rule javax.xml.soap.** com.sun.javax.xml.soap.@1',
+            'rule javax.xml.ws.** com.sun.javax.xml.ws.@1',
+            'rule com.sun.xml.bind.** com.sun.xml.internal.bind.@1',
+            'rule org.bouncycastle.** de.persoapp.org.bouncycastle.@1'
+    ]
+
+    srcExcludes = [
+            'META-INF/*.SF',
+            'META-INF/MANIFEST.MF',
+            'META-INF/LICENSE.txt',
+            'javax/xml/ws/wsaddressing/package-info.class'
+    ]
 }
 
 android {

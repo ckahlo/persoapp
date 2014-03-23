@@ -2,8 +2,8 @@ package de.persoapp.android;
 
 import android.app.Activity;
 
-import net.vrallev.android.base.BaseActivitySupport;
 import net.vrallev.android.base.BaseActivityModule;
+import net.vrallev.android.base.BaseActivitySupport;
 
 import javax.inject.Singleton;
 
@@ -26,6 +26,7 @@ import de.persoapp.android.view.PinRow;
  */
 @SuppressWarnings("UnusedDeclaration")
 @Module(
+        addsTo = AppModule.class,
         includes = {
                 BaseActivityModule.class
         },

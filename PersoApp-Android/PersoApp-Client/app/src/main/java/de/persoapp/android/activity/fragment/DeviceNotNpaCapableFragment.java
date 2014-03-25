@@ -14,8 +14,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import de.persoapp.android.R;
-import de.persoapp.android.core.adapter.NfcTransportProvider;
-import de.persoapp.android.nfc.NpaTester;
+import de.persoapp.android.nfc.NfcTester;
 
 /**
  * @author Ralf Wondratschek
@@ -24,9 +23,6 @@ public class DeviceNotNpaCapableFragment extends Fragment {
 
     @Inject
     EventBus mEventBus;
-
-    @Inject
-    NpaTester mNpaTester;
 
     @Override
     public void onAttach(Activity activity) {
@@ -52,10 +48,8 @@ public class DeviceNotNpaCapableFragment extends Fragment {
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(NfcTransportProvider.NfcConnectedEvent event) {
-        boolean result = mNpaTester.testIsoDep(event.getIsoDep());
-
-        if (result) {
+    public void onEventMainThread(NfcTester.NpaCapableEvent event) {
+        if (event.isNpaSupported()) {
             mEventBus.post(new InitializeAppFragment.OnAppInitialized(true));
         } else {
             CroutonBuilder.showError(getActivity(), getString(R.string.test_failed_again));

@@ -52,7 +52,7 @@ public class AuthenticateActivity extends AbstractNfcActivity {
 
         if (savedInstanceState == null) {
 
-            if (!mNpaTester.needsToShowOtherContent(R.id.frameLayout)) {
+            if (!mNfcTester.needsToShowOtherContent(R.id.frameLayout)) {
                 startAuthentication();
             }
 
@@ -90,7 +90,7 @@ public class AuthenticateActivity extends AbstractNfcActivity {
     }
 
     @Override
-    public void onDeviceNpaCapable() {
+    public void onDeviceNfcCapable() {
         startAuthentication();
     }
 

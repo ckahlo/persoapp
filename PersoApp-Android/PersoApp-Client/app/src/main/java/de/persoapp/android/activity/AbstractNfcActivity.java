@@ -17,7 +17,7 @@ import de.persoapp.android.activity.fragment.InitializeAppFragment;
 import de.persoapp.android.core.adapter.MainViewFacade;
 import de.persoapp.android.core.adapter.MainViewFragment;
 import de.persoapp.android.core.adapter.NfcTransportProvider;
-import de.persoapp.android.nfc.NpaTester;
+import de.persoapp.android.nfc.NfcTester;
 import de.persoapp.android.view.MenuHelper;
 
 /**
@@ -38,7 +38,7 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
     protected EventBus mEventBus;
 
     @Inject
-    protected NpaTester mNpaTester;
+    protected NfcTester mNfcTester;
 
     protected MainViewFragment mMainViewFragment;
 
@@ -53,7 +53,7 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
     @Override
     protected void onStart() {
         super.onStart();
-        mEventBus.register(this, InitializeAppFragment.OnAppInitialized.class);
+        mEventBus.register(this, InitializeAppFragment.OnAppInitialized.class, NfcTransportProvider.NfcConnectedEvent.class);
     }
 
     @Override
@@ -70,7 +70,7 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
 
     @Override
     protected void onStop() {
-        mEventBus.unregister(this, InitializeAppFragment.OnAppInitialized.class);
+        mEventBus.unregister(this, InitializeAppFragment.OnAppInitialized.class, NfcTransportProvider.NfcConnectedEvent.class);
         super.onStop();
     }
 
@@ -100,14 +100,19 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
     @SuppressWarnings("UnusedDeclaration")
     public final void onEvent(InitializeAppFragment.OnAppInitialized event) {
         if (event.isSuccess()) {
-            onDeviceNpaCapable();
+            onDeviceNfcCapable();
         } else {
             // content will change to DeviceNotCapableFragment
-            mNpaTester.needsToShowOtherContent();
+            mNfcTester.needsToShowOtherContent();
         }
     }
 
-    public void onDeviceNpaCapable() {
+    @SuppressWarnings("UnusedDeclaration")
+    public final void onEvent(NfcTransportProvider.NfcConnectedEvent event) {
+        mNfcTester.testIsoDep(event.getIsoDep());
+    }
+
+    public void onDeviceNfcCapable() {
         // no op
     }
 }

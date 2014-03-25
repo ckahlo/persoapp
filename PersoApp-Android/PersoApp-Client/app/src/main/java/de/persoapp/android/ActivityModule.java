@@ -14,6 +14,7 @@ import de.persoapp.android.activity.AuthenticateActivity;
 import de.persoapp.android.activity.MainActivity;
 import de.persoapp.android.activity.PinOptionsActivity;
 import de.persoapp.android.activity.dialog.CanDialog;
+import de.persoapp.android.activity.dialog.NfcDeactivatedDialog;
 import de.persoapp.android.activity.dialog.QuestionDialog;
 import de.persoapp.android.activity.fragment.CommonChangePinFragment;
 import de.persoapp.android.activity.fragment.AuthenticateFragment;
@@ -21,7 +22,7 @@ import de.persoapp.android.activity.fragment.ConfirmPinFragment;
 import de.persoapp.android.activity.fragment.DeviceNotNpaCapableFragment;
 import de.persoapp.android.activity.fragment.InitializeAppFragment;
 import de.persoapp.android.activity.fragment.NewPinFragment;
-import de.persoapp.android.nfc.NpaTester;
+import de.persoapp.android.nfc.NfcTester;
 import de.persoapp.android.view.MenuHelper;
 import de.persoapp.android.view.PinRow;
 
@@ -48,9 +49,10 @@ import de.persoapp.android.view.PinRow;
                 InitializeAppFragment.class,
                 CommonChangePinFragment.class,
                 DeviceNotNpaCapableFragment.class,
+                NfcDeactivatedDialog.class,
 
                 PinRow.class,
-                NpaTester.class
+                NfcTester.class
         }
 )
 public class ActivityModule {
@@ -63,7 +65,7 @@ public class ActivityModule {
 
     @Provides
     @Singleton
-    NpaTester provideNpaTester(Activity activity) {
-        return new NpaTester((BaseActivitySupport) activity);
+    NfcTester provideNfcTester(Activity activity) {
+        return new NfcTester((BaseActivitySupport) activity);
     }
 }

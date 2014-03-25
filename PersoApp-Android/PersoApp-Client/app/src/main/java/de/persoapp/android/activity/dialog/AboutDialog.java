@@ -10,10 +10,10 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import de.persoapp.android.BuildConfig;
 import de.persoapp.android.R;
+import de.persoapp.android.activity.LicenseActivity;
 
 /**
  * @author Ralf Wondratschek
@@ -31,14 +31,8 @@ public class AboutDialog extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
-                        Toast.makeText(getActivity(), "Licenses", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getActivity(), LicenseActivity.class));
                         break;
-
-//                    case DialogInterface.BUTTON_NEUTRAL:
-////                        startActivity(new Intent(getActivity(), LicenseActivity.class));
-//                        // TODO: add License view
-//
-//                        break;
                 }
             }
         };
@@ -59,7 +53,7 @@ public class AboutDialog extends DialogFragment {
                 .setTitle(R.string.app_name)
                 .setIcon(R.drawable.ic_launcher)
                 .setView(view)
-                .setNegativeButton(R.string.close, onClickListener)
+                .setNegativeButton(R.string.close, null)
                 .setPositiveButton(R.string.licenses, onClickListener)
                 .create();
     }

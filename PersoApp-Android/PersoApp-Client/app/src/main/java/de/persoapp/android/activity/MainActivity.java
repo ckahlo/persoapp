@@ -15,13 +15,13 @@ public class MainActivity extends AbstractNfcActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState == null && !mNpaTester.needsToShowOtherContent()) {
+        if (savedInstanceState == null && !mNfcTester.needsToShowOtherContent()) {
             updateContentFragment();
         }
     }
 
     @Override
-    public void onDeviceNpaCapable() {
+    public void onDeviceNfcCapable() {
         updateContentFragment();
     }
 

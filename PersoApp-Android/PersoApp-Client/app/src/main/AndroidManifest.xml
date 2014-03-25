@@ -46,6 +46,10 @@
         <activity
                 android:name=".activity.CommonChangePinActivity"
                 android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+                android:name=".activity.LicenseActivity"
+                android:label="@string/licenses"
+                android:parentActivityName=".activity.MainActivity" />
     </application>
 
 </manifest>

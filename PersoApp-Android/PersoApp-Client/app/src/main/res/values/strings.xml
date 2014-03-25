@@ -60,5 +60,13 @@
     <string name="device_not_supported">Ihr Smartphone unterstützt den neuen Personalausweis leider nicht.\n\nHalten Sie Ihren Ausweis erneut an das Smartphone, um den Test neuzustarten.</string>
     <string name="test_again">Erneut testen</string>
     <string name="test_failed_again">Test erneut fehlgeschlagen</string>
+    <string name="action_success">Vorgang erfolgreich</string>
+    <string name="action_failure">Vorgang fehlgeschlagen</string>
+    <string name="nfc_deactivated">NFC abgeschaltet</string>
+    <string name="nfc_deactivated_message">Um diese App nutzen zu können, muss NFC aktiviert sein. Bitte aktivieren Sie NFC in den Einstellungen.</string>
+    <string name="no_nfc">Kein NFC</string>
+    <string name="no_nfc_message">Ihr Gerät hat kein NFC Adapter. Sie können diese App leider nicht verwenden.</string>
+    <string name="tranceive_failed_title">Verbindung unterbrochen</string>
+    <string name="tranceive_failed_message">Die Verbindung wurde unterbrochen. Entfernen Sie Ihren Ausweis und halten Sie ihn erneut an Ihr Smartphone, um den Prozess fortzusetzen.</string>
 
 </resources>

@@ -190,12 +190,21 @@ public class MainViewFragment extends Fragment implements IMainView {
 
     @Override
     public void showMessage(final String msg, final int type) {
+        long time = System.currentTimeMillis();
+        if (mCroutonDismissedTime < time) {
+            mCroutonDismissedTime = time;
+        }
+
+        final int duration = Configuration.DURATION_SHORT;
+
+        mCroutonDismissedTime += duration;
+
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
 
                 CroutonBuilder builder = new CroutonBuilder(getActivity())
-                        .setDuration(Configuration.DURATION_SHORT)
+                        .setDuration(duration)
                         .setHideOnClick(true)
                         .setMessage(msg);
 
@@ -217,12 +226,6 @@ public class MainViewFragment extends Fragment implements IMainView {
                 }
 
                 builder.show();
-
-                long time = System.currentTimeMillis();
-                if (mCroutonDismissedTime < time) {
-                    mCroutonDismissedTime = time;
-                }
-                mCroutonDismissedTime += Configuration.DURATION_SHORT;
             }
         });
     }
@@ -263,12 +266,12 @@ public class MainViewFragment extends Fragment implements IMainView {
                             Cat.d("RefreshAddress == %b, %s", mRefreshAddress.endsWith("Major=ok"), mRefreshAddress);
 
                             startActivity(intent);
-                            if (getActivity() != null) {
-                                getActivity().finish();
-                            }
                         } catch (final Exception e) {
                             Cat.w(e, "Unexpected exception");
                         }
+                    }
+                    if (getActivity() != null) {
+                        getActivity().finish();
                     }
                     break;
             }

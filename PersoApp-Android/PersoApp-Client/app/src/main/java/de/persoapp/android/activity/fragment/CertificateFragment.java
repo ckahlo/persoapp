@@ -20,9 +20,6 @@ import de.persoapp.core.client.IEAC_Info;
 
 /**
  * @author Ralf Wondratschek
- *
- * TODO: finish
- *
  */
 public class CertificateFragment extends Fragment {
 

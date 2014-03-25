@@ -18,18 +18,18 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import de.persoapp.android.R;
-import de.persoapp.android.activity.ActivatePinActivity;
+import de.persoapp.android.activity.CommonChangePinActivity;
 import de.persoapp.android.view.PinRow;
 
 /**
  * @author Ralf Wondratschek
  */
-public class ActivatePinFragment extends Fragment {
+public class CommonChangePinFragment extends Fragment {
 
     @Inject
     EventBus mEventBus;
 
-    private ActivatePinActivity mActivity;
+    private CommonChangePinActivity mActivity;
 
     private ViewPager mViewPager;
     private MyFragmentPagerAdapter mFragmentPagerAdapter;
@@ -38,19 +38,32 @@ public class ActivatePinFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = (ActivatePinActivity) activity;
+        mActivity = (CommonChangePinActivity) activity;
         mActivity.inject(this);
+
+        switch (mActivity.getMode()) {
+            case ACTIVATE:
+                mActivity.setTitle(R.string.activate_npa);
+                break;
+            case CHANGE:
+                mActivity.setTitle(R.string.change_pin);
+                break;
+            case UNLOCK:
+                mActivity.setTitle(R.string.unlock_pin);
+                break;
+            default:
+                throw new IllegalStateException();
+        }
     }
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_activate_pin, container, false);
+        View view = inflater.inflate(R.layout.fragment_common_change_pin, container, false);
 
         mFragmentPagerAdapter = new MyFragmentPagerAdapter(getChildFragmentManager());
 
         mViewConfirm = view.findViewById(R.id.textView_confirm);
-//        mViewConfirm.setVisibility(View.INVISIBLE);
 
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mViewPager.setAdapter(mFragmentPagerAdapter);
@@ -123,6 +136,22 @@ public class ActivatePinFragment extends Fragment {
         }
     }
 
+    public byte[] getPinOld() {
+        if (isInputComplete()) {
+            return mFragmentPagerAdapter.findFragment(0).getApprovedPin();
+        } else {
+            return null;
+        }
+    }
+
+    public byte[] getPinNew() {
+        if (isInputComplete()) {
+            return mFragmentPagerAdapter.findFragment(1).getApprovedPin();
+        } else {
+            return null;
+        }
+    }
+
     protected boolean isInputComplete() {
         PinFragment fragment1 = mFragmentPagerAdapter.findFragment(0);
         PinFragment fragment2 = mFragmentPagerAdapter.findFragment(1);
@@ -143,7 +172,16 @@ public class ActivatePinFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return getString(R.string.transport_pin);
+                    switch (mActivity.getMode()) {
+                        case ACTIVATE:
+                            return getString(R.string.transport_pin);
+                        case CHANGE:
+                            return getString(R.string.current_pin);
+                        case UNLOCK:
+                            return getString(R.string.puk);
+                        default:
+                            throw new IllegalStateException();
+                    }
                 case 1:
                     return getString(R.string.new_pin);
                 default:

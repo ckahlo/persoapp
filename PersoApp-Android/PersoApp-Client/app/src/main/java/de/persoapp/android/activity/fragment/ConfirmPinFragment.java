@@ -39,15 +39,21 @@ public class ConfirmPinFragment extends PinFragment {
 
         mPinRow = (PinRow) view.findViewById(R.id.pinRow_current_pin);
 
-//        // TODO: check while authentication
-//        mPinRow.setLastImeOption(EditorInfo.IME_ACTION_NEXT, true);
-
         return view;
     }
 
     @Override
     public boolean isInputComplete() {
         return mPinRow != null && mPinRow.isComplete();
+    }
+
+    @Override
+    public byte[] getApprovedPin() {
+        if (isInputComplete()) {
+            return mPinRow.getPin();
+        } else {
+            return null;
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")

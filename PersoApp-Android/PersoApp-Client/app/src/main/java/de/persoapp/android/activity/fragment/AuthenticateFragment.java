@@ -28,14 +28,11 @@ public class AuthenticateFragment extends Fragment {
     @Inject
     EventBus mEventBus;
 
-    private ViewPager mViewPager;
-
-    private MyFragmentPagerAdapter mFragmentPagerAdapter;
+    private AuthenticateActivity mActivity;
 
     private View mViewConfirm;
-    private View mViewCancel;
 
-    private AuthenticateActivity mActivity;
+    private MyFragmentPagerAdapter mFragmentPagerAdapter;
 
     @Override
     public void onAttach(Activity activity) {
@@ -52,14 +49,13 @@ public class AuthenticateFragment extends Fragment {
         mFragmentPagerAdapter = new MyFragmentPagerAdapter(getChildFragmentManager());
 
         mViewConfirm = view.findViewById(R.id.textView_confirm);
-        mViewCancel = view.findViewById(R.id.textView_cancel);
 
-        mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        mViewPager.setAdapter(mFragmentPagerAdapter);
-        mViewPager.setOffscreenPageLimit(2);
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        viewPager.setAdapter(mFragmentPagerAdapter);
+        viewPager.setOffscreenPageLimit(2);
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) view.findViewById(R.id.pagerSlidingTabStrip);
-        tabStrip.setViewPager(mViewPager);
+        tabStrip.setViewPager(viewPager);
 
         tabStrip.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
@@ -80,16 +76,11 @@ public class AuthenticateFragment extends Fragment {
                     case R.id.textView_confirm:
                         mActivity.onConfirmPressed();
                         break;
-
-                    case R.id.textView_cancel:
-                        mActivity.onCancelPressed();
-                        break;
                 }
             }
         };
 
         mViewConfirm.setOnClickListener(onClickListener);
-        mViewCancel.setOnClickListener(onClickListener);
 
         return view;
     }
@@ -105,7 +96,7 @@ public class AuthenticateFragment extends Fragment {
         if (visible && mViewConfirm.getVisibility() != View.VISIBLE) {
             ViewHelper.setVisibility(mViewConfirm, View.VISIBLE);
         } else if (!visible && mViewConfirm.getVisibility() == View.VISIBLE) {
-            ViewHelper.setVisibility(mViewConfirm, View.INVISIBLE);
+            ViewHelper.setVisibility(mViewConfirm, View.GONE);
         }
     }
 

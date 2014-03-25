@@ -133,8 +133,6 @@ public class NfcTransportProvider implements TransportProvider, CCID {
                     mIsoDep.connect();
                 }
 
-                mEventBus.post(new NfcConnectedEvent(mIsoDep));
-
             } catch (final IOException e) {
                 try {
                     mIsoDep.close();
@@ -150,6 +148,9 @@ public class NfcTransportProvider implements TransportProvider, CCID {
 //            System.out.println("Not an ISO-Tag");
             Cat.d("Not an ISO-Tag");
         }
+
+        // mIsoDep may be null, but that's fine
+        mEventBus.post(new NfcConnectedEvent(mIsoDep));
 
         //		final NotificationManager notifMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         //
@@ -266,12 +267,16 @@ public class NfcTransportProvider implements TransportProvider, CCID {
 
         private final IsoDep mIsoDep;
 
-        public NfcConnectedEvent(IsoDep isoDep) {
+        private NfcConnectedEvent(IsoDep isoDep) {
             mIsoDep = isoDep;
         }
 
         public IsoDep getIsoDep() {
             return mIsoDep;
+        }
+
+        public boolean isConnected() {
+            return mIsoDep != null;
         }
     }
 }

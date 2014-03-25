@@ -38,6 +38,8 @@ public class PinRow extends LinearLayout {
     protected EventBus mEventBus;
 
     protected int mFieldCount;
+    protected int mFieldMargin;
+
     protected EditTextFalse[] mEditTexts;
 
     public PinRow(Context context) {
@@ -58,12 +60,14 @@ public class PinRow extends LinearLayout {
     @SuppressWarnings("ConstantConditions")
     protected void constructor(Context context, AttributeSet attrs, int defStyle) {
         mFieldCount = DEFAULT_FIELD_COUNT;
+        mFieldMargin = -1;
 
         if (attrs != null) {
             TypedArray typedArray = null;
             try {
                 typedArray = context.obtainStyledAttributes(attrs, R.styleable.PinRow);
                 mFieldCount = typedArray.getInteger(R.styleable.PinRow_fieldCount, mFieldCount);
+                mFieldMargin = (int) typedArray.getDimension(R.styleable.PinRow_fieldMargin, mFieldMargin);
 
             } finally {
                 if (typedArray != null) {
@@ -79,6 +83,11 @@ public class PinRow extends LinearLayout {
         for (int i = 0; i < mEditTexts.length; i++) {
             mEditTexts[i] = (EditTextFalse) layoutInflater.inflate(R.layout.pin_field, this, false);
             addView(mEditTexts[i]);
+
+            if (mFieldMargin >= 0) {
+                ((LayoutParams)mEditTexts[i].getLayoutParams()).setMargins(mFieldMargin, mFieldMargin, mFieldMargin, mFieldMargin);
+            }
+
 
             mEditTexts[i].setId(100 + i); // assign IDs for configuration change
             mEditTexts[i].setOnKeyListener(mOnKeyListener);

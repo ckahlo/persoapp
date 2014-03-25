@@ -2,6 +2,7 @@ package de.persoapp.android.core.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -32,10 +33,9 @@ import hugo.weaving.DebugLog;
 
 /**
  * @author Ralf Wondratschek
- *
- * TODO: add support for intent library
- * TODO: update Crouton library
- *
+ *         <p/>
+ *         TODO: add support for intent library
+ *         TODO: update Crouton library
  */
 @SuppressWarnings("ConstantConditions")
 public class MainViewFragment extends Fragment implements IMainView {
@@ -193,29 +193,36 @@ public class MainViewFragment extends Fragment implements IMainView {
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
+
+                CroutonBuilder builder = new CroutonBuilder(getActivity())
+                        .setDuration(Configuration.DURATION_SHORT)
+                        .setHideOnClick(true)
+                        .setMessage(msg);
+
                 switch (type) {
-                    // TODO
                     case IMainView.ERROR:
+                        builder.setColor(Style.holoRedLight);
+                        break;
                     case IMainView.INFO:
                     case IMainView.RELOAD:
-                    case IMainView.SUCCESS:
-                    case IMainView.WARNING:
                     case IMainView.QUESTION:
-
-                        new CroutonBuilder(getActivity())
-                                .setColor(Style.holoBlueLight)
-                                .setDuration(Configuration.DURATION_SHORT)
-                                .setHideOnClick(true)
-                                .setMessage(msg)
-                                .show();
-
-                        long time = System.currentTimeMillis();
-                        if (mCroutonDismissedTime < time) {
-                            mCroutonDismissedTime = time;
-                        }
-                        mCroutonDismissedTime += Configuration.DURATION_SHORT;
+                        builder.setColor(Style.holoBlueLight);
+                        break;
+                    case IMainView.SUCCESS:
+                        builder.setColor(Style.holoGreenLight);
+                        break;
+                    case IMainView.WARNING:
+                        builder.setColor(Color.parseColor("#ffffbb33"));
                         break;
                 }
+
+                builder.show();
+
+                long time = System.currentTimeMillis();
+                if (mCroutonDismissedTime < time) {
+                    mCroutonDismissedTime = time;
+                }
+                mCroutonDismissedTime += Configuration.DURATION_SHORT;
             }
         });
     }

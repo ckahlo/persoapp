@@ -1,6 +1,5 @@
 package de.persoapp.android.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,6 @@ import de.persoapp.android.R;
 
 /**
  * @author Ralf Wondratschek
- *
- * TODO: Ausweis an Smartphone halten? Um die Auswahl einzuschränken
- *
  */
 public class PinOptionsActivity extends AbstractNfcActivity {
 
@@ -31,11 +27,13 @@ public class PinOptionsActivity extends AbstractNfcActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        startActivity(new Intent(PinOptionsActivity.this, ActivatePinActivity.class));
+                        startActivity(CommonChangePinActivity.createIntent(PinOptionsActivity.this, CommonChangePinActivity.Mode.ACTIVATE));
                         break;
-
                     case 1:
-                        startActivity(new Intent(PinOptionsActivity.this, ChangePinActivity.class));
+                        startActivity(CommonChangePinActivity.createIntent(PinOptionsActivity.this, CommonChangePinActivity.Mode.CHANGE));
+                        break;
+                    case 2:
+                        startActivity(CommonChangePinActivity.createIntent(PinOptionsActivity.this, CommonChangePinActivity.Mode.UNLOCK));
                         break;
                 }
             }

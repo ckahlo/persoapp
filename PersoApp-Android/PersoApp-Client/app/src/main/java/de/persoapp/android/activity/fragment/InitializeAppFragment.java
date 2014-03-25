@@ -6,22 +6,21 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.nfc.tech.IsoDep;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import net.vrallev.android.base.BaseActivitySupport;
 
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import de.persoapp.android.R;
-import de.persoapp.android.activity.MainActivity;
 import de.persoapp.android.core.adapter.NfcTransportProvider;
+import de.persoapp.android.nfc.NpaTester;
 
 /**
  * @author Ralf Wondratschek
@@ -32,11 +31,10 @@ public class InitializeAppFragment extends Fragment {
     @Inject
     EventBus mEventBus;
 
-    private MainActivity mMainActivity;
+    @Inject
+    NpaTester mNpaTester;
 
     private ImageView mImageView;
-    private TextView mTextViewHeader;
-    private View mCard;
 
     private ColorMatrix mColorMatrix;
     private float mSaturation;
@@ -44,8 +42,7 @@ public class InitializeAppFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mMainActivity = (MainActivity) activity;
-        mMainActivity.inject(this);
+        ((BaseActivitySupport) activity).inject(this);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -54,8 +51,6 @@ public class InitializeAppFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_initialize_app, container, false);
 
         mImageView = (ImageView) view.findViewById(R.id.imageView);
-        mTextViewHeader = (TextView) view.findViewById(R.id.textView_header);
-        mCard = view.findViewById(R.id.card_init_device);
 
         mSaturation = 0;
         mColorMatrix = new ColorMatrix();
@@ -79,17 +74,11 @@ public class InitializeAppFragment extends Fragment {
 
     @SuppressWarnings("UnusedDeclaration")
     public void onEvent(NfcTransportProvider.NfcConnectedEvent event) {
-        if (isDeviceCapable(event.getIsoDep())) {
-//            playSuccessAnimation();
-            mMainActivity.onAppInitialized(true);
+        if (mNpaTester.testIsoDep(event.getIsoDep())) {
+            playSuccessAnimation();
         } else {
-            // TODO
-            Toast.makeText(mMainActivity, "TODO: failur", Toast.LENGTH_SHORT).show();
+            mEventBus.post(new OnAppInitialized(false));
         }
-    }
-
-    private boolean isDeviceCapable(IsoDep isoDep) {
-        return isoDep.getMaxTransceiveLength() >= 65546;
     }
 
     private void playSuccessAnimation() {
@@ -101,28 +90,35 @@ public class InitializeAppFragment extends Fragment {
                 mImageView.animate().alpha(0).setDuration(300l).withEndAction(new Runnable() {
                     @Override
                     public void run() {
-                        mMainActivity.onAppInitialized(true);
+                        mEventBus.post(new OnAppInitialized(true));
                     }
                 });
             }
         });
         animator.start();
-
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(mCard, "alpha", 0f);
-        ObjectAnimator alpha1 = ObjectAnimator.ofFloat(mTextViewHeader, "alpha", 0f);
-        alpha.setDuration(1000L);
-        alpha1.setDuration(1000L);
-        alpha.start();
-        alpha1.start();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void setSaturation(float saturation) {
         mSaturation = saturation;
         mColorMatrix.setSaturation(saturation);
         mImageView.setColorFilter(new ColorMatrixColorFilter(mColorMatrix));
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public float getSaturation() {
         return mSaturation;
+    }
+
+    public static class OnAppInitialized {
+        private final boolean mSuccess;
+
+        public OnAppInitialized(boolean success) {
+            mSuccess = success;
+        }
+
+        public boolean isSuccess() {
+            return mSuccess;
+        }
     }
 }

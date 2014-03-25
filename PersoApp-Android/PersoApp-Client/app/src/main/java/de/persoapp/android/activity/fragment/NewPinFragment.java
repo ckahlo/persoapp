@@ -20,8 +20,6 @@ import de.persoapp.android.view.PinRow;
 
 /**
  * @author Ralf Wondratschek
- *
- * TODO: compare characters while typing
  */
 public class NewPinFragment extends PinFragment {
 
@@ -57,7 +55,16 @@ public class NewPinFragment extends PinFragment {
 
     @Override
     public boolean isInputComplete() {
-        return mPinRow != null && mPinRowConfirm != null && mPinRow.isComplete() && mPinRowConfirm.isComplete();
+        return mPinRow != null && mPinRowConfirm != null && mPinRow.isComplete() && mPinRowConfirm.isComplete() && !hasFalseField();
+    }
+
+    @Override
+    public byte[] getApprovedPin() {
+        if (!isInputComplete()) {
+            return null;
+        } else {
+            return mPinRow.getPin();
+        }
     }
 
     @SuppressWarnings({"ConstantConditions", "UnusedDeclaration"})
@@ -65,10 +72,6 @@ public class NewPinFragment extends PinFragment {
         switch (event) {
             case FINISHED:
                 onInputFinishedEvent();
-                break;
-
-            case NEW_INPUT:
-                onNewInput();
                 break;
         }
     }
@@ -79,8 +82,11 @@ public class NewPinFragment extends PinFragment {
             return;
         }
 
-        // TODO: possible null
         View focusedView = mActivity.getCurrentFocus();
+        if (focusedView == null) {
+            Cat.w("Focused view is null.");
+            return;
+        }
 
         if (mPinRow.contains(focusedView)) {
             mPinRowConfirm.requestFocus();
@@ -91,16 +97,22 @@ public class NewPinFragment extends PinFragment {
         }
     }
 
-    private void onNewInput() {
+    private boolean hasFalseField() {
+        boolean result = false;
+
         for (int i = mPinRow.getFieldCount() - 1; i >= 0; i--) {
             EditTextFalse editText = mPinRow.getEditText(i);
             EditTextFalse editTextConfirm = mPinRowConfirm.getEditText(i);
 
             if (!TextUtils.isEmpty(editText.getText()) && !TextUtils.isEmpty(editTextConfirm.getText())) {
-                editTextConfirm.setFalse(!TextUtils.equals(editText.getText(), editTextConfirm.getText()));
+                boolean isFalse = !TextUtils.equals(editText.getText(), editTextConfirm.getText());
+                editTextConfirm.setFalse(isFalse);
+                result = result || isFalse;
             } else {
                 editTextConfirm.setFalse(false);
             }
         }
+
+        return result;
     }
 }

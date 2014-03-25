@@ -6,11 +6,16 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import de.persoapp.android.R;
+import de.persoapp.android.core.adapter.NfcTransportProvider;
+import de.persoapp.core.client.PropertyResolver;
 
 /**
  * @author Ralf Wondratschek
  */
 public class QuestionDialog extends AbstractGetResultDialog<Boolean> {
+
+    // this is a dirty hack, but requested
+    private static final String MAGIC_QUESTION = PropertyResolver.getString("text_core", "SALService_insert_card");
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -40,13 +45,39 @@ public class QuestionDialog extends AbstractGetResultDialog<Boolean> {
             }
         };
 
-        return new AlertDialog.Builder(getActivity())
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setCancelable(false)
                 .setIcon(R.drawable.ic_launcher)
                 .setTitle(getArguments().getString(TITLE))
                 .setMessage(getArguments().getString(MESSAGE))
-                .setPositiveButton(android.R.string.yes, onClickListener)
-                .setNegativeButton(android.R.string.no, onClickListener)
-                .create();
+                .setNegativeButton(android.R.string.no, onClickListener);
+
+        if (!MAGIC_QUESTION.equals(getArguments().getString(MESSAGE))) {
+            builder.setPositiveButton(android.R.string.yes, onClickListener);
+        }
+
+        return builder.create();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (MAGIC_QUESTION.equals(getArguments().getString(MESSAGE))) {
+            mEventBus.register(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        if (MAGIC_QUESTION.equals(getArguments().getString(MESSAGE))) {
+            mEventBus.unregister(this);
+        }
+        super.onStop();
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    public void onEventMainThread(NfcTransportProvider.NfcConnectedEvent event) {
+        postResult(true);
+        dismiss();
     }
 }

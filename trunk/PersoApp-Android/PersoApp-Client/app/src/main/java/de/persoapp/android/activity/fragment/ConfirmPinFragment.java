@@ -7,12 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import net.vrallev.android.base.BaseActivitySupport;
-
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import de.persoapp.android.R;
+import de.persoapp.android.activity.AuthenticateActivity;
 import de.persoapp.android.view.PinRow;
 
 /**
@@ -21,19 +19,16 @@ import de.persoapp.android.view.PinRow;
 public class ConfirmPinFragment extends PinFragment {
 
     @Inject
-    EventBus mEventBus;
-
-    @Inject
     InputMethodManager mInputMethodManager;
 
     private PinRow mPinRow;
 
-    private BaseActivitySupport mActivity;
+    private AuthenticateActivity mActivity;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = (BaseActivitySupport) activity;
+        mActivity = (AuthenticateActivity) activity;
         mActivity.inject(this);
     }
 
@@ -51,18 +46,6 @@ public class ConfirmPinFragment extends PinFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        mEventBus.register(this);
-    }
-
-    @Override
-    public void onPause() {
-        mEventBus.unregister(this);
-        super.onPause();
-    }
-
-    @Override
     public boolean isInputComplete() {
         return mPinRow != null && mPinRow.isComplete();
     }
@@ -74,6 +57,18 @@ public class ConfirmPinFragment extends PinFragment {
                 View focusedView = mActivity.getCurrentFocus();
                 if (focusedView != null) {
                     mInputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+                }
+                break;
+            case NEW_INPUT:
+                if (getParentFragment() instanceof AuthenticateFragment) {
+                    boolean isInputComplete = isInputComplete();
+                    if (isInputComplete) {
+                        mActivity.setPin(mPinRow.getPin());
+                    } else {
+                        mActivity.setPin(null);
+                    }
+
+                    ((AuthenticateFragment) getParentFragment()).setConfirmVisible(isInputComplete);
                 }
                 break;
         }

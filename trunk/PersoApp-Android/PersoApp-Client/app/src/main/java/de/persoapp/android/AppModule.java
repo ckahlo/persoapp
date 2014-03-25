@@ -48,8 +48,8 @@ public class AppModule {
 
     @Provides
     @Singleton
-    NfcTransportProvider provideNfcTransportProvider(NfcManager nfcManager) {
-        return new NfcTransportProvider(nfcManager);
+    NfcTransportProvider provideNfcTransportProvider(NfcManager nfcManager, EventBus eventBus) {
+        return new NfcTransportProvider(nfcManager, eventBus);
     }
 
     @Provides

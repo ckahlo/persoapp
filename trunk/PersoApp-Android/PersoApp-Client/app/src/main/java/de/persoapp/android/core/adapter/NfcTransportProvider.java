@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import javax.smartcardio.CardException;
 
+import de.greenrobot.event.EventBus;
 import de.persoapp.core.card.CCID;
 import de.persoapp.core.card.TransportProvider;
 import de.persoapp.core.util.ArrayTool;
@@ -34,12 +35,14 @@ import de.persoapp.core.util.Hex;
 public class NfcTransportProvider implements TransportProvider, CCID {
 
     private final NfcAdapter mNfcAdapter;
+    private final EventBus mEventBus;
 
     private IsoDep mIsoDep = null;
     private int mLastSW = 0;
 
-    public NfcTransportProvider(NfcManager nfcManager) {
+    public NfcTransportProvider(NfcManager nfcManager, EventBus eventBus) {
         mNfcAdapter = nfcManager.getDefaultAdapter();
+        mEventBus = eventBus;
     }
 
 //    public static NfcTransport getInstance() {
@@ -130,6 +133,8 @@ public class NfcTransportProvider implements TransportProvider, CCID {
                     mIsoDep.connect();
                 }
 
+                mEventBus.post(new NfcConnectedEvent(mIsoDep));
+
             } catch (final IOException e) {
                 try {
                     mIsoDep.close();
@@ -157,6 +162,7 @@ public class NfcTransportProvider implements TransportProvider, CCID {
         //		notifMgr.notify(1234, notif);
 
 //		QuestionDialog.dismissLastInstance();
+
     }
 
     private IsoDep getIsoDep() {
@@ -254,5 +260,18 @@ public class NfcTransportProvider implements TransportProvider, CCID {
     @Override
     public byte[] transmitControlCommand(final byte feature, final byte[] ctrlCommand) {
         return null;
+    }
+
+    public static class NfcConnectedEvent {
+
+        private final IsoDep mIsoDep;
+
+        public NfcConnectedEvent(IsoDep isoDep) {
+            mIsoDep = isoDep;
+        }
+
+        public IsoDep getIsoDep() {
+            return mIsoDep;
+        }
     }
 }

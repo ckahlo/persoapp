@@ -36,7 +36,10 @@ public abstract class AbstractGetResultDialog<T> extends DialogFragment {
         super.onAttach(activity);
         ((BaseActivitySupport) activity).inject(this);
 
-        mEventBus.register(mWaiter);
+        if (mWaiter != null) {
+            // the waiter is null on orientation change, but that's fine, it's already registered on the event bus
+            mEventBus.register(mWaiter);
+        }
     }
 
     public final class Waiter {

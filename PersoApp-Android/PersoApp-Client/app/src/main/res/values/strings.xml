@@ -40,7 +40,7 @@
     <string name="authenticate_field_anschrift_text">Anschrift</string>
     <string name="authenticate_field_wohnortbestaetigung_text">Wohnortbestätigung</string>
     <string name="authenticate_field_geburtsdatum_text">Geburtsdatum</string>
-    <string name="authenticate_field_altersverifikation_text">Altersverifikation</string>
+    <string name="authenticate_field_altersverifikation_text">Altersverifikation (\u2265 %d)</string>
     <string name="authenticate_field_geburtsort_text">Geburtsort</string>
     <string name="authenticate_field_pseudonym_text">Pseudonym/Kartenerkennung</string>
     <string name="authenticate_field_ablaufdatum_text">Ablaufdatum</string>
@@ -50,5 +50,10 @@
     <string name="required_fields">Pflichtfelder</string>
     <string name="optional_fields">Optionale Felder</string>
     <string name="invalid_request">Ungültige Anfrage.</string>
+    <string name="can_dialog_title">CAN</string>
+    <string name="transaction_data">Transaktionsdaten:</string>
+    <string formatted="false" name="validity_string">Gültigkeit: %s - %s</string>
+    <string name="test_device">Smartphone testen</string>
+    <string name="init_device_description">Bevor der Ausweis zusammen mit dem Smartphone genutzt werden kann, muss das die App das Smartphone auf die entsprechende Funktionanlität überprüfen.\n\nBitte halten Sie jetzt ihren neuen Personalausweis an die Rückseite Ihres Smartphones.</string>
 
 </resources>

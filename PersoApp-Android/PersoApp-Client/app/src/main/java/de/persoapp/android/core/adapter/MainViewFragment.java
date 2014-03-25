@@ -15,11 +15,14 @@ import net.vrallev.android.base.util.Cat;
 import net.vrallev.android.lib.crouton.extension.CroutonBuilder;
 
 import java.net.URL;
+import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 
 import de.keyboardsurfer.android.widget.crouton.Configuration;
 import de.keyboardsurfer.android.widget.crouton.Style;
+import de.persoapp.android.R;
+import de.persoapp.android.activity.dialog.CanDialog;
 import de.persoapp.android.activity.dialog.QuestionDialog;
 import de.persoapp.core.ECardWorker;
 import de.persoapp.core.client.IEAC_Info;
@@ -31,12 +34,15 @@ import hugo.weaving.DebugLog;
  * @author Ralf Wondratschek
  *
  * TODO: add support for intent library
+ * TODO: update Crouton library
  *
  */
 @SuppressWarnings("ConstantConditions")
 public class MainViewFragment extends Fragment implements IMainView {
 
     public static final String TAG = "MainViewFragmentTag";
+
+    private static final int MSG_FINISH = 1;
 
     public static MainViewFragment findOrCreateFragment(BaseActivitySupport activity) {
         Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(TAG);
@@ -64,24 +70,37 @@ public class MainViewFragment extends Fragment implements IMainView {
     private String mTcTokenUrl;
     private String mRefreshAddress;
 
+    private EventListener mEventListener;
+    private final Object mEventMonitor = new Object();
+
+    private MainViewCallback mMainViewCallback;
+
+    private MainDialogResult mMainDialogResult;
+    private CountDownLatch mCountDownLatchResult;
+
+    private long mCroutonDismissedTime;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setRetainInstance(true);
 
         mMainHandler = new MyHandler(mMainLooper);
+        mCountDownLatchResult = new CountDownLatch(1);
     }
 
-    public void setTcTokenUrl(String tcTokenUrl) {
+    public void startAuthentication(String tcTokenUrl) {
+        if (mTcTokenUrl != null) {
+            throw new IllegalStateException("You can only start one authentication per session.");
+        }
+
         mTcTokenUrl = tcTokenUrl;
 
-        // TODO: cache thread
         new Thread() {
             @Override
             public void run() {
                 try {
                     mRefreshAddress = ECardWorker.start(new URL(mTcTokenUrl));
-//                    mRefreshAddress = new AndroidECApiHttpHandler().startAuthentication(new URL(mTcTokenUrl));
                 } catch (Exception e) {
                     Cat.e(e);
                 }
@@ -89,37 +108,55 @@ public class MainViewFragment extends Fragment implements IMainView {
         }.start();
     }
 
+    public void setMainViewCallback(MainViewCallback mainViewCallback) {
+        mMainViewCallback = mainViewCallback;
+    }
+
+    public void setMainDialogResult(MainDialogResult mainDialogResult) {
+        mMainDialogResult = mainDialogResult;
+        mCountDownLatchResult.countDown();
+    }
+
     @Override
-    @DebugLog
     public void setEventLister(EventListener listener) {
-
+        synchronized (mEventMonitor) {
+            mEventListener = listener;
+        }
     }
 
     @Override
-    @DebugLog
     public Object triggerEvent(int event, Object... eventData) {
-        return null;
+        if (mEventListener != null) {
+            synchronized (mEventMonitor) {
+                return mEventListener.handleEvent(event, eventData);
+            }
+        } else {
+            Cat.w("EventListener is null.");
+            return null;
+        }
     }
 
     @Override
-    @DebugLog
-    public void showMainDialog(IEAC_Info eacInfo, int MODE) {
-
+    public void showMainDialog(IEAC_Info eacInfo, int mode) {
+        if (mMainViewCallback != null) {
+            mMainViewCallback.showMainDialog(eacInfo, mode);
+        }
     }
 
     @Override
-    @DebugLog
     public MainDialogResult getMainDialogResult() {
-        char[] pin = new char[]{'1', '2', '3', '4', '5', '6'};
-        byte[] pinByte = new String(pin).getBytes();
+        try {
+            mCountDownLatchResult.await();
+        } catch (InterruptedException e) {
+            Cat.e(e);
+        }
 
-        return new MainDialogResult(16816132, pinByte, true);
+        return mMainDialogResult;
     }
 
     @Override
-    @DebugLog
     public SecureHolder showCANDialog(String msg) {
-        return null;
+        return new CanDialog().askForResult((BaseActivitySupport) getActivity(), getString(R.string.can_dialog_title), msg);
     }
 
     @Override
@@ -131,17 +168,17 @@ public class MainViewFragment extends Fragment implements IMainView {
     @Override
     @DebugLog
     public void showProgress(String message, int amount, boolean enabled) {
-
+        if (mMainViewCallback != null) {
+            mMainViewCallback.showProgress(message, amount, enabled);
+        }
     }
 
     @Override
-    @DebugLog
     public boolean showQuestion(String title, String message) {
         return new QuestionDialog().askForResult((BaseActivitySupport) getActivity(), title, message);
     }
 
     @Override
-    @DebugLog
     public void showError(final String title, final String message) {
         mMainHandler.post(new Runnable() {
             @Override
@@ -152,78 +189,52 @@ public class MainViewFragment extends Fragment implements IMainView {
     }
 
     @Override
-    @DebugLog
-    public void showMessage(final String msg, int type) {
+    public void showMessage(final String msg, final int type) {
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
-                new CroutonBuilder(getActivity())
-                        .setColor(Style.holoBlueLight)
-                        .setDuration(Configuration.DURATION_LONG)
-                        .setHideOnClick(true)
-                        .setMessage(msg)
-                        .show();
+                switch (type) {
+                    // TODO
+                    case IMainView.ERROR:
+                    case IMainView.INFO:
+                    case IMainView.RELOAD:
+                    case IMainView.SUCCESS:
+                    case IMainView.WARNING:
+                    case IMainView.QUESTION:
+
+                        new CroutonBuilder(getActivity())
+                                .setColor(Style.holoBlueLight)
+                                .setDuration(Configuration.DURATION_SHORT)
+                                .setHideOnClick(true)
+                                .setMessage(msg)
+                                .show();
+
+                        long time = System.currentTimeMillis();
+                        if (mCroutonDismissedTime < time) {
+                            mCroutonDismissedTime = time;
+                        }
+                        mCroutonDismissedTime += Configuration.DURATION_SHORT;
+                        break;
+                }
             }
         });
     }
 
     @Override
+    @DebugLog
     public void closeDialogs() {
-        // TODO: handle activity null
-//        Activity activity = getActivity();
-//
-//        activity.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                    Log.d(PreferencesMgr.LOG_TAG, "Closing dialogs, refreshBrowser == " + refreshBrowser
-//                            + ", refreshURL == " + mRefreshURL);
-
-//                    if (mMainDialogResult == null || mMainDialogResult.getCHAT() == -1L) {
-//                        showMessage("Authentisierung nicht erfolgreich.", IMainView.ERROR);
-//                        if (!refreshBrowser) {
-//                            final Intent i = new Intent().putExtra(EXTRA_REFRESH_ADDRESS, mRefreshURL);
-//                            getActivity().setResult(Activity.RESULT_CANCELED, i);
-//                        }
-//                    } else {
-//                        if (refreshBrowser) {
-        if (mRefreshAddress != null) {
-            final Intent i = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(mRefreshAddress));
-
-            // use this to reuse the last tab in the browser
-            i.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.browser");
-            try {
-                Cat.d("RefreshAddress == %b, %s", mRefreshAddress.endsWith("Major=ok"), mRefreshAddress);
-
-                startActivity(i);
-                if (getActivity() != null) {
-                    getActivity().finish();
-                }
-//                        getActivity().finish();
-            } catch (final Exception e) {
-                // XXX
-            }
-//                    } else {
-            // if refreshURL could not be validated display error
+        long time = System.currentTimeMillis();
+        if (mCroutonDismissedTime <= time) {
+            mMainHandler.sendEmptyMessage(MSG_FINISH);
+        } else {
+            mMainHandler.sendEmptyMessageDelayed(MSG_FINISH, Math.min(mCroutonDismissedTime - time, 2000L));
         }
-//            }
-
-//                else
-//
-//                {
-//                    final Intent data = new Intent();
-//                    data.putExtra(EXTRA_REFRESH_ADDRESS, mRefreshURL);
-//                    if (getActivity() == null) {
-//                        Log.d(PreferencesMgr.LOG_TAG, "XXXXXXXX");
-//                    } else {
-//                        getActivity().setResult(Activity.RESULT_OK, data);
-//                    }
-//        });
     }
 
     @Override
     @DebugLog
     public void shutdown() {
-
+        closeDialogs();
     }
 
     private class MyHandler extends Handler {
@@ -234,7 +245,37 @@ public class MainViewFragment extends Fragment implements IMainView {
 
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+            switch (msg.what) {
+                case MSG_FINISH:
+                    if (mRefreshAddress != null) {
+                        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(mRefreshAddress));
+
+                        // use this to reuse the last tab in the browser
+                        intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.browser");
+                        try {
+                            Cat.d("RefreshAddress == %b, %s", mRefreshAddress.endsWith("Major=ok"), mRefreshAddress);
+
+                            startActivity(intent);
+                            if (getActivity() != null) {
+                                getActivity().finish();
+                            }
+                        } catch (final Exception e) {
+                            Cat.w(e, "Unexpected exception");
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
+    public static abstract class MainViewCallback {
+
+        public void showMainDialog(IEAC_Info eacInfo, int mode) {
+            // override me
+        }
+
+        public void showProgress(String message, int amount, boolean enabled) {
+            // override me
         }
     }
 }

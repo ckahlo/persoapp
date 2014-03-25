@@ -130,7 +130,7 @@ public class PinRow extends LinearLayout {
         }
     }
 
-    public byte[] getChat() {
+    public byte[] getPin() {
         StringBuilder builder = new StringBuilder();
         for (EditText editText : mEditTexts) {
             if (!TextUtils.isEmpty(editText.getText())) {
@@ -148,6 +148,17 @@ public class PinRow extends LinearLayout {
             }
         }
         return true;
+    }
+
+    public EditText getEditText(int index) {
+        return mEditTexts[index];
+    }
+
+    // this is necessary, when we have two PinRows in one layout
+    public void increaseIds() {
+        for (EditText editText : mEditTexts) {
+            editText.setId(editText.getId() + 100);
+        }
     }
 
     private OnKeyListener mOnKeyListener = new OnKeyListener() {

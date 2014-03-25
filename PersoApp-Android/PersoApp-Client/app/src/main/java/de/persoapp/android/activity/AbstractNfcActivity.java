@@ -69,7 +69,7 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
 //
 //            final String tcURL = mUri.getQueryParameter("tcTokenURL");
 //            if (tcURL != null) {
-//                mMainViewFragment.setTcTokenUrl(tcURL);
+//                mMainViewFragment.startAuthentication(tcURL);
 //            }
 //        }
 //    }

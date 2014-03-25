@@ -9,18 +9,16 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 
-import net.vrallev.android.base.BaseActivitySupport;
 import net.vrallev.android.base.view.ViewHelper;
 
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import de.persoapp.android.R;
-import de.persoapp.android.view.PinRow;
+import de.persoapp.android.activity.AuthenticateActivity;
 
 /**
  * @author Ralf Wondratschek
@@ -37,12 +35,12 @@ public class AuthenticateFragment extends Fragment {
     private View mViewConfirm;
     private View mViewCancel;
 
-    private BaseActivitySupport mActivity;
+    private AuthenticateActivity mActivity;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = (BaseActivitySupport) activity;
+        mActivity = (AuthenticateActivity) activity;
         mActivity.inject(this);
     }
 
@@ -54,27 +52,37 @@ public class AuthenticateFragment extends Fragment {
         mFragmentPagerAdapter = new MyFragmentPagerAdapter(getChildFragmentManager());
 
         mViewConfirm = view.findViewById(R.id.textView_confirm);
-        mViewConfirm.setVisibility(View.INVISIBLE);
-
         mViewCancel = view.findViewById(R.id.textView_cancel);
 
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2);
 
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) view.findViewById(R.id.pagerSlidingTabStrip);
         tabStrip.setViewPager(mViewPager);
+
+        tabStrip.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                Fragment fragment = mFragmentPagerAdapter.findFragment(2);
+                if (position == 2) {
+                    mEventBus.register(fragment);
+                } else if (fragment != null) {
+                    mEventBus.unregister(fragment);
+                }
+            }
+        });
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.textView_confirm:
-                        // TODO:
-                        Toast.makeText(mActivity, "Confirm", Toast.LENGTH_SHORT).show();
+                        mActivity.onConfirmPressed();
                         break;
 
                     case R.id.textView_cancel:
-                        mActivity.finish();
+                        mActivity.onCancelPressed();
                         break;
                 }
             }
@@ -89,31 +97,16 @@ public class AuthenticateFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mEventBus.register(this);
+
+        setConfirmVisible(mActivity.getPin() != null);
     }
 
-    @Override
-    public void onPause() {
-        mEventBus.unregister(this);
-        super.onPause();
-    }
-
-    @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(PinRow.InputEvent event) {
-        switch (event) {
-            case NEW_INPUT:
-                if (isInputComplete() && mViewConfirm.getVisibility() != View.VISIBLE) {
-                    ViewHelper.setVisibility(mViewConfirm, View.VISIBLE);
-                } else if (!isInputComplete() && mViewConfirm.getVisibility() == View.VISIBLE) {
-                    ViewHelper.setVisibility(mViewConfirm, View.INVISIBLE);
-                }
-                break;
+    public void setConfirmVisible(boolean visible) {
+        if (visible && mViewConfirm.getVisibility() != View.VISIBLE) {
+            ViewHelper.setVisibility(mViewConfirm, View.VISIBLE);
+        } else if (!visible && mViewConfirm.getVisibility() == View.VISIBLE) {
+            ViewHelper.setVisibility(mViewConfirm, View.INVISIBLE);
         }
-    }
-
-
-    protected boolean isInputComplete() {
-        return ((PinFragment) mFragmentPagerAdapter.findFragment(2)).isInputComplete();
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {

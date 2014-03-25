@@ -1,7 +1,9 @@
 package de.persoapp.android.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import net.vrallev.android.base.settings.SettingsMgr;
@@ -11,6 +13,7 @@ import javax.inject.Inject;
 import de.persoapp.android.BuildConfig;
 import de.persoapp.android.activity.fragment.InitializeAppFragment;
 import de.persoapp.android.activity.fragment.MainFragment;
+import de.persoapp.android.core.adapter.NfcTransportProvider;
 
 /**
  * @author Ralf Wondratschek
@@ -22,16 +25,25 @@ public class MainActivity extends AbstractNfcActivity {
     @Inject
     SettingsMgr mSettingsMgr;
 
+    @Inject
+    NfcTransportProvider mNfcTransportProvider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null &&BuildConfig.DEBUG) {
             // TODO: remove
-            mSettingsMgr.putBoolean(APP_NPA_CAPABLE, false);
+//            mSettingsMgr.putBoolean(APP_NPA_CAPABLE, false);
         }
 
         updateContentFragment();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mNfcTransportProvider.handleIntent(intent);
     }
 
     public void onAppInitialized(boolean success) {
@@ -49,7 +61,7 @@ public class MainActivity extends AbstractNfcActivity {
 
         if (mSettingsMgr.getBoolean(APP_NPA_CAPABLE, false)) {
             if (!(contentFragment instanceof MainFragment)) {
-                replaceFragment(android.R.id.content, new MainFragment());
+                replaceFragment(android.R.id.content, new MainFragment(), FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             }
 
         } else {

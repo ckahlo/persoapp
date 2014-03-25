@@ -93,12 +93,22 @@ public class ActivatePinActivity extends AbstractNfcActivity {
     protected void onResume() {
         super.onResume();
         mEventBus.register(this);
+
+        setConfirmVisible(isInputComplete());
     }
 
     @Override
     protected void onPause() {
         mEventBus.unregister(this);
         super.onPause();
+    }
+
+    public void setConfirmVisible(boolean visible) {
+        if (visible && mViewConfirm.getVisibility() != View.VISIBLE) {
+            ViewHelper.setVisibility(mViewConfirm, View.VISIBLE);
+        } else if (!visible && mViewConfirm.getVisibility() == View.VISIBLE) {
+            ViewHelper.setVisibility(mViewConfirm, View.INVISIBLE);
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -111,18 +121,15 @@ public class ActivatePinActivity extends AbstractNfcActivity {
                 break;
 
             case NEW_INPUT:
-//                mViewConfirm.setEnabled(isInputComplete());
-                if (isInputComplete() && mViewConfirm.getVisibility() != View.VISIBLE) {
-                    ViewHelper.setVisibility(mViewConfirm, View.VISIBLE);
-                } else if (!isInputComplete() && mViewConfirm.getVisibility() == View.VISIBLE) {
-                    ViewHelper.setVisibility(mViewConfirm, View.INVISIBLE);
-                }
+                setConfirmVisible(isInputComplete());
                 break;
         }
     }
 
     protected boolean isInputComplete() {
-        return mFragmentPagerAdapter.findFragment(0).isInputComplete() && mFragmentPagerAdapter.findFragment(1).isInputComplete();
+        PinFragment fragment1 = mFragmentPagerAdapter.findFragment(0);
+        PinFragment fragment2 = mFragmentPagerAdapter.findFragment(1);
+        return fragment1 != null && fragment2 != null && fragment1.isInputComplete() && fragment2.isInputComplete();
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {

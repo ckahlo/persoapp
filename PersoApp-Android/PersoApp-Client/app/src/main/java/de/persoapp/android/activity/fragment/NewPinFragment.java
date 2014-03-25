@@ -46,6 +46,8 @@ public class NewPinFragment extends PinFragment {
         mPinRow = (PinRow) view.findViewById(R.id.pinRow_new_pin);
         mPinRowConfirm = (PinRow) view.findViewById(R.id.pinRow_new_pin_confirm);
 
+        mPinRowConfirm.increaseIds();
+
         mPinRow.setLastImeOption(EditorInfo.IME_ACTION_NEXT);
 
         return view;

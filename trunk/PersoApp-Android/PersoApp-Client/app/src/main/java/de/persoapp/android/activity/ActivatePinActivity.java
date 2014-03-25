@@ -1,24 +1,10 @@
 package de.persoapp.android.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.widget.Toast;
+import android.support.v4.app.FragmentTransaction;
 
-import com.astuetz.PagerSlidingTabStrip;
-
-import net.vrallev.android.base.view.ViewHelper;
-
-import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 import de.persoapp.android.R;
-import de.persoapp.android.activity.fragment.CurrentPinFragment;
-import de.persoapp.android.activity.fragment.NewPinFragment;
-import de.persoapp.android.activity.fragment.PinFragment;
-import de.persoapp.android.view.PinRow;
+import de.persoapp.android.activity.fragment.ActivatePinFragment;
 
 /**
  * @author Ralf Wondratschek
@@ -28,151 +14,17 @@ import de.persoapp.android.view.PinRow;
  */
 public class ActivatePinActivity extends AbstractNfcActivity {
 
-    @Inject
-    EventBus mEventBus;
-
-    private ViewPager mViewPager;
-
-    private MyFragmentPagerAdapter mFragmentPagerAdapter;
-
-    private View mViewConfirm;
-    private View mViewCancel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_activate_pin);
+        setContentView(R.layout.frame_layout);
 
-        mFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
-
-        mViewConfirm = findViewById(R.id.textView_confirm);
-        mViewConfirm.setVisibility(View.INVISIBLE);
-//        mViewConfirm.setEnabled(false);
-
-        mViewCancel = findViewById(R.id.textView_cancel);
-
-        mViewPager = (ViewPager) findViewById(R.id.viewPager);
-        mViewPager.setAdapter(mFragmentPagerAdapter);
-
-        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.pagerSlidingTabStrip);
-        tabStrip.setViewPager(mViewPager);
-
-        View.OnClickListener onClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.textView_confirm:
-                        // TODO:
-                        Toast.makeText(ActivatePinActivity.this, "Confirm", Toast.LENGTH_SHORT).show();
-                        break;
-
-                    case R.id.textView_cancel:
-                        finish();
-                        break;
-                }
-            }
-        };
-
-        mViewConfirm.setOnClickListener(onClickListener);
-        mViewCancel.setOnClickListener(onClickListener);
-
-        tabStrip.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                // this is needed for the focus switch
-                if (position == 0) {
-                    mEventBus.unregister(mFragmentPagerAdapter.findFragment(1));
-                } else {
-                    mEventBus.register(mFragmentPagerAdapter.findFragment(1));
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mEventBus.register(this);
-
-        setConfirmVisible(isInputComplete());
-    }
-
-    @Override
-    protected void onPause() {
-        mEventBus.unregister(this);
-        super.onPause();
-    }
-
-    public void setConfirmVisible(boolean visible) {
-        if (visible && mViewConfirm.getVisibility() != View.VISIBLE) {
-            ViewHelper.setVisibility(mViewConfirm, View.VISIBLE);
-        } else if (!visible && mViewConfirm.getVisibility() == View.VISIBLE) {
-            ViewHelper.setVisibility(mViewConfirm, View.INVISIBLE);
+        if (savedInstanceState == null) {
+            replaceFragment(R.id.frameLayout, new ActivatePinFragment(), FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         }
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(PinRow.InputEvent event) {
-        switch (event) {
-            case FINISHED:
-                if (mViewPager.getCurrentItem() == 0) {
-                    mViewPager.setCurrentItem(1);
-                }
-                break;
+    public void onConfirmPressed() {
 
-            case NEW_INPUT:
-                setConfirmVisible(isInputComplete());
-                break;
-        }
-    }
-
-    protected boolean isInputComplete() {
-        PinFragment fragment1 = mFragmentPagerAdapter.findFragment(0);
-        PinFragment fragment2 = mFragmentPagerAdapter.findFragment(1);
-        return fragment1 != null && fragment2 != null && fragment1.isInputComplete() && fragment2.isInputComplete();
-    }
-
-    private class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-
-        public MyFragmentPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        public PinFragment findFragment(int index) {
-            return (PinFragment) getSupportFragmentManager().findFragmentByTag(makeFragmentName(R.id.viewPager, index));
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getString(R.string.transport_pin);
-                case 1:
-                    return getString(R.string.new_pin);
-                default:
-                    throw new IndexOutOfBoundsException();
-            }
-        }
-
-        @Override
-        public PinFragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new CurrentPinFragment();
-                case 1:
-                    return new NewPinFragment();
-                default:
-                    throw new IndexOutOfBoundsException();
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-    }
-
-    private static String makeFragmentName(int viewId, int index) {
-        return "android:switcher:" + viewId + ":" + index;
     }
 }

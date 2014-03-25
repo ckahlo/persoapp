@@ -16,6 +16,7 @@ import de.persoapp.android.activity.MainActivity;
 import de.persoapp.android.activity.PinOptionsActivity;
 import de.persoapp.android.activity.dialog.CanDialog;
 import de.persoapp.android.activity.dialog.QuestionDialog;
+import de.persoapp.android.activity.fragment.ActivatePinFragment;
 import de.persoapp.android.activity.fragment.AuthenticateFragment;
 import de.persoapp.android.activity.fragment.ConfirmPinFragment;
 import de.persoapp.android.activity.fragment.InitializeAppFragment;
@@ -45,6 +46,7 @@ import de.persoapp.android.view.PinRow;
                 CanDialog.class,
                 AuthenticateFragment.class,
                 InitializeAppFragment.class,
+                ActivatePinFragment.class,
 
                 PinRow.class
         }

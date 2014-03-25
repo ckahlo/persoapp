@@ -2,6 +2,7 @@ package de.persoapp.android.activity.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import net.vrallev.android.base.util.Cat;
 import javax.inject.Inject;
 
 import de.persoapp.android.R;
+import de.persoapp.android.view.EditTextFalse;
 import de.persoapp.android.view.PinRow;
 
 /**
@@ -64,6 +66,10 @@ public class NewPinFragment extends PinFragment {
             case FINISHED:
                 onInputFinishedEvent();
                 break;
+
+            case NEW_INPUT:
+                onNewInput();
+                break;
         }
     }
 
@@ -82,6 +88,19 @@ public class NewPinFragment extends PinFragment {
             mInputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
         } else {
             mPinRow.requestFocus();
+        }
+    }
+
+    private void onNewInput() {
+        for (int i = mPinRow.getFieldCount() - 1; i >= 0; i--) {
+            EditTextFalse editText = mPinRow.getEditText(i);
+            EditTextFalse editTextConfirm = mPinRowConfirm.getEditText(i);
+
+            if (!TextUtils.isEmpty(editText.getText()) && !TextUtils.isEmpty(editTextConfirm.getText())) {
+                editTextConfirm.setFalse(!TextUtils.equals(editText.getText(), editTextConfirm.getText()));
+            } else {
+                editTextConfirm.setFalse(false);
+            }
         }
     }
 }

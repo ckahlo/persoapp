@@ -37,7 +37,7 @@ public class AuthenticateActivity extends AbstractNfcActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_authenticate); // we need this empty frame, otherwise Crouton may render its croutons wrong
+        setContentView(R.layout.frame_layout); // we need this empty frame, otherwise Crouton may render its croutons wrong
 
         Uri uri = getIntent().getData();
         final String tcURL = uri != null ? uri.getQueryParameter(TC_TOKEN_PARAMETER) : null;

@@ -9,4 +9,5 @@ public abstract class PinFragment extends Fragment {
 
     public abstract boolean isInputComplete();
 
+    public abstract byte[] getApprovedPin();
 }

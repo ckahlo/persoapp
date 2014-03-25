@@ -1,5 +1,6 @@
 package de.persoapp.android.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,10 +11,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
 import de.persoapp.android.ActivityModule;
+import de.persoapp.android.activity.fragment.InitializeAppFragment;
 import de.persoapp.android.core.adapter.MainViewFacade;
 import de.persoapp.android.core.adapter.MainViewFragment;
 import de.persoapp.android.core.adapter.NfcTransportProvider;
+import de.persoapp.android.nfc.NpaTester;
 import de.persoapp.android.view.MenuHelper;
 
 /**
@@ -30,6 +34,12 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
     @Inject
     protected MenuHelper mMenuHelper;
 
+    @Inject
+    protected EventBus mEventBus;
+
+    @Inject
+    protected NpaTester mNpaTester;
+
     protected MainViewFragment mMainViewFragment;
 
     @Override
@@ -38,6 +48,12 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
 
         mMainViewFragment = MainViewFragment.findOrCreateFragment(this);
         mMainViewFacade.setMainView(mMainViewFragment);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mEventBus.register(this, InitializeAppFragment.OnAppInitialized.class);
     }
 
     @Override
@@ -53,26 +69,16 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
     }
 
     @Override
+    protected void onStop() {
+        mEventBus.unregister(this, InitializeAppFragment.OnAppInitialized.class);
+        super.onStop();
+    }
+
+    @Override
     protected void addModules(List<Object> modules) {
         super.addModules(modules);
         modules.add(new ActivityModule());
     }
-
-    // TODO: check
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//
-//        mNfcTransportProvider.handleIntent(intent);
-//
-//        if (mUri != null) {
-//
-//            final String tcURL = mUri.getQueryParameter("tcTokenURL");
-//            if (tcURL != null) {
-//                mMainViewFragment.startAuthentication(tcURL);
-//            }
-//        }
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,5 +89,25 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return mMenuHelper.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mNfcTransportProvider.handleIntent(intent);
+    }
+
+    @SuppressWarnings("UnusedDeclaration")
+    public final void onEvent(InitializeAppFragment.OnAppInitialized event) {
+        if (event.isSuccess()) {
+            onDeviceNpaCapable();
+        } else {
+            // content will change to DeviceNotCapableFragment
+            mNpaTester.needsToShowOtherContent();
+        }
+    }
+
+    public void onDeviceNpaCapable() {
+        // no op
     }
 }

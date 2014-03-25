@@ -1,6 +1,5 @@
 package de.persoapp.android.activity;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,15 +33,17 @@ public class AuthenticateActivity extends AbstractNfcActivity {
     private byte[] mPin;
     private long mResultChat;
 
+    private String mTcUrl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.frame_layout); // we need this empty frame, otherwise Crouton may render its croutons wrong
 
         Uri uri = getIntent().getData();
-        final String tcURL = uri != null ? uri.getQueryParameter(TC_TOKEN_PARAMETER) : null;
+        mTcUrl = uri != null ? uri.getQueryParameter(TC_TOKEN_PARAMETER) : null;
 
-        if (tcURL == null) {
+        if (mTcUrl == null) {
             // skip whole life cycle
             Toast.makeText(this, R.string.invalid_request, Toast.LENGTH_LONG).show();
             finish();
@@ -50,8 +51,10 @@ public class AuthenticateActivity extends AbstractNfcActivity {
         }
 
         if (savedInstanceState == null) {
-            replaceFragment(R.id.frameLayout, new ProgressFragment());
-            mMainViewFragment.startAuthentication(tcURL);
+
+            if (!mNpaTester.needsToShowOtherContent(R.id.frameLayout)) {
+                startAuthentication();
+            }
 
         } else {
             mPin = savedInstanceState.getByteArray(PIN_KEY);
@@ -72,12 +75,6 @@ public class AuthenticateActivity extends AbstractNfcActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        mNfcTransportProvider.handleIntent(intent);
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mPin != null) {
@@ -90,6 +87,17 @@ public class AuthenticateActivity extends AbstractNfcActivity {
     public void onBackPressed() {
         onCancelPressed();
         super.onBackPressed();
+    }
+
+    @Override
+    public void onDeviceNpaCapable() {
+        startAuthentication();
+    }
+
+    private void startAuthentication() {
+        replaceFragment(R.id.frameLayout, new ProgressFragment());
+        mMainViewFragment.startAuthentication(mTcUrl);
+        mTcUrl = null;
     }
 
     public IEAC_Info getIeacInfo() {

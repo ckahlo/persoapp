@@ -7,14 +7,13 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-    <!--TODO: Icons oder entfernen -->
     <!--<ImageView -->
             <!--android:id="@+id/imageView"-->
             <!--android:layout_width="?android:attr/listPreferredItemHeight"-->
             <!--android:layout_height="?android:attr/listPreferredItemHeight"-->
             <!--android:minHeight="?android:attr/listPreferredItemHeight"-->
             <!--android:padding="12dp"-->
-            <!--android:src="@drawable/img_singleplayer"-->
+            <!--android:src="@drawable/any_image"-->
             <!--tools:ignore="ContentDescription" />-->
 
     <TextView

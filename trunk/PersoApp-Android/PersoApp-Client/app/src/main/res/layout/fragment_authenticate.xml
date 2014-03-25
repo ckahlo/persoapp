@@ -9,41 +9,22 @@
         android:orientation="vertical"
         tools:context="de.persoapp.android.activity.AuthenticateActivity">
 
-    <LinearLayout
-            android:id="@+id/button_container"
+    <TextView
+            android:id="@+id/textView_confirm"
+            style="@style/ButtonBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/white"
-            android:divider="@drawable/divider_vertical_bright"
-            android:dividerPadding="12dp"
-            android:showDividers="middle">
-
-        <TextView
-                android:id="@+id/textView_cancel"
-                style="@style/ButtonBottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="@android:string/cancel" />
-
-        <TextView
-                android:id="@+id/textView_confirm"
-                style="@style/ButtonBottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="@string/confirm"
-                android:visibility="invisible"
-                tools:visibility="visible" />
-    </LinearLayout>
+            android:layout_gravity="center"
+            android:background="@drawable/bottom_button_background"
+            android:text="@string/confirm"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/button_container"
+            android:layout_above="@id/textView_confirm"
             android:orientation="vertical">
 
         <com.astuetz.PagerSlidingTabStrip

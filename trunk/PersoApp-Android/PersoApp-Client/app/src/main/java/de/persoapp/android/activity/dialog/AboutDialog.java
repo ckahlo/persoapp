@@ -36,7 +36,7 @@ public class AboutDialog extends DialogFragment {
 
 //                    case DialogInterface.BUTTON_NEUTRAL:
 ////                        startActivity(new Intent(getActivity(), LicenseActivity.class));
-//                        // TODO:
+//                        // TODO: add License view
 //
 //                        break;
                 }

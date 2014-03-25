@@ -2,5 +2,6 @@
 <resources>
     <declare-styleable name="PinRow">
         <attr name="fieldCount" format="integer" />
+        <attr name="fieldMargin" format="dimension" />
     </declare-styleable>
 </resources>

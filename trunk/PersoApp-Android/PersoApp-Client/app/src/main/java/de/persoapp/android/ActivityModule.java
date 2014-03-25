@@ -9,18 +9,19 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import de.persoapp.android.activity.ActivatePinActivity;
+import de.persoapp.android.activity.CommonChangePinActivity;
 import de.persoapp.android.activity.AuthenticateActivity;
-import de.persoapp.android.activity.ChangePinActivity;
 import de.persoapp.android.activity.MainActivity;
 import de.persoapp.android.activity.PinOptionsActivity;
 import de.persoapp.android.activity.dialog.CanDialog;
 import de.persoapp.android.activity.dialog.QuestionDialog;
-import de.persoapp.android.activity.fragment.ActivatePinFragment;
+import de.persoapp.android.activity.fragment.CommonChangePinFragment;
 import de.persoapp.android.activity.fragment.AuthenticateFragment;
 import de.persoapp.android.activity.fragment.ConfirmPinFragment;
+import de.persoapp.android.activity.fragment.DeviceNotNpaCapableFragment;
 import de.persoapp.android.activity.fragment.InitializeAppFragment;
 import de.persoapp.android.activity.fragment.NewPinFragment;
+import de.persoapp.android.nfc.NpaTester;
 import de.persoapp.android.view.MenuHelper;
 import de.persoapp.android.view.PinRow;
 
@@ -37,8 +38,7 @@ import de.persoapp.android.view.PinRow;
                 MainActivity.class,
                 AuthenticateActivity.class,
                 PinOptionsActivity.class,
-                ActivatePinActivity.class,
-                ChangePinActivity.class,
+                CommonChangePinActivity.class,
 
                 NewPinFragment.class,
                 ConfirmPinFragment.class,
@@ -46,9 +46,11 @@ import de.persoapp.android.view.PinRow;
                 CanDialog.class,
                 AuthenticateFragment.class,
                 InitializeAppFragment.class,
-                ActivatePinFragment.class,
+                CommonChangePinFragment.class,
+                DeviceNotNpaCapableFragment.class,
 
-                PinRow.class
+                PinRow.class,
+                NpaTester.class
         }
 )
 public class ActivityModule {
@@ -59,4 +61,9 @@ public class ActivityModule {
         return new MenuHelper((BaseActivitySupport) activity);
     }
 
+    @Provides
+    @Singleton
+    NpaTester provideNpaTester(Activity activity) {
+        return new NpaTester((BaseActivitySupport) activity);
+    }
 }

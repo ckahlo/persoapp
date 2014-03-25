@@ -19,8 +19,7 @@ import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import de.persoapp.android.R;
-import de.persoapp.android.core.adapter.NfcTransportProvider;
-import de.persoapp.android.nfc.NpaTester;
+import de.persoapp.android.nfc.NfcTester;
 
 /**
  * @author Ralf Wondratschek
@@ -30,9 +29,6 @@ public class InitializeAppFragment extends Fragment {
 
     @Inject
     EventBus mEventBus;
-
-    @Inject
-    NpaTester mNpaTester;
 
     private ImageView mImageView;
 
@@ -73,8 +69,8 @@ public class InitializeAppFragment extends Fragment {
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    public void onEvent(NfcTransportProvider.NfcConnectedEvent event) {
-        if (mNpaTester.testIsoDep(event.getIsoDep())) {
+    public void onEventMainThread(NfcTester.NpaCapableEvent event) {
+        if (event.isNpaSupported()) {
             playSuccessAnimation();
         } else {
             mEventBus.post(new OnAppInitialized(false));

@@ -3,24 +3,32 @@ package de.persoapp.android.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
+import net.vrallev.android.base.LooperBackground;
 import net.vrallev.android.base.util.Cat;
+
+import javax.inject.Inject;
 
 import de.persoapp.android.R;
 import de.persoapp.android.activity.fragment.CommonChangePinFragment;
-import de.persoapp.android.core.adapter.MainViewFragment;
+import de.persoapp.android.activity.fragment.ProgressFragment;
 import de.persoapp.core.client.IMainView;
-import hugo.weaving.DebugLog;
 
 /**
  * @author Ralf Wondratschek
- * TODO: move buttons to the top
  */
 public class CommonChangePinActivity extends AbstractNfcActivity {
 
+    public static final int REQUEST_CODE = 100;
+
     public static final String MODE_KEY = "mode";
+
+    private static final int MSG_CHANGE_PIN = 1;
 
     public static Intent createIntent(Context context, Mode mode) {
         if (context == null || mode == null) {
@@ -34,65 +42,55 @@ public class CommonChangePinActivity extends AbstractNfcActivity {
 
     private Mode mMode;
 
+    @Inject
+    @LooperBackground
+    Looper mLooper;
+
+    private Handler mHandler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.frame_layout);
 
+        mHandler = new MyHandler(mLooper);
+
         if (savedInstanceState == null) {
             replaceFragment(R.id.frameLayout, new CommonChangePinFragment(), FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            setResult(RESULT_CANCELED);
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mMainViewFragment.setMainViewCallback(new MyMainViewCallback());
-    }
-
-    @Override
-    protected void onStop() {
-        mMainViewFragment.setMainViewCallback(null);
-        super.onStop();
-    }
-
     public void onConfirmPressed() {
-        // TODO
-        new Thread() {
-            @Override
-            public void run() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
+        if (!(fragment instanceof CommonChangePinFragment)) {
+            Cat.w("Wrong state");
+            return;
+        }
 
-                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
-                if (!(fragment instanceof CommonChangePinFragment)) {
-                    Cat.w("Wrong state");
-                    return;
-                }
+        byte[] pinOld = ((CommonChangePinFragment) fragment).getPinOld();
+        byte[] pinNew = ((CommonChangePinFragment) fragment).getPinNew();
 
-                byte[] pinOld = ((CommonChangePinFragment) fragment).getPinOld();
-                byte[] pinNew = ((CommonChangePinFragment) fragment).getPinNew();
+        IMainView.ChangePINDialogResult pinDialogResult;
 
-                IMainView.ChangePINDialogResult pinDialogResult;
+        switch (getMode()) {
+            case ACTIVATE:
+            case CHANGE:
+                pinDialogResult = new IMainView.ChangePINDialogResult(pinOld, pinNew, true);
+                break;
 
-                switch (getMode()) {
-                    case ACTIVATE:
-                    case CHANGE:
-                        pinDialogResult = new IMainView.ChangePINDialogResult(pinOld, pinNew, true);
-                        break;
+            case UNLOCK:
+                // pinOld is the PUK
+                pinDialogResult = new IMainView.ChangePINDialogResult(pinOld, null, true);
+                break;
 
-                    case UNLOCK:
-                        // pinOld is the PUK
-                        pinDialogResult = new IMainView.ChangePINDialogResult(pinOld, null, true);
-                        break;
+            default:
+                throw new IllegalStateException();
+        }
 
-                    default:
-                        throw new IllegalStateException();
-                }
+        replaceFragment(R.id.frameLayout, new ProgressFragment(), "Tag", FragmentTransaction.TRANSIT_FRAGMENT_OPEN, true);
 
-                Object result = mMainViewFacade.triggerEvent(getMode().getCoreEventId(), pinDialogResult);
-
-                Cat.d("");
-            }
-        }.start();
+        mHandler.sendMessage(mHandler.obtainMessage(MSG_CHANGE_PIN, pinDialogResult));
     }
 
     public Mode getMode() {
@@ -121,10 +119,36 @@ public class CommonChangePinActivity extends AbstractNfcActivity {
         }
     }
 
-    private class MyMainViewCallback extends MainViewFragment.MainViewCallback {
+    private class MyHandler extends Handler {
+
+        private MyHandler(Looper looper) {
+            super(looper);
+        }
+
         @Override
-        @DebugLog
-        public void showProgress(String message, int amount, boolean enabled) {
+        public void handleMessage(Message msg) {
+            if (msg.what != MSG_CHANGE_PIN) {
+                return;
+            }
+
+            Object result = mMainViewFacade.triggerEvent(getMode().getCoreEventId(), msg.obj);
+
+            if (result instanceof Boolean && (Boolean)result) {
+                setResult(RESULT_OK);
+                mMainViewFragment.showMessage(getString(R.string.action_success), IMainView.SUCCESS);
+                mMainViewFragment.closeDialogs();
+
+            } else {
+                mMainViewFragment.showMessage(getString(R.string.action_failure), IMainView.ERROR);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        removeFragment(getSupportFragmentManager().findFragmentById(R.id.frameLayout), FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                        getSupportFragmentManager().popBackStack();
+                    }
+                });
+            }
         }
     }
 }

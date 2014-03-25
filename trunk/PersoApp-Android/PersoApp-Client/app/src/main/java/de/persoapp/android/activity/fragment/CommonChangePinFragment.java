@@ -85,9 +85,9 @@ public class CommonChangePinFragment extends Fragment {
         mViewConfirm.setOnClickListener(onClickListener);
 
         tabStrip.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+
             @Override
             public void onPageSelected(int position) {
-                // this is needed for the focus switch
                 if (position == 0) {
                     mEventBus.unregister(mFragmentPagerAdapter.findFragment(1));
                 } else {
@@ -110,6 +110,7 @@ public class CommonChangePinFragment extends Fragment {
     @Override
     public void onPause() {
         mEventBus.unregister(this);
+        mEventBus.unregister(mFragmentPagerAdapter.findFragment(1));
         super.onPause();
     }
 

@@ -99,15 +99,20 @@ public abstract class AbstractGetResultDialog<T> extends DialogFragment {
     }
 
     public T askForResult(final BaseActivitySupport activity, String title, String message) {
+        Bundle args = new Bundle();
+        args.putString(TITLE, title);
+        args.putString(MESSAGE, message);
+
+        return askForResult(activity, args);
+    }
+
+    public T askForResult(final BaseActivitySupport activity, Bundle args) {
         if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
             throw new IllegalThreadStateException("You are on the UI thread!");
         }
 
         final double id = Math.random();
 
-        Bundle args = new Bundle();
-        args.putString(TITLE, title);
-        args.putString(MESSAGE, message);
         args.putDouble(ID, id);
         setArguments(args);
 

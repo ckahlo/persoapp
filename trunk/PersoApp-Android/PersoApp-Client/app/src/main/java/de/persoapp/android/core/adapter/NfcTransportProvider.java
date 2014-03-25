@@ -1,18 +1,16 @@
 package de.persoapp.android.core.adapter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.NfcManager;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
-import android.provider.Settings;
 
+import net.vrallev.android.base.BaseActivitySupport;
 import net.vrallev.android.base.util.Cat;
 import net.vrallev.android.base.util.IoUtils;
 
@@ -21,16 +19,16 @@ import java.io.IOException;
 import javax.smartcardio.CardException;
 
 import de.greenrobot.event.EventBus;
+import de.persoapp.android.R;
+import de.persoapp.android.activity.dialog.QuestionDialog;
 import de.persoapp.core.card.CCID;
+import de.persoapp.core.card.ICardHandler;
 import de.persoapp.core.card.TransportProvider;
 import de.persoapp.core.util.ArrayTool;
 import de.persoapp.core.util.Hex;
 
 /**
  * @author Ralf Wondratschek
- *
- * TODO: clean comments
- *
  */
 public class NfcTransportProvider implements TransportProvider, CCID {
 
@@ -40,36 +38,16 @@ public class NfcTransportProvider implements TransportProvider, CCID {
     private IsoDep mIsoDep = null;
     private int mLastSW = 0;
 
+    private BaseActivitySupport mActivity;
+
     public NfcTransportProvider(NfcManager nfcManager, EventBus eventBus) {
         mNfcAdapter = nfcManager.getDefaultAdapter();
         mEventBus = eventBus;
     }
 
-//    public static NfcTransport getInstance() {
-//        return instance;
-//    }
-
-    private void ensureSensorIsOn(final Activity activity) {
-        if (mNfcAdapter != null && !mNfcAdapter.isEnabled()) {
-            new AlertDialog.Builder(activity)
-                    .setTitle("NFC abgeschaltet")
-                    .setMessage("NFC einschalten")
-                    .setPositiveButton("Einstellungen", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            activity.startActivity(new Intent(Settings.ACTION_NFC_SETTINGS));
-                        }
-                    }).setNegativeButton(android.R.string.cancel, null)
-                    .show();
-        }
-    }
-
     @SuppressWarnings("ConstantConditions")
-    public void enableForegroundDispatch(Activity activity) {
+    public void enableForegroundDispatch(BaseActivitySupport activity) {
         if (mNfcAdapter != null) {
-            Cat.d("NFC Found");
-
-            ensureSensorIsOn(activity);
 
             final Context applicationContext = activity.getApplicationContext();
 
@@ -83,14 +61,19 @@ public class NfcTransportProvider implements TransportProvider, CCID {
             intentFilters[0].addAction(NfcAdapter.ACTION_TECH_DISCOVERED);
             intentFilters[0].addCategory(Intent.CATEGORY_DEFAULT);
 
-            mNfcAdapter.enableForegroundDispatch(activity, pendingIntent, intentFilters, new String[][] { new String[] { IsoDep.class.getName() } });
+            mNfcAdapter.enableForegroundDispatch(activity, pendingIntent, intentFilters, new String[][]{new String[]{IsoDep.class.getName()}});
+
+            mActivity = activity;
+            Cat.d("Foreground dispatch enabled");
         }
     }
 
     public void disableForegroundDispatch(final Activity targetActivity) {
         if (mNfcAdapter != null && mNfcAdapter.isEnabled()) {
             mNfcAdapter.disableForegroundDispatch(targetActivity);
+            Cat.d("Foreground dispatch disabled");
         }
+        mActivity = null;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -99,6 +82,7 @@ public class NfcTransportProvider implements TransportProvider, CCID {
         if (!NfcAdapter.ACTION_TECH_DISCOVERED.equals(action)) {
             return;
         }
+
 
         final Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
         if (tag == null) {
@@ -120,14 +104,6 @@ public class NfcTransportProvider implements TransportProvider, CCID {
             Cat.d("extended length capable? %b", mIsoDep.isExtendedLengthApduSupported());
             Cat.d("Maximum tranceive length: %d", mIsoDep.getMaxTransceiveLength());
 
-//            System.out.println("ISO-tag found: " + mIsoDep + " ID: " + Hex.toString(tag.getId()), (hb != null ? Hex.toString(hb) : "null"));
-
-//            System.out.println("extended length capable? " + miso.isExtendedLengthApduSupported());
-//            System.out.println("Maximum transceive length: " + iso.getMaxTransceiveLength());
-
-            // 10 seconds time-out for tests
-            //	iso.setTimeout(10000);
-
             try {
                 if (!mIsoDep.isConnected()) {
                     mIsoDep.connect();
@@ -145,39 +121,18 @@ public class NfcTransportProvider implements TransportProvider, CCID {
             }
 
         } else {
-//            System.out.println("Not an ISO-Tag");
             Cat.d("Not an ISO-Tag");
         }
 
         // mIsoDep may be null, but that's fine
         mEventBus.post(new NfcConnectedEvent(mIsoDep));
-
-        //		final NotificationManager notifMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        //
-        //		final Notification notif = new Notification();
-        //		notif.ledARGB = Color.argb(255, 0, 0, 255);
-        //		notif.flags |= Notification.FLAG_SHOW_LIGHTS;
-        //		notif.ledOnMS = 200;
-        //		notif.ledOffMS = 300;
-        //
-        //		notifMgr.notify(1234, notif);
-
-//		QuestionDialog.dismissLastInstance();
-
     }
 
     private IsoDep getIsoDep() {
-        // TODO: add basic check at the start of the app
         boolean extendedLengthSupported = true;
         if (mIsoDep != null) {
             extendedLengthSupported = mIsoDep.isExtendedLengthApduSupported();
         }
-
-        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-        // if (iso != null) {
-        // extendedLengthSupported = iso.isExtendedLengthApduSupported();
-        // }
-        // }
 
         if (mIsoDep != null && extendedLengthSupported && !mIsoDep.isConnected()) {
             try {
@@ -195,10 +150,23 @@ public class NfcTransportProvider implements TransportProvider, CCID {
         return null;
     }
 
-//	@Override
-//	public byte[] transmit(final String apdu) {
-//		return transmit(Hex.fromString(apdu));
-//	}
+    public boolean testExtendedLength() {
+        boolean capable = false;
+
+        try {
+            byte[] transmit = transmit(Hex.fromString("00a4040c00" + Hex.shortToString(ICardHandler.AID_NPA.length() / 2) + ICardHandler.AID_NPA));
+            if (transmit != null && (mLastSW == 0x9000 || mLastSW == 0x6982)) {
+                byte[] buffer = new byte[400];
+                transmit = transmit(Hex.fromString("00a4040c00" + Hex.shortToString(buffer.length) + Hex.toString(buffer)));
+                capable = transmit != null && (mLastSW == 0x6a82 || mLastSW == 0x6a87);
+            }
+        } catch (Exception e) {
+            Cat.e(e);
+        }
+
+        return capable;
+    }
+
 
     @Override
     public byte[] transmit(final byte[] apdu) {
@@ -207,12 +175,7 @@ public class NfcTransportProvider implements TransportProvider, CCID {
 
             final IsoDep iso = getIsoDep();
             if (iso != null) {
-                // System.out.println("<NFC: " + Hex.toString(apdu));
-
-                // TODO: catch Exceptions here / Transceive failed or Transceive length exceeds supported maximum
                 byte[] rpdu = iso.transceive(apdu);
-
-                // System.out.println(">NFC: " + Hex.toString(rpdu));
 
                 if (rpdu != null && rpdu.length >= 2) {
                     mLastSW = ((rpdu[rpdu.length - 2] & 0xFF) << 8) + (rpdu[rpdu.length - 1] & 0xFF);
@@ -221,7 +184,10 @@ public class NfcTransportProvider implements TransportProvider, CCID {
                 return rpdu;
             }
         } catch (final IOException e) {
-            Cat.e(e);
+            // TODO: check with CK
+            if (mActivity != null && new QuestionDialog().askForResult(mActivity, R.string.tranceive_failed_title, R.string.tranceive_failed_message, true)) {
+                return transmit(apdu);
+            }
         }
 
         return null;
@@ -263,6 +229,7 @@ public class NfcTransportProvider implements TransportProvider, CCID {
         return null;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public static class NfcConnectedEvent {
 
         private final IsoDep mIsoDep;

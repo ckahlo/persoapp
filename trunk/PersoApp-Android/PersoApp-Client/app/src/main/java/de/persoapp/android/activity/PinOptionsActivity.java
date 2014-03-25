@@ -1,5 +1,6 @@
 package de.persoapp.android.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,19 +26,35 @@ public class PinOptionsActivity extends AbstractNfcActivity {
         adapterView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CommonChangePinActivity.Mode mode;
                 switch (position) {
                     case 0:
-                        startActivity(CommonChangePinActivity.createIntent(PinOptionsActivity.this, CommonChangePinActivity.Mode.ACTIVATE));
+                        mode = CommonChangePinActivity.Mode.ACTIVATE;
                         break;
                     case 1:
-                        startActivity(CommonChangePinActivity.createIntent(PinOptionsActivity.this, CommonChangePinActivity.Mode.CHANGE));
+                        mode = CommonChangePinActivity.Mode.CHANGE;
                         break;
                     case 2:
-                        startActivity(CommonChangePinActivity.createIntent(PinOptionsActivity.this, CommonChangePinActivity.Mode.UNLOCK));
+                        mode = CommonChangePinActivity.Mode.UNLOCK;
                         break;
+                    default:
+                        throw new IllegalStateException();
                 }
+
+                startActivityForResult(CommonChangePinActivity.createIntent(PinOptionsActivity.this, mode), CommonChangePinActivity.REQUEST_CODE);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CommonChangePinActivity.REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private BaseAdapter mAdapter = new BaseAdapter() {

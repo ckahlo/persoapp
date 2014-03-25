@@ -12,7 +12,7 @@ public class ChangePinActivity extends AbstractNfcActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_activate_pin);
+//        setContentView(R.layout.fragment_activate_pin);
         if (savedInstanceState == null) {
             replaceFragment(android.R.id.content, new CurrentPinFragment());
         }

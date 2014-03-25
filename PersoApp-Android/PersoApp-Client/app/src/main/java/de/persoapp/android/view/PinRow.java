@@ -38,7 +38,7 @@ public class PinRow extends LinearLayout {
     protected EventBus mEventBus;
 
     protected int mFieldCount;
-    protected EditText[] mEditTexts;
+    protected EditTextFalse[] mEditTexts;
 
     public PinRow(Context context) {
         super(context);
@@ -72,12 +72,12 @@ public class PinRow extends LinearLayout {
             }
         }
 
-        mEditTexts = new EditText[mFieldCount];
+        mEditTexts = new EditTextFalse[mFieldCount];
 
         final LayoutInflater layoutInflater = LayoutInflater.from(context);
 
         for (int i = 0; i < mEditTexts.length; i++) {
-            mEditTexts[i] = (EditText) layoutInflater.inflate(R.layout.pin_field, this, false);
+            mEditTexts[i] = (EditTextFalse) layoutInflater.inflate(R.layout.pin_field, this, false);
             addView(mEditTexts[i]);
 
             mEditTexts[i].setId(100 + i); // assign IDs for configuration change
@@ -150,7 +150,7 @@ public class PinRow extends LinearLayout {
         return true;
     }
 
-    public EditText getEditText(int index) {
+    public EditTextFalse getEditText(int index) {
         return mEditTexts[index];
     }
 

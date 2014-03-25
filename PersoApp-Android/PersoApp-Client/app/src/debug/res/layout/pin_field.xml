@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<EditText xmlns:android="http://schemas.android.com/apk/res/android"
+<de.persoapp.android.view.EditTextFalse xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_margin="2dp"
-        android:maxLength="1"
-        android:gravity="center"
         android:layout_height="wrap_content"
-        android:inputType="number"/>
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:inputType="number"
+        android:maxLength="1" />

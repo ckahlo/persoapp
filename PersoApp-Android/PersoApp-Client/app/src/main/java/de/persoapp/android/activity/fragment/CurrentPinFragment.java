@@ -37,7 +37,6 @@ public class CurrentPinFragment extends PinFragment {
                 layout = R.layout.fragment_current_pin;
                 break;
             case UNLOCK:
-                // TODO: check PUK UI
                 layout = R.layout.fragment_puk;
                 break;
             default:

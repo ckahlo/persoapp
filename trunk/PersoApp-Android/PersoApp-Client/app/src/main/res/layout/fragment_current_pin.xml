@@ -31,8 +31,7 @@
                 android:layout_margin="@dimen/card_padding"
                 android:background="@drawable/card_background"
                 android:padding="@dimen/card_padding_inner"
-                android:text="@string/landing_page_description"
-                tools:text="@string/landing_page_description" />
+                android:text="@string/current_pin_description" />
 
     </LinearLayout>
 </ScrollView>

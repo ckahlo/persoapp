@@ -156,7 +156,7 @@ public class CommonChangePinFragment extends Fragment {
     protected boolean isInputComplete() {
         PinFragment fragment1 = mFragmentPagerAdapter.findFragment(0);
         PinFragment fragment2 = mFragmentPagerAdapter.findFragment(1);
-        return fragment1 != null && fragment2 != null && fragment1.isInputComplete() && fragment2.isInputComplete();
+        return fragment1 != null && fragment2 != null && fragment2.isInputComplete() && fragment1.isInputComplete();
     }
 
     private class MyFragmentPagerAdapter extends FragmentPagerAdapter {

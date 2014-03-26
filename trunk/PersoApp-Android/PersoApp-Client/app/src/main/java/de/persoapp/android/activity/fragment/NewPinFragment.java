@@ -8,13 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
-import net.vrallev.android.base.BaseActivitySupport;
 import net.vrallev.android.base.util.Cat;
 
 import javax.inject.Inject;
 
 import de.persoapp.android.R;
+import de.persoapp.android.activity.CommonChangePinActivity;
 import de.persoapp.android.view.EditTextFalse;
 import de.persoapp.android.view.PinRow;
 
@@ -23,7 +24,7 @@ import de.persoapp.android.view.PinRow;
  */
 public class NewPinFragment extends PinFragment {
 
-    private BaseActivitySupport mActivity;
+    private CommonChangePinActivity mActivity;
 
     private PinRow mPinRow;
     private PinRow mPinRowConfirm;
@@ -34,7 +35,7 @@ public class NewPinFragment extends PinFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mActivity = (BaseActivitySupport) activity;
+        mActivity = (CommonChangePinActivity) activity;
         mActivity.inject(this);
     }
 
@@ -50,12 +51,25 @@ public class NewPinFragment extends PinFragment {
 
         mPinRow.setLastImeOption(EditorInfo.IME_ACTION_NEXT);
 
+        TextView textView = (TextView) view.findViewById(R.id.textView_new_pin_description);
+
+        switch (mActivity.getMode()) {
+            case ACTIVATE:
+                textView.setText(R.string.new_pin_activate_description);
+                break;
+
+            case CHANGE:
+            case UNLOCK:
+                textView.setText(R.string.new_pin_pin_change_description);
+                break;
+        }
+
         return view;
     }
 
     @Override
     public boolean isInputComplete() {
-        return mPinRow != null && mPinRowConfirm != null && mPinRow.isComplete() && mPinRowConfirm.isComplete() && !hasFalseField();
+        return mPinRow != null && mPinRowConfirm != null && !hasFalseField() && mPinRow.isComplete() && mPinRowConfirm.isComplete();
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -25,9 +26,6 @@ import de.persoapp.android.R;
 
 /**
  * @author Ralf Wondratschek
- *
- * TODO: delete button
- * TODO: Sony devices fix
  */
 @SuppressWarnings({"UnusedParameters", "UnusedDeclaration"})
 public class PinRow extends LinearLayout {
@@ -88,9 +86,7 @@ public class PinRow extends LinearLayout {
                 ((LayoutParams)mEditTexts[i].getLayoutParams()).setMargins(mFieldMargin, mFieldMargin, mFieldMargin, mFieldMargin);
             }
 
-
             mEditTexts[i].setId(100 + i); // assign IDs for configuration change
-            mEditTexts[i].setOnKeyListener(mOnKeyListener);
             mEditTexts[i].setImeOptions(i < (mEditTexts.length - 1) ? EditorInfo.IME_ACTION_NEXT : EditorInfo.IME_ACTION_DONE);
             mEditTexts[i].addTextChangedListener(mTextWatcher);
             mEditTexts[i].setRawInputType(Configuration.KEYBOARD_12KEY);
@@ -170,54 +166,56 @@ public class PinRow extends LinearLayout {
         }
     }
 
-    private OnKeyListener mOnKeyListener = new OnKeyListener() {
-
-        private char mChar = 255;
-
-        @Override
-        public boolean onKey(View v, int keyCode, KeyEvent event) {
-            switch (event.getAction()) {
-                case KeyEvent.ACTION_DOWN:
-                    if (v instanceof EditText) {
-                        EditText editText = (EditText) v;
-                        if (!TextUtils.isEmpty(editText.getText())) {
-                            mChar = (char) event.getUnicodeChar();
-                        }
-                    }
-                    break;
-
-                case KeyEvent.ACTION_UP:
-                    View view = v.focusSearch(FOCUS_RIGHT);
-                    if (view != null) {
-                        view.requestFocus();
-                    } else {
-                        mEventBus.post(InputEvent.FINISHED);
-                    }
-
-                    if (mChar != 255) {
-                        ((EditText) v).setText(String.valueOf(mChar));
-                        mChar = 255;
-                    }
-
-                    break;
-            }
-
-            return false;
-        }
-    };
-
     private TextWatcher mTextWatcher = new TextWatcher() {
+
+        private boolean mIgnoreNextEvent;
+
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            mEventBus.post(InputEvent.NEW_INPUT);
+            if (s instanceof SpannableStringBuilder) {
+                SpannableStringBuilder builder = (SpannableStringBuilder) s;
+
+                if (builder.length() >= 2) {
+                    // we only want a max length of 1, but we set a maxLength of 2 to get a callback in the textWatcher
+                    // don't post the next event, because we programmatically changed the text
+                    mIgnoreNextEvent = true;
+                    char c = builder.charAt(start);
+                    builder.replace(0, builder.length(), String.valueOf(c));
+                }
+            }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
+            if (mIgnoreNextEvent) {
+                mIgnoreNextEvent = false;
+                return;
+            }
+
+            mEventBus.post(InputEvent.NEW_INPUT);
+
+            if(!TextUtils.isEmpty(s)){
+                View view = getRootView();
+                if (view == null) {
+                    return;
+                }
+                view = view.findFocus();
+                if (view == null) {
+                    return;
+                }
+
+                view = view.focusSearch(FOCUS_RIGHT);
+                if (view != null) {
+                    view.requestFocus();
+                } else {
+                    mEventBus.post(InputEvent.FINISHED);
+                }
+            }
+
         }
     };
 

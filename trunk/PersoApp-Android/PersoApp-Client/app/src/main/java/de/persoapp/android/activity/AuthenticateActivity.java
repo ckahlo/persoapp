@@ -45,6 +45,9 @@ public class AuthenticateActivity extends AbstractNfcActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.frame_layout); // we need this empty frame, otherwise Crouton may render its croutons wrong
 
+        // default value
+        setResult(RESULT_CANCELED);
+
         Uri uri = getIntent().getData();
         mTcUrl = uri != null ? uri.getQueryParameter(TC_TOKEN_PARAMETER) : null;
 
@@ -118,7 +121,7 @@ public class AuthenticateActivity extends AbstractNfcActivity {
         progressFragment.setMessage(getString(R.string.please_wait));
         replaceFragment(R.id.frameLayout, progressFragment);
 
-        mMainViewFragment.startAuthentication(mTcUrl);
+        mMainViewFragment.startAuthentication(mTcUrl, getIntent());
         mTcUrl = null;
     }
 
@@ -204,7 +207,7 @@ public class AuthenticateActivity extends AbstractNfcActivity {
         }
 
         @Override
-        public void closeDialogs() {
+        public void closeDialogs(boolean success) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

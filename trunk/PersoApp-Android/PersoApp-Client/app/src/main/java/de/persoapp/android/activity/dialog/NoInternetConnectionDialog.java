@@ -3,8 +3,12 @@ package de.persoapp.android.activity.dialog;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
@@ -29,6 +33,8 @@ public class NoInternetConnectionDialog extends DialogFragment {
 
     @Inject
     EventBus mEventBus;
+
+    private boolean mRegistered;
 
     @Override
     public void onAttach(Activity activity) {
@@ -64,8 +70,7 @@ public class NoInternetConnectionDialog extends DialogFragment {
         super.onResume();
 
         if (mNetworkHelper.isNetworkAvailable()) {
-            dismiss();
-            mEventBus.post(new InitializeAppFragment.OnAppInitialized(true));
+            closeDialog();
 
         } else {
             AlertDialog dialog = (AlertDialog) getDialog();
@@ -76,6 +81,32 @@ public class NoInternetConnectionDialog extends DialogFragment {
                     startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
                 }
             });
+
+            getActivity().registerReceiver(mBroadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+            mRegistered = true;
         }
     }
+
+    @Override
+    public void onPause() {
+        if (mRegistered) {
+            getActivity().unregisterReceiver(mBroadcastReceiver);
+            mRegistered = false;
+        }
+        super.onPause();
+    }
+
+    private void closeDialog() {
+        dismiss();
+        mEventBus.post(new InitializeAppFragment.OnAppInitialized(true));
+    }
+
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mNetworkHelper.isNetworkAvailable()) {
+                closeDialog();
+            }
+        }
+    };
 }

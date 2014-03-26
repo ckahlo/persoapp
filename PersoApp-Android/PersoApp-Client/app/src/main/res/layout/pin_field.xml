@@ -6,4 +6,4 @@
         android:layout_weight="1"
         android:gravity="center"
         android:inputType="numberPassword"
-        android:maxLength="1" />
+        android:maxLength="2" /><!-- 2 is necessary for the TextWatcher -->

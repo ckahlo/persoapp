@@ -167,6 +167,7 @@ public class AuthenticateActivity extends AbstractNfcActivity {
     private class MyMainViewCallback extends MainViewFragment.MainViewCallback implements NfcTransportProvider.TranceiveErrorCallback {
 
         private static final int PIN_SUCCESSFULLY_CHECKED = 25;
+        private static final int MAIN_DIALOG_VISIBLE = 1;
 
         private int mProgress;
 
@@ -174,6 +175,8 @@ public class AuthenticateActivity extends AbstractNfcActivity {
         public void showMainDialog(final IEAC_Info eacInfo, final int mode) {
             mIeacInfo = eacInfo;
             put(IEAC_INFO, mIeacInfo);
+
+            mProgress = MAIN_DIALOG_VISIBLE;
 
             runOnUiThread(new Runnable() {
                 @Override
@@ -203,7 +206,9 @@ public class AuthenticateActivity extends AbstractNfcActivity {
 
         @Override
         public boolean shouldRepeatTranceive(byte[] apdu, Exception e) {
-            return mProgress < PIN_SUCCESSFULLY_CHECKED && new QuestionDialog().askForResult(AuthenticateActivity.this, R.string.tranceive_failed_title, R.string.tranceive_failed_message, true);
+            return mProgress < PIN_SUCCESSFULLY_CHECKED
+                    && mProgress >= MAIN_DIALOG_VISIBLE
+                    && new QuestionDialog().askForResult(AuthenticateActivity.this, R.string.tranceive_failed_title, R.string.tranceive_failed_message, true);
         }
 
         @Override

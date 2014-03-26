@@ -308,6 +308,8 @@ public class MainViewFragment extends Fragment implements IMainView {
             return;
         }
 
+        excludeFromRecentAppList(activity);
+
         if (isAuthenticationSuccess()) {
             if (mRefreshBrowser) {
                 sendIntentToBrowser();
@@ -339,6 +341,14 @@ public class MainViewFragment extends Fragment implements IMainView {
         }
     }
 
+    protected void excludeFromRecentAppList(Activity activity) {
+        // a dirty hack to exclude this activity from the recent app list after the process finished
+        // since it runs in singleInstance mode onNewIntent will be called
+        final Intent intent = new Intent(activity, activity.getClass());
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        startActivity(intent);
+    }
 
     public static abstract class MainViewCallback {
 

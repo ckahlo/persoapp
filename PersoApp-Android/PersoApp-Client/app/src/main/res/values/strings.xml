@@ -54,7 +54,7 @@
     <string name="transaction_data">Transaktionsdaten:</string>
     <string formatted="false" name="validity_string">Gültigkeit: %s - %s</string>
     <string name="test_device">Smartphone testen</string>
-    <string name="init_device_description">Bevor der Ausweis zusammen mit dem Smartphone genutzt werden kann, muss die App das Smartphone auf die entsprechende Funktionanlität überprüfen.\n\nBitte halten Sie jetzt Ihren neuen Personalausweis an die Rückseite Ihres Smartphones.</string>
+    <string name="init_device_description">Bevor der Ausweis zusammen mit Ihrem Smartphone genutzt werden kann, muss die App Ihr Smartphone auf die entsprechende Funktionanlität überprüfen.\n\nBitte halten Sie jetzt Ihren neuen Personalausweis an die Rückseite Ihres Smartphones.</string>
     <string name="puk">PUK</string>
     <string name="npa_options">Ausweis Optionen</string>
     <string name="device_not_supported">Ihr Smartphone unterstützt den neuen Personalausweis leider nicht.\n\nHalten Sie Ihren Ausweis erneut an das Smartphone, um den Test neuzustarten.</string>
@@ -72,5 +72,12 @@
     <string name="no_internet_connection">Keine Internetverbindung</string>
     <string name="no_internet_connection_message">Sie haben keine Verbindung zum Internet. Bitte stellen Sie eine Verbindung her.</string>
     <string name="authentication_failed">Authentisierung nicht erfolgreich</string>
+    <string name="main_description">Die Prüfung der Funktionalität Ihres Smartphones war erfolgreich. Sie können nun die eID-Funktion Ihres neuen Personalausweises nutzen.</string>
+    <string name="transport_pin_description">Um Ihren Ausweis zu aktivieren, tragen Sie an dieser Stelle bitte Ihre Transport PIN ein. Diese 5-stellige PIN finden Sie in den Unterlagen, welche Ihnen von der zuständigen Behörde übergeben wurden.</string>
+    <string name="current_pin_description">Bitte geben Sie an dieser Stelle Ihre aktuell gültige Personalausweis-PIN ein, um diese im nächsten Schritt ändern zu können.</string>
+    <string name="puk_description">Um Ihren neuen Personalausweis zu entsperren und seine eID-Funktion weiter nutzen zu können, ist die Eingabe Ihrer PUK zwingend erforderlich. Ihre PUK finden Sie in den Unterlagen, welche Ihnen von der zuständigen Behörde übergeben wurden.</string>
+    <string name="npa_pin_description">Um die eID-Funktion Ihres neuen Personalausweises nutzen zu können, geben Sie an dieser Stelle bitte Ihre aktuell gültige Personalausweis-PIN ein.</string>
+    <string name="new_pin_pin_change_description">Sie haben an dieser Stelle die Möglichkeit Ihren aktuellen Personalausweis-PIN zu ändern. Geben Sie dazu eine neue 6-stellige PIN ein und wiederholen Sie diese an entsprechender Stelle.</string>
+    <string name="new_pin_activate_description">Sie haben nun die Möglichkeit ihre Personalausweis-PIN zu erstellen. Geben Sie dazu eine 6-stellige PIN ein und wiederholen Sie diese an entsprechender Stelle.</string>
 
 </resources>

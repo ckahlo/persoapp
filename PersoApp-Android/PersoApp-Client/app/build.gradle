@@ -8,7 +8,7 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.0.2'
 
     compile 'net.vrallev.android.library:android-base:1.5.0'
-    compile 'net.vrallev.android.library:crouton-extension:1.0.3'
+    compile 'net.vrallev.android.library:crouton-extension:1.0.4'
 
     compile 'com.squareup.dagger:dagger:1.2.1'
     provided 'com.squareup.dagger:dagger-compiler:1.2.1'
@@ -17,8 +17,8 @@ dependencies {
 
     compile 'com.android.support:support-v4:+'
 
-    jarjar 'de.persoapp:persoapp-core:1.0.0-SNAPSHOT'
-    jarjar 'de.persoapp:persoapp-jaxb:1.0.0-SNAPSHOT'
+    jarjar 'de.persoapp:persoapp-core:1.0.0'
+    jarjar 'de.persoapp:persoapp-jaxb:1.0.0'
     jarjar 'org.bouncycastle:bcprov-jdk15on:1.50'
     jarjar ('javax.xml.bind:jaxb-api:2.2.1') {
         exclude module: 'stax-api'
@@ -64,10 +64,20 @@ android {
         versionName "1.0.0"
     }
 
+    signingConfigs {
+        releaseConfig {
+            storeFile file("../../tools/Default.keystore")
+            storePassword "123456"
+            keyAlias "Ageto"
+            keyPassword "123456"
+        }
+    }
+
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.releaseConfig
         }
 
         debug {

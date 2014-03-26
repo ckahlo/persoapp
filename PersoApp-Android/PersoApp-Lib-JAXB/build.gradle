@@ -17,8 +17,8 @@ apply plugin: 'propdeps-eclipse'
 
 sourceCompatibility = 1.6
 
-version = '1.0.0-SNAPSHOT'
-//version = '1.0.0'
+//version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
 
 group = 'de.persoapp'
 
@@ -34,7 +34,7 @@ repositories {
 }
 
 dependencies {
-    provided 'de.persoapp:persoapp-core:1.0.0-SNAPSHOT'
+    provided 'de.persoapp:persoapp-core:1.0.0'
 }
 
 sourceSets {

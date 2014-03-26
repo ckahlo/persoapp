@@ -68,5 +68,8 @@
     <string name="no_nfc_message">Ihr Gerät hat kein NFC Adapter. Sie können diese App leider nicht verwenden.</string>
     <string name="tranceive_failed_title">Verbindung unterbrochen</string>
     <string name="tranceive_failed_message">Die Verbindung wurde unterbrochen. Entfernen Sie Ihren Ausweis und halten Sie ihn erneut an Ihr Smartphone, um den Prozess fortzusetzen.</string>
+    <string name="please_wait">Bitte warten Sie, während die Anfrage verarbeitet wird.</string>
+    <string name="no_internet_connection">Keine Internetverbindung</string>
+    <string name="no_internet_connection_message">Sie haben keine Verbindung zum Internet. Bitte stellen Sie eine Verbindung her.</string>
 
 </resources>

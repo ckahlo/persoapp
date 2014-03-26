@@ -33,7 +33,6 @@ import hugo.weaving.DebugLog;
 
 /**
  * @author Ralf Wondratschek
- *         <p/>
  *         TODO: add support for intent library
  *         TODO: update Crouton library
  */
@@ -48,18 +47,24 @@ public class MainViewFragment extends Fragment implements IMainView {
         Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(TAG);
 
         if (!(fragment instanceof MainViewFragment)) {
-            MainViewFragment mainViewFragment = new MainViewFragment();
-            activity.inject(mainViewFragment);
-            activity.getSupportFragmentManager().beginTransaction().add(mainViewFragment, TAG).commit();
-
-            return mainViewFragment;
+            return forceCreateFragment(activity);
         }
 
         return (MainViewFragment) fragment;
     }
 
-    @Inject
-    NfcTransportProvider mNfcTransportProvider;
+    public static MainViewFragment forceCreateFragment(BaseActivitySupport activity) {
+        Fragment fragment = activity.getSupportFragmentManager().findFragmentByTag(TAG);
+        if (fragment != null) {
+            activity.getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }
+
+        fragment = new MainViewFragment();
+        activity.inject(fragment);
+        activity.getSupportFragmentManager().beginTransaction().add(fragment, TAG).commit();
+
+        return (MainViewFragment) fragment;
+    }
 
     @Inject
     @LooperMain
@@ -156,7 +161,11 @@ public class MainViewFragment extends Fragment implements IMainView {
 
     @Override
     public SecureHolder showCANDialog(String msg) {
-        return new CanDialog().askForResult((BaseActivitySupport) getActivity(), getString(R.string.can_dialog_title), msg);
+        if (getActivity() != null) {
+            return new CanDialog().askForResult((BaseActivitySupport) getActivity(), getString(R.string.can_dialog_title), msg);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -175,7 +184,7 @@ public class MainViewFragment extends Fragment implements IMainView {
 
     @Override
     public boolean showQuestion(String title, String message) {
-        return new QuestionDialog().askForResult((BaseActivitySupport) getActivity(), title, message);
+        return getActivity() != null && new QuestionDialog().askForResult((BaseActivitySupport) getActivity(), title, message);
     }
 
     @Override
@@ -183,7 +192,9 @@ public class MainViewFragment extends Fragment implements IMainView {
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
-                CroutonBuilder.showError(getActivity(), title, message);
+                if (getActivity() != null) {
+                    CroutonBuilder.showError(getActivity(), title, message);
+                }
             }
         });
     }
@@ -202,6 +213,9 @@ public class MainViewFragment extends Fragment implements IMainView {
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
+                if (getActivity() == null) {
+                    return;
+                }
 
                 CroutonBuilder builder = new CroutonBuilder(getActivity())
                         .setDuration(duration)
@@ -239,6 +253,10 @@ public class MainViewFragment extends Fragment implements IMainView {
         } else {
             mMainHandler.sendEmptyMessageDelayed(MSG_FINISH, Math.min(mCroutonDismissedTime - time, 2000L));
         }
+
+        if (mMainViewCallback != null) {
+            mMainViewCallback.closeDialogs();
+        }
     }
 
     @Override
@@ -257,20 +275,21 @@ public class MainViewFragment extends Fragment implements IMainView {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_FINISH:
-                    if (mRefreshAddress != null) {
-                        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(mRefreshAddress));
-
-                        // use this to reuse the last tab in the browser
-                        intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.browser");
-                        try {
-                            Cat.d("RefreshAddress == %b, %s", mRefreshAddress.endsWith("Major=ok"), mRefreshAddress);
-
-                            startActivity(intent);
-                        } catch (final Exception e) {
-                            Cat.w(e, "Unexpected exception");
-                        }
-                    }
                     if (getActivity() != null) {
+                        if (mRefreshAddress != null) {
+                            final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(mRefreshAddress));
+
+                            // use this to reuse the last tab in the browser
+                            intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.browser");
+                            try {
+                                Cat.d("RefreshAddress == %b, %s", mRefreshAddress.endsWith("Major=ok"), mRefreshAddress);
+
+                                startActivity(intent);
+                            } catch (final Exception e) {
+                                Cat.w(e, "Unexpected exception");
+                            }
+                        }
+
                         getActivity().finish();
                     }
                     break;
@@ -285,6 +304,10 @@ public class MainViewFragment extends Fragment implements IMainView {
         }
 
         public void showProgress(String message, int amount, boolean enabled) {
+            // override me
+        }
+
+        public void closeDialogs() {
             // override me
         }
     }

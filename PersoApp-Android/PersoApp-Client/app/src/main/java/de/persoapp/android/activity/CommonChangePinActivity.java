@@ -56,9 +56,21 @@ public class CommonChangePinActivity extends AbstractNfcActivity {
         mHandler = new MyHandler(mLooper);
 
         if (savedInstanceState == null) {
-            replaceFragment(R.id.frameLayout, new CommonChangePinFragment(), FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             setResult(RESULT_CANCELED);
+
+            if (!mDeviceStateTester.needsToShowOtherContent()) {
+                updateContentFragment();
+            }
         }
+    }
+
+    @Override
+    public void onDeviceReady() {
+        updateContentFragment();
+    }
+
+    protected void updateContentFragment() {
+        replaceFragment(R.id.frameLayout, new CommonChangePinFragment(), FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
     }
 
     public void onConfirmPressed() {

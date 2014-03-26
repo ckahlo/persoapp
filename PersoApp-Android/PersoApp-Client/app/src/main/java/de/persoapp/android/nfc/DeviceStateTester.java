@@ -7,12 +7,14 @@ import android.support.v4.app.FragmentTransaction;
 
 import net.vrallev.android.base.BaseActivitySupport;
 import net.vrallev.android.base.settings.SettingsMgr;
+import net.vrallev.android.base.util.NetworkHelper;
 
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
 import de.persoapp.android.activity.dialog.NfcDeactivatedDialog;
 import de.persoapp.android.activity.dialog.NfcNotSupportedDialog;
+import de.persoapp.android.activity.dialog.NoInternetConnectionDialog;
 import de.persoapp.android.activity.fragment.DeviceNotNpaCapableFragment;
 import de.persoapp.android.activity.fragment.InitializeAppFragment;
 import de.persoapp.android.core.adapter.NfcTransportProvider;
@@ -21,7 +23,7 @@ import hugo.weaving.DebugLog;
 /**
  * @author Ralf Wondratschek
  */
-public class NfcTester {
+public class DeviceStateTester {
 
     private static final String APP_NPA_CAPABLE = "npaCapable";
 
@@ -43,11 +45,14 @@ public class NfcTester {
     @Inject
     NfcManager mNfcManager;
 
+    @Inject
+    NetworkHelper mNetworkHelper;
+
     private int mLastContentId;
 
     private Thread mNpaTestThread;
 
-    public NfcTester(BaseActivitySupport activity) {
+    public DeviceStateTester(BaseActivitySupport activity) {
         mActivity = activity;
         mActivity.inject(this);
 
@@ -65,7 +70,7 @@ public class NfcTester {
 
                     mEventBus.post(new NpaCapableEvent(capable));
 
-                    synchronized (NfcTester.this) {
+                    synchronized (DeviceStateTester.this) {
                         mNpaTestThread = null;
                     }
                 }
@@ -97,6 +102,10 @@ public class NfcTester {
 
         } else if (!mNfcManager.getDefaultAdapter().isEnabled()) {
             mActivity.showDialog(new NfcDeactivatedDialog(), "dialog");
+            return true;
+
+        } else if (!mNetworkHelper.isNetworkAvailable()) {
+            mActivity.showDialog(new NoInternetConnectionDialog(), "dialog");
             return true;
 
         } else if (!hasTested()) {

@@ -3,11 +3,6 @@
         tools:context="de.persoapp.android.activity.AuthenticateActivity">
 
     <item
-            android:id="@+id/action_settings"
-            android:title="@string/settings"
-            android:orderInCategory="100"
-            android:showAsAction="never" />
-    <item
             android:id="@+id/action_help"
             android:title="@string/help"
             android:orderInCategory="101"

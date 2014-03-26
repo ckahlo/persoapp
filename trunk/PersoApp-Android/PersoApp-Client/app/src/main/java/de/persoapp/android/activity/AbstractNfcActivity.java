@@ -17,7 +17,7 @@ import de.persoapp.android.activity.fragment.InitializeAppFragment;
 import de.persoapp.android.core.adapter.MainViewFacade;
 import de.persoapp.android.core.adapter.MainViewFragment;
 import de.persoapp.android.core.adapter.NfcTransportProvider;
-import de.persoapp.android.nfc.NfcTester;
+import de.persoapp.android.nfc.DeviceStateTester;
 import de.persoapp.android.view.MenuHelper;
 
 /**
@@ -38,7 +38,7 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
     protected EventBus mEventBus;
 
     @Inject
-    protected NfcTester mNfcTester;
+    protected DeviceStateTester mDeviceStateTester;
 
     protected MainViewFragment mMainViewFragment;
 
@@ -100,19 +100,19 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
     @SuppressWarnings("UnusedDeclaration")
     public final void onEvent(InitializeAppFragment.OnAppInitialized event) {
         if (event.isSuccess()) {
-            onDeviceNfcCapable();
+            onDeviceReady();
         } else {
             // content will change to DeviceNotCapableFragment
-            mNfcTester.needsToShowOtherContent();
+            mDeviceStateTester.needsToShowOtherContent();
         }
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public final void onEvent(NfcTransportProvider.NfcConnectedEvent event) {
-        mNfcTester.testIsoDep(event.getIsoDep());
+        mDeviceStateTester.testIsoDep(event.getIsoDep());
     }
 
-    public void onDeviceNfcCapable() {
+    public void onDeviceReady() {
         // no op
     }
 }

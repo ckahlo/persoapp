@@ -19,8 +19,6 @@ import java.io.IOException;
 import javax.smartcardio.CardException;
 
 import de.greenrobot.event.EventBus;
-import de.persoapp.android.R;
-import de.persoapp.android.activity.dialog.QuestionDialog;
 import de.persoapp.core.card.CCID;
 import de.persoapp.core.card.ICardHandler;
 import de.persoapp.core.card.TransportProvider;
@@ -38,7 +36,7 @@ public class NfcTransportProvider implements TransportProvider, CCID {
     private IsoDep mIsoDep = null;
     private int mLastSW = 0;
 
-    private BaseActivitySupport mActivity;
+    private TranceiveErrorCallback mCallback;
 
     public NfcTransportProvider(NfcManager nfcManager, EventBus eventBus) {
         mNfcAdapter = nfcManager.getDefaultAdapter();
@@ -63,7 +61,6 @@ public class NfcTransportProvider implements TransportProvider, CCID {
 
             mNfcAdapter.enableForegroundDispatch(activity, pendingIntent, intentFilters, new String[][]{new String[]{IsoDep.class.getName()}});
 
-            mActivity = activity;
             Cat.d("Foreground dispatch enabled");
         }
     }
@@ -73,7 +70,10 @@ public class NfcTransportProvider implements TransportProvider, CCID {
             mNfcAdapter.disableForegroundDispatch(targetActivity);
             Cat.d("Foreground dispatch disabled");
         }
-        mActivity = null;
+    }
+
+    public void setTranceiveErrorCallback(TranceiveErrorCallback callback) {
+        mCallback = callback;
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -184,8 +184,7 @@ public class NfcTransportProvider implements TransportProvider, CCID {
                 return rpdu;
             }
         } catch (final IOException e) {
-            // TODO: check with CK
-            if (mActivity != null && new QuestionDialog().askForResult(mActivity, R.string.tranceive_failed_title, R.string.tranceive_failed_message, true)) {
+            if (mCallback != null && mCallback.shouldRepeatTranceive(apdu, e)) {
                 return transmit(apdu);
             }
         }
@@ -245,5 +244,9 @@ public class NfcTransportProvider implements TransportProvider, CCID {
         public boolean isConnected() {
             return mIsoDep != null;
         }
+    }
+
+    public static interface TranceiveErrorCallback {
+        public boolean shouldRepeatTranceive(byte[] apdu, Exception e);
     }
 }

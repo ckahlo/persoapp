@@ -3,6 +3,7 @@ package de.persoapp.android.activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import net.vrallev.android.base.util.Cat;
@@ -11,9 +12,11 @@ import java.util.Arrays;
 
 import de.persoapp.android.BuildConfig;
 import de.persoapp.android.R;
+import de.persoapp.android.activity.dialog.QuestionDialog;
 import de.persoapp.android.activity.fragment.AuthenticateFragment;
 import de.persoapp.android.activity.fragment.ProgressFragment;
 import de.persoapp.android.core.adapter.MainViewFragment;
+import de.persoapp.android.core.adapter.NfcTransportProvider;
 import de.persoapp.core.client.IEAC_Info;
 import de.persoapp.core.client.IMainView;
 
@@ -35,6 +38,8 @@ public class AuthenticateActivity extends AbstractNfcActivity {
 
     private String mTcUrl;
 
+    private MyMainViewCallback mMainViewCallback;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +57,7 @@ public class AuthenticateActivity extends AbstractNfcActivity {
 
         if (savedInstanceState == null) {
 
-            if (!mNfcTester.needsToShowOtherContent(R.id.frameLayout)) {
+            if (!mDeviceStateTester.needsToShowOtherContent(R.id.frameLayout)) {
                 startAuthentication();
             }
 
@@ -65,12 +70,26 @@ public class AuthenticateActivity extends AbstractNfcActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        mMainViewFragment.setMainViewCallback(new MyMainViewCallback());
+        mMainViewCallback = new MyMainViewCallback();
+        mMainViewFragment.setMainViewCallback(mMainViewCallback);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mNfcTransportProvider.setTranceiveErrorCallback(mMainViewCallback);
+    }
+
+    @Override
+    protected void onPause() {
+        mNfcTransportProvider.setTranceiveErrorCallback(null);
+        super.onPause();
     }
 
     @Override
     protected void onStop() {
         mMainViewFragment.setMainViewCallback(null);
+        mMainViewCallback = null;
         super.onStop();
     }
 
@@ -90,12 +109,15 @@ public class AuthenticateActivity extends AbstractNfcActivity {
     }
 
     @Override
-    public void onDeviceNfcCapable() {
+    public void onDeviceReady() {
         startAuthentication();
     }
 
     private void startAuthentication() {
-        replaceFragment(R.id.frameLayout, new ProgressFragment());
+        ProgressFragment progressFragment = new ProgressFragment();
+        progressFragment.setMessage(getString(R.string.please_wait));
+        replaceFragment(R.id.frameLayout, progressFragment);
+
         mMainViewFragment.startAuthentication(mTcUrl);
         mTcUrl = null;
     }
@@ -139,7 +161,12 @@ public class AuthenticateActivity extends AbstractNfcActivity {
         return mResultChat;
     }
 
-    private class MyMainViewCallback extends MainViewFragment.MainViewCallback {
+    private class MyMainViewCallback extends MainViewFragment.MainViewCallback implements NfcTransportProvider.TranceiveErrorCallback {
+
+        private static final int PIN_SUCCESSFULLY_CHECKED = 25;
+
+        private int mProgress;
+
         @Override
         public void showMainDialog(final IEAC_Info eacInfo, final int mode) {
             mIeacInfo = eacInfo;
@@ -155,6 +182,8 @@ public class AuthenticateActivity extends AbstractNfcActivity {
 
         @Override
         public void showProgress(final String message, int amount, boolean enabled) {
+            mProgress = amount;
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -165,6 +194,24 @@ public class AuthenticateActivity extends AbstractNfcActivity {
                     }
 
                     ((ProgressFragment) fragment).setMessage(message);
+                }
+            });
+        }
+
+        @Override
+        public boolean shouldRepeatTranceive(byte[] apdu, Exception e) {
+            return mProgress < PIN_SUCCESSFULLY_CHECKED && new QuestionDialog().askForResult(AuthenticateActivity.this, R.string.tranceive_failed_title, R.string.tranceive_failed_message, true);
+        }
+
+        @Override
+        public void closeDialogs() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.frameLayout);
+                    if (fragment != null) {
+                        removeFragment(fragment, FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                    }
                 }
             });
         }

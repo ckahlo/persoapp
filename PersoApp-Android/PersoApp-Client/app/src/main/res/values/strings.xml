@@ -71,5 +71,6 @@
     <string name="please_wait">Bitte warten Sie, während die Anfrage verarbeitet wird.</string>
     <string name="no_internet_connection">Keine Internetverbindung</string>
     <string name="no_internet_connection_message">Sie haben keine Verbindung zum Internet. Bitte stellen Sie eine Verbindung her.</string>
+    <string name="authentication_failed">Authentisierung nicht erfolgreich</string>
 
 </resources>

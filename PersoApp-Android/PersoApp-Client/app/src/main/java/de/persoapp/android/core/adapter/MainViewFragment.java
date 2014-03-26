@@ -33,13 +33,15 @@ import hugo.weaving.DebugLog;
 
 /**
  * @author Ralf Wondratschek
- *         TODO: add support for intent library
  *         TODO: update Crouton library
  */
 @SuppressWarnings("ConstantConditions")
 public class MainViewFragment extends Fragment implements IMainView {
 
     public static final String TAG = "MainViewFragmentTag";
+
+    private static final String EXTRA_DO_REDIRECT = "net.ageto.eid.intent.extra.do_redirect";
+    private static final String EXTRA_REFRESH_ADDRESS = "net.ageto.eid.intent.extra.refresh_address";
 
     private static final int MSG_FINISH = 1;
 
@@ -75,6 +77,8 @@ public class MainViewFragment extends Fragment implements IMainView {
     private String mTcTokenUrl;
     private String mRefreshAddress;
 
+    private boolean mRefreshBrowser;
+
     private EventListener mEventListener;
     private final Object mEventMonitor = new Object();
 
@@ -94,20 +98,32 @@ public class MainViewFragment extends Fragment implements IMainView {
         mCountDownLatchResult = new CountDownLatch(1);
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void startAuthentication(String tcTokenUrl) {
+        startAuthentication(tcTokenUrl, null);
+    }
+
+    public void startAuthentication(String tcTokenUrl, Intent extra) {
         if (mTcTokenUrl != null) {
             throw new IllegalStateException("You can only start one authentication per session.");
         }
 
         mTcTokenUrl = tcTokenUrl;
+        mRefreshBrowser = extra == null || extra.getBooleanExtra(EXTRA_DO_REDIRECT, true);
 
         new Thread() {
             @Override
             public void run() {
                 try {
                     mRefreshAddress = ECardWorker.start(new URL(mTcTokenUrl));
+
+                    if (getActivity() != null) {
+                        getActivity().setResult(Activity.RESULT_CANCELED, new Intent().putExtra(EXTRA_REFRESH_ADDRESS, mRefreshAddress));
+                    }
+
                 } catch (Exception e) {
-                    Cat.e(e);
+                    Cat.w(e, "Bad request");
+                    closeDialogs();
                 }
             }
         }.start();
@@ -247,6 +263,11 @@ public class MainViewFragment extends Fragment implements IMainView {
     @Override
     @DebugLog
     public void closeDialogs() {
+        boolean success = isAuthenticationSuccess();
+        if (!success && getActivity() != null) {
+            showMessage(getActivity().getString(R.string.authentication_failed), IMainView.ERROR);
+        }
+
         long time = System.currentTimeMillis();
         if (mCroutonDismissedTime <= time) {
             mMainHandler.sendEmptyMessage(MSG_FINISH);
@@ -255,7 +276,7 @@ public class MainViewFragment extends Fragment implements IMainView {
         }
 
         if (mMainViewCallback != null) {
-            mMainViewCallback.closeDialogs();
+            mMainViewCallback.closeDialogs(success);
         }
     }
 
@@ -275,27 +296,49 @@ public class MainViewFragment extends Fragment implements IMainView {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_FINISH:
-                    if (getActivity() != null) {
-                        if (mRefreshAddress != null) {
-                            final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(mRefreshAddress));
-
-                            // use this to reuse the last tab in the browser
-                            intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.browser");
-                            try {
-                                Cat.d("RefreshAddress == %b, %s", mRefreshAddress.endsWith("Major=ok"), mRefreshAddress);
-
-                                startActivity(intent);
-                            } catch (final Exception e) {
-                                Cat.w(e, "Unexpected exception");
-                            }
-                        }
-
-                        getActivity().finish();
-                    }
+                    finish();
                     break;
             }
         }
     }
+
+    protected void finish() {
+        Activity activity = getActivity();
+        if (activity == null) {
+            return;
+        }
+
+        if (isAuthenticationSuccess()) {
+            if (mRefreshBrowser) {
+                sendIntentToBrowser();
+            } else {
+                activity.setResult(Activity.RESULT_OK, new Intent().putExtra(EXTRA_REFRESH_ADDRESS, mRefreshAddress));
+            }
+        }
+
+        activity.finish();
+    }
+
+    protected boolean isAuthenticationSuccess() {
+        return mMainDialogResult != null && mMainDialogResult.getCHAT() != -1;
+    }
+
+    protected void sendIntentToBrowser() {
+        if (mRefreshAddress != null) {
+            final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(mRefreshAddress));
+
+            // use this to reuse the last tab in the browser
+            intent.putExtra(Browser.EXTRA_APPLICATION_ID, "com.android.browser");
+            try {
+                Cat.d("RefreshAddress == %b, %s", mRefreshAddress.endsWith("Major=ok"), mRefreshAddress);
+
+                startActivity(intent);
+            } catch (final Exception e) {
+                Cat.w(e, "Unexpected exception");
+            }
+        }
+    }
+
 
     public static abstract class MainViewCallback {
 
@@ -307,7 +350,7 @@ public class MainViewFragment extends Fragment implements IMainView {
             // override me
         }
 
-        public void closeDialogs() {
+        public void closeDialogs(boolean success) {
             // override me
         }
     }

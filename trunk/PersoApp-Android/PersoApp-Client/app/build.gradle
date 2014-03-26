@@ -9,7 +9,6 @@ dependencies {
 
     compile 'net.vrallev.android.library:android-base:1.5.0'
     compile 'net.vrallev.android.library:crouton-extension:1.0.3'
-//    compile 'com.facebook.crypto:conceal:1.0.0'
 
     compile 'com.squareup.dagger:dagger:1.2.1'
     provided 'com.squareup.dagger:dagger-compiler:1.2.1'

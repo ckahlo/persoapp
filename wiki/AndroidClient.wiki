@@ -10,7 +10,7 @@ The PersoApp for Android uses [http://www.gradle.org/ Gradle] as build system.
 The build task fetches all dependencies, runs the jarjar tool in order to repackage some dependencies, compiles code and resources, runs proguard and finally creates a debug and release version of the app. You find the output in the `/PersoApp-Android/PersoApp-Client/app/build/apk` folder. The proguard output can be found under `/PersoApp-Android/PersoApp-Client/app/build/proguard`.
 
 
-= Updating the PersoApp-Core and PersoApp-Lib-JAXB libraries =
+= Updating the !PersoApp-Core and !PersoApp-Lib-JAXB libraries =
 
 The PersoApp Android client fetches these two dependencies from the local Maven repository, which can be found at `/PersoApp-Android/mvn-repo`. During development it is recommended to use a second repository for snapshot builds. Create next to the `mvn-repo` folder a folder called '`mvn-repo-snapshot`'.
 

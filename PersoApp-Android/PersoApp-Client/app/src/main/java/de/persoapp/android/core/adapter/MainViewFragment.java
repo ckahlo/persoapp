@@ -108,7 +108,6 @@ public class MainViewFragment extends Fragment implements IMainView {
         }
 
         fragment = new MainViewFragment();
-        activity.inject(fragment);
         activity.getSupportFragmentManager().beginTransaction().add(fragment, TAG).commit();
 
         return (MainViewFragment) fragment;
@@ -139,6 +138,8 @@ public class MainViewFragment extends Fragment implements IMainView {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         setRetainInstance(true);
+
+        ((BaseActivitySupport) activity).inject(this);
 
         mMainHandler = new MyHandler(mMainLooper);
         mCountDownLatchResult = new CountDownLatch(1);

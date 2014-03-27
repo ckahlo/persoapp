@@ -51,12 +51,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import net.vrallev.android.base.util.Cat;
+
+import java.lang.reflect.Field;
 
 import de.persoapp.android.BuildConfig;
 import de.persoapp.android.R;
@@ -85,8 +90,9 @@ public class AboutDialog extends DialogFragment {
         };
 
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_about, null);
+
         TextView versionTextView = (TextView) view.findViewById(R.id.textView_version);
-        versionTextView.setText(getString(R.string.version_string, BuildConfig.VERSION_NAME));
+        versionTextView.setText(getString(R.string.version_string, getVersionName()));
 
         TextView homepageTextView = (TextView) view.findViewById(R.id.textview_homepage);
         homepageTextView.setOnClickListener(new View.OnClickListener() {
@@ -103,5 +109,24 @@ public class AboutDialog extends DialogFragment {
                 .setNegativeButton(R.string.close, null)
                 .setPositiveButton(R.string.licenses, onClickListener)
                 .create();
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    private String getVersionName() {
+        try {
+            Field field = BuildConfig.class.getField("VERSION_NAME");
+            return (String) field.get(null);
+
+        } catch (NoSuchFieldException | IllegalAccessException ignore) {
+            // eclipse...
+
+            try {
+                PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0);
+                return packageInfo.versionName;
+            } catch (Exception e) {
+                Cat.e(e);
+                return "";
+            }
+        }
     }
 }

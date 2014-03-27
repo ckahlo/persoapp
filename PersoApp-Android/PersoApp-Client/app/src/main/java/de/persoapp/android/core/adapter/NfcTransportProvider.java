@@ -205,7 +205,7 @@ public class NfcTransportProvider implements TransportProvider, CCID {
             if (transmit != null && (mLastSW == 0x9000 || mLastSW == 0x6982)) {
                 byte[] buffer = new byte[400];
                 transmit = transmit(Hex.fromString("00a4040c00" + Hex.shortToString(buffer.length) + Hex.toString(buffer)));
-                capable = transmit != null && (mLastSW == 0x6a82 || mLastSW == 0x6a87);
+                capable = transmit != null && (mLastSW == 0x6a82 || mLastSW == 0x6a87 || mLastSW == 0x6700);
             }
         } catch (Exception e) {
             Cat.e(e);

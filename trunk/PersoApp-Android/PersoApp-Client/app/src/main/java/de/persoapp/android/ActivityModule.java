@@ -75,6 +75,8 @@ import de.persoapp.android.view.MenuHelper;
 import de.persoapp.android.view.PinRow;
 
 /**
+ * Provides dependencies with {@link android.app.Activity} scope.
+ *
  * @author Ralf Wondratschek
  */
 @SuppressWarnings("UnusedDeclaration")

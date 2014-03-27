@@ -73,6 +73,8 @@ import de.persoapp.core.ws.engine.WSContainer;
 import de.persoapp.lib.paos.PAOSInitiatorExtension;
 
 /**
+ * This class setups the connection to the core library.
+ *
  * @author Ralf Wondratschek
  */
 public class AppExtension extends BaseApp {
@@ -114,7 +116,6 @@ public class AppExtension extends BaseApp {
 
     protected void initWebService() {
         ICardHandler cardHandler = new AndroidCardHandler(mMainViewFacade, mNfcTransportProvider);
-        // ICardHandler cardHandler = CardHandler.getInstance(mainView);
 
         mMainViewFacade.setEventLister(new MainViewEventListener(cardHandler, mMainViewFacade));
 

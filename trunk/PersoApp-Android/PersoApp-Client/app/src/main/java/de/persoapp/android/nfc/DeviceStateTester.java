@@ -68,6 +68,10 @@ import de.persoapp.android.core.adapter.NfcTransportProvider;
 import hugo.weaving.DebugLog;
 
 /**
+ * Tests several cases whether the device is ready to interact with an eID card. An {@link android.app.Activity} extending {@link de.persoapp.android.activity.AbstractNfcActivity}
+ * should call {@link #needsToShowOtherContent()} to check whether it can display its content or it should wait for the {@link de.persoapp.android.activity.AbstractNfcActivity#onDeviceReady()}
+ * callback.
+ *
  * @author Ralf Wondratschek
  */
 public class DeviceStateTester {

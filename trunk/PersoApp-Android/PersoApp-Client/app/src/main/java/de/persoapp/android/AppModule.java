@@ -64,6 +64,8 @@ import de.persoapp.android.core.adapter.MainViewFragment;
 import de.persoapp.android.core.adapter.NfcTransportProvider;
 
 /**
+ * Provides dependencies with {@link android.app.Application} scope.
+ *
  * @author Ralf Wondratschek
  */
 @SuppressWarnings("UnusedDeclaration")

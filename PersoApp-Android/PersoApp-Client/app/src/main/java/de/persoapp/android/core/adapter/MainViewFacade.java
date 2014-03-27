@@ -55,6 +55,13 @@ import de.persoapp.core.client.SecureHolder;
 import hugo.weaving.DebugLog;
 
 /**
+ * This class is the adapter between core library and client. One instance of this class is created and registered in the {@link de.persoapp.android.AppExtension}
+ * class. Instead of registering other {@link de.persoapp.core.client.IMainView} instances in the core library,
+ * you should set other {@link de.persoapp.core.client.IMainView} instances by calling {@link de.persoapp.android.core.adapter.MainViewFacade#setMainView(de.persoapp.core.client.IMainView)}
+ * in order to receive callbacks, e.g. the {@link de.persoapp.android.core.adapter.MainViewFragment} class does this and eases the process even more.
+ *
+ * @see de.persoapp.android.core.adapter.MainViewFragment
+ *
  * @author Ralf Wondratschek
  */
 public class MainViewFacade implements IMainView {

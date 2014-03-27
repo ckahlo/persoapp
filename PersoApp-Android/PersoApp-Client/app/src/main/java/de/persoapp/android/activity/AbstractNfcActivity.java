@@ -68,6 +68,17 @@ import de.persoapp.android.nfc.DeviceStateTester;
 import de.persoapp.android.view.MenuHelper;
 
 /**
+ * All activities with NFC capabilietes should extend this class. It setups the foreground dispatch and
+ * has callbacks for the {@link de.persoapp.android.nfc.DeviceStateTester}.
+ *
+ * <br>
+ * <br>
+ *
+ * It's important to note, that you should <b>NOT</b> display your activity's content in the {@link android.app.Activity#onCreate(android.os.Bundle)} method
+ * right away. Instead you should call {@link de.persoapp.android.nfc.DeviceStateTester#needsToShowOtherContent()} first. If the {@link de.persoapp.android.nfc.DeviceStateTester}
+ * doesn't need to display other content, then you can display your views. Otherwise you receive a callback in {@link AbstractNfcActivity#onDeviceReady()}
+ * when the device is ready to display your content.
+ *
  * @author Ralf Wondratschek
  */
 public abstract class AbstractNfcActivity extends BaseActivitySupport {

@@ -79,6 +79,16 @@ import de.persoapp.core.client.SecureHolder;
 import hugo.weaving.DebugLog;
 
 /**
+ * Handles most interactions between core library and {@link android.app.Activity}s. By extending {@link de.persoapp.android.activity.AbstractNfcActivity} one
+ * {@link de.persoapp.android.core.adapter.MainViewFragment} instance is already setup.
+ *
+ * <br>
+ * <br>
+ *
+ * You can extend {@link de.persoapp.android.core.adapter.MainViewFragment.MainViewCallback} to receive callbacks.
+ *
+ * @see de.persoapp.android.activity.AuthenticateActivity
+ *
  * @author Ralf Wondratschek
  */
 @SuppressWarnings("ConstantConditions")

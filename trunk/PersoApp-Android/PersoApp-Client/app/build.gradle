@@ -92,3 +92,5 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
+
+apply from: '../eclipse-compatibility.gradle'

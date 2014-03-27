@@ -1,6 +1,6 @@
 #summary How to build and import the PersoApp Android client.
 
-The PersoApp for Android uses [http://www.gradle.org/ Gradle] as build system. 
+The !PersoApp for Android uses [http://www.gradle.org/ Gradle] as build system. 
 
 = Building the Android app =
 
@@ -12,7 +12,7 @@ The build task fetches all dependencies, runs the jarjar tool in order to repack
 
 = Updating the !PersoApp-Core and !PersoApp-Lib-JAXB libraries =
 
-The PersoApp Android client fetches these two dependencies from the local Maven repository, which can be found at `/PersoApp-Android/mvn-repo`. During development it is recommended to use a second repository for snapshot builds. Create next to the `mvn-repo` folder a folder called '`mvn-repo-snapshot`'.
+The !PersoApp Android client fetches these two dependencies from the local Maven repository, which can be found at `/PersoApp-Android/mvn-repo`. During development it is recommended to use a second repository for snapshot builds. Create next to the `mvn-repo` folder a folder called '`mvn-repo-snapshot`'.
 
 Both libraries are already prepared for publishing release and snapshot builds. Gradle either uploads the artifacts into the `mvn-repo` or `mvn-repo-snapshot` repository depending on the version of the library. A snapshot build has the suffix '`-SNAPSHOT`'. You find the version string in the '`build.gradle`' file in each library. 
 
@@ -24,20 +24,20 @@ Do the following in order to upload a new artifact:
 Do not forget to update the dependencies in the Android client project in order to use the new artifacts. A snapshot version requires here a '`-SNAPSHOT`' suffix in the version as well. 
 
 
-= JarJar Plugin =
+= !JarJar Plugin =
 
-You may notice that the Android client project has '`jarjar`' dependencies. The JarJar plugin fetches all of these dependencies, builds one single fat `.jar` file and runs the the jarjar tool.  
+You may notice that the Android client project has '`jarjar`' dependencies. The !JarJar plugin fetches all of these dependencies, builds one single fat `.jar` file and runs the the jarjar tool.  
 
 You find the documentation and source code of this plugin here: https://github.com/vRallev/jarjar-gradle
 
 You find the documentation for the jarjar tool here: https://code.google.com/p/jarjar/
 
-The JarJar plugin integrates its tasks into the build process. It detects dependency changes automatically and creates a new result `.jar` file if necessary. 
+The !JarJar plugin integrates its tasks into the build process. It detects dependency changes automatically and creates a new result `.jar` file if necessary. 
 
 
 = Importing the project into Android Studio =
 
-Import the /PersoApp-Android/PersoApp-Client folder as Gradle project. Android Studio will fetch all dependencies automatically and build the project.
+Import the `/PersoApp-Android/PersoApp-Client` folder as Gradle project. Android Studio will fetch all dependencies automatically and build the project.
 
 
 = Importing the project into eclipse =

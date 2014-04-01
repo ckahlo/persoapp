@@ -127,6 +127,12 @@ public abstract class AbstractNfcActivity extends BaseActivitySupport {
     }
 
     @Override
+    protected void onDestroy() {
+        mNfcTransportProvider.close();
+        super.onDestroy();
+    }
+
+    @Override
     protected void onStop() {
         mEventBus.unregister(this, InitializeAppFragment.OnAppInitialized.class, NfcTransportProvider.NfcConnectedEvent.class);
         super.onStop();

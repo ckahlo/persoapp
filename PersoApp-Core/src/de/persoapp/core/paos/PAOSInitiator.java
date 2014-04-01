@@ -28,16 +28,16 @@
  *
  *          Diese Datei ist Teil von PersoApp.
  *
- *          PersoApp ist Freie Software: Sie k�nnen es unter den Bedingungen der
+ *          PersoApp ist Freie Software: Sie können es unter den Bedingungen der
  *          GNU Lesser General Public License, wie von der Free Software
  *          Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder
- *          sp�teren ver�ffentlichten Version, weiterverbreiten und/oder
+ *          späteren veröffentlichten Version, weiterverbreiten und/oder
  *          modifizieren.
  *
- *          PersoApp wird in der Hoffnung, dass es n�tzlich sein wird, aber OHNE
- *          JEDE GEW�HRLEISTUNG, bereitgestellt; sogar ohne die implizite
- *          Gew�hrleistung der MARKTF�HIGKEIT oder EIGNUNG F�R EINEN BESTIMMTEN
- *          ZWECK. Siehe die GNU Lesser General Public License f�r weitere
+ *          PersoApp wird in der Hoffnung, dass es nützlich sein wird, aber OHNE
+ *          JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+ *          Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN
+ *          ZWECK. Siehe die GNU Lesser General Public License für weitere
  *          Details.
  *
  *          Sie sollten eine Kopie der GNU Lesser General Public License

@@ -62,7 +62,7 @@ import com.sun.net.httpserver.HttpHandler;
 import de.persoapp.core.client.PropertyResolver;
 
 /**
- * @author ckahlo
+ * @author Christian Kahlo
  * 
  */
 public final class ECApiHttpHandler implements HttpHandler {

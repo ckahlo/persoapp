@@ -109,7 +109,7 @@ import liberty.paos._2006_08.PaosType;
  * role, and the client plays the server role. Technically, the initial SOAP
  * request from the server is bound to a server HTTP response. Then the
  * subsequent response is bound to a client request. This is why Reversed HTTP
- * Binding for SOAP is also known as <tt>PAOS</tt> (or “SOAP” spelled
+ * Binding for SOAP is also known as <tt>PAOS</tt> (or 'SOAP' spelled
  * backwards).
  * </p>
  * <p>

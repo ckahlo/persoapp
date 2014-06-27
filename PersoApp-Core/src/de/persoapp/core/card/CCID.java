@@ -61,15 +61,14 @@ package de.persoapp.core.card;
  */
 import javax.smartcardio.CardException;
 
-// TODO: Auto-generated Javadoc
 /**
- * The Interface CCID.
+ * The Interface CCID abstracts a part of the function layer from
+ * <em>Chip Card Interface Devices</em>.
  */
 public interface CCID {
 	
 	/**
-	 * Describes the different card states, according to the current running
-	 * operation.
+	 * The feature list.
 	 */
 	static final String[]		FEATURES					= new String[] { "NO_FEATURE", "FEATURE_VERIFY_PIN_START",
 			"FEATURE_VERIFY_PIN_FINISH", "FEATURE_MODIFY_PIN_START", "FEATURE_MODIFY_PIN_FINISH",
@@ -88,31 +87,49 @@ public interface CCID {
 	 */
 	public static final byte	FEATURE_VERIFY_PIN_FINISH	= 0x02;
 	
-	/** The Constant FEATURE_MODIFY_PIN_START. */
+	/**
+	 * The feature to start the modify pin process.
+	 */
 	public static final byte	FEATURE_MODIFY_PIN_START	= 0x03;
 	
-	/** The Constant FEATURE_MODIFY_PIN_FINISH. */
+	/**
+	 * The feature to finish the modify pin process.
+	 */
 	public static final byte	FEATURE_MODIFY_PIN_FINISH	= 0x04;
 	
-	/** The Constant FEATURE_GET_KEY_PRESSED. */
+	/**
+	 * The feature to retrieve the pressed key.
+	 */
 	public static final byte	FEATURE_GET_KEY_PRESSED		= 0x05;
 	
-	/** The Constant FEATURE_VERIFY_PIN_DIRECT. */
+	/**
+	 * The feature to verify the pin direct.
+	 */
 	public static final byte	FEATURE_VERIFY_PIN_DIRECT	= 0x06;
 	
-	/** The Constant FEATURE_MODIFY_PIN_DIRECT. */
+	/**
+	 * The feature to modify the pin direct.
+	 */
 	public static final byte	FEATURE_MODIFY_PIN_DIRECT	= 0x07;
 	
-	/** The Constant FEATURE_MCT_READER_DIRECT. */
+	/**
+	 * The feature to use the reader function of a <em>Multislot Card Terminal</em>.
+	 */
 	public static final byte	FEATURE_MCT_READER_DIRECT	= 0x08;
 	
-	/** The Constant FEATURE_MCT_UNIVERSAL. */
+	/**
+	 * The feature to use all functions of a <em>Multislot Card Terminal</em>.
+	 */
 	public static final byte	FEATURE_MCT_UNIVERSAL		= 0x09;
 	
-	/** The Constant FEATURE_IFD_PIN_PROPERTIES. */
+	/**
+	 * The feature to handle the pin properties.
+	 */
 	public static final byte	FEATURE_IFD_PIN_PROPERTIES	= 0x0A;
 	
-	/** The Constant FEATURE_EXECUTE_PACE. */
+	/**
+	 * The feature to execute the <em>PACE</em>-protocol.
+	 */
 	public static final byte	FEATURE_EXECUTE_PACE		= 0x20;
 
 	/**

@@ -47,6 +47,8 @@
  */
 package de.persoapp.core.card;
 
+import javax.smartcardio.CardException;
+
 /**
  * <p>
  * The <tt>CCID</tt> interface specifies methods and functions for use with a
@@ -58,12 +60,6 @@ package de.persoapp.core.card;
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
- */
-import javax.smartcardio.CardException;
-
-/**
- * The Interface CCID abstracts a part of the function layer from
- * <em>Chip Card Interface Devices</em>.
  */
 public interface CCID {
 	

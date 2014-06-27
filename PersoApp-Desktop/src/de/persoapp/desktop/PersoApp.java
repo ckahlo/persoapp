@@ -69,8 +69,11 @@ import de.persoapp.core.ws.SALService;
 import de.persoapp.core.ws.engine.WSContainer;
 
 /**
- * The <tt>PersoApp-Application</tt> is a modern eID-Client for use with the nPA
- * (new personal identify card).
+ * <p>
+ * The <tt>PersoApp</tt> class is the starting point of the
+ * <em>PersoApp-Application</em>. Every application layer is initialized and
+ * started in a individual thread.
+ * </p>
  * 
  * @author Christian Kahlo
  */

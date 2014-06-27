@@ -54,16 +54,32 @@ import javax.crypto.Cipher;
 import de.persoapp.core.util.ArrayTool;
 
 /**
+ * <p>
  * CMac using standard Java cipher interface as a base. Inspired by
  * BouncyCastles internal engine.
+ * </p>
+ * <p>
+ * <code>public class CMac</code>
+ * </p>
  * 
- * @author ckahlo
- * 
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class CMac {
+	
+	/**
+	 * The constant used for the mac creation.
+	 */
 	private static final byte	CONSTANT_128	= (byte) 0x87;
 
+	/**
+	 * The buffer, in which the created parts of the CMac are stored.
+	 */
 	private final byte[]		buf;
+	
+	/**
+	 * The starting offset of the buffer.
+	 */
 	private int					bufOff;
 	private final Cipher		cipher;
 
@@ -71,6 +87,22 @@ public class CMac {
 
 	private final byte[]		L, Lu, Lu2;
 
+	/**
+	 * Creates and initializes a new cipher based message authentication code.
+	 * The {@link CMac} is block cipher based.
+	 * 
+	 * @param cipher
+	 *            - The starting cipher.
+	 * @param macSize
+	 *            - The size of the message authentication code.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             If the macSize is greater than the cipher blocksize or if the
+	 *             blocksize not equal to 16 bytes.
+	 *             
+	 * @throws GeneralSecurityException
+	 *             If a error occurs during the creation process of the cipher.
+	 */
 	public CMac(final Cipher cipher, final int macSize) throws GeneralSecurityException {
 		if (macSize > cipher.getBlockSize()) {
 			throw new IllegalArgumentException("macSize must be <= " + cipher.getBlockSize());
@@ -95,6 +127,9 @@ public class CMac {
 		Lu2 = doubleLu(Lu);
 	}
 
+	/**
+	 *Further informations follow in MR3.
+	 */
 	private byte[] doubleLu(final byte[] in) {
 		final int FirstBit = (in[0] & 0xFF) >> 7;
 		final byte[] ret = new byte[in.length];
@@ -108,6 +143,21 @@ public class CMac {
 		return ret;
 	}
 
+	/**
+	 * Continues the multiple-part creation of the {@link CMac}, processing
+	 * another data part. The first <tt>len</tt> bytes in the <tt>input</tt>
+	 * buffer, starting at <tt>inOff</tt> are processed.
+	 * 
+	 * @param in
+	 *            - The input buffer.
+	 * @param inOff
+	 *            - The offset in the input buffer, where the input starts.
+	 * @param len
+	 *            - The input length.
+	 * 
+	 * @throws GeneralSecurityException
+	 *             If an error occurs during the encryption operation.
+	 */
 	public void update(final byte[] in, int inOff, int len) throws GeneralSecurityException {
 		final int blockSize = cipher.getBlockSize();
 		final int gapLen = blockSize - bufOff;
@@ -127,13 +177,32 @@ public class CMac {
 				inOff += blockSize;
 			}
 		}
-
+		
+		//saves the result of the processed operation through the copie in the buffer.
 		System.arraycopy(in, inOff, buf, bufOff, len);
+		//updates the buffer length with the length of the copied result
 		bufOff += len;
 	}
 
+	/**
+	 * The padding to fill up the last block of encrypted or decrypted data.
+	 */
 	private static final byte[]	SM_PAD	= new byte[] { (byte) 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
+	/**
+	 * Finishes the creation of the cipher-block based message authentication
+	 * code.
+	 * <p>
+	 * The padding is added at the end of the created mac. The finished result
+	 * is stored in a new buffer and returned.
+	 * </p>
+	 * 
+	 * @return Returns the new buffer with the result.
+	 * 
+	 * @throws GeneralSecurityException
+	 *             If a error occurs during the encryption or decryption
+	 *             process.
+	 */
 	public byte[] doFinal() throws GeneralSecurityException {
 		final int blockSize = cipher.getBlockSize();
 
@@ -156,6 +225,8 @@ public class CMac {
 
 	/**
 	 * Reset the mac generator.
+	 * 
+	 * @throws GeneralSecurityException
 	 */
 	public void reset() throws GeneralSecurityException {
 		/*

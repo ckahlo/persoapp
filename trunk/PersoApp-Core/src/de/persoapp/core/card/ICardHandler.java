@@ -113,11 +113,11 @@ public interface ICardHandler {
 	 *            - The {@link TransportProvider}, which is used to transmit
 	 *            data.
 	 * @param verifySecret
-	 *            - The currently active <em>PIN</em>.
+	 *            - The verify secret.
 	 * @param verifySecretInput
-	 *            - The currently active <em>PIN</em>, a second time inserted.
+	 *            - The inserted currently active <em>PIN</em>.
 	 * @param unblockSecret
-	 *            - The inserted <em>PUK</em>.
+	 *            - The unblock secret.
 	 * @return Returns the status code of the <em>APDU</em>-Response.
 	 */
 	int doPINUnblock(TransportProvider tp, byte verifySecret, SecureHolder verifySecretInput, byte unblockSecret);
@@ -128,13 +128,13 @@ public interface ICardHandler {
 	 * @param tp
 	 *            - The used transport provider.
 	 * @param verifySecret
-	 *            - The currently active <em>PIN</em>, first time insertion.
+	 *            - The verify secret.
 	 * @param verifySecretInput
-	 *            - The currently active <em>PIN</em>, a second time inserted.
+	 *            - The inserted active <em>PIN</em>.
 	 * @param modifySecret
-	 *            - The desired new <em>PIN</em>, first time insertion.
+	 *            - The modify secret.
 	 * @param modifySecretInput
-	 *            - The desired new <em>PIN</em>, a second time inserted.
+	 *            - The inserted new <em>PIN</em>.
 	 * @return Returns the status code of the <em>APDU</em>-Response.
 	 */
 	int doPINChange(TransportProvider tp, byte verifySecret, SecureHolder verifySecretInput, byte modifySecret,

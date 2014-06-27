@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -62,19 +62,42 @@ import com.sun.net.httpserver.HttpHandler;
 import de.persoapp.core.client.PropertyResolver;
 
 /**
- * @author Christian Kahlo
+ * Further Informations follow in MR3.
  * 
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public final class ECApiHttpHandler implements HttpHandler {
 
+	/**
+	 * The <tt>user-agent</tt> who emits the communication channel.
+	 */
 	private static final String	HTTP_USER_AGENT	= "eID-Client";
+	/**
+	 * The used <tt>http-charset</tt>.
+	 */
 	private static final String	HTTP_CHARSET	= "ISO-8859-1";
 
+	/**
+	 * The http-method <tt>HEAD</tt>.
+	 */
 	private static final String	HTTP_METH_HEAD	= "HEAD";
+	/**
+	 * The http-method <tt>GET</tt>.
+	 */
 	private static final String	HTTP_METH_GET	= "GET";
+	/**
+	 * The http-method <tt>POST</tt>.
+	 */
 	private static final String	HTTP_METH_POST	= "POST";
 
+	/**
+	 * The used <tt>token-requester</tt>.
+	 */
 	private static final String	TC_TOKEN_REQ	= "/eID-Client";
+	/**
+	 * The used <tt>token-url</tt>.
+	 */
 	private static final String	TC_TOKEN_URL	= "tcTokenURL=";
 
 	/*
@@ -83,6 +106,13 @@ public final class ECApiHttpHandler implements HttpHandler {
 	 * @see
 	 * com.sun.net.httpserver.HttpHandler#handle(com.sun.net.httpserver.HttpExchange
 	 * )
+	 */
+	/**
+	 * This function handles the communication between the <tt>PersoApp</tt> and
+	 * the eID-Server with the given {@link HttpExchange}-object.
+	 * 
+	 * @param he
+	 *            - The used HttpExchange object.
 	 */
 	@Override
 	public final void handle(final HttpExchange he) throws IOException {
@@ -243,6 +273,21 @@ public final class ECApiHttpHandler implements HttpHandler {
 
 	/*
 	 * write response
+	 */
+	/**
+	 * Various responses are send with this function.
+	 * 
+	 * @param he
+	 *            - The used {@link HttpExchange}-Object.
+	 * @param code
+	 *            - The used html status code.
+	 * @param refreshURI
+	 *            - The used refresh {@link URI}.
+	 * @param message
+	 *            - The message to send.
+	 * 
+	 * @throws IOException
+	 *             If some error occurs during the sending process.
 	 */
 	private void sendResponse(final HttpExchange he, final int code, final URI refreshURI, final String message)
 			throws IOException {

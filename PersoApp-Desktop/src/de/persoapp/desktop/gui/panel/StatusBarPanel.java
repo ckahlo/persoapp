@@ -1,6 +1,6 @@
 /**
  * 
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  * 
  * Authors Christian Kahlo, Ralf Wondratschek
  * 
@@ -57,19 +57,46 @@ import javax.swing.JProgressBar;
 import de.persoapp.desktop.gui.ArrowButton;
 
 /**
- * @author ckahlo
+ * The <tt>StatusBarPanel</tt> holds all informations about the used status bar
+ * to show the progress of operations.
+ * <p>
+ * <code>public class StatusBarPanel extends JPanel</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class StatusBarPanel extends JPanel {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long	serialVersionUID	= 7386565036232115981L;
 
+	/**
+	 * The <tt>MAX value</tt> of the {@link StatusBarPanel}.
+	 */
 	private static final int	MAX					= 99;
+	
+	/**
+	 * The <tt>MIN value</tt> of the {@link StatusBarPanel}.
+	 */
 	private static final int	MIN					= 0;
 
+	/**
+	 * The {@link JProgressBar} which displays the progress.
+	 */
 	private JProgressBar		progressBar;
+	
+	/**
+	 * The used <tt>arrow buttons</tt> for adding and removing the sidebar.
+	 */
 	private ArrowButton			arrowButton;
 
+	/**
+	 * Constructs a new instance of the {@link StatusBarPanel}. Also initializes
+	 * and draws the components. The constructed panel is double-buffered for
+	 * advanced displaying.
+	 */
 	public StatusBarPanel() {
 		super();
 		this.setDoubleBuffered(true);
@@ -79,6 +106,9 @@ public class StatusBarPanel extends JPanel {
 		drawComponents();
 	}
 
+	/**
+	 * Initializes the components of the {@link StatusBarPanel}.
+	 */
 	private void initComponents() {
 		progressBar = new JProgressBar(JProgressBar.HORIZONTAL, MIN, MAX);
 		progressBar.setStringPainted(true);
@@ -87,6 +117,9 @@ public class StatusBarPanel extends JPanel {
 		arrowButton = new ArrowButton();
 	}
 
+	/**
+	 * Draws the components of the {@link StatusBarPanel}.
+	 */
 	private void drawComponents() {
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.HORIZONTAL;
@@ -107,10 +140,14 @@ public class StatusBarPanel extends JPanel {
 	}
 
 	/**
-	 * Es wird kein value Wert gesetzt und angezeigt.
+	 * Displays the given text in the progress bar of the {@link StatusBarPanel}
+	 * . The given text can be <strong>null</strong>. In this case, no text is
+	 * shown. The second argument enables or disables the progress bar.
 	 * 
 	 * @param message
-	 *            Angezeigter Text, kann null sein.
+	 *            - The given text, which is shown in the progress bar.
+	 * @param enabled
+	 *            - Enables or disables the progress bar.
 	 */
 	public void setProgressBarValue(final String message, final boolean enabled) {
 		progressBar.setString(message == null ? "" : message);
@@ -119,11 +156,22 @@ public class StatusBarPanel extends JPanel {
 	}
 
 	/**
+	 * This function works like {@link #setProgressBarValue(String, boolean)},
+	 * but sets the visual state of the bar to the given
+	 * <strong>amount</strong>.
 	 * 
 	 * @param message
-	 *            Angezeigter Text, kann null sein.
+	 *            -The given Text, which is shown in the progress bar.
+	 * 
 	 * @param amount
-	 *            Wird an MIN und MAX angepasst.
+	 *            - The <strong>amount</strong>, to which the bar is filled up.<br>
+	 *            </br> If the <strong>amount</strong> is bigger than
+	 *            {@link #MAX}, the bar is filled up completely. The progress
+	 *            bar is completely emptied if the given <strong>amount</strong>
+	 *            is lower than {@link #MIN}.
+	 *            
+	 * @param enabled
+	 *            - Enables or disables the progress bar.
 	 */
 	public void setProgressBarValue(final String message, int amount, final boolean enabled) {
 		if (amount > MAX) {

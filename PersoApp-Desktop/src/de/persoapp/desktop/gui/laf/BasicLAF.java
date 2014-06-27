@@ -51,11 +51,19 @@ import javax.swing.UIDefaults;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 
 /**
- * @author ckahlo
+ * The <tt>BasicLAF</tt> class defines the so called
+ * <tt>Basic Look and Feel</tt> for the <tt>PersoApp-Application</tt>.
+ * <p>
+ * <code>public class BasicLAF extends BasicLookAndFeel</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class BasicLAF extends BasicLookAndFeel {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long	serialVersionUID	= -6555138672140374307L;
 
 	@Override

@@ -59,26 +59,54 @@ import de.persoapp.desktop.Utils;
 import de.persoapp.desktop.gui.frame.SidebarProvider;
 
 /**
- * @author ckahlo
+ * The <tt>ArrowButton</tt>-class provides the main functionality to work with a
+ * <tt>SidebarProvider</tt>. The ArrowButtons can be used to hide and add a
+ * sidebar to a <tt>Window</tt>.
+ * <p>
+ * <code>public class ArrowButton extends JButton implements ActionListener<code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class ArrowButton extends JButton implements ActionListener {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long	serialVersionUID	= 1L;
 
+	/**
+	 * The constant to set up the left pressed state.
+	 */
 	public static final int		STATE_LEFT			= 0;
+	
+	/**
+	 * The constant to set up the right pressed state.
+	 */
 	public static final int		STATE_RIGHT			= 1;
 
+	/**
+	 * The <tt>ImageIcons</tt> for displaying the different button states.
+	 */
 	private static ImageIcon	left				= new ImageIcon(Utils.getImage("arrow_left.png")),
 			leftPressed = new ImageIcon(Utils.getImage("arrow_left_dark.png")), leftRollover = new ImageIcon(
 					Utils.getImage("arrow_left_light.png")), right = new ImageIcon(Utils.getImage("arrow_right.png")),
 			rightPressed = new ImageIcon(Utils.getImage("arrow_right_dark.png")), rightRollover = new ImageIcon(
 					Utils.getImage("arrow_right_light.png"));
 
+	/**
+	 * The provider for the sidebar.
+	 */
 	private SidebarProvider		window;
 
+	/**
+	 * The state of the {@link ArrowButton}.
+	 */
 	private int					state;
 
+	/**
+	 * Constructs a new instance of the {@link ArrowButton}.
+	 */
 	public ArrowButton() {
 		super();
 
@@ -92,6 +120,13 @@ public class ArrowButton extends JButton implements ActionListener {
 		this.addActionListener(this);
 	}
 
+	/**
+	 * Sets the current icon state.<br>
+	 * </br> The state can be <code>STATE_LEFT</code> for removing the sidebar
+	 * and <code>STATE_RIGHT</code> for adding the sidebar.
+	 * 
+	 * @param state - The state to set.
+	 */
 	public void setIconState(final int state) {
 		switch (state) {
 			case STATE_LEFT:

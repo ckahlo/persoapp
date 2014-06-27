@@ -67,16 +67,36 @@ import de.persoapp.desktop.gui.frame.HelpPanelProvider;
  * anymore.
  */
 /**
- * @author ckahlo
+ * The <tt>MyMouseListener</tt> class provides the functionality of regular
+ * <tt>MouseListeners</tt>. In case of a <tt>MyMouseListener</tt> is added to a
+ * <tt>component</tt>, the name of the <tt>Component</tt> and their
+ * subcomponents is set dynamically, during the adding process.
+ * <p>
+ * <code>public class MyMouseListener extends MouseAdapter</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class MyMouseListener extends MouseAdapter {
 
+	/**
+	 * The singleton instance of the {@link MyMouseListener}.
+	 */
 	private static MyMouseListener						instance	= new MyMouseListener();
 
+	/**
+	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 */
 	private final PropertyResolver.Bundle				textBundle;
+	
+	/**
+	 * The cache of all frames.
+	 */
 	private final HashMap<String, HelpPanelProvider>	frameCache;
 
+	/**
+	 * Constructs a new instance of {@link MyMouseListener}.
+	 */
 	private MyMouseListener() {
 		textBundle = PropertyResolver.getBundle("text");
 		frameCache = new HashMap<String, HelpPanelProvider>();
@@ -100,6 +120,15 @@ public class MyMouseListener extends MouseAdapter {
 		}
 	}
 
+	/**
+	 * Retrieves the {@link HelpPanelProvider}.
+	 * 
+	 * @param c
+	 *            - A underlying <tt>Component</tt> of the
+	 *            {@link HelpPanelProvider}.
+	 * 
+	 * @return Returns the {@link HelpPanelProvider}.
+	 */
 	private HelpPanelProvider getHelpPanelProvider(final Component c) {
 		if (c.getName() == null) {
 			return null;
@@ -118,22 +147,49 @@ public class MyMouseListener extends MouseAdapter {
 
 		return result;
 	}
-
+	
 	/**
-	 * Fügt den Standard-MouseListener der Komponente hinzu. Weiterhin wird der
-	 * Name der Komponente gesetzt.
+	 * Adds the standard {@link MouseListener} to the given <tt>component</tt>
+	 * c. The name of the component is found and set dynamically. The name is
+	 * going to be something like
+	 * <p>
+	 * <ul>
+	 * <li>NameOfFrame_ChoosedName_header</li>
+	 * <li>NameOfFrame_ChoosedName_description</li>
+	 * </ul>
+	 * </p>
 	 * 
-	 * Der Name der Komponente setzt sich aus FrameKlassenName_Parameter-Name
-	 * zusammen. Der FrameKlassenName wird dynamisch gefunden. In der
-	 * text.properties Datei würde beispielhaft stehen:
-	 * 
-	 * NameVomFrame_GewählterName_header
-	 * NameVomFrame_GewählterName_description
+	 * @param frame
+	 *            - The <tt>Frame</tt> to set the specified name.
+	 * @param c
+	 *            - The <tt>Component</tt> to which the listener is going to be
+	 *            added.
+	 * @param name
+	 *            - The name of the component.
 	 */
 	public static void addListener(final Component c, final String name) {
 		addListener(SwingUtilities.getRoot(c), c, name);
 	}
 
+	/**
+	 * Adds the standard {@link MouseListener} to the given <tt>component</tt>
+	 * c. The name of the component is found and set dynamically. The name is
+	 * going to be something like
+	 * <p>
+	 * <ul>
+	 * <li>NameOfFrame_ChoosedName_header</li>
+	 * <li>NameOfFrame_ChoosedName_description</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param frame
+	 *            - The <tt>Frame</tt> to set the specified name.
+	 * @param c
+	 *            - The <tt>Component</tt> to which the listener is going to be
+	 *            added.
+	 * @param name
+	 *            - The name of the component.
+	 */
 	public static void addListener(final Component frame, final Component c, final String name) {
 		if (!(frame instanceof HelpPanelProvider)) {
 			throw new IllegalArgumentException("frame must be an instance of HelpPanelProvider");
@@ -150,6 +206,13 @@ public class MyMouseListener extends MouseAdapter {
 		}
 	}
 
+	/**
+	 * Removes the {@link MyMouseListener} from c and all belonging components.
+	 * 
+	 * @param c
+	 *            - The <tt>Component</tt> which listener is going to be
+	 *            removed.
+	 */
 	public static void removeListener(final Component c) {
 		c.removeMouseListener(instance);
 		c.setName("");
@@ -163,7 +226,15 @@ public class MyMouseListener extends MouseAdapter {
 	}
 
 	/**
-	 * Setzt rekursiv für alle enthaltenen Komponenten den Namen.
+	 * Sets the name for all given components, in a recursive way.
+	 * 
+	 * @param frame
+	 *            - The <tt>Frame</tt>
+	 * @param c
+	 *            - The <tt>Component</tt> which name is set. The names of the
+	 *            <tt>components</tt> of c are set in a recursive way.
+	 * @param name
+	 *            - The name to be set.
 	 */
 	public static void setName(final Component frame, final Component c, final String name) {
 		if (!(frame instanceof HelpPanelProvider)) {
@@ -180,6 +251,15 @@ public class MyMouseListener extends MouseAdapter {
 		}
 	}
 
+	/**
+	 * Recursively sets the name of c and all belonging <tt>components</tt>.
+	 * 
+	 * @param c
+	 *            - The <tt>Component</tt> which name is going to be set.
+	 * 
+	 * @param name
+	 *            - The name to be set.
+	 */
 	public static void setName(final Component c, final String name) {
 		setName(SwingUtilities.getRoot(c), c, name);
 	}

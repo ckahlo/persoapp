@@ -63,17 +63,45 @@ import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * @author ckahlo
+ * The <tt>KeypadPanel</tt> holds the buttons of the {@link PinPanel} and
+ * provides the option to insert the needed <tt>Pins</tt>.
+ * <p>
+ * <code>public class KeypadPanel extends JPanel</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class KeypadPanel extends JPanel {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long	serialVersionUID	= 2807875955848469717L;
 
+	/**
+	 * The <code>ArrayList</code> of the keys.
+	 */
 	private ArrayList<JButton>	keys;
+	
+	/**
+	 * The <tt>JButtons</tt> for additionally functionality like
+	 * <strong>clear</strong> and <strong>delete</strong>.
+	 */
 	private JButton				clear, delete;
+	
+	/**
+	 * The {@link PinPanel} which is necessary for the input of the pin.
+	 */
 	private PinPanel			pinPanel;
 
+	/**
+	 * Creates a new instance of the {@link KeypadPanel} with the given
+	 * {@link PinPanel}. The constructed Panel is double-buffered for advanced
+	 * displaying.
+	 * 
+	 * @param panel
+	 *            - The given {@link PinPanel}.
+	 */
 	public KeypadPanel(final PinPanel panel) {
 		super();
 		this.setDoubleBuffered(true);
@@ -88,6 +116,9 @@ public class KeypadPanel extends JPanel {
 		this.setEnabled(false);
 	}
 
+	/**
+	 * Initializes the components of the {@link KeypadPanel}.
+	 */
 	private void initComponents() {
 		keys = new ArrayList<JButton>();
 
@@ -124,6 +155,9 @@ public class KeypadPanel extends JPanel {
 		});
 	}
 
+	/**
+	 * Draws the <tt>components</tt> of the KeypadPanel.
+	 */
 	private void drawComponents() {
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.NONE;
@@ -155,6 +189,9 @@ public class KeypadPanel extends JPanel {
 		this.add(clear, cons);
 	}
 
+	/**
+	 * Shuffles the keys of the {@link KeyPadPanel}.
+	 */
 	public void shuffle() {
 		for (final JButton button : keys) {
 			this.remove(button);
@@ -168,7 +205,13 @@ public class KeypadPanel extends JPanel {
 
 		this.repaint();
 	}
-
+	
+	/**
+	 * Sets the {@link PinPanel}.
+	 * 
+	 * @param panel
+	 *            - The given {@link PinPanel}.
+	 */
 	public void setPinPanel(final PinPanel panel) {
 		this.pinPanel = panel;
 	}

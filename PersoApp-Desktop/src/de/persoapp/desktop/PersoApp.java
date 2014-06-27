@@ -69,16 +69,32 @@ import de.persoapp.core.ws.SALService;
 import de.persoapp.core.ws.engine.WSContainer;
 
 /**
- * @author ckahlo
+ * The <tt>PersoApp-Application</tt> is a modern eID-Client for use with the nPA
+ * (new personal identify card).
  * 
+ * @author Christian Kahlo
  */
 public final class PersoApp implements Runnable {
 
 	// avoid "localhost" name spoofing
+	/**
+	 * The host name for the <tt>eID-Client</tt>. 
+	 */
 	private static final String	EID_HTTP_HOST_NAME	= "127.0.0.1";
+	
+	/**
+	 * The used port of the <tt>eID-Client</tt>.
+	 */
 	private static final int	EID_HTTP_PORT		= 24727;
+	
+	/**
+	 * The used ctx name of the <tt>eID-Client</tt>. 
+	 */
 	private static final String	EID_HTTP_CTX_NAME	= "/eID-Client";
 
+	/**
+	 * The <tt>PersoApp-Application</tt> logger.
+	 */
 	private final static Logger	log					= Logger.getLogger(PersoApp.class.getName());
 
 	@Override
@@ -200,6 +216,11 @@ public final class PersoApp implements Runnable {
 		}
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static final void main(final String[] args) {
 		new PersoApp().run();
 	}

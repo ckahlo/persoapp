@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -57,25 +57,72 @@ import de.persoapp.core.util.ArrayTool;
 import de.persoapp.core.util.TLV;
 
 /**
+ * <p>
+ * The <tt>ISOSMTransport</tt> implements the way, how data is transmitted to
+ * the inserted card according to <em>ISO 7816-4</em>, after a <em>PACE</em>
+ * -tunnel to the smart card is established.
+ * </p>
+ * <p>
+ * <code>public class ISOSMTransport implements TransportProvider</code>
+ * </p>
  * 
- * @author ckahlo
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class ISOSMTransport implements TransportProvider {
+	
+	/**
+	 * The algorithm to encrypt the initialization vector.
+	 */
 	private static final String		IV_ENC_ALG		= "AES/ECB/NoPadding";
+	
+	/**
+	 * The algorithm to encrypt the data, which is send on the established line.
+	 */
 	private static final String		LINE_ENC_ALG	= "AES/CBC/NoPadding";
 
+	/**
+	 * The currently used TransportProvider.
+	 */
 	private final TransportProvider	parent;
 
+	/**
+	 * The keys for creating a message authentication code (mac) and the encryption. 
+	 */
 	private byte[]					kEnc, kMac;
 	//
+	/**
+	 * The ciphers for encoding, decoding and the initialization vector.
+	 */
 	private Cipher					ivCipher, encCipher, decCipher;
+	
+	/**
+	 * The used block-cipher based message authentication code.
+	 */
 	private CMac					cmac;
 	//
+	/**
+	 * The buffer of the initialization vector.
+	 */
 	private ByteBuffer				ivBuf			= null;
+	
+	/**
+	 * Changes the initialization vector with every call on <tt>getIV()</tt>.
+	 */
 	private long					ssc				= 0;
 	//
+	/**
+	 * The last status word.
+	 */
 	private int						lastSW			= -1;
 
+	/**
+	 * Creates and initializes a new instance of the {@link ISOSMTransport}
+	 * -provider. 
+	 * 
+	 * @param parent
+	 *            - The underlying transport provider.
+	 */
 	public ISOSMTransport(TransportProvider parent) {
 		if (parent == null) {
 			throw new NullPointerException("parent transport provider required");
@@ -118,6 +165,14 @@ public class ISOSMTransport implements TransportProvider {
 		return apdu;
 	}
 
+	/**
+	 * Sets the EncKey and the MacKey.
+	 * 
+	 * @param newkEnc
+	 *            - The EncKey.
+	 * @param newkMac
+	 *            - The MacKey.
+	 */
 	public void setupKeys(final byte[] newkEnc, final byte[] newkMac) {
 		kEnc = newkEnc.clone();
 		kMac = newkMac.clone();
@@ -140,6 +195,11 @@ public class ISOSMTransport implements TransportProvider {
 		}
 	}
 
+	/**
+	 * Returns the initialization vector.
+	 * 
+	 * @return Returns the initialization vector.
+	 */
 	private byte[] getIV() {
 		try {
 			ivBuf.rewind();
@@ -151,8 +211,18 @@ public class ISOSMTransport implements TransportProvider {
 		return null;
 	}
 
+	/**
+	 * The <tt>PAD</tt> for enlarging a block to its needed size.
+	 */
 	private static final byte[]	SM_PAD	= new byte[] { (byte) 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
+	/**
+	 * Decodes the <tt>Secure Message</tt> and returns the decoded message.
+	 * 
+	 * @param in
+	 *            - The encoded message.
+	 * @return Returns the decoded message.
+	 */
 	private byte[] decodeSM(final byte[] in) {
 		try {
 			byte[] data = TLV.get(in, (byte) 0x87);
@@ -203,6 +273,15 @@ public class ISOSMTransport implements TransportProvider {
 		}
 	}
 
+	/**
+	 * Encodes the secure message and returns the encoded message. The message
+	 * isn't exented with padding.
+	 * 
+	 * @param in
+	 *            - The not encoded message.
+	 * 
+	 * @return Returns the encoded message.
+	 */
 	private byte[] encodeSM(final byte[] in) {
 		try {
 			final byte[] currentSSC = getIV();

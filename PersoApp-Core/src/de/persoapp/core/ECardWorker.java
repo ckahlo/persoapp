@@ -1,9 +1,9 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
- *
+ * 
  * All Rights Reserved.
  *
  * Contact: PersoApp, http://www.persoapp.de
@@ -81,26 +81,77 @@ import de.persoapp.core.ws.EcAPIProvider;
 import de.persoapp.core.ws.engine.WSContainer;
 
 /**
- * @author ckahlo
+ * <p>
+ * The <tt>ECardWorker</tt> contains all functions to process incoming
+ * eID-Requests and supervise the communication between the <em>PAOS</em>-stack
+ * and the target eID-Server.
+ * </p>
+ * <p>
+ * The <tt>ECardWorker</tt> listens during his supervising process on
+ * <em>Cancel</em>, <em>Error</em>, <em>Timeout</em> and <em>Success</em> events
+ * and notifies the gui and the browser, if an event occurs.
+ * </p>
  * 
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public final class ECardWorker {
+	
 	/*
-	 * constants
+	 * The following flags are used to retrieve values according to 
+	 * the given flag from the saved parameters.
+	 */
+	/**
+	 * The <tt>https</tt> scheme.
 	 */
 	private static final String	SCHEME_HTTPS	= "https://";
 
+	/**
+	 * The constant
+	 *  <p><code>private static final String	TLS_PSK_USR</code></p>
+	 *  is the flag for pre-shared key user.
+	 */
 	private static final String	TLS_PSK_USR		= "SessionIdentifier";
+	
+	/**
+	 * The constant
+	 * <p><code>private static final String	TLS_PSK_KEY</code></p>
+	 * is the flag for the pre-shared used key. 
+	 */
 	private static final String	TLS_PSK_KEY		= "PathSecurity-Parameters";
+	
+	/**
+	 * The constant
+	 * <p><code>private static final String	TLS_PSK_SVR</code></p>
+	 * is the flag for the protocol termination point.
+	 */
 	private static final String	TLS_PSK_SVR		= "ServerAddress";
+	
+	/**
+	 * The constant
+	 * <p><code>private static final String	PATH_PROTOCOL</code></p>
+	 * is the flag for the path protocol.
+	 */
 	private static final String	PATH_PROTOCOL	= "PathSecurity-Protocol";
+	
+	/**
+	 * The constant
+	 * <p><code>private static final String	PATH_BINDING</code></p>
+	 * is the flag for the path binding.
+	 */
 	private static final String	PATH_BINDING	= "Binding";
+	
+	/**
+	 * The constant
+	 * <p><code>private static final String	REFRESH_ADDR</code></p>
+	 * is the flag for the refresh adress.
+	 */
 	private static final String	REFRESH_ADDR	= "RefreshAddress";
 
-	/*
-	 * 
+	/**
+	 * The <tt>CALLBACK_RESULT</tt> enum refers to the working states of the
+	 * <tt>ECardWorker</tt>
 	 */
-
 	public static enum CALLBACK_RESULT {
 		PROCESSING, FINALLY, TA_OK, CANCEL, TA_ERROR
 	};
@@ -108,33 +159,78 @@ public final class ECardWorker {
 	/*
 	 * static values, valid for the application live-time
 	 */
+	/**
+	 * The <tt>IMainView</tt> static variable contains the main viewport of the
+	 *  application.
+	 */
 	private static IMainView						mainView;
+	
+	/**
+	 * The <tt>WSContainer</tt> static variable maintains the different webservices.
+	 */
 	private static WSContainer						wsCtx;
+	
+	/**
+	 * The <tt>ICardHandler</tt> static variable contains the handle to the 
+	 * currently used <tt>ECard</tt>
+	 */
 	private static ICardHandler						eCardHandler;
 
+	/**
+	 * The constant bundle for storing and resolving properties.
+	 */
 	private static final PropertyResolver.Bundle	textBundle		= PropertyResolver.getBundle("text_core");
 
 	/*
 	 * per worker/session identifiers
 	 */
-
+	/**
+	 * The <tt>contextHandle</tt> contains the 32 byte long
+	 * handle to the currently running session.
+	 */
 	private final byte[]							contextHandle	= new byte[32];
+	
+	/**
+	 * The <tt>slotHandle</tt> contains the 32 byte long handle
+	 * to the currently used slot on the reading gear.
+	 */
 	private final byte[]							slotHandle		= new byte[32];
 
 	/*
 	 * currently running session and initiator
 	 */
+	/**
+	 * The <tt>ECardSession</tt> is the currently running session.
+	 */
 	private final ECardSession						session;
+	
+	/**
+	 * The <tt>PAOSInitiator</tt> initiates the PAOS-Webservice.
+	 */
 	private final PAOSInitiator						paosInitiator;
 
 	/*
 	 * result info values (prototype);
+	 */
+	/**
+	 * The <tt>info</tt> value holds various informations during the entire 
+	 * running time of the <tt>ECardWorker</tt>
 	 */
 	private Object[]								info			= null;
 
 	/*
 	 * setup application-wide values must be static for Android & embedded
 	 * clients
+	 */
+	/**
+	 * This function initializes the <tt>ECardWorker</tt> after the start of the <tt>PersoApp-DesktopClient</tt>.
+	 * 
+	 * @param mainView
+	 *            - The used {@link IMainView}, as the current <tt>PersoApp-Application</tt> instance.
+	 * @param wsCtx
+	 *            - The used {@link WSContainer}, to access methods and security informations according to the incoming request.
+	 * @param eCardHandler
+	 *            - The used {@link ICardHandler}, to access the current used ECard.
 	 */
 	public static final void init(final IMainView mainView, final WSContainer wsCtx, final ICardHandler eCardHandler) {
 		if (ECardWorker.mainView == null) {
@@ -144,6 +240,22 @@ public final class ECardWorker {
 		}
 	}
 
+	/**
+	 * This function checks the server certificate of the given
+	 * {@link URLConnection}.
+	 * 
+	 * @param uc
+	 *            - The given {@link URLConnection}.
+	 * @return The positively checked certificate.
+	 * 
+	 * @throws IOException
+	 *             - If an error occurs during the checking process.
+	 * @throws URISyntaxException
+	 *             If the {@link URI} of the given {@link URLConnection} is
+	 *             malformed.
+	 * @throws IllegalArgumentException
+	 *             If the checked certificate is invalid.
+	 */
 	private static final X509Certificate checkCertificate(final URLConnection uc) throws IOException,
 			URISyntaxException {
 		X509Certificate cert = null;
@@ -164,7 +276,22 @@ public final class ECardWorker {
 	/*
 	 * start an eCardWorker with supplied tcTokenURL
 	 */
-
+	/**
+	 * This function starts the <tt>ECardWorker</tt> with the supplied
+	 * tcTokenURL.
+	 * 
+	 * @param tcTokenURL
+	 *            - The given {@link URL}.
+	 * @return The status message of the attempt to start the
+	 *         <tt>ECardWorker</tt>.
+	 * 
+	 * @throws Exception
+	 *             If an error occurs during the starting process.
+	 * @throws IllegalArgumentException
+	 *             If the given URL is no <tt>https</tt> URL.
+	 * @throws FileNotFoundException
+	 *             If the parameter config file cant be found.
+	 */
 	public static final String start(final URL tcTokenURL) throws Exception {
 		final List<Certificate> sourceCerts = new ArrayList<Certificate>();
 		HttpURLConnection uc = null;
@@ -215,6 +342,16 @@ public final class ECardWorker {
 	/*
 	 * helper to add params to URI
 	 */
+	/**
+	 * Adds the given params as varargs to the given {@link URI}.
+	 * 
+	 * @param uri
+	 *            - The given <em>uri</em>.
+	 * @param params
+	 *            - The given <em>params</em>.
+	 * 
+	 * @return The URI with added params.
+	 */
 	private static URI addParam(final URI uri, final String... params) {
 		final StringBuffer uriBuffer = new StringBuffer(uri.toString());
 		boolean first = !uri.toString().contains("?");
@@ -230,7 +367,25 @@ public final class ECardWorker {
 	/*
 	 * start eCardWorker with retrieved connection handle parameters
 	 */
-
+	/**
+	 * Starts the ECardWorker with the retrieved connection handle parameters.
+	 * Establishes a connection to a eID-Server and authenticates the user
+	 * against the connected eID-Server. All parameters have to be set and can't
+	 * be <strong>null</strong>.
+	 * 
+	 * @param params
+	 *            - The given parameters, to maintain the connection.
+	 * @param serverCerts
+	 *            - The given server certificates, to ensure the safety of the
+	 *            established connection.
+	 * @param tcTokenURL
+	 *            - The given token URL.
+	 * 
+	 * @return The status message of the attempt to launch the ECardWorker.
+	 * @throws Exception
+	 *             Throws a {@link Exception} if a error occurs during the
+	 *             launching process.
+	 */
 	private static String startECardWorker(final Map<String, String> params, final List<Certificate> serverCerts,
 			final URI tcTokenURL) throws Exception {
 
@@ -352,6 +507,21 @@ public final class ECardWorker {
 	 * start an eCard-Worker with given parameters from ISO24727-Protocols
 	 * service or ECApiHttpHandler
 	 */
+	/**
+	 * Starts a created eCard-Worker with the given parameters from
+	 * <em>ISO24727</em>-Protocols service or ECApiHttpHandler.
+	 * 
+	 * @param ch
+	 *            - The used {@link ChannelHandleType}.
+	 * @param sessionPSK
+	 *            - The used session pre-shared key.
+	 * @param origin
+	 *            - The used origin URI.
+	 * @param certs
+	 *            - The used certificates.
+	 * 
+	 * @return The current state of the eCardWorker.
+	 */
 	public static final Object[] start(final ChannelHandleType ch, final byte sessionPSK[], final URI origin,
 			final Certificate[] certs) {
 		try {
@@ -396,6 +566,13 @@ public final class ECardWorker {
 	 * called from ECardWorker on final and from SALService on error, on cancel
 	 * and on success
 	 */
+	/**
+	 * This function is called to notify all currently running threads. The
+	 * given info-Object(s) initializes the info attribute of the ECardWorker.
+	 * 
+	 * @param info
+	 *            - The given info objects.
+	 */
 	public final void callback(final Object... info) {
 		synchronized (this) {
 			if (this.info == null) {
@@ -408,12 +585,32 @@ public final class ECardWorker {
 	/*
 	 * retrieve current state of info field
 	 */
+	/**
+	 * Retrieves the current state of the info field.
+	 * 
+	 * @return The current state of the info field.
+	 */
 	public final Object getCurrentState() {
 		return this.info == null ? null : this.info[0];
 	}
 
 	/*
 	 * create an eCard-Worker, setup all components
+	 */
+	/**
+	 * Creates a ECardWorker and setup all his components.
+	 * 
+	 * @param ch
+	 *            - The used {@link ChannelHandleType}.
+	 * @param sessionPSK
+	 *            - The used session pre-shared key.
+	 * @param tcTokenURL
+	 *            - The used token URL.
+	 * @param sourceCerts
+	 *            - The used server certificates.
+	 * 
+	 * @throws Exception
+	 *             if a error occurs during the creation process.
 	 */
 	private ECardWorker(final ChannelHandleType ch, final byte sessionPSK[], final URI tcTokenURL,
 			final Certificate[] sourceCerts) throws Exception {
@@ -438,6 +635,11 @@ public final class ECardWorker {
 		session.setAttribute(PAOSInitiator.class.getName(), paosInitiator);
 	}
 
+	/**
+	 * Fires the PAOSResponse in a ECardSession and fetches the result. Does the
+	 * error handling if the response have no result or some error occurs.
+	 * Notifies all threads before terminating.
+	 */
 	private final void run() {
 		/*
 		 * this is a per-thread operation, so it has to be done inside the

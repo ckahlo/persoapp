@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -57,22 +57,56 @@ import de.persoapp.core.util.ArrayTool;
 import de.persoapp.core.util.Hex;
 
 /**
- * @author ckahlo
+ * The <tt>PersoSimTransport</tt>-class simulates the transport and the exchange
+ * of data from a new personal identity card with a remotehost.
+ * <p>
+ * <code>public class PersoSimTransport implements TransportProvider</code>
+ * </p>
  * 
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class PersoSimTransport implements TransportProvider {
 
+	/**
+	 * The last status word.
+	 */
 	private int				lastSW;
+	
+	/**
+	 * The name or ip address of the remotehost.
+	 */
 	private final String	host;
+	
+	/**
+	 * The port of the remotehost.
+	 */
 	private final int		port;
+	
+	/**
+	 * The underlying {@link Socket} for transmitting operations.
+	 */
 	private Socket			socket;
 
 	private PersoSimTransport(final String host, final int port) {
 		this.host = host;
 		this.port = port;
 	}
-
+	
+	/**
+	 * Returns a new instance of {@link PersoSimTransport}.
+	 * 
+	 * @param host
+	 *            - The name of the remotehost.
+	 * @param port
+	 *            - The port of the remotehost.
+	 * 
+	 * @return Returns a new instance of {@link PersoSimTransport}.
+	 */
 	public static PersoSimTransport getInstance(final String host, final int port) {
+		/*
+		 * The actual PersoSimTransport instance.
+		 */
 		final PersoSimTransport instance = new PersoSimTransport(host, port);
 
 		final String atr = instance.exchangeApdu("FFFF0000");
@@ -91,6 +125,9 @@ public class PersoSimTransport implements TransportProvider {
 		return null;
 	}
 
+	/**
+	 * The value for the empty response. 
+	 */
 	private static final byte[]	EMPTY_RESPONSE	= new byte[0];
 
 	@Override
@@ -142,6 +179,14 @@ public class PersoSimTransport implements TransportProvider {
 
 	}
 
+	/**
+	 * Converts the provided argument into a {@link String} and exchanges it
+	 * with a remotehost.
+	 * 
+	 * @param cmdApdu
+	 *            - The provided data.
+	 * @return Returns the response.
+	 */
 	private String exchangeApdu(String cmdApdu) {
 		//		if (socket == null || socket.isClosed() || socket.isInputShutdown() || socket.isOutputShutdown()) {
 		try {

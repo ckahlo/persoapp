@@ -64,26 +64,55 @@ import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * @author ckahlo
+ * The <tt>DataPanel</tt> provides the platform to mark user data from the
+ * electronic identity card for sending.
+ * <p>
+ * <code>public class DataPanel extends JPanel</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class DataPanel extends JPanel {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long				serialVersionUID	= -950928041357540864L;
 
+	/**
+	 * The position integer array of the <tt>JCheckboxes</tt>.
+	 */
 	private static final int[]				pos					= new int[] { 0, 1, 2, 8, 9, 10, 11, 12, 13, 14, 15,
 			16, 17, 20, 24, 26									};
 
+	/**
+	 * The <tt>JCheckBoxes</tt> provides the possibilities to mark data for sending.
+	 */
 	@SuppressWarnings("unused")
 	private JCheckBox						vorname, name, doktorgrad, anschrift, geburtsdatum, geburtsort,
 			kuenstlername, ausweistyp, land, ablaufdatum, wohnortbestaetigung, altersverifikation, pseudonym,
 			geburtsname, nebenbestimmungen, nationalitaet;
+	
+	/**
+	 * The <tt>JCheckBox-Array</tt> for easy access and iteration over the defined <tt>JCheckboxes</tt>.
+	 */
 	private JCheckBox[]						components;
 
+	/**
+	 * The necessary <tt>JPanels</tt> which holds the defined
+	 * <tt>JCheckBoxes</tt> for user input.
+	 */
 	private JPanel							mRequiredPanel, mOptionalPanel;
 
+	/**
+	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 */
 	private final PropertyResolver.Bundle	textBundle;
 
+	/**
+	 * Constructs a new instance of the {@link DataPanel}. The constructed Panel
+	 * is double-buffered for advanced displaying.
+	 */
 	public DataPanel() {
 		super();
 		this.textBundle = PropertyResolver.getBundle("text");
@@ -95,6 +124,11 @@ public class DataPanel extends JPanel {
 		drawComponents();
 	}
 
+	/**
+	 * Initializes the member-attributes of the {@link DataPanel}. This
+	 * includes the instantiation of the member-attributes, defined
+	 * <tt>JCheckBoxes</tt> and the setup of the layout of the JPanel.
+	 */
 	private void initComponents() {
 		components = new JCheckBox[pos.length];
 
@@ -140,6 +174,10 @@ public class DataPanel extends JPanel {
 		clear();
 	}
 
+	/**
+	 * Set up the layout of the required panel and the optional panel and thus
+	 * of the {@link DataPanel}.
+	 */
 	private void drawComponents() {
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.BOTH;
@@ -158,6 +196,12 @@ public class DataPanel extends JPanel {
 		this.add(mOptionalPanel, cons);
 	}
 
+	/**
+	 * Set all <tt>JCheckBoxes</tt> into a "not selected" state. Disables and
+	 * removes the boxes from the required panel and from the optional panel. The
+	 * required panel and the optional panel are member attributes of the
+	 * {@link DataPanel}.
+	 */
 	public void clear() {
 		for (final JCheckBox box : components) {
 			box.setSelected(false);
@@ -172,7 +216,19 @@ public class DataPanel extends JPanel {
 			mOptionalPanel.remove(component);
 		}
 	}
-
+	
+	/**
+	 * Removes the currently displayed content of the {@link DataPanel} and
+	 * fills in specific certificate informations from the given {@link IEAC_Info}.
+	 * <ul>
+	 * <li>The result of the required chat.</li>
+	 * <li>The result of the optional chat.</li>
+	 * <li>Additionally selects all defined JCheckBoxes
+	 * in the {@link DataPanel}.</li>
+	 * </ul>
+	 * Inserts the 
+	 * @param eacInfo
+	 */
 	public void fillCertificate(final IEAC_Info eacInfo) {
 		clear();
 
@@ -211,6 +267,13 @@ public class DataPanel extends JPanel {
 		fillOptionalPanel();
 	}
 
+	/**
+	 * Returns a specific value which is calculated from all selected
+	 * {@link JCheckBox} objects in the given dialog.
+	 * 
+	 * @return Returns the calculated result from all selected {@link JCheckBox}
+	 *         objects.
+	 */
 	public long getResultChat() {
 		long result = 0;
 
@@ -239,6 +302,17 @@ public class DataPanel extends JPanel {
 		return preferredSize;
 	}
 
+	/**
+	 * Fills a panel with the given List of {@link JCheckBox} objects and 
+	 * adds additionally <tt>JPanel</tt> objects to the given panel.
+	 * <p>
+	 * Just one panel is added, if the number of JCheckbox objects is even.
+	 * Two panels are added, if the number of JCheckbox objects is odd.
+	 * </p>
+	 * 
+	 * @param panel - The given panel.
+	 * @param boxes - The list of {@link JCheckBox} objects to add.
+	 */
 	private void fillPanel(final JPanel panel, final List<JCheckBox> boxes) {
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.HORIZONTAL;
@@ -275,6 +349,11 @@ public class DataPanel extends JPanel {
 		panel.add(new JPanel(true), cons);
 	}
 
+	/**
+	 * Collects all <tt>JCheckBoxes which are selected and not enabled.
+	 * Adds the collected <tt>JCheckBoxes</tt> to the required panel and
+	 * does the set up for the panel layout.
+	 */
 	private void fillRequiredPanel() {
 		final List<JCheckBox> requiredBoxes = new ArrayList<JCheckBox>();
 		for (final JCheckBox box : components) {
@@ -294,6 +373,11 @@ public class DataPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Collects all <tt>JCheckBoxes</tt> which arn't selected and enabled.
+	 * Adds the collected <tt>JCheckBoxes</tt> to the optional panel and 
+	 * does the set up the panel layout.
+	 */
 	private void fillOptionalPanel() {
 		final List<JCheckBox> optionalBoxes = new ArrayList<JCheckBox>();
 		for (final JCheckBox box : components) {

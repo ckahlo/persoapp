@@ -81,16 +81,39 @@ import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.desktop.gui.frame.AboutFrame;
 
 /**
- * @author ckahlo
+ * The <tt>StatusIndicator</tt>-class displays the current state of the
+ * <tt>PersoApp-Application</tt> on the info frame.
+ * <p>
+ * <code>public class StatusIndicator</code>
+ * </p> 
  * 
+ * @author Christian Kahlo
  */
 public class StatusIndicator {
 
+	/**
+	 * The system system-tray-icon.
+	 */
 	protected SystemTray		tray;
+	
+	/**
+	 * The tray-icon.
+	 */
 	protected final TrayIcon	trayIcon;
+	
+	/**
+	 * The info frame to display the current status of the <tt>PersoApp-Application</tt>.
+	 */
 	private final JDialog		infoFrame;
+	
+	/**
+	 * The default title of the info frame.
+	 */
 	protected String			defaultTitle;
 
+	/**
+	 * Constructs a new instance of {@link StatusIndicator}. 
+	 */
 	public StatusIndicator() {
 		final ActionListener actionListener = new ActionListener() {
 			@Override
@@ -102,7 +125,7 @@ public class StatusIndicator {
 				} else if (e.getActionCommand().equals("exit")) {
 					System.exit(0);
 				} else if (e.getActionCommand().equals("icon")) {
-					//Passiert nur bei Doppelklick, das wird aber korrekt mit MouseListener gelöst
+					// seems to be an double click event (otherwise for a mouse listener it should work)
 					Logging.getLogger().log(Level.INFO, "Icon clicked");
 				} else {
 					Logging.getLogger().log(Level.INFO, "Action performed " + e);
@@ -224,7 +247,7 @@ public class StatusIndicator {
 				@Override
 				public void windowClosing(final WindowEvent arg0) {
 					infoFrame.dispose();
-
+					//Display the info frame during the window is closing
 					if (infoFrame.isUndecorated()) {
 						infoFrame.setUndecorated(false);
 						infoFrame.setSize(50, 64);
@@ -253,6 +276,14 @@ public class StatusIndicator {
 				}
 			});
 
+			/**
+			 * This class provides the mechanism to drag & drop the <tt>infoFrame</tt>.
+			 * <p>
+			 * <code>class MyMouseListener implements MouseListener, MouseMotionListener</code>
+			 * </p>
+			 * 
+			 * @author Christian Kahlo
+			 */
 			class MyMouseListener implements MouseListener, MouseMotionListener {
 				@Override
 				public void mouseDragged(final MouseEvent arg0) {
@@ -319,6 +350,17 @@ public class StatusIndicator {
 		}
 	}
 
+	/**
+	 * Displays the given <em>message</em> with the given <em>title</em>
+	 * according to the given <em>type</em> of the message.
+	 * 
+	 * @param title
+	 *            - The given title.
+	 * @param message
+	 *            - The given message to display.
+	 * @param type
+	 *            - The given type of the message.
+	 */
 	public void displayMessage(String title, final String message, final int type) {
 		if (title == null) {
 			title = this.defaultTitle;
@@ -350,6 +392,13 @@ public class StatusIndicator {
 		}
 	}
 
+	/**
+	 * Sets the given String as the default title and as tooltip above the
+	 * trayIcon.
+	 * 
+	 * @param defaultTitle
+	 *            - The given String.
+	 */
 	public void setDefaultTitle(final String defaultTitle) {
 		this.defaultTitle = defaultTitle;
 		if (trayIcon != null) {
@@ -357,10 +406,18 @@ public class StatusIndicator {
 		}
 	}
 
+	/**
+	 * Returns the default title of the info dialog.
+	 * 
+	 * @return Returns the title of the info dialog.
+	 */
 	public String getDefaultTitle() {
 		return defaultTitle;
 	}
-
+	
+	/**
+	 *  Close the application.
+	 */
 	public void close() {
 		if (tray != null && trayIcon != null) {
 			tray.remove(trayIcon);

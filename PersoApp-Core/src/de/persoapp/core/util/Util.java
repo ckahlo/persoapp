@@ -77,20 +77,55 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.persoapp.core.tls.BCTlsSocketFactoryImpl;
 
+/*
+ * Project: PersoApp
+ * $Header: 1.0
+ * Author:  Christian Kahlo, Ralf Wondratschek
+ * Last Change:
+ *    by:   Rico Klimsa
+ *    date: 23.04.2014 - 15:29
+ * Copyright (c): AGETO Innovation GmbH, 2014
+ */
+
 /**
- * @author ckahlo
+ * The util class provides functions for setting up 
+ * SSL-Sockets, opening urls, validating 
+ * URLIdentitys, getEcApiParams and parsing Objects.
  * 
+ * @author Christian Kahlo
  */
 public class Util {
+
+	/**
+	 * The currently used {@link SSLSocketFactory}.
+	 */
 	private static SSLSocketFactory	sslSF	= null;
 
+	/**
+	 * The basic factory method for new SSL-Sockets.
+	 * 
+	 * @return a new {@link BCTlsSocketFactoryImpl} in ssLSF
+	 */
 	private static SSLSocketFactory getSSLSocketFactory() {
 		if (sslSF == null) {
 			sslSF = new BCTlsSocketFactoryImpl();
 		}
 		return sslSF;
 	}
-
+	
+	/**
+	 * Reads a given {@link InputStream} line by line and returns it 
+	 * contents as a {@link String} object. Returns <b>null</b>, 
+	 * if noting is read from the {@link InputStream}.
+	 * 
+	 * @param is - The <u>final</u> input-stream to be read.
+	 * @return The contents of the stream, or null.
+	 * @throws IOException If the application is trying to read a empty stream.
+	 * 
+	 * @see {@link InputStream}
+	 * @see {@link BufferedReader}
+	 * @see {@link StringBuffer}
+	 */
 	public static String readStream(final InputStream is) throws IOException {
 		final StringBuffer sb = new StringBuffer();
 		final BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -103,6 +138,19 @@ public class Util {
 		return sb.toString();
 	}
 
+
+	/**
+	 * Retrieves the EcApiParams with a {@link EcApi_TCTokenHandler} 
+	 * from a httpObject in a basic map object or otherwise null, 
+	 * if no EcApiParams can be retrieved.
+	 * 
+	 * @param httpObject - The object which EcApiParams are about to be retrieved.
+	 * @return A map<<u>Key</u>,<u>Value</u>> Object which has
+	 * 		   the EcApiParams stored, or <strong>null</strong>.
+	 * 
+	 * @see {@link EcApi_TCTokenHandler}
+	 * @see {@link Map}
+	 */
 	public static Map<String, String> getEcApiParams(String httpObject) {
 		if (httpObject.contains("<TCTokenType>")) {
 			final String START = "<TCTokenType>", END = "</TCTokenType>";
@@ -119,6 +167,14 @@ public class Util {
 		return null;
 	}
 
+	/**
+	 * Parses the given httpObject with the ContentHandler through a XMLReader.
+	 * Every time a searched element in the httpObject is reached, a individually 
+	 * event is triggered.
+	 * 
+	 * @param httpObject - The HttpObject which has to be parsed.
+	 * @param ch - The content handler of the httpObject.
+	 */
 	private static void parseObject(final String httpObject, final ContentHandler ch) {
 		try {
 			XMLReader reader = null;
@@ -143,6 +199,25 @@ public class Util {
 		}
 	}
 
+	/**
+	 * Establishes a connection through the ProxySelector and returns
+	 * the connection or the value <strong>null</strong> if an error 
+	 * occurs.
+	 * 
+	 * This function works with <u>http</u> {@link HttpURLConnection} and
+	 *  <u>https</u> {@link HttpsURLConnection}.
+	 *
+	 * @param url - The given {@link URL}, to connect to.
+	 * @return The established <i>http</i>connection as
+	 * 		   {@link HttpURLConnection} or
+	 * 		   {@link HttpsURLConnection}, or <strong>null</strong>. 
+	 *
+	 * @see {@link URLConnection}
+	 * @see {@link HttpURLConnection}
+	 * @see {@link HttpsURLConnection}
+	 * @see {@link Proxy}
+	 * @see {@link ProxySelector}
+	 */
 	public static URLConnection openURL(final URL url) {
 		URLConnection uc = null;
 		try {
@@ -170,6 +245,19 @@ public class Util {
 		return uc;
 	}
 
+	/**
+	 * Validates the identity of the certificate.
+	 * 
+	 * @param cert
+	 *            - The given {@link X509Certificate}.
+	 * @param uri
+	 *            - The given {@link URI}.
+	 * @return Returns <b>true</b> if the identity of the certificate is
+	 *         correct, otherwise <b>false</b>.
+	 * 
+	 * @see {@link X509Certificate}
+	 * @see {@link URI}
+	 */
 	public static boolean validateIdentity(final X509Certificate cert, final URI uri) {
 		try {
 			final Collection<List<?>> altNames = cert.getSubjectAlternativeNames();

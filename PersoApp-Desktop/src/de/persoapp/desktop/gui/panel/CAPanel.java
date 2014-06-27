@@ -63,20 +63,47 @@ import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * @author ckahlo
+ * This class extends {@link JPanel} and displays all informations
+ * about the <tt>Certificate Authority</tt>.
+ * <p>
+ * <code>public class CAPanel extends JPanel</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class CAPanel extends JPanel {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long				serialVersionUID	= -1598003679367657336L;
 
+	/**
+	 * The constant for <tt>bold</tt> text style.
+	 */
 	public static final String				BOLD				= "Bold";
+	
+	/**
+	 * The constant for <tt>normal</tt> text style.
+	 */
 	public static final String				NORMAL				= "Normal";
 
+	/**
+	 * The necessary {@link JTextPane} to display the <tt>Certificate
+	 * Authority Informations</tt>.
+	 */
 	private JTextPane						textPane;
 
+	/**
+	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 */
 	private final PropertyResolver.Bundle	textBundle;
 
+	/**
+	 * Constructs and initializes a new instance of the <tt>Certificate Authority Panel</tt>.
+	 * Also initializes the belonging attributes and draws the content. The
+	 * constructed panel is double-buffered for advanced displaying.
+	 */
 	public CAPanel() {
 		super();
 
@@ -88,6 +115,10 @@ public class CAPanel extends JPanel {
 		drawContent();
 	}
 
+	/**
+	 * Draws the content of the {@link CAPanel}. The way the content is drawn
+	 * can't be changed.
+	 */
 	private void drawContent() {
 		textPane = new JTextPane();
 		textPane.setEditable(false);
@@ -99,7 +130,16 @@ public class CAPanel extends JPanel {
 		this.add(new JScrollPane(textPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 	}
-
+	
+	/**
+	 * Adds the given text with the given style to the {@link Document} which is
+	 * defined in the {@link #textPane} attribute.
+	 * 
+	 * @param text
+	 *            - The given text.
+	 * @param style
+	 *            - The style of the text.
+	 */
 	private void addText(final String text, final String style) {
 		final Document doc = textPane.getDocument();
 		try {
@@ -108,11 +148,26 @@ public class CAPanel extends JPanel {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * Removes the content of the {@link #textPane}.
+	 */
 	public void clear() {
 		textPane.setText("");
 	}
 
+	/**
+	 * Removes the content of the included <tt>textPane</tt> and inserts
+	 * specific certificate informations from the given {@link IEAC_Info}.
+	 * <p>
+	 * <ul>
+	 * <li>Issuer Name</li>
+	 * <li>Issuer URL</li>
+	 * </ul>
+	 * 
+	 * @param eacInfo
+	 *            - The given {@link IEAC_Info}.
+	 */
 	public void fillCertificate(final IEAC_Info eacInfo) {
 		clear();
 		addText(eacInfo.getIssuerName() + "\n", BOLD);

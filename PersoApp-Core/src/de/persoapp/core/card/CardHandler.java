@@ -1,6 +1,6 @@
 /**
  * 
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  * 
  * Authors Christian Kahlo, Ralf Wondratschek
  * 
@@ -76,40 +76,152 @@ import de.persoapp.core.util.Hex;
 import de.persoapp.core.util.TLV;
 
 /**
- * 
- * @author ckahlo
+ * The Class CardHandler. Informations will follow in the MR3.
+ *
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class CardHandler implements ICardHandler {
+	
+	/** The Constant PACE_AES128CBC. */
 	private static final String				PACE_AES128CBC	= "04007F00070202040202";
 
+	/**
+	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 */
 	private final PropertyResolver.Bundle	textBundle		= PropertyResolver.getBundle("text_core");
 
+	/** The last cert subject. */
 	private byte[]							lastCertSubject;
 
+	/** The TA key. */
 	private byte[]							TAKey;
 
+	/** The CA references. */
 	private List<byte[]>					CAReferences;
+	
+	/**
+	 * The EF.CardAccess file.
+	 */
 	private byte[]							EFCardAccess;
+	
+	/** The idpicc. */
 	private byte[]							IDPICC;
 
+	/** The tp0. */
 	private TransportProvider				tp0;
+	
+	/** The tp. */
 	private TransportProvider				tp;
 
+	/** Indicates if the card handler is initialized.*/
 	private boolean							initialized		= false;
+	
+	/** The currently running instance of the <tt>PersoApp-Application</tt>.*/
 	private final IMainView					mainView;
 
-	// this is the default curve if the field is not present in EFCardAccess, or
-	// EFCardAccess doesn't exist at all -> brainpoolP256r1
+	/** this is the default curve if the field is not present in EFCardAccess, or EFCardAccess doesn't exist at all -> brainpoolP256r1. */
 	private int								PACEv2_curveID	= 13;
 
+	/**
+	 * Creates and initializes the {@link CardHandler} with the actual
+	 * {@link IMainView}
+	 * 
+	 * @param mainView
+	 *            - The actual <tt>mainview</tt>.
+	 */
 	public CardHandler(final IMainView mainView) {
 		this.mainView = mainView;
 	}
 
+	/**
+	 * Logs the given <tt>message</tt> to the console.
+	 * 
+	 * @param msg - The given <tt>message</tt>.
+	 */
 	public void log(final String msg) {
 		System.out.println(msg);
 	}
 
+	/**
+	 * Builds the <em>APDU</em>-Command. The structure of the created
+	 * <em>APDU</em>-Command is determined by the inserted data.
+	 * <table border="1">
+	 * <tr>
+	 * <th>Case</th>
+	 * <th>Structure</th>
+	 * </tr>
+	 * <tr>
+	 * <td>Case 1</td>
+	 * <td>The 'case 1'-<em>APDU</em>-command is a simple command, which doesn't
+	 * contains further data and response data. Therefore, the command contains
+	 * just the <em>class</em>-byte, the <em>instruction</em>-byte and the two
+	 * <em>parameter</em>-bytes. The structure of a 'case 1'-<em>APDU</em>
+	 * -command looks like:
+	 * <table border="1">
+	 * <tr>
+	 * <td>Header</td>
+	 * </tr>
+	 * </table>
+	 * </td>
+	 * </tr>
+	 * <tr>
+	 * <td>Case 2</td>
+	 * <td>The 'case 2'-<em>APDU</em>-command doesn't contain further command
+	 * data, but expects a response. The structure of an 'case 2'-<em>APDU</em>
+	 * -command looks like:
+	 * <table border="1">
+	 * <tr>
+	 * <td>Header</td>
+	 * <td>Le</td>
+	 * </tr>
+	 * </table>
+	 * </tr>
+	 * <tr>
+	 * <td>Case 3</td>
+	 * <td>The 'case 3'-<em>APDU</em>-command contains command data and doesn't
+	 * expect a response. The Structure of a 'case 3'-<em>APDU</em>-command
+	 * looks like:
+	 * <table border="1">
+	 * <tr>
+	 * <td>Header</td>
+	 * <td>Lc</td>
+	 * <td>Data</td>
+	 * </tr>
+	 * </table>
+	 * </tr>
+	 * <tr>
+	 * <td>Case 4</td>
+	 * <td>The 'case 4'-<em>APDU</em>-command contains command data and
+	 * expect a response. The Structure of a 'case 4'-<em>APDU</em>-command
+	 * looks like:
+	 * <table border="1">
+	 * <tr>
+	 * <td>Header</td>
+	 * <td>Lc</td>
+	 * <td>Data</td>
+	 * <td>Le</td>
+	 * </tr>
+	 * </table>
+	 * </tr>
+
+	 * </table>
+	 * 
+	 * @param cla
+	 *            - The class byte.
+	 * @param ins
+	 *            - The instruction byte.
+	 * @param p1
+	 *            - The byte p1.
+	 * @param p2
+	 *            - The byte p2.
+	 * @param data
+	 *            - The send data.
+	 * @param le
+	 *            - The expected length of the <em>APDU</em>-Response.
+	 * 
+	 * @return Returns the <em>APDU</em>-command.
+	 */
 	private byte[] buildCmd(final byte cla, final byte ins, final byte p1, final byte p2, final byte[] data,
 			final int le) {
 		if (data == null) {
@@ -132,6 +244,20 @@ public class CardHandler implements ICardHandler {
 		}
 	}
 
+	
+	/**
+	 * Set Authentication Template for mutual authentication.
+	 * 
+	 * @param tp
+	 *            - The used <tt>transport provider</tt>.
+	 * @param cryptoMechanism
+	 *            - The used <tt>cryptoMechanism</tt>.
+	 * @param keyReference
+	 *            - The reference of the used key.
+	 * @param CHAT
+	 *            - The used <em>Card Holder Authorization Template</em>
+	 * @return Returns the status value of the <em>APDU</em>-Response.
+	 */
 	private int setMSE_AT(final TransportProvider tp, final String cryptoMechanism, final byte keyReference,
 			final byte[] CHAT) {
 		try {
@@ -151,6 +277,87 @@ public class CardHandler implements ICardHandler {
 		return tp.lastSW();
 	}
 
+	/**
+	 * The general authentication is used to perform the protocol <tt>PACE</tt>.
+	 * The keys and protocol are implicitly known and the data are protocol
+	 * specific data objects.
+	 * 
+	 * @param tp
+	 *            - The used <tt>transport provider</tt>.
+	 * @param authData
+	 *            - The auth data encoded as <em>BER-TLV</em>.
+	 * @param lastCommand
+	 *            the last command
+	 * @return <p>
+	 *         Returns the response of the general authentication command in
+	 *         case of a successful authentication. Otherwise
+	 *         <strong>null</strong> is returned. The returned response can
+	 *         contain the following bytes.
+	 *         <table border="1">
+	 *         <tr>
+	 *         <td>Data</td>
+	 *         <td>0x7C</td>
+	 *         <td><em>Dynamic Authentication Data</em><br/>
+	 *         Protocol specific data objects.</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>Status Bytes</td>
+	 *         <td>
+	 *         <table>
+	 *         <tr>
+	 *         <td>0x9000</td>
+	 *         <td><em>Normal Operation</em><br/>
+	 *         The protocol (step) was successful.</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>0x6300</td>
+	 *         <td><em>Authentication failed</em><br/>
+	 *         The protocol (step) failed.</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>0x63CX</td>
+	 *         <td><em>Authentication failed</em><br/>
+	 *         The protocol (step) failed. X indicates the number of remaining
+	 *         verification tries: X=1: The password is suspended. The password
+	 *         MUST be resumed. X=0: The password is blocked. The password MUST
+	 *         be unblocked.</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>0x6982</td>
+	 *         <td><em>Security status not satisfied</em><br/>
+	 *         The terminal is not authorized to perform the protocol (e.g. the
+	 *         password is blocked, deactivated, or suspended).</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>0x6983</td>
+	 *         <td><em>Authentication method blocked</em><br/>
+	 *         The password is blocked.</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>0x6984</td>
+	 *         <td><em>Reference data not usable</em><br/>
+	 *         The password is deactivated.</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>0x6985</td>
+	 *         <td><em>Conditions of use not satisfied</em><br/>
+	 *         The password is suspended.</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>0x6A80</td>
+	 *         <td><em>Incorrect parameters in data field</em><br/>
+	 *         Provided data is invalid.</td>
+	 *         </tr>
+	 *         <tr>
+	 *         <td>other</td>
+	 *         <td><em>Operating system dependent error</em><br/>
+	 *         The protocol (step) failed.</td>
+	 *         </tr>
+	 *         <table></td>
+	 *         </tr>
+	 *         </table>
+	 *         </p>
+	 */
 	private byte[] generalAUTH(final TransportProvider tp, byte[] authData, final boolean lastCommand) {
 		if (authData == null) {
 			authData = new byte[0];
@@ -164,6 +371,9 @@ public class CardHandler implements ICardHandler {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#getECard()
+	 */
 	@Override
 	public TransportProvider getECard() {
 		if (this.tp0 != null) {
@@ -245,6 +455,11 @@ public class CardHandler implements ICardHandler {
 		return tpNew;
 	}
 
+	/**
+	 * Gets the HAL transport, which signals events and data in a PC/SC connection.
+	 *
+	 * @return the HAL transport
+	 */
 	protected TransportProvider getHALTransport() {
 		TransportProvider tpNew = null;
 		try {
@@ -271,6 +486,14 @@ public class CardHandler implements ICardHandler {
 		return tpNew;
 	}
 
+	/**
+	 * Gets the <em>CCID</em> of the given Transport provider.
+	 * 
+	 * @param transport
+	 *            - The currently used transport provider.
+	 * 
+	 * @return Returns the <em>CCID</em>.
+	 */
 	private CCID getCCID(Object transport) {
 		CCID ccid = null;
 		if (transport == null) {
@@ -288,6 +511,20 @@ public class CardHandler implements ICardHandler {
 		return ccid;
 	}
 
+	/**
+	 * Send pace command to the <em>CCID</em>.
+	 * 
+	 * @param transport
+	 *            - The used <tt>transport provider</tt>.
+	 * @param function
+	 *            - The used function of the <tt>PACE</tt>-protocol application.
+	 * @param data
+	 *            - The send data.
+	 * 
+	 * @return Returns the <em>APDU</em>-response in little endian byte order,
+	 *         or <strong>null</strong>, if the <em>CCID</em> terminates the
+	 *         processing of the <tt>PACE</tt>-command.
+	 */
 	private byte[] sendPACECommand(final Object transport, final int function, byte[] data) {
 		final CCID ccid = getCCID(transport);
 		if (ccid != null && ccid.hasFeature(CCID.FEATURE_EXECUTE_PACE)) {
@@ -323,6 +560,9 @@ public class CardHandler implements ICardHandler {
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#hasPACE(java.lang.Object)
+	 */
 	@Override
 	public int hasPACE(final Object transport) {
 		// PACE capabilities: fn=0x01
@@ -334,6 +574,14 @@ public class CardHandler implements ICardHandler {
 		return 0;
 	}
 
+	/**
+	 * Execute remote pace.
+	 *
+	 * @param keyReference the key reference
+	 * @param CHAT the chat
+	 * @param termDesc the term desc
+	 * @return the int
+	 */
 	private int executeRemotePACE(final byte keyReference, final byte[] CHAT, final byte[] termDesc) {
 		byte[] pace_res = null;
 
@@ -401,6 +649,26 @@ public class CardHandler implements ICardHandler {
 	}
 
 	// Key-Derivation Function, usually SHA-1 with limit=16 only
+	/**
+	 * <p>
+	 * The key derivation function uses the inserted key and a
+	 * {@link ByteBuffer} to derive keying material that can be employed by
+	 * cryptographic algorithms. The counter is inserted at the end of the
+	 * <tt>byte-array</tt> and the limit determines the size of the created key.
+	 * </p>
+	 * 
+	 * @param md
+	 *            - The used message digest algorithm.
+	 * @param secret
+	 *            - The public key(shared secret).
+	 * @param counter
+	 *            - The counter.
+	 * @param limit
+	 *            - The limit.
+	 * 
+	 * @return Returns material that can be employed by cryptographic
+	 *         algorithms.
+	 */
 	private byte[] KDF(final MessageDigest md, final byte[] secret, final int counter, final int limit) {
 		final ByteBuffer temp = counter != -1 ? ByteBuffer.allocate(secret.length + 4) : ByteBuffer
 				.allocate(secret.length);
@@ -416,6 +684,21 @@ public class CardHandler implements ICardHandler {
 	// SHA-1(Serial Number || Date of Birth || Date of Expiry)
 	// secretType: 0x00 = ??, 0x01 = MRZ, 0x02 = CAN, 0x03 = PIN, 0x04 = PUK,
 	// ..??
+	/**
+	 * Executes the <tt>PACE</tt>-protocol locally.
+	 * 
+	 * @param algorithm
+	 *            - The used algorithm.
+	 * @param keyReference
+	 *            - The used key reference.
+	 * @param secret
+	 *            - The inserted eID-pin.
+	 * @param CHAT
+	 *            - The used data from the
+	 *            <em>Card Holder Authorization Template</em>.
+	 * 
+	 * @return Returns the received status word.
+	 */
 	private int executeLocalPACE(final String algorithm, final byte keyReference, final byte[] secret, final byte[] CHAT) {
 		int status = -1;
 
@@ -532,10 +815,36 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
+	/**
+	 * Executed the <em>PACE</em>-protocol.
+	 * 
+	 * @param keyReference
+	 *            - The key reference.
+	 * @param secret
+	 *            - The inserted eID-pin during pinChange or transport pin
+	 *            during cardActivation.
+	 * @param CHAT
+	 *            - The <em>Card Holder Autorization Template</em>.
+	 * @return Returns the received status word.
+	 */
 	private int executePACE(final byte keyReference, final byte[] secret, final byte[] CHAT) {
 		return executePACE(keyReference, secret, CHAT, null);
 	}
 
+	/**
+	 * Executed the <em>PACE</em>-protocol.
+	 * 
+	 * @param keyReference
+	 *            - The key reference.
+	 * @param secret
+	 *            - The inserted eID-pin during pinChange or transport pin
+	 *            during cardActivation.
+	 * @param CHAT
+	 *            - The <em>Card Holder Autorization Template</em>.
+	 * @param termDesc
+	 *            - The terminal description.
+	 * @return Returns the received status word.
+	 */
 	private int executePACE(final byte keyReference, final byte[] secret, final byte[] CHAT, final byte[] termDesc) {
 		this.EFCardAccess = tp.transmit(new byte[] { 0x00, (byte) 0xB0, (byte) 0x9C, 0x00, 0x00, 0x00, 0x00 });
 		if (tp.lastSW() != 0x9000) {
@@ -588,6 +897,9 @@ public class CardHandler implements ICardHandler {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#startAuthentication(byte[], de.persoapp.core.client.SecureHolder, byte[])
+	 */
 	@Override
 	public synchronized boolean startAuthentication(final byte CHAT[], final SecureHolder secret, final byte[] termDesc) {
 		if (!initialized) {
@@ -620,6 +932,9 @@ public class CardHandler implements ICardHandler {
 		return initialized;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#doPINUnblock(de.persoapp.core.card.TransportProvider, byte, de.persoapp.core.client.SecureHolder, byte)
+	 */
 	@Override
 	public int doPINUnblock(final TransportProvider tp0, final byte verifySecret, final SecureHolder verifySecretInput,
 			final byte unblockSecret) {
@@ -634,6 +949,9 @@ public class CardHandler implements ICardHandler {
 		return tp.lastSW();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#doPINChange(de.persoapp.core.card.TransportProvider, byte, de.persoapp.core.client.SecureHolder, byte, de.persoapp.core.client.SecureHolder)
+	 */
 	@Override
 	public int doPINChange(final TransportProvider tp0, final byte verifySecret, final SecureHolder verifySecretInput,
 			final byte updateSecret, final SecureHolder updateSecretInput) {
@@ -663,21 +981,33 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#getCAReferences()
+	 */
 	@Override
 	public List<byte[]> getCAReferences() {
 		return CAReferences;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#getEFCardAccess()
+	 */
 	@Override
 	public byte[] getEFCardAccess() {
 		return EFCardAccess;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#getIDPICC()
+	 */
 	@Override
 	public byte[] getIDPICC() {
 		return IDPICC;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#verifyCertificate(byte[])
+	 */
 	@Override
 	public boolean verifyCertificate(byte[] data) {
 		final byte[] cert = TLV.get(data, (short) 0x7F21);
@@ -695,6 +1025,9 @@ public class CardHandler implements ICardHandler {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#initTA(byte[], byte[])
+	 */
 	@Override
 	public void initTA(final byte[] ephemeralKey, final byte[] auxData) {
 		this.TAKey = ephemeralKey;
@@ -707,11 +1040,17 @@ public class CardHandler implements ICardHandler {
 		tp.transmit(buildCmd((byte) 0x00, (byte) 0x22, (byte) 0x81, (byte) 0xA4, data, -1));
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#getTAChallenge()
+	 */
 	@Override
 	public byte[] getTAChallenge() {
 		return tp.transmit(new byte[] { 0x00, (byte) 0x84, 0x00, 0x00, 0x08 });
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#verifyTASignature(byte[])
+	 */
 	@Override
 	public boolean verifyTASignature(final byte[] signature) {
 		tp.transmit(buildCmd((byte) 0x00, (byte) 0x82, (byte) 0x00, (byte) 0x00, signature, -1));
@@ -721,15 +1060,33 @@ public class CardHandler implements ICardHandler {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#getEFCardSecurity()
+	 */
 	@Override
 	public byte[] getEFCardSecurity() {
 		return readFile((short) 0x011D);
 	}
 
+	/**
+	 * Read file.
+	 *
+	 * @param FID the fid
+	 * @return the byte[]
+	 */
 	private byte[] readFile(final short FID) {
 		return readFile(this.tp, FID);
 	}
 
+	/**
+	 * Reads the file from the <em>ICC</em>.
+	 * 
+	 * @param tp
+	 *            - The used <tt>transport provider</tt>.
+	 * @param FID
+	 *            - The used <tt>file identifier</tt>.
+	 * @return Returns the content of the read file.
+	 */
 	private byte[] readFile(final TransportProvider tp, final short FID) {
 		tp.transmit(new byte[] { 0x00, (byte) 0xA4, 0x02, 0x0C, 0x02, (byte) (FID >> 8), (byte) (FID & 0xFF) });
 		if (tp.lastSW() != 0x9000) {
@@ -753,6 +1110,9 @@ public class CardHandler implements ICardHandler {
 		return baos.toByteArray();
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#execCA()
+	 */
 	@Override
 	public byte[] execCA() {
 		tp.transmit(new byte[] { 0x00, 0x22, 0x41, (byte) 0xA4, 0x0C, (byte) 0x80, 0x0A, 0x04, 0x00, 0x7F, 0x00, 0x07,
@@ -760,6 +1120,9 @@ public class CardHandler implements ICardHandler {
 		return generalAUTH(tp, TLV.build(0x80, Hex.fromString("04" + Hex.toString(TAKey))), true);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#reset()
+	 */
 	@Override
 	public void reset() {
 		initialized = false;
@@ -770,12 +1133,22 @@ public class CardHandler implements ICardHandler {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#transmit(byte[])
+	 */
 	@Override
 	public byte[] transmit(byte[] cmd) {
 		cmd = tp0.transmit(cmd);
 		return ArrayTool.arrayconcat(cmd, new byte[] { (byte) (tp0.lastSW() >> 8), (byte) (tp0.lastSW() & 0xFF) });
 	}
 
+	/**
+	 * Select esign.
+	 *
+	 * @param tp0 the tp0
+	 * @param verifySecret the verify secret
+	 * @return the int
+	 */
 	private int selectESIGN(final TransportProvider tp0, final byte verifySecret) {
 		this.tp = tp0;
 		// role Signature Terminal
@@ -788,9 +1161,15 @@ public class CardHandler implements ICardHandler {
 		return tp0.lastSW();
 	}
 
+	/** The Constant ESIGN_PIN_ID. */
 	private static final byte	ESIGN_PIN_ID	= (byte) 0x81;
+	
+	/** The Constant ESIGN_PRK_QES. */
 	private static final byte	ESIGN_PRK_QES	= (byte) 0x84;
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#doESignInit(de.persoapp.core.card.TransportProvider)
+	 */
 	@Override
 	public int doESignInit(final TransportProvider tp0) {
 		int status = selectESIGN(tp0, (byte) 0x03);
@@ -814,6 +1193,9 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#doESignChange(de.persoapp.core.card.TransportProvider)
+	 */
 	@Override
 	public int doESignChange(final TransportProvider tp0) {
 		int status = selectESIGN(tp0, (byte) 0x02);
@@ -832,6 +1214,9 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#doESignUnblock(de.persoapp.core.card.TransportProvider)
+	 */
 	@Override
 	public int doESignUnblock(final TransportProvider tp0) {
 		final int status = selectESIGN(tp0, (byte) 0x04);
@@ -841,6 +1226,9 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.persoapp.core.card.ICardHandler#doESignTerminate(de.persoapp.core.card.TransportProvider)
+	 */
 	@Override
 	public int doESignTerminate(final TransportProvider tp0) {
 		final int status = selectESIGN(tp0, (byte) 0x03);
@@ -852,10 +1240,23 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
+	/**
+	 * Open_e sign.
+	 *
+	 * @param tp0 the tp0
+	 * @return the int
+	 */
 	public int open_eSign(final TransportProvider tp0) {
 		return open_eSign(tp0, true);
 	}
 
+	/**
+	 * Open_e sign.
+	 *
+	 * @param tp0 the tp0
+	 * @param validatePin the validate pin
+	 * @return the int
+	 */
 	public int open_eSign(final TransportProvider tp0, final boolean validatePin) {
 		int status = selectESIGN(tp0, (byte) 0x02);
 		if (status == 0x9000 && validatePin) {
@@ -864,6 +1265,12 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
+	/**
+	 * Validate_e sign pin.
+	 *
+	 * @param tp0 the tp0
+	 * @return the int
+	 */
 	public int validate_eSignPin(final TransportProvider tp0) {
 		int status = -1;
 		try {
@@ -877,10 +1284,21 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
+	/**
+	 * Do e sign.
+	 *
+	 * @param dataTBS the data tbs
+	 * @return the byte[]
+	 */
 	public byte[] doESign(final byte[] dataTBS) {
 		return tp.transmit(buildCmd((byte) 0x00, (byte) 0x2A, (byte) 0x9E, (byte) 0x9A, dataTBS, 0));
 	}
 
+	/**
+	 * Do e sign get certificates.
+	 *
+	 * @return the list
+	 */
 	public List<byte[]> doESignGetCertificates() {
 		final List<byte[]> certs = new ArrayList<byte[]>();
 		certs.add(readFile((short) 0xC000));

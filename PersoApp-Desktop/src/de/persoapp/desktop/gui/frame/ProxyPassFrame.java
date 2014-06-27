@@ -68,28 +68,74 @@ import de.persoapp.desktop.Configuration;
 import de.persoapp.desktop.gui.panel.ButtonPanel;
 
 /**
- * @author ckahlo
+ * TODO: Comment.
  * 
+ * @author Christian Kahlo
  */
 public class ProxyPassFrame extends JFrame {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long				serialVersionUID	= 1L;
 
+	/**
+	 * The attributes to store the user credentials.
+	 */
 	private String							user, pass;
+	
+	/**
+	 * The name of the {@link ProxyPassFrame}.
+	 */
 	private final String					frameName;
 
+	/**
+	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 */
 	private final PropertyResolver.Bundle	textBundle;
+	
+	/**
+	 * The top text area.
+	 */
 	private JTextArea						topTextArea;
+	
+	/**
+	 * The <tt>label</tt> for the field of the username and the password.
+	 */
 	private JLabel							userLabel, passLabel;
+	
+	/**
+	 * The <tt>textfield</tt> for the username. 
+	 */
 	private JTextField						userField;
+	
+	/**
+	 * The <tt>textfield</tt> for containing the user-password.
+	 */
 	private JPasswordField					passField;
+	
+	/**
+	 * The {@link ButtonPanel} for providing the option of user interaction.
+	 */
 	private ButtonPanel						buttonPanel;
+	
+	/**
+	 * The main panel of the {@link ProxyPassFrame}.
+	 */
 	private JPanel							mainPanel;
 
 	/**
+	 * Creates a new instance of the {@link ProxyPassFrame} and initializes it
+	 * with the given arguments.
+	 * 
+	 * @param realm
+	 *            - The user account location. The given realm can be either a
+	 *            prefix (A domain of an operating system like Windows NT 4.0)
+	 *            or a suffix (A DNS domain name or the name of an Active
+	 *            Directory domain).
 	 * 
 	 * @param creds
-	 *            Username and password, can be null or left blank.
+	 *            - Username and password, can be null or left blank.
 	 */
 	public ProxyPassFrame(final String realm, final String... creds) {
 
@@ -131,6 +177,14 @@ public class ProxyPassFrame extends JFrame {
 		}
 	}
 
+	/**
+	 * Initializes the panels of the {@link ProxyPassFrame}. The given realm can
+	 * be either a prefix (A domain of an operating system like Windows NT 4.0)
+	 * or a suffix (A DNS domain name or the name of an Active Directory domain).
+	 * 
+	 * @param realm
+	 *            - The currently user account location.
+	 */
 	private void initPanels(final String realm) {
 		topTextArea = new JTextArea();
 		topTextArea.setFont(UIManager.getFont("Label.font"));
@@ -165,6 +219,10 @@ public class ProxyPassFrame extends JFrame {
 		mainPanel.setBackground(background);
 	}
 
+	/**
+	 * Adds a {@link ActionListener} to the buttons of the {@link ButtonPanel}
+	 * and to the field of the <tt>password</tt>.
+	 */
 	private void addListener() {
 		final ActionListener listener = new ActionListener() {
 			@Override
@@ -190,6 +248,10 @@ public class ProxyPassFrame extends JFrame {
 		buttonPanel.getCancel().addActionListener(listener);
 	}
 
+	/**
+	 * Draws the panels of the {@link ProxyPassFrame}. The {@link GridBagLayout}
+	 * is used for drawing.
+	 */
 	private void drawPanels() {
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.BOTH;
@@ -227,6 +289,12 @@ public class ProxyPassFrame extends JFrame {
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Returns the credentials of a user.
+	 * 
+	 * @return Returns the <strong>username</strong> and
+	 *         <strong>password</strong>.
+	 */
 	public String[] getCredentials() {
 		synchronized (this) {
 			try {

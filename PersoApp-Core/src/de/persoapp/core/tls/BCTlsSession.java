@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -65,13 +65,29 @@ import org.bouncycastle.crypto.tls.TlsClient;
 import org.bouncycastle.crypto.tls.TlsPeer;
 
 /**
- * @author ckahlo
+ * This class implements all methods to enable the secure communication between
+ * two endpoints.
+ * <p>
+ * <code>public class BCTlsSession implements SSLSession</code>
+ * </p>
  * 
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class BCTlsSession implements SSLSession {
 
+	/**
+	 * The currently used <tt>TlsPeer</tt>, which refers to this application as
+	 * the starting point of the tls-connection.
+	 */
 	final TlsPeer	tlsPeer;
 
+	/**
+	 * Creates a new instance of the {@link BCTlsSession}.
+	 * 
+	 * @param bcTlsSocketImpl
+	 *            - The currently used implementation for <tt>TLS-Sockets</tt>.
+	 */
 	public BCTlsSession(final BCTlsSocketImpl bcTlsSocketImpl) {
 		this.tlsPeer = bcTlsSocketImpl.getPeerHandler();
 	}

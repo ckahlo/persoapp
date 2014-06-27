@@ -57,14 +57,23 @@ import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.desktop.gui.laf.DefaultLAF;
 
 /**
- * @author ckahlo
+ * The <tt>Configuration</tt>-class contains the <code>PropertyResolver</code>
+ * and the used properties. The <tt>Icons</tt> and the common constants are also
+ * inserted here.
  * 
+ * @author Christian Kahlo
  */
 public class Configuration {
 
+	/**
+	 * The persistent set of defined properties. The properties are defined in
+	 * the <tt>config.properties</tt>.
+	 */
 	private static final Properties						PROPS		= PropertyResolver
 																			.getProperties("config.properties");
-
+	/**
+	 * The initialization of the <tt>Configuration</tt> goes here.
+	 */
 	static {
 		LOOK_AND_FEEL = DefaultLAF.class;
 
@@ -78,23 +87,48 @@ public class Configuration {
 		MAINVIEW_CLASS = de.persoapp.desktop.MainView.class;
 	}
 
+	/**
+	 * The class of the main view of the <tt>PersoApp-Application</tt>.
+	 */
 	public static final Class<? extends IMainView>		MAINVIEW_CLASS;
 
+	/**
+	 * The <tt>Look and Feel</tt> of the <tt>PersoApp-Application</tt>.
+	 */
 	public static final Class<? extends LookAndFeel>	LOOK_AND_FEEL;
 
+	/**
+	 * The way, how to retrieve the requested text.
+	 */
 	public static final String							CLAIM_TEXT;
 
+	/**
+	 * The common logging flag.
+	 */
 	public static final boolean							LOGGING		= Boolean.parseBoolean(PROPS.getProperty("logging",
 																			"true"));
-
+	/**
+	 * The common resizable flag.
+	 */
 	public static final boolean							RESIZABLE	= Boolean.parseBoolean(PROPS.getProperty(
 																			"layout.resizeable", "false"));
-
+	/**
+	 * The <tt>Layout-Font</tt>.
+	 */
 	public static final String							FONT		= PROPS.getProperty("layout.font", "Arial");
 
+	/**
+	 * The used <tt>window icon</tt>. The <tt>icon.png</tt> is used.
+	 */
 	public static final BufferedImage					WINDOW_ICON	= Utils.getImage("icon.png");
 
+	/**
+	 * The tray icon.
+	 */
 	public static final BufferedImage					TRAY_ICON	= WINDOW_ICON;
 
+	/**
+	 * The logo icon.
+	 */
 	public static final BufferedImage					LOGO		= WINDOW_ICON;
 }

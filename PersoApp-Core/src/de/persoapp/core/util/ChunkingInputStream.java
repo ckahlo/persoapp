@@ -52,17 +52,42 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Basic class which provides utilities to handle data from the underlying {@link FilterInputStream}. 
+ * 
+ * @author Christian Kahlo, Ralf Wondratschek
+ */
 public class ChunkingInputStream extends FilterInputStream {
 
+	/**
+	 * The carriage return, which ends the current line.
+	 */
 	private static final char	CR			= 13;
+	
+	/**
+	 * The line feed, which starts a new line.
+	 */
 	private static final char	LF			= 10;
+	
+	/**
+	 * An estimate of the number of bytes that can be read (or skipped over)
+	 * from this input stream without blocking.
+	 */
 	int							chunksize	= 0;
 
-	/** Creates a new instance of CipherInputStream */
+	/**
+	 * Creates a new instance of {@link ChunkingInputStream}.
+	 * 
+	 * @param in
+	 *            - The underlying {@link InputStream}.
+	 */
 	public ChunkingInputStream(final InputStream in) {
 		super(in);
 	}
-
+	
+	/**
+	 * The buffer which is about to be read.
+	 */
 	byte[]	readBuf	= new byte[1];
 
 	@Override
@@ -99,6 +124,19 @@ public class ChunkingInputStream extends FilterInputStream {
 		return 0;    // we don't skip
 	}
 
+	/**
+	 * Reads a line of data from the given InputStream. A line of data comes to
+	 * an end with a LF.
+	 * 
+	 * @param input
+	 *            - The given InputStream.
+	 * @return The read line of the given InputStream as a String
+	 * 
+	 * @throws IOException
+	 *             Thrown if a read-error occurs during the reading process.
+	 * @throws EOFException
+	 *             Thrown if the EOF is reached during the reading process.
+	 */
 	private String readLine(final InputStream input) throws IOException, EOFException {
 		final StringBuffer line = new StringBuffer();
 		int c;
@@ -116,6 +154,26 @@ public class ChunkingInputStream extends FilterInputStream {
 		return line.toString();
 	}
 
+	/**
+	 * Reads a chunk of data.
+	 * 
+	 * @param out
+	 *            - The chunk of data.
+	 * @param offset
+	 *            - The starting offset.
+	 * @param size
+	 *            - The size the data-chunk which is about to be read.
+	 * @return This function returns <strong>-1</strong> if an error occurs.
+	 *         Otherwise it returns the amount of space which is still
+	 *         available.
+	 * 
+	 * @throws IOException
+	 *             Thrown if something during the parsing of the content of
+	 *             System.in happens.
+	 * @throws IllegalArgumentException
+	 *             Thrown if the offset and the length of the data is greater
+	 *             than the whole chunk of data.
+	 */
 	private int readChunk(final byte[] out, int offset, final int size) throws IOException {
 		if (out.length < offset + size) {
 			throw new IllegalArgumentException();

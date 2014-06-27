@@ -59,27 +59,64 @@ import javax.swing.UIDefaults;
 import de.persoapp.desktop.Logging;
 
 /**
- * @author ckahlo
+ * The <tt>LAFFacade</tt>-class has no own behavior, except for setter and getter
+ * functions and constructors. All behavior comes from the <tt>target</tt>
+ * attribute.
+ * <p>
+ * <code>public class LAFFacade extends LookAndFeel</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class LAFFacade extends LookAndFeel {
 
+	/**
+	 * The target variable holds the {@link LookAndFeel}-class. All
+	 * functions are going to be called from there.
+	 */
 	private LookAndFeel	target	= null;
 
+	/**
+	 * Creates a new instance of the {@link LAFFacade}.
+	 */
 	public LAFFacade() {
 		super();
 	}
 
+	/**
+	 * Creates a new instance of the {@link LAFFacade}. Sets the
+	 * {@link LookAndFeel}-class during the creation process.<br>
+	 * </br>
+	 * <p>
+	 * The functions from the given object are going to be used in case of
+	 * function calls.
+	 * </p>
+	 * 
+	 * @param laf
+	 *            - The target {@link LookAndFeel}-object to set.
+	 */
 	public LAFFacade(final LookAndFeel laf) {
 		super();
 		setTarget(laf);
 	}
-
+	
+	/**
+	 * Sets the given object as the new functionality providing target. The
+	 * target is going to be used in case of function calls.
+	 * 
+	 * @param target
+	 *            - The target to set.
+	 */
 	public void setTarget(final LookAndFeel target) {
 		this.target = target;
 		Logging.getLogger().log(Level.INFO, "LAF: " + target.getClass() + " = " + target.toString());
 	}
 
+	/**
+	 * Retrieves the current set target.
+	 * 
+	 * @return Returns the current set target.
+	 */
 	private LookAndFeel target() {
 		return this.target;
 	}

@@ -80,29 +80,95 @@ import de.persoapp.desktop.gui.panel.ServiceProviderPanel;
 import de.persoapp.desktop.gui.panel.StatusBarPanel;
 
 /**
- * @author ckahlo
+ * The <tt>MainFrame</tt> is the frame of the <tt>PersoApp-DesktopClient</tt>
+ * which provides the main functionality.
+ * <p>
+ * By using the <tt>MainFrame</tt>, the user has access to the informations
+ * about the service provider and the certificate authority and to the main
+ * functionality of the application.
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvider {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long				serialVersionUID	= -7125602795219536236L;
 
+	/**
+	 * The panel for displaying the informations about the used service
+	 * provider.
+	 */
 	private ServiceProviderPanel			serviceProviderPanel;
+	
+	/**
+	 * The panel for displaying the informations about the used certificate
+	 * authority.
+	 */
 	private CAPanel							caPanel;
+	
+	/**
+	 * The panel for marking the personal data, which is needed for the
+	 * <em>eID-process</em>.
+	 */
 	private DataPanel						dataPanel;
+	
+	/**
+	 * The panel for inserting the necessary pin to authenticate the user.
+	 */
 	private PinPanel						pinPanel;
+	
+	/**
+	 * The panel which holds the <tt>Confirm</tt>- and <tt>Cancel</tt>-Button.
+	 */
 	private ButtonPanel						buttonPanel;
+	
+	/**
+	 * The shown status bar which includes a progress bar.
+	 */
 	private StatusBarPanel					statusBarPanel;
+	
+	/**
+	 * The panel which holds the {@link PinPanel}.
+	 */
 	private KeypadPanel						keypadPanel;
+	
+	/**
+	 * The panel, which holds informations about the
+	 * <tt>PersoApp-Application</tt>.
+	 */
 	private HelpPanel						helpPanel;
+	
+	/**
+	 * The main panel, which holds all components of the {@link MainFrame}.
+	 */
 	private JPanel							mainPanel;
+	
+	/**
+	 * The displayed picture of the <tt>PersoApp-Application</tt>.
+	 */
 	private JLabel							pic;
 
+	/**
+	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 */
 	private final PropertyResolver.Bundle	textBundle;
 
+	/**
+	 * The flag for enabling or disabling the currently used {@link PinPanel} 
+	 */
 	private boolean							pinEnabled;
+	
+	/**
+	 * The flag for showing the sidebar.
+	 */
 	private boolean							showSideBar;
 
+	/**
+	 * Creates a new instance of the {@link MainFrame}.
+	 */
 	public MainFrame() {
 		super();
 		textBundle = PropertyResolver.getBundle("text");
@@ -121,6 +187,9 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 		addListener();
 	}
 
+	/**
+	 * Initializes the Panels of the {@link MainFrame}.
+	 */
 	private void initPanels() {
 		mainPanel = new JPanel(true);
 		mainPanel.setLayout(new GridBagLayout());
@@ -142,6 +211,10 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 		}
 	}
 
+	/**
+	 * Draws the different panels of the {@link MainFrame}, using the
+	 * {@link GridBagLayout}.
+	 */
 	private void drawPanels() {
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.BOTH;
@@ -191,6 +264,11 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Adds a {@link WindowAdapter}, {@ink ActionListener}, {@link KeyAdapter}
+	 * to the components of the {@link MainFrame}, to provide the necessary
+	 * internal logic.
+	 */
 	private void addListener() {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
@@ -231,10 +309,27 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 		});
 	}
 
+	/**
+	 * Shows the progress of the current operation.
+	 * 
+	 * @param message
+	 *            - The message to display.
+	 * @param amount
+	 *            - The amount to fill the progress bar.
+	 * @param enabled
+	 *            - Enables or disables the progress bar.
+	 */
 	public void showProgress(final String message, final int amount, final boolean enabled) {
 		statusBarPanel.setProgressBarValue(message, amount, enabled);
 	}
 
+	/**
+	 * Initializes the different panels with the informations from the
+	 * {@link IEAC_Info}.
+	 * 
+	 * @param eacInfo
+	 *            - The certificate informations.
+	 */
 	public void init(final IEAC_Info eacInfo) {
 		pinPanel.clear();
 		buttonPanel.getCancel().setEnabled(true);
@@ -252,10 +347,20 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 		this.setLocationRelativeTo(null);
 	}
 
+	/**
+	 * Returns the marked personal data from the {@link DataPanel}.
+	 * 
+	 * @return Returns the marked personal data of the user.
+	 */
 	public long getResultChat() {
 		return dataPanel.getResultChat();
 	}
 
+	/**
+	 * Disables the <tt>Confirm</tt>- and the <tt>Cancel</tt>-Button and sets
+	 * the <tt>Result</tt> of the user interaction in the currently running
+	 * instance of {@link MainView}.
+	 */
 	public void returnResultConfirm() {
 		((MainView) MainView.getInstance()).setResult(dataPanel.getResultChat(), pinPanel.getPinCode(0), true);
 
@@ -263,6 +368,10 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 		buttonPanel.getCancel().setEnabled(false);
 	}
 
+	/**
+	 * Sets the visibility of the <tt>MainFrame</tt> to <strong>false</strong>
+	 * and deletes the <tt>Result</tt> of the user interaction.
+	 */
 	public void returnResultAbort() {
 		this.setVisible(false);
 
@@ -336,6 +445,12 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 		this.setSize(this.getWidth() - helpPanel.getSize().width - 10, this.getHeight());
 	}
 
+	/**
+	 * Enables the KeypadPanel, if the sidebar is currently shown.
+	 * 
+	 * @param enabled
+	 *            - Can be <strong>true</strong> or <strong>false</strong>.
+	 */
 	public void setKeypadPanelEnabled(final boolean enabled) {
 		if (showSideBar) {
 			keypadPanel.setEnabled(enabled);
@@ -351,10 +466,17 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 
 	@Override
 	public void clearHelpPanelText() {
-		//Der Text soll nicht gelöscht werden, da er auch sonst entfernt wird, wenn die Maus
-		//das Fenster verlässt
+		// text deletion is not needed. 
+		// if the mouse pointer is out of the window scope the text will be removed.
 	}
-
+	
+	/**
+	 * Enables used {@link PinPanel}, if the given argument is <strong>true</strong>,
+	 * otherwise the <tt>PinPanel</tt> is disabled.
+	 * 
+	 * @param enabled
+	 *            - Can be <strong>true</strong> or <strong>false</strong>.
+	 */
 	public void setPinEnabled(final boolean enabled) {
 		this.pinEnabled = enabled;
 
@@ -375,7 +497,7 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 
 			if (keypadPanel.getParent() == mainPanel && !enabled || keypadPanel.getParent() != mainPanel && enabled) {
 
-				//wenn nötig wird das keypadPanel hinzugefügt (pin in gui aktiviert) oder entfernt
+				// add keypad panel if necessary (activate pin in gui) or remove
 				this.removeSidebar();
 				this.addSidebar();
 			}

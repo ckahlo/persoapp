@@ -75,16 +75,36 @@ import de.persoapp.core.util.Hex;
 import de.persoapp.core.util.TLV;
 
 /**
- * @author ckahlo
+ * The <tt>Extended Access Protocol Handler</tt> 
  * 
+ * @author Christian Kahlo
  */
 public class EACProtocolHandler {
+	
+	/**
+	 * The bundle to resolve necessary properties.
+	 */
 	private final PropertyResolver.Bundle	textBundle	= PropertyResolver.getBundle("text_core");
 
+	/**
+	 * The currently used <tt>CardHandler</tt>.
+	 */
 	private final ICardHandler				eCardHandler;
+	
+	/**
+	 * The currently running instance of the <tt>PersoApp-Application</tt>.
+	 */
 	private final IMainView					mainView;
+	
+	/**
+	 * 
+	 */
 	private final ECardSession				session;
 
+	/**
+	 * Creates and initializes a new {@link EACProtocolHandler}.
+	 * @param session
+	 */
 	public EACProtocolHandler(final ECardSession session) {
 		this.session = session;
 		// this.eCardHandler = session.getCardHandler(slotHandle);
@@ -94,6 +114,11 @@ public class EACProtocolHandler {
 		this.mainView = session.getMainView();
 	}
 
+	/**
+	 * 
+	 * @param in
+	 * @return
+	 */
 	public DIDAuthenticationDataType process(final DIDAuthenticationDataType in) {
 		DIDAuthenticationDataType out = null;
 

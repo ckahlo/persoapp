@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -48,15 +48,49 @@
 package de.persoapp.core.card;
 
 /**
+ * <p>
+ * The <tt>TransportProvider</tt> is an abstract, generic interface with the
+ * intent to unify the communication to the higher application layers. The
+ * properties of the installed hardware can be retrieved through the provided
+ * methods.
+ * </p>
+ * <p>
+ * <code>public interface TransportProvider</code>
+ * </p>
  * 
- * @author ckahlo
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public interface TransportProvider {
+	
+	/**
+	 * Returns the parent object of the underlying object.
+	 * 
+	 * @return Returns the parent object of the underlying object.
+	 */
 	public Object getParent();
 
+	/**
+	 * Transmits the provided <em>APDU</em> and returns the <em>APDU</em>
+	 * -response. The success of the operation can be seen at the transmitted
+	 * status word, at the response.
+	 * 
+	 * @param apdu
+	 *            - The apdu, to transmit.
+	 * 
+	 * @return Returns the response.
+	 */
 	public byte[] transmit(byte[] apdu);
 
+	/**
+	 * Returns the last status word.
+	 * 
+	 * @return Returns the last status word.
+	 */
 	public int lastSW();
 
+	/**
+	 * Terminates the activities of the calling transport provider.
+	 */
 	public void close();
 }

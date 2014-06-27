@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -48,12 +48,29 @@
 package de.persoapp.core.card;
 
 /**
+ * <p>
+ * The <tt>CCID</tt> interface specifies methods and functions for use with a
+ * Chip Card Interface Devices. This is a card terminal in general.
+ * </p>
+ * <p>
+ * <code>public interface CCID</code>
+ * </p>
  * 
- * @author ckahlo
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 import javax.smartcardio.CardException;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Interface CCID.
+ */
 public interface CCID {
+	
+	/**
+	 * Describes the different card states, according to the current running
+	 * operation.
+	 */
 	static final String[]		FEATURES					= new String[] { "NO_FEATURE", "FEATURE_VERIFY_PIN_START",
 			"FEATURE_VERIFY_PIN_FINISH", "FEATURE_MODIFY_PIN_START", "FEATURE_MODIFY_PIN_FINISH",
 			"FEATURE_GET_KEY_PRESSED", "FEATURE_VERIFY_PIN_DIRECT", "FEATURE_MODIFY_PIN_DIRECT",
@@ -61,28 +78,95 @@ public interface CCID {
 			"FEATURE_SET_SPE_MESSAGE", "FEATURE_VERIFY_PIN_DIRECT_APP_ID", "FEATURE_MODIFY_PIN_DIRECT_APP_ID",
 			"FEATURE_WRITE_DISPLAY", "FEATURE_GET_KEY", "FEATURE_IFD_DISPLAY_PROPERTIES" };
 
+	/**
+	 * The feature to start the verify pin process.
+	 */
 	public static final byte	FEATURE_VERIFY_PIN_START	= 0x01;
+	
+	/**
+	 * The feature to finish the verify pin process.
+	 */
 	public static final byte	FEATURE_VERIFY_PIN_FINISH	= 0x02;
+	
+	/** The Constant FEATURE_MODIFY_PIN_START. */
 	public static final byte	FEATURE_MODIFY_PIN_START	= 0x03;
+	
+	/** The Constant FEATURE_MODIFY_PIN_FINISH. */
 	public static final byte	FEATURE_MODIFY_PIN_FINISH	= 0x04;
+	
+	/** The Constant FEATURE_GET_KEY_PRESSED. */
 	public static final byte	FEATURE_GET_KEY_PRESSED		= 0x05;
+	
+	/** The Constant FEATURE_VERIFY_PIN_DIRECT. */
 	public static final byte	FEATURE_VERIFY_PIN_DIRECT	= 0x06;
+	
+	/** The Constant FEATURE_MODIFY_PIN_DIRECT. */
 	public static final byte	FEATURE_MODIFY_PIN_DIRECT	= 0x07;
+	
+	/** The Constant FEATURE_MCT_READER_DIRECT. */
 	public static final byte	FEATURE_MCT_READER_DIRECT	= 0x08;
+	
+	/** The Constant FEATURE_MCT_UNIVERSAL. */
 	public static final byte	FEATURE_MCT_UNIVERSAL		= 0x09;
+	
+	/** The Constant FEATURE_IFD_PIN_PROPERTIES. */
 	public static final byte	FEATURE_IFD_PIN_PROPERTIES	= 0x0A;
+	
+	/** The Constant FEATURE_EXECUTE_PACE. */
 	public static final byte	FEATURE_EXECUTE_PACE		= 0x20;
 
+	/**
+	 * Returns the name of the <tt>integrated chip card</tt>.
+	 * 
+	 * @return Returns the name of the <tt>integrated chip card</tt>.
+	 */
 	public String getName();
 
 	// Card connect() throws CardException;
-
+	/**
+	 * Returns <strong>true</strong>. if the requested feature is available.
+	 * Otherwise <strong>false</strong>.
+	 * 
+	 * @param feature
+	 *            - The requested feature.
+	 * @return Returns <strong>true</strong>. if the requested feature is
+	 *         available. Otherwise <strong>false</strong>.
+	 */
 	public boolean hasFeature(final byte feature);
 
+	/**
+	 * Verify the pin direct at the card terminal.
+	 * 
+	 * @param PIN_VERIFY
+	 *            - The <em>APDU</em>-command.
+	 * @return Returns the <em>APDU</em>-Response.
+	 * @throws CardException
+	 *             If no card is present.
+	 */
 	public byte[] verifyPinDirect(final byte[] PIN_VERIFY) throws CardException;
 
+	/**
+	 * Modifies the pin direct at the card terminal.
+	 * 
+	 * @param PIN_MODIFY
+	 *            - The <em>APDU</em>-command.
+	 * @return Returns the <em>APDU</em>-Response.
+	 * @throws CardException
+	 *             If no card is present.
+	 */
 	public byte[] modifyPinDirect(final byte[] PIN_MODIFY) throws CardException;
 
 	// executePACE()
+	/**
+	 * Transmits the <em>control command</em>, according to the given
+	 * <tt>feature</tt>, and retrieves the response.
+	 * 
+	 * @param feature
+	 *            - The feature, which uses the control command.
+	 * 
+	 * @param ctrlCommand
+	 *            - The control command to transmit.
+	 * @return Returns the received response.
+	 */
 	public byte[] transmitControlCommand(final byte feature, final byte[] ctrlCommand);
 }

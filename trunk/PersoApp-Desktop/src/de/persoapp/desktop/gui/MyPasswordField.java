@@ -59,19 +59,44 @@ import javax.swing.text.PlainDocument;
 import de.persoapp.desktop.gui.panel.PinPanel;
 
 /**
- * @author ckahlo
+ * The <tt>MyPasswordField</tt>-class contains the logic for storing and
+ * displaying <tt>Pins</tt> in a safe and correct way.
+ * <p>
+ * <code>public class MyPasswordField extends JPasswordField</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class MyPasswordField extends JPasswordField {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long	serialVersionUID	= 5514819391155385931L;
 
+	/**
+	 * The <tt>BULLET</tt> for displaying in exchange for the <tt>LETTER</tt>.
+	 */
 	private static final char	BULLET				= '\u2022';
+	
+	/**
+	 * The plain <tt>LETTER</tt>.
+	 */
 	private static final char	LETTER				= '\u0000';
 
+	/**
+	 * The index of the current position of the inserted values.
+	 */
 	private int					index;
+	
+	/**
+	 * The parent {@link PinPanel}.
+	 */
 	private PinPanel			parent;
 
+	/**
+	 * Creates a new instance of {@link MyPasswordField}.
+	 */
 	public MyPasswordField() {
 		super();
 		setEchoChar(BULLET);
@@ -97,6 +122,11 @@ public class MyPasswordField extends JPasswordField {
 		}
 	}
 
+	/**
+	 * Returns the inserted pin of the field.
+	 * 
+	 * @return Returns the inserted pin.
+	 */
 	public int getValue() {
 		try {
 			return Integer.parseInt(new String(getPassword()));
@@ -105,19 +135,44 @@ public class MyPasswordField extends JPasswordField {
 		}
 	}
 
+	/**
+	 * Shows the plain text, if <tt>show</tt> is set to <strong>true</strong>,
+	 * otherwise the text is hidden.
+	 * 
+	 * @param show
+	 *            - Can be true or false.
+	 */
 	@Deprecated
 	public void showPlainText(final boolean show) {
 		setEchoChar(show ? LETTER : BULLET);
 	}
 
+	/**
+	 * Returns the current index.
+	 * 
+	 * @return Returns the current active index.
+	 */
 	public int getIndex() {
 		return index;
 	}
 
+	/**
+	 * Sets the given value as current index.
+	 * 
+	 * @param index
+	 *            - The current index. Should not be negative.
+	 */
 	public void setIndex(final int index) {
 		this.index = index;
 	}
 
+	/**
+	 * Finds the <tt>parent pin panel</tt> in a recursive way. Stores the
+	 * <tt>parent pin panel</tt> when it is found.
+	 * 
+	 * @param c
+	 *            - The container, which haves a <tt>parent pin panel</tt>.
+	 */
 	private void findParentPinPanel(final Container c) {
 		if (c != null) {
 			if (c instanceof PinPanel) {
@@ -128,10 +183,24 @@ public class MyPasswordField extends JPasswordField {
 		}
 	}
 
+	/**
+	 * The class for internal text documents, to store text.
+	 * <p>
+	 * <code>private class IntTextDocument extends PlainDocument</code>
+	 * </p>
+	 * 
+	 * @author Christian Kahlo
+	 */
 	private class IntTextDocument extends PlainDocument {
 
+		/**
+		 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+		 */
 		private static final long	serialVersionUID	= -3244520335727589902L;
 
+		/**
+		 * Creates a new instance of {@link InternalTextDocument}.
+		 */
 		public IntTextDocument() {
 			super();
 		}

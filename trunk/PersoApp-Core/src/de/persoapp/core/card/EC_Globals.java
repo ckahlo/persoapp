@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -53,6 +53,12 @@ import java.security.spec.ECParameterSpec;
 import java.security.spec.ECPoint;
 import java.security.spec.EllipticCurve;
 
+/**
+ * The <tt>EC_Globals</tt> includes the curves from RFC 5639 / BSI TR-03111.
+ *  
+ * @author Christian Kahlo, Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
+ */
 public class EC_Globals {
 	// curves from RFC 5639  / BSI TR-03111
 	// ordering according to TR-03110
@@ -145,6 +151,14 @@ public class EC_Globals {
 			"01" // h
 			}											};
 
+	/**
+	 * Returns the {@link ECParameterSpec} according to
+	 * the given <em>id</em>.
+	 * 
+	 * @param id
+	 *            - The id of the curve.
+	 * @return Returns the {@link ECParameterSpec}.
+	 */
 	public static ECParameterSpec getCurve(final int id) {
 		if (id < DOMAIN_PARAMETERS.length && DOMAIN_PARAMETERS[id] != null) {
 			final EllipticCurve curve = new EllipticCurve(new ECFieldFp(new BigInteger(DOMAIN_PARAMETERS[id][0], 16)),

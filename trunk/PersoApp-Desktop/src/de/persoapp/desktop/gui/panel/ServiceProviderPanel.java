@@ -67,18 +67,41 @@ import de.persoapp.core.client.PropertyResolver.Bundle;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * @author ckahlo
+ * The <tt>ServiceProviderPanel</tt> displays all informations about the used
+ * <tt>ServiceProvider</tt>.
+ * <p>
+ * <code>public class ServiceProviderPanel extends JPanel</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class ServiceProviderPanel extends JPanel {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long	serialVersionUID	= 1064043770147009097L;
 
+	/**
+	 * The constant for <tt>bold</tt> text style.
+	 */
 	public static final String	BOLD				= "Bold";
+	
+	/**
+	 * The constant for <tt>normal</tt> text style.
+	 */
 	public static final String	NORMAL				= "Normal";
 
+	/**
+	 * The necessary {@link JTextPane} to display the
+	 * <tt>ServiceProvider Informations</tt>.
+	 */
 	private JTextPane			textPane;
 
+	/**
+	 * Constructs a new instance of the {@link ServiceProviderPanel}. The
+	 * constructed panel is double-buffered for advanced displaying.
+	 */
 	public ServiceProviderPanel() {
 		super();
 		this.setDoubleBuffered(true);
@@ -88,6 +111,9 @@ public class ServiceProviderPanel extends JPanel {
 		drawContent();
 	}
 
+	/**
+	 * Draws the content of the {@link ServiceProviderPanel}.
+	 */
 	private void drawContent() {
 		textPane = new JTextPane();
 		textPane.setEditable(false);
@@ -100,6 +126,12 @@ public class ServiceProviderPanel extends JPanel {
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 	}
 
+	/**
+	 * Adds the given <tt>text</tt> in the given <tt>style</tt> to the {@link ServiceProviderPanel}.
+	 * 
+	 * @param text - The given text.
+	 * @param style - The given style.
+	 */
 	private void addText(final String text, final String style) {
 		final Document doc = textPane.getDocument();
 		try {
@@ -109,10 +141,30 @@ public class ServiceProviderPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Clears the content of the {@link ServiceProviderPanel}.
+	 */
 	public void clear() {
 		textPane.setText("");
 	}
 
+	/**
+	 * Fills in the certificate informations from the given {@link IEAC_Info}.
+	 * This includes the following informations:
+	 * <p>
+	 * <ul>
+	 * <li>Subject Name</li>
+	 * <li>Subject URL</li>
+	 * <li>Effective Date - the current date</li>
+	 * <li>Expiration Date - the date of expiration</li>
+	 * <li>Transaction Info</li>
+	 * <li>Terms of Usage</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param eacInfo
+	 *            - The given {@link IEAC_Info}.
+	 */
 	public void fillCertificate(final IEAC_Info eacInfo) {
 		clear();
 		addText(eacInfo.getSubjectName() + "\n", BOLD);

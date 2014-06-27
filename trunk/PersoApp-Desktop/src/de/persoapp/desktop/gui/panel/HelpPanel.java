@@ -71,22 +71,56 @@ import de.persoapp.desktop.Configuration;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * @author ckahlo
+ * The <tt>HelpPanel</tt> provides helping informations in the
+ * desktop client, like the pin state or the need additionally input.
+ * <p>
+ * <code>public class HelpPanel extends JPanel</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class HelpPanel extends JPanel {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long				serialVersionUID	= 4377094333650746341L;
 
+	/**
+	 * The constant for <tt>bold</tt> text style.
+	 */
 	public static final String				BOLD				= "Bold";
+	
+	/**
+	 * The constant for <tt>normal</tt> text style.
+	 */
 	public static final String				NORMAL				= "Normal";
 
+	/**
+	 * The necessary {@link JTextPane} to display text in the {@link HelpPanel}.
+	 */
 	private JTextPane						textPane;
+	
+	/**
+	 * The {@link JScrollPane} for the scrolling.
+	 */
 	private JScrollPane						scrollPane;
+	
+	/**
+	 * The <tt>JLabels</tt> for displaying informations in the {@link HelpPanel}. 
+	 */
 	private JLabel							pinStatus, inputRequired;
 
+	/**
+	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 */
 	private final PropertyResolver.Bundle	textBundle;
 
+	/**
+	 * Constructs a new instance of the {@link HelpPanel}. This includes the
+	 * drawing and the initialization of all defined components. The constructed
+	 * Panel is double-buffered for advanced displaying.
+	 */
 	public HelpPanel() {
 		super();
 
@@ -99,6 +133,9 @@ public class HelpPanel extends JPanel {
 		drawComponents();
 	}
 
+	/**
+	 * Initializes all components of the {@link HelpPanel}.
+	 */
 	private void initComponents() {
 		textPane = new JTextPane();
 		textPane.setEditable(false);
@@ -120,6 +157,9 @@ public class HelpPanel extends JPanel {
 		inputRequired.setVisible(false);
 	}
 
+	/**
+	 * Draws all components of the {@link HelpPanel}.
+	 */
 	private void drawComponents() {
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.BOTH;
@@ -141,6 +181,15 @@ public class HelpPanel extends JPanel {
 		this.add(inputRequired, cons);
 	}
 
+	/**
+	 * Sets the description as text in the {@link HelpPanel}. The
+	 * style-information of the text is provided through the style argument.
+	 * 
+	 * @param text
+	 *            - The given text.
+	 * @param style
+	 *            - The provided style-information.
+	 */
 	private void setDescription(final String text, final String style) {
 		final Document doc = textPane.getDocument();
 		try {
@@ -150,6 +199,10 @@ public class HelpPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * Removes all content from the included document of the {@link HelpPanel}.
+	 * This function is called before new text is set in the {@link HelpPanel}.
+	 */
 	public void clear() {
 		final Document doc = textPane.getDocument();
 		try {
@@ -161,6 +214,17 @@ public class HelpPanel extends JPanel {
 		this.repaint();
 	}
 
+	/**
+	 * Clears the content from the {@link HelpPanel} and sets the given header
+	 * as the title and the description as the corresponding text in the
+	 * {@link HelpPanel}. The scroll-state is set to the top of the
+	 * {@link HelpPanel} after repainting.
+	 * 
+	 * @param header
+	 *            - The given Header.
+	 * @param description
+	 *            - The given Description.
+	 */
 	public void setText(final String header, final String description) {
 		clear();
 		((MyTitledBorder) this.getBorder()).setTitle(header);
@@ -168,6 +232,22 @@ public class HelpPanel extends JPanel {
 		this.repaint();
 	}
 
+	/**
+	 * Clears the content from the {@link HelpPanel}. Sets the given header as
+	 * the title and the description as the corresponding text in the
+	 * {@link HelpPanel}. The current scroll state is saved if
+	 * <code>saveScrollState</code> equals <strong>true</strong>. Otherwise it
+	 * is set to the top after repainting the {@link HelpPanel}.
+	 * 
+	 * @param header
+	 *            - The given header.
+	 * @param description
+	 *            - The corresponding text.
+	 * @param saveScrollState
+	 *            - Saves the current view position if true.
+	 * 
+	 * @see #setText(String, String)
+	 */
 	public void setText(final String header, final String description, final boolean saveScrollState) {
 		if (saveScrollState) {
 			final Point position = scrollPane.getViewport().getViewPosition();
@@ -183,7 +263,13 @@ public class HelpPanel extends JPanel {
 			setText(header, description);
 		}
 	}
-
+	
+	/**
+	 * The function displays the current PinState in the {@link HelpPanel}.
+	 * 
+	 * @param attempts
+	 *            - The remaining attempts to insert the correct pin.
+	 */
 	public void setPINState(final int attempts) {
 		inputRequired.setVisible(false);
 

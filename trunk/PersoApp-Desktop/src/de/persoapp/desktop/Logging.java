@@ -51,13 +51,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author ckahlo
+ * The logging class provides the logging functionality.
  * 
+ * @author Christian Kahlo
  */
 public class Logging {
 
+	/**
+	 * The basic <tt>application logger</tt>.
+	 */
 	private static Logger	logger	= null;
 
+	/**
+	 * Retrieves the <tt>application logger</tt>. If no logger is set, a new one
+	 * is going to be created and returned.
+	 * 
+	 * @return Returns the <tt>application logger</tt>.
+	 */
 	public static Logger getLogger() {
 
 		if (logger == null) {
@@ -66,7 +76,7 @@ public class Logging {
 
 			try {
 
-				//es wird alles geloggt (Debuging)
+				// log all (Debugging)
 				if (Configuration.LOGGING) {
 					logger.setLevel(Level.ALL);
 				} else {

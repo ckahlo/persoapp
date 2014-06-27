@@ -56,16 +56,34 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
+ * Utilities to handle tokens with the <tt>Electronic Card</tt>-Api. The
+ * <tt>EcApi_TCTokenHandler</tt> provides functions to work with documents and
+ * namespaces.
  * 
- * @author ckahlo
+ * @author Christian Kahlo
  */
 public class EcApi_TCTokenHandler implements ContentHandler {
 
+	/**
+	 * The stored properties.
+	 */
 	private final Map<String, String>	props				= new HashMap<String, String>();
 
+	/**
+	 * The name of the current element.
+	 */
 	private String						currentElementName	= null;
+	
+	/**
+	 * The current value.
+	 */
 	private StringBuffer				currentValue;
 
+	/**
+	 * Returns the stored properties.
+	 * 
+	 * @return Returns the stored properties.
+	 */
 	public Map<String, String> getProperties() {
 		return props;
 	}

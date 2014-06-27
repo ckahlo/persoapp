@@ -64,20 +64,71 @@ import de.persoapp.core.card.ICardHandler;
 import de.persoapp.core.client.ECardSession;
 
 /**
- * @author ckahlo
+ * The <tt>IFDService</tt> is a webservice and allows the transmission of data
+ * to connected eCards and the retrieval of the response.
  * 
+ * <p>
+ * <code>public final class IFDService implements IFD</code>
+ * </p>
+ * 
+ * @author Christian Kahlo
  */
 @WebService(serviceName = "IFD", portName = "IFDPort", targetNamespace = "urn:iso:std:iso-iec:24727:tech:schema")
 public final class IFDService implements IFD {
 
+	/**
+	 * The webservice context for access to message contexts and security
+	 * informations relative to a currently served request.
+	 */
 	@Resource
 	private final WebServiceContext	wsCtx	= null;
 
+	/**
+	 * Initializes the {@link IFDService}.
+	 */
 	@PostConstruct
 	public void init() {
 		System.out.println("INIT called: " + wsCtx);
 	}
 
+	/**
+	 * The Transmit function sends one or more APDU(s) to a connected eCard. The
+	 * transmission parameters are divided in two parts.
+	 * <p>
+	 * <table border="1">
+	 * <tr>
+	 * <th>Parameter</th>
+	 * <th>Descryption</th>
+	 * </tr>
+	 * <tr>
+	 * <td>SlotHandle</td>
+	 * <td>With the SlotHandle the connection established with Connect to the
+	 * eCard is addressed.</td>
+	 * </tr>
+	 * <tr>
+	 * <td>InputAPDUInfo</td>
+	 * <td>MAY be present multiple times and contains the command APDU, which is
+	 * sent to the eCard and optionally acceptable status codes.</td>
+	 * </tr>
+	 * </table>
+	 * </p>
+	 * 
+	 * @param parameters
+	 *            - The <em>parameters</em>, which specifies the data
+	 *            transmission.
+	 * 
+	 * @return The returned Response is divided into two parts
+	 *         <p>
+	 *         <ul>
+	 *         <li>dss:Result - Contains the status information and the errors
+	 *         of an executed action.</li>
+	 *         <li>OutputAPDU - MAY be present multiple times and contains the
+	 *         APDU returned by the eCard. A successful call of the Transmit
+	 *         function MUST contain exactly as many InputAPDU- as
+	 *         OutputAPDU-elements.</li>
+	 *         </ul>
+	 *         </p>
+	 */
 	@Override
 	public iso.std.iso_iec._24727.tech.schema.TransmitResponse transmit(
 			final iso.std.iso_iec._24727.tech.schema.Transmit parameters) {

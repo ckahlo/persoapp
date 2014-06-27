@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -60,34 +60,135 @@ import de.persoapp.core.util.ArrayTool;
 import de.persoapp.core.util.Hex;
 import de.persoapp.core.util.TLV;
 
+/**
+ * The <tt>EAC_Info</tt> contains all informations about the initialized
+ * certificate and the data for the <em>eID</em>-process of the user.
+ * <p>
+ * <code>public class EAC_Info implements IEAC_Info<code>
+ * </p>
+ * 
+ * @author Christian Kahlo, Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
+ */
 public class EAC_Info implements IEAC_Info {
+	
+	/**
+	 * Shows the validity of the certificate informations.
+	 */
 	private boolean				valid	= false;
 
+	/**
+	 * The currently used cv certificates.
+	 */
 	private final List<byte[]>	cvcerts;
+	
+	/**
+	 * The certificate of a terminal.
+	 */
 	private byte[]				terminalCertificate;
+	
+	/**
+	 * The description of a terminal.
+	 */
 	private final byte[]		terminalDescription;
 
+	/**
+	 * The informations about the current transaction.
+	 */
 	private final String		transactionInfo;
+	
+	/**
+	 * The type of the current description.
+	 */
 	private String				descriptionType;
+	
+	/**
+	 * The name of the current issuer.
+	 */
 	private String				issuerName;
+	
+	/**
+	 * The URL of the current issuer.
+	 */
 	private String				issuerURL;
+
+	/**
+	 * The name of the current subject.
+	 */
 	private String				subjectName;
+	
+	/**
+	 * The URL of the current subject.
+	 */
 	private String				subjectURL;
+	
+	/**
+	 * The terms of usage.
+	 */
 	private String				termsOfUsage;
+	
+	/**
+	 * The URL to redirect.
+	 */
 	private String				redirectURL;
+	
+	/**
+	 * The defined certificate hashes.
+	 */
 	private byte[][]			certificateHashes;
+	
+	/**
+	 * The current date.
+	 */
 	private Date				effectiveDate;
+	
+	/**
+	 * The date of expiration.
+	 */
 	private Date				expirationDate;
 
+	/**
+	 * The chats for marking the personal data which is needed.
+	 */
 	private final long			reqCHAT, optCHAT;
+	
+	/**
+	 * The certificate authority reference.
+	 */
 	private String				caRef;
+	
+	/**
+	 * The certificate handler reference.
+	 */
 	private String				chRef;
+	
+	/**
+	 * The auxiliary data.
+	 */
 	private final byte[]		auxData;
 
+	/**
+	 * The verified community id.
+	 */
 	private String				verifyCommunityID;
 
+	/**
+	 * The date of the verify action.
+	 */
 	private int					verifyAge;
 
+	/**
+	 * Creates and initializes a new {@link EAC_Info} instance. The received
+	 * data from the gui-dialogs is transformed in a readable byteform.
+	 * 
+	 * @param cvcerts 
+	 * @param cvcertDescription
+	 * @param transactionInfo
+	 * @param requiredCHAT
+	 * @param optionalCHAT
+	 * @param auxData
+	 * @throws IOException
+	 */
 	private EAC_Info(final List<byte[]> cvcerts, final byte[] cvcertDescription, final String transactionInfo,
 			final byte[] requiredCHAT, final byte[] optionalCHAT, final byte[] auxData) throws IOException {
 		this.cvcerts = cvcerts;
@@ -117,6 +218,17 @@ public class EAC_Info implements IEAC_Info {
 		initAuxData(this.auxData);
 	}
 
+	/**
+	 * Creates a new instance of the {@link EAC_Info} with the given parameters.
+	 * 
+	 * @param cvcerts
+	 * @param cvcertDescription
+	 * @param transactionInfo
+	 * @param requiredCHAT
+	 * @param optionalCHAT
+	 * @param auxData
+	 * @return
+	 */
 	public static EAC_Info newInstance(final List<byte[]> cvcerts, final byte[] cvcertDescription,
 			final String transactionInfo, final byte[] requiredCHAT, final byte[] optionalCHAT, final byte[] auxData) {
 		try {
@@ -127,10 +239,27 @@ public class EAC_Info implements IEAC_Info {
 		return null;
 	}
 
+	/**
+	 * Returns <strong>true</strong>, if the informations of is valid. Otherwise the
+	 * function returns <strong>false</strong>.
+	 * 
+	 * @return Returns <strong>true</strong>, if the certificate is valid.
+	 *         Otherwise the function returns <strong>false</strong>.
+	 */
 	public final boolean isValid() {
 		return this.valid;
 	}
 
+	/**
+	 * Converts the certificate date in a regular date object.
+	 * 
+	 * @param cvDate
+	 *            - The date, to convert.
+	 * @param endOfDay
+	 *            - Set to <tt>true</tt> if the date should set to the end of
+	 *            date, otherwise <tt>false</tt>.
+	 * @return Returns the retrieved date of the certificate.
+	 */
 	private final Date cvDate2Date(final byte[] cvDate, final boolean endOfDay) {
 		final GregorianCalendar cal = (GregorianCalendar) GregorianCalendar.getInstance(TimeZone.getTimeZone("UTC"));
 		cal.set(Calendar.YEAR, 2000 + cvDate[0] * 10 + cvDate[1]);
@@ -143,6 +272,12 @@ public class EAC_Info implements IEAC_Info {
 		return cal.getTime();
 	}
 
+	/**
+	 * Initializes the auxiliary data.
+	 * 
+	 * @param auxData
+	 *            - The auxiliary data, to initialize.
+	 */
 	private final void initAuxData(final byte[] auxData) {
 		if (auxData == null) {
 			return;
@@ -191,6 +326,14 @@ public class EAC_Info implements IEAC_Info {
 		}
 	}
 
+	/**
+	 * Initializes the certificate description, of the given certificate.
+	 * 
+	 * @param cvcert - The given certificate.
+	 * @param certDescription - The certificate description.
+	 * 
+	 * @throws IOException If an error occurs during the initialization.
+	 */
 	private final void initDescription(byte[] cvcert, final byte[] certDescription) throws IOException {
 		cvcert = TLV.get(cvcert, (short) 0x7F21);
 		cvcert = TLV.get(cvcert, (short) 0x7F4E);
@@ -247,6 +390,17 @@ public class EAC_Info implements IEAC_Info {
 		}
 	}
 
+	/**
+	 * Initializes the chat through the use of the original chat, which contains
+	 * inserted values. Returns <strong>zero</strong> if the <em>origCHAT</em>
+	 * is <strong>null</strong>.
+	 * 
+	 * @param origCHAT
+	 *            - The original marked personal data. Can be <strong>null</strong>.
+	 * 
+	 * @return Returns <strong>zero</strong> if <em>origChat</em> is set to
+	 *         <strong>null</strong>.
+	 */
 	private int initCHAT(final byte[] origCHAT) {
 		int result = 0;
 
@@ -261,26 +415,51 @@ public class EAC_Info implements IEAC_Info {
 		return result;
 	}
 
+	/**
+	 * Returns the certificate chain.
+	 * 
+	 * @return Returns the certificate chain.
+	 */
 	//@Override
 	public List<byte[]> getCertificateChain() {
 		return this.cvcerts;
 	}
 
+	/**
+	 * Returns the currently used terminal certificate.
+	 * 
+	 * @return Returns the currently used terminal certificate.
+	 */
 	//@Override
 	public byte[] getTerminalCertificate() {
 		return this.terminalCertificate;
 	}
 
+	/**
+	 * Returns the terminal description.
+	 * 
+	 * @return Returns the terminal description.
+	 */
 	//@Override
 	public byte[] getTerminalDescription() {
 		return this.terminalDescription;
 	}
 
+	/**
+	 * Returns the certificate authority reference.
+	 * 
+	 * @return Returns the certificate authority reference.
+	 */
 	//@Override
 	public String getAuthorityReference() {
 		return this.caRef;
 	}
 
+	/**
+	 * Returns the certificate holder reference.
+	 * 
+	 * @return Returns the certificate holder reference.
+	 */
 	//@Override
 	public String getHolderReference() {
 		return this.chRef;
@@ -335,7 +514,12 @@ public class EAC_Info implements IEAC_Info {
 	public String getRedirectURL() {
 		return this.redirectURL;
 	}
-
+	
+	/**
+	 * Returns the certificate hashes.
+	 * 
+	 * @return Returns the certificate hashes.
+	 */
 	//@Override
 	public byte[][] getCertificateHashes() {
 		return this.certificateHashes;
@@ -356,17 +540,11 @@ public class EAC_Info implements IEAC_Info {
 		return auxData;
 	}
 
-	/**
-	 * @return the verifyCommunityID
-	 */
 	@Override
 	public String getVerifyCommunityID() {
 		return verifyCommunityID;
 	}
 
-	/**
-	 * @return the verifyAge
-	 */
 	@Override
 	public long getVerifyAge() {
 		return verifyAge;

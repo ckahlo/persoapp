@@ -48,8 +48,9 @@
 package de.persoapp.core.ws;
 
 /**
- * @author ckahlo
+ * The <tt>EcAPIProvider</tt> contains namespaces for the <tt>ECard</tt>.
  * 
+ * @author Christian Kahlo
  */
 public interface EcAPIProvider {
 

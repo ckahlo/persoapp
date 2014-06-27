@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -54,10 +54,39 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * <p>
+ * The <tt>SecureHolder</tt> encrypts and stores data in a safety way. After a
+ * PIN is inserted through a {@link PinPanel}, the inserted PIN is transmitted
+ * from the gui to the core through a provided instance of the
+ * <em>SecureHolder</em>.
+ * </p>
+ * <p>
+ * <code>public class SecureHolder</code>
+ * </p>
+ * 
+ * @author Christian Kahlo, Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
+ */
 public class SecureHolder {
+	
+	/**
+	 * The stored value.
+	 */
 	private transient byte[]	value	= null;
+	
+	/**
+	 * The current system time for advanced encryption and decryption.
+	 */
 	private transient long		ts		= System.currentTimeMillis();
 
+	/**
+	 * Creates and initializes a new {@link SecureHolder}. The data of the
+	 * <em>source</em> argument is encrypted and stored.
+	 * 
+	 * @param source
+	 *            - The data, which is going to be stored.
+	 */
 	public SecureHolder(final byte[] source) {
 		this.value = cipher(true, source);
 		for (int i = 0; source != null && i < source.length; source[i++] = 0) {
@@ -65,10 +94,18 @@ public class SecureHolder {
 		}
 	}
 
+	/**
+	 * Decrypts and returns the current stored value.
+	 * 
+	 * @return Decrypts and returns the current stored value.
+	 */
 	public final byte[] getValue() {
 		return cipher(false, value);
 	}
 
+	/**
+	 * Deletes the current stored value.
+	 */
 	public final void clean() {
 		final byte[] source = value;
 		value = null;
@@ -77,6 +114,20 @@ public class SecureHolder {
 		}
 	}
 
+	/**
+	 * Encrypts the <em>input</em>, if <em>encrypt</em> is set to
+	 * <strong>true</strong>. Otherwise it decrypts the provided data argument
+	 * <em>input</em>.
+	 * 
+	 * @param encrypt
+	 *            - If set to <strong>true</strong>, the function ecrypts the
+	 *            data of the argument <em>input</em>. Otherwise it decrypts the
+	 *            provided data of the argument <em>input</em>.
+	 * @param input
+	 *            - The data, which needs to be encrypted or decrypted.
+	 * 
+	 * @return Returns the encrypted or decrypted data.
+	 */
 	private byte[] cipher(final boolean encrypt, final byte[] input) {
 		if (input == null) {
 			return null;

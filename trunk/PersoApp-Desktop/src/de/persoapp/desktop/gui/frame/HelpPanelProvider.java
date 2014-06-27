@@ -48,12 +48,30 @@
 package de.persoapp.desktop.gui.frame;
 
 /**
- * @author ckahlo
+ * The interface <tt>HelpPanelProvider</tt> contains the method declaration for
+ * setting and clearing the text. Also it provides an option to differentiate
+ * between different panels according to the name creation in
+ * {@link MyMouseListener}.
+ * <p>
+ * <code>public interface HelpPanelProvider</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public interface HelpPanelProvider {
 
+	/**
+	 * Sets the Text of the specified panel.
+	 * 
+	 * @param header
+	 *            - The header is used as the title.
+	 * @param description
+	 *            - The description is the descriptive text of the header
+	 */
 	public void setHelpPanelText(String header, String description);
 
+	/**
+	 * Clears the text of the panel.
+	 */
 	public void clearHelpPanelText();
 }

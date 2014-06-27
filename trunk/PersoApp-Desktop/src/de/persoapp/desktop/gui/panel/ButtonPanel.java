@@ -58,15 +58,36 @@ import javax.swing.JPanel;
 import de.persoapp.core.client.PropertyResolver;
 
 /**
- * @author ckahlo
+ * This class extends {@link JPanel} and contains the
+ * used buttons of the <tt>PersoApp Desktop Client</tt>.
+ * <p>
+ * <code>public class ButtonPanel extends JPanel</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class ButtonPanel extends JPanel {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long				serialVersionUID	= -3803650768195073587L;
+	
+	/**
+	 * The used <tt>JButtons</tt> of the {@link ButtonPanel}.
+	 */
 	private JButton							confirm, cancel;
+	
+	/**
+	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 */
 	private final PropertyResolver.Bundle	textBundle;
 
+	/**
+	 * Constructs a new instance of the {@link ButtonPanel}. Also draws the
+	 * components and initializes the member attributes. The constructed Panel
+	 * is double-buffered for advanced displaying.
+	 */
 	public ButtonPanel() {
 		super();
 		textBundle = PropertyResolver.getBundle("text");
@@ -78,11 +99,18 @@ public class ButtonPanel extends JPanel {
 		drawComponents();
 	}
 
+	/**
+	 * Initializes the components of the {@link ButtonPanel}.
+	 */
 	private void initComponents() {
 		confirm = new JButton(textBundle.get("confirm"));
 		cancel = new JButton(textBundle.get("cancel"));
 	}
 
+	/**
+	 * Draws the components on the {@link ButtonPanel}. The way
+	 * in which the components are drawn can't be changed.
+	 */
 	private void drawComponents() {
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.HORIZONTAL;
@@ -100,7 +128,15 @@ public class ButtonPanel extends JPanel {
 		cons.insets = new Insets(0, 5, 0, 0);
 		this.add(getCancel(), cons);
 	}
-
+	
+	/**
+	 * Sets the focus to the component, which is identified through the given
+	 * index.
+	 * 
+	 * @param index
+	 *            - The specified index of the component, which requests the
+	 *            focus.
+	 */
 	public void setFocusToComponent(final int index) {
 		switch (index) {
 			case 0:
@@ -113,18 +149,18 @@ public class ButtonPanel extends JPanel {
 	}
 
 	/**
-	 * Gibt den "Confirm" Button zurück.
+	 * Retrieves the <tt>confirm</tt> button.
 	 * 
-	 * @return
+	 * @return Returns the <tt>confirm</tt> button.
 	 */
 	public JButton getConfirm() {
 		return confirm;
 	}
 
 	/**
-	 * Gibt den "Cancel" Button zurück
+	 * Retrieves the <tt>cancel</tt> button.
 	 * 
-	 * @return
+	 * @return Returns the <tt>cancel</tt> button.
 	 */
 	public JButton getCancel() {
 		return cancel;

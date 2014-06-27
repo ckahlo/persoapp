@@ -70,18 +70,46 @@ import de.persoapp.desktop.Configuration;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * @author ckahlo
+ * The <tt>AboutFrame</tt> displays the links to the homepage and the support
+ * and further informations about the <tt>PersoApp-Application</tt>, like the
+ * version.
+ * <p>
+ * <code>public class AboutFrame extends JFrame</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class AboutFrame extends JFrame {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long				serialVersionUID	= 7707227028876424642L;
 
+	/**
+	 * The panels for providing the functionality of the {@link AboutFrame}.
+	 */
 	private JPanel							mainPanel, contentPanel;
+	
+	/**
+	 * The labels to display necessary informations.
+	 */
 	private JLabel							pic, homepage, support;
+	
+	/**
+	 * The confirm button.
+	 */
 	private JButton							confirm;
+	
+	/**
+	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 */
 	private final PropertyResolver.Bundle	textBundle;
 
+	/**
+	 * Constructs a new instance of the {@link AboutFrame} and shows it in the
+	 * center of the screen.
+	 */
 	public AboutFrame() {
 		super();
 		textBundle = PropertyResolver.getBundle("text");
@@ -90,7 +118,7 @@ public class AboutFrame extends JFrame {
 		//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		//		this.setBounds((screenSize.width - width) / 2 , (screenSize.height - height) / 2, width, height);
 
-		// zentriert, mit this.pack() optimale Größe berechnet
+		// centered - this.pack() calculates optimized size
 		this.setLocationRelativeTo(null);
 
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -109,6 +137,10 @@ public class AboutFrame extends JFrame {
 		this.setVisible(true);
 	}
 
+	/**
+	 * Initializes all panels of the {@link AboutFrame} using the
+	 * {@link GridBagLayout} and creating all buttons.
+	 */
 	private void initPanels() {
 		mainPanel = new JPanel(true);
 		mainPanel.setLayout(new GridBagLayout());
@@ -124,6 +156,11 @@ public class AboutFrame extends JFrame {
 		contentPanel = getContentPanel();
 	}
 
+	/**
+	 * Adds a {@link ActionListener} to the <code>Confirm</code>-Button. Creates
+	 * and adds a {@link MouseAdapter} to the labels of the <tt>homepage</tt>
+	 * and <tt>support</tt>.
+	 */
 	private void addListener() {
 		confirm.addActionListener(new ActionListener() {
 			@Override
@@ -172,6 +209,9 @@ public class AboutFrame extends JFrame {
 		support.addMouseListener(adapter);
 	}
 
+	/**
+	 * Draws all panels, using the {@link GridBagLayout}.
+	 */
 	private void drawPanels() {
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.BOTH;
@@ -197,6 +237,12 @@ public class AboutFrame extends JFrame {
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Creates a new content panel, initializes all of its components and the
+	 * layout and returns it.
+	 * 
+	 * @return Returns the newly created content panel.
+	 */
 	private JPanel getContentPanel() {
 		final Font bold = new Font(Configuration.FONT, Font.BOLD, 12);
 
@@ -254,6 +300,19 @@ public class AboutFrame extends JFrame {
 		return result;
 	}
 
+	/**
+	 * Returns the text, which is stored in the properties, by using the
+	 * following key template.
+	 * <p>
+	 * <code>this.getName() + "_" + identifier</code>.
+	 * </p>
+	 * 
+	 * @param identifier
+	 *            - The used identifier of the text.
+	 * 
+	 * @return Returns the stored <em>text</em> or <strong>null</strong> if no
+	 *         one is previously stored using the given <tt>identifier</tt>.
+	 */
 	private String getText(final String identifier) {
 		return textBundle.get(this.getName() + "_" + identifier);
 	}

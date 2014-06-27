@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -66,14 +66,55 @@ import org.bouncycastle.crypto.tls.TlsProtocol;
  */
 
 /**
- * @author ckahlo
+ * The <tt>BCTlsSocketImpl</tt> enables additional functionality for
+ * {@link SSLSocket}-object.
+ * <p>
+ * The additionally functionality allows the <tt>Socket</tt> to work with the
+ * implemented <tt>pre-shared keys</tt>.
+ * </p>
+ * <p>
+ * <code>
+ * public final class BCTlsSocketImpl extends SSLSocket
+ * </code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public final class BCTlsSocketImpl extends SSLSocket {
 
+	/**
+	 * The used <tt>TlsProtocol</tt> of the <tt>TlsConnection</tt>.
+	 */
 	final TlsProtocol	tls;
+	
+	/**
+	 * The current <tt>TlsPeer</tt> of the <tt>TlsConnection</tt>.
+	 */
 	final TlsPeer		peerHandler;
 
+	/**
+	 * Creates a new instance of a <tt>BCTlsSocket</tt>. If a
+	 * <tt>pre-shared key</tt> is set, the constructor uses a
+	 * {@link TLSPSKClient} to establish the connection. If no
+	 * <tt>pre-shared key</tt> is set, a {@link TLSClient} is used to establish
+	 * the connection to the endpoint.
+	 * 
+	 * @param netSocket
+	 *            - The underlying <tt>Socket</tt> of the <tt>BCTlsSocket</tt>
+	 *            which maintains the connection.
+	 * @param factory
+	 *            - The factory, which provides the pre-shared key and the
+	 *            pre-shared key id, if their are set.
+	 * @param serverMode
+	 *            - Can't set to <strong>true</strong>.
+	 * 
+	 * @throws IOException
+	 *             If something goes wrong with the set up of the
+	 *             <tt>Socket</tt>.
+	 * @throws UnsupportedOperationException
+	 *             Is thrown, when the <tt>serverMode</tt> is set to
+	 *             <strong>true</strong>.
+	 */
 	public BCTlsSocketImpl(final Socket netSocket, final BCTlsSocketFactoryImpl factory, final boolean serverMode)
 			throws IOException {
 		tls = new TlsClientProtocol(netSocket.getInputStream(), netSocket.getOutputStream());
@@ -93,6 +134,11 @@ public final class BCTlsSocketImpl extends SSLSocket {
 		}
 	}
 
+	/**
+	 * Returns the current set <tt>PeerHandler</tt>.
+	 * 
+	 * @return Returns the current set <tt>PeerHandler</tt>.
+	 */
 	final TlsPeer getPeerHandler() {
 		return this.peerHandler;
 	}

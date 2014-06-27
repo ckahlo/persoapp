@@ -70,20 +70,60 @@ import javax.xml.ws.handler.MessageContext;
 import org.w3c.dom.Element;
 
 /**
- * @author ckahlo
+ * <p>
+ * The <tt>WSContainer</tt> bind and initializes the <em>ISO 24727</em>
+ * webservices in <em>JAX-WS 2.0</em> style. The services are defined in
+ * <em>BSI TR-03112</em>.
+ * </p>
+ * <p>
+ * <code>public final class WSContainer implements WebServiceContext</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public final class WSContainer implements WebServiceContext {
+	
+	/**
+	 * Contains all created <tt>endpoints</tt>.
+	 */
 	private final Map<String, WSEndpoint>	endpointsMap	= new HashMap<String, WSEndpoint>();
+	
+	/**
+	 * The different message contexts of the {@link WSContainer}.
+	 */
 	private ThreadLocal<MsgCtx>				messageContexts;
+	
+	/**
+	 * The {@link WebServiceContext} to grant access to {@link MsgCtx} and
+	 * security informations relative to the incoming requests.
+	 */
 	private WebServiceContext				wsCtx			= null;
 
+	/**
+	 * Creates a new empty instance of the {@link WSContainer}.
+	 */
 	public WSContainer() {
 	}
 
+	/**
+	 * The <tt>MsgCtx</tt> provides the option to set and get the scope. But the
+	 * mechanism is currently not implemented.
+	 * <p>
+	 * <code>public final class MsgCtx extends HashMap<String, Object> implements MessageContext</code>
+	 * </p>
+	 * 
+	 * @author Christian Kahlo, Ralf Wondratschek
+	 */
 	public final class MsgCtx extends HashMap<String, Object> implements MessageContext {
+		
+		/**
+		 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+		 */
 		private static final long	serialVersionUID	= 43022433778691293L;
 
+		/**
+		 * Creates a new instance of {@link MessageContext}. The constructor isn't visible outside of the package. Because of this, he isn't used by another functions.
+		 */
 		MsgCtx() {
 		}
 
@@ -135,14 +175,31 @@ public final class WSContainer implements WebServiceContext {
 		return false;
 	}
 
+	/**
+	 * Adds a new {@link WSEndpoint}.
+	 * 
+	 * @param wse - The new {@link WSEndpoint}.
+	 */
 	public final void addEndpoint(final WSEndpoint wse) {
 		endpointsMap.put(wse.getPortName(), wse);
 	}
 
+	/**
+	 * Adds a new endpoint. The handed parameter <tt>impl</tt> is used to set up
+	 * the port of the created {@link WSEndpoint}.
+	 * 
+	 * @param impl
+	 *            - The installation parameters for the new {@link WSEndpoint}.
+	 */
 	public final void addService(final Object impl) {
 		addEndpoint(new WSEndpoint(impl));
 	}
 
+	/**
+	 * Returns all stored web service endpoints.
+	 * 
+	 * @return Returns all stored web service endpoints.
+	 */
 	public final Set<Class<? extends Object>> getXmlSeeAlso() {
 		final Set<Class<? extends Object>> result = new HashSet<Class<? extends Object>>();
 
@@ -153,6 +210,19 @@ public final class WSContainer implements WebServiceContext {
 		return result;
 	}
 
+	/**
+	 * Initializes the {@link WSContainer} with the given {@ink
+	 * WebServiceKontext}. If the argument is <strong>null</strong>, the current
+	 * running instance is used to set the web service context.
+	 * <p>
+	 * After the initialization of the context, the stored endpoints are
+	 * injected.
+	 * </p>
+	 * 
+	 * @param externalContext
+	 *            - The external context of the webservice. Can be
+	 *            <strong>null</strong>.
+	 */
 	public final void init(final WebServiceContext externalContext) {
 		if (this.wsCtx == null) {
 			if (externalContext != null) {
@@ -167,6 +237,13 @@ public final class WSContainer implements WebServiceContext {
 		}
 	}
 
+	/**
+	 * Injects the currently instance through the given target. Invokes all
+	 * methods. TODO: Comment
+	 * 
+	 * @param target
+	 *            - The target, which is injected in the currently instance.
+	 */
 	private void injectOnInit(final Object target) {
 		final Class<?> clazz = target.getClass();
 
@@ -212,9 +289,21 @@ public final class WSContainer implements WebServiceContext {
 		}
 	}
 
-	//@TODO: optimize that into a "global" map
-	//Note: namespace cannot be used to identify correct service, because
+	// @TODO: optimize that into a "global" map
+	// Note: namespace cannot be used to identify correct service, because
 	// namespace is not unique per service
+	/**
+	 * Invokes the provided method through the given qualified name and
+	 * processes the message to the invoked method. TODO: comment.
+	 * 
+	 * @param name
+	 *            - The method name.
+	 * @param message
+	 *            - The message, which is processed to the called method.
+	 * @return Returns the return value of the called method. If the method has
+	 *         a <code>WebResult</code>-annotation, the return value is
+	 *         <tt>JAXB</tt>-formatted.
+	 */
 	public final Object processRequest(final QName name, final Object message) {
 		Method m = null;
 		Object port = null;

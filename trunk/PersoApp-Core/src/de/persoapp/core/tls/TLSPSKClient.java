@@ -59,26 +59,57 @@ import org.bouncycastle.crypto.tls.TlsAuthentication;
 import org.bouncycastle.crypto.tls.TlsPSKIdentity;
 
 /**
- * @author ckahlo
+ * The <tt>TLSPSKClient</tt> uses a <tt>pre-shared key</tt> to get further
+ * security by exchanging keys.
+ * <p>
+ * <code>public class TLSPSKClient extends PSKTlsClient</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class TLSPSKClient extends PSKTlsClient {
 
+	/**
+	 * The currently used {@link BCTlsAuthentication} for retrieving the
+	 * username and the password of the client.
+	 */
 	private final TlsAuthentication	authentication	= new BCTlsAuthentication();
 
+	/**
+	 * The currently acquired hostname.
+	 */
 	private final String			hostname;
 
+	/**
+	 * The cipher suites for encryption. The defined suites belongs to the
+	 * RSA_PSK cipher.
+	 */
 	private static final int[]		defaultCS		= new int[] {
 													//
 													// 0x008C, 0x008D, 0x00AE, 0x00AF, // TLS_PSK_*
 			0x0094, 0x0095, 0x00B6, 0x00B7, // TLS_RSA_PSK
 													};
 
+	/**
+	 * Returns the defined cipher suites.
+	 * 
+	 * @return Returns the defined cipher suites.
+	 */
 	@Override
 	public int[] getCipherSuites() {
 		return defaultCS;
 	}
 
+	/**
+	 * Creates and initializes a instance of the {@link TLSPSKClient}-class.
+	 * 
+	 * @param hostname
+	 *            - The name of the host.
+	 * @param pskId
+	 *            - The id of the <tt>pre-shared key</tt>.
+	 * @param pskSecret
+	 *            - The <tt>pre-shared key</tt> itself.
+	 */
 	public TLSPSKClient(final String hostname, final byte[] pskId, final byte[] pskSecret) {
 		super(new TlsPSKIdentity() {
 			@Override
@@ -89,12 +120,22 @@ public class TLSPSKClient extends PSKTlsClient {
 			public void notifyIdentityHint(final byte[] psk_identity_hint) {
 				System.out.println("PSK id hint: " + new String(psk_identity_hint));
 			}
-
+			
+			/**
+			 * Returns the psk(Pre-Shared Key) identity.
+			 * 
+			 * @return Returns the psk-identity.
+			 */
 			@Override
 			public byte[] getPSKIdentity() {
 				return pskId;
 			}
 
+			/**
+			 * Returns the psk(Pre-shared key).
+			 * 
+			 * @return Returns the psk.
+			 */
 			@Override
 			public byte[] getPSK() {
 				return pskSecret;
@@ -103,20 +144,44 @@ public class TLSPSKClient extends PSKTlsClient {
 		this.hostname = hostname;
 	}
 
+	/**
+	 * Creates and initializes a {@link TLSPSKClient} and setting the name of
+	 * the host to <strong>null</strong>.
+	 * 
+	 * @param pskId
+	 *            - The pre-shared key id.
+	 * @param pskSecret
+	 *            - The pre shared key itself.
+	 */
 	public TLSPSKClient(final byte[] pskId, final byte[] pskSecret) {
 		this(null, pskId, pskSecret);
 	}
 
+	/**
+	 * Returns the current authenticator.
+	 *	
+	 * @return Returns the current authenticator.
+	 */
 	@Override
 	public TlsAuthentication getAuthentication() throws IOException {
 		return this.authentication;
 	}
 
+	/**
+	 * Returns the minimal version of the used <tt>TLS</tt>-library.
+	 *	
+	 * @return Returns the minimal version of the used <tt>TLS</tt>-library.
+	 */
 	@Override
 	public ProtocolVersion getMinimumVersion() {
 		return ProtocolVersion.TLSv11;
 	}
 
+	/**
+	 * Returns the client specific extensions.
+	 * 
+	 * @return Returns the client specific extensions.
+	 */
 	@Override
 	public Hashtable<Integer, byte[]> getClientExtensions() throws IOException {
 		@SuppressWarnings("unchecked")

@@ -54,13 +54,31 @@ import javax.swing.border.TitledBorder;
 import de.persoapp.desktop.Configuration;
 
 /**
- * @author ckahlo
+ * The <tt>MyTitledBorder</tt>-class sets up the border for
+ * {@link javax.swing.JComponent} objects, using a individual <code>font</code>.
+ * <p>
+ * <code>public class MyTitledBorder extends TitledBorder</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class MyTitledBorder extends TitledBorder {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long	serialVersionUID	= -7009403230565728382L;
 
+	/**
+	 * Constructs a new instance of the {@link MyTitledBorder}. The given string
+	 * is set as the title of the border.
+	 * <p>
+	 * The font <code>new Font(Configuration.FONT, Font.BOLD, 12)</code> is used
+	 * as the title font.
+	 * </p>
+	 * 
+	 * @param title - The title to set.
+	 */
 	public MyTitledBorder(final String title) {
 		super(title);
 		this.setTitleFont(new Font(Configuration.FONT, Font.BOLD, 12));

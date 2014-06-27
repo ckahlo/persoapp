@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -60,29 +60,74 @@ import javax.net.ssl.SSLSocketFactory;
  * pre-liminary stub
  */
 /**
- * @author ckahlo
+ * The <tt>BCTlsSocketFactory</tt> creates <tt>Sockets</tt> and undocks the
+ * creation process of the <tt>Sockets</tt> from the <tt>Socket</tt>
+ * implementation.
+ * <p>
+ * <code>public final class BCTlsSocketFactoryImpl extends SSLSocketFactory</code>
+ * </p>
  * 
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public final class BCTlsSocketFactoryImpl extends SSLSocketFactory {
 
 	/*
 	 * arbitrary value, trying to be reasonable
 	 */
+	/**
+	 * Stops the attempt to connect the server, after the timeout runs out.
+	 */
 	private static final int	SO_CONNECT_TIMEOUT	= 10 * 1000;	// 10 seconds
 
+	/**
+	 * The current pre-shared key id.
+	 */
 	final byte[]				pskId;
+	
+	/**
+	 * The current pre-shared key.
+	 */
 	final byte[]				pskKey;
 
+	/**
+	 * Creates a new instance of {@link BCTlsSocketFactoryImpl} with
+	 * <tt>pskId</tt> and <tt>pskKey</tt> set to <strong>null</strong>.
+	 */
 	public BCTlsSocketFactoryImpl() {
 		pskId = null;
 		pskKey = null;
 	}
 
+	/**
+	 * Creates a new instance of {@link BCTlsSocketFactoryImpl} with
+	 * <tt>pskId</tt> and <tt>pskKey</tt> set to the given arguments.
+	 * 
+	 * @param pskId
+	 *            - The id of the pre-shared key.
+	 * @param pskKey
+	 *            - The pre-shared key itself.
+	 */
 	public BCTlsSocketFactoryImpl(final byte[] pskId, final byte[] pskKey) {
 		this.pskId = pskId;
 		this.pskKey = pskKey;
 	}
 
+	/**
+	 * Returns the parameters of the pre-shared key. These are in detail:
+	 * <p>
+	 * <ul>
+	 * <li>The id of the pre-shared key.</li>
+	 * <li>The pre-shared key itself.</li>
+	 * </ul>
+	 * </p>
+	 * If no parameters are set, <strong>null</strong> is returned.
+	 * 
+	 * @return Returns the psk-parameters in a 2-elements sized byte array with
+	 *         the <tt>pskId</tt> on the first place and the <tt>pskKey</tt> on
+	 *         the second place of the returned array. If no parameters are set,
+	 *         <strong>null</strong> is returned.
+	 */
 	final byte[][] getPSKParameters() {
 		if (pskId != null && pskKey != null) {
 			return new byte[][] { pskId, pskKey };

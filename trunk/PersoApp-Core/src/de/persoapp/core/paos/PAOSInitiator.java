@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -91,42 +91,156 @@ import liberty.paos._2006_08.PaosType;
 //@TODO: check for server hello version and don't allow server version
 //lower than a specified minimum level ... either here or in app-code
 
+/**
+ * This class initiates the <tt>PAOS</tt>-protocol which is used to communicate
+ * with <tt>PAOS</tt>-webservices. PAOS is another name for the implementation
+ * of the Liberty Reverse HTTP Binding for SOAP Specification. The use of
+ * <tt>PAOS</tt> makes possible the exchange of information between user agent
+ * hosted services and remote servers.
+ * <p>
+ * In a typical forward SOAP binding, an HTTP client exposes a service via a
+ * client request and a server response. For example, a cell phone user (the
+ * client) may contact his phone service provider (the service) in order to
+ * retrieve stocks quotes and weather information. The service verifies the
+ * user’s identity, and responds with the requested information.
+ * </p>
+ * <p>
+ * In a reverse HTTP SOAP binding, the Service Provider server plays the client
+ * role, and the client plays the server role. Technically, the initial SOAP
+ * request from the server is bound to a server HTTP response. Then the
+ * subsequent response is bound to a client request. This is why Reversed HTTP
+ * Binding for SOAP is also known as <tt>PAOS</tt> (or “SOAP” spelled
+ * backwards).
+ * </p>
+ * <p>
+ * <code>public class PAOSInitiator</code>
+ * </p>
+ * 
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
+ */
 public class PAOSInitiator {
+	
+	/**
+	 * The <tt>1.1</tt> version of the liberty scheme.
+	 */
     public static final String VERSION1_1  = "urn:liberty:2003-08";
+  
+    /**
+     * The <tt>2.0</tt> version of the liberty scheme.
+     */
     public static final String VERSION2_0  = "urn:liberty:2006-08";
+   
+    /**
+     * The first role of the <tt>liberty scheme</tt>.
+     */
     public static final String ENDPOINT1   = "http://www.projectliberty.org/2006/01/role/paos";
+   
+    /**
+     * The second role of the <tt>liberty scheme</tt>.
+     */
     public static final String ENDPOINT2   = "http://www.projectliberty.org/2006/02/role/paos";
+    
+    /**
+     * The servicetype of the <tt>PAOSInitiator</tt>.
+     */
     public static final String SERVICETYPE = "http://www.bsi.bund.de/ecard/api/1.0/PAOS/GetNextCommand";
+    
+    /**
+     * The actor of the <tt>PAOSInitiator</tt>.
+     */
     public static final String ACTOR 	   = "http://schemas.xmlsoap.org/soap/actor/next";
 
-
+    /**
+     * The used {@link liberty.paos._2006_08.ObjectFactory} for <tt>PAOS</tt> of the {@link PAOSInitiator}.
+     */
     private static final liberty.paos._2006_08.ObjectFactory paosOF = new liberty.paos._2006_08.ObjectFactory();
+    
+    /**
+     * The used {@link org.xmlsoap.schemas.soap.envelope.ObjectFactory} for <tt>SOAP</tt> of the {@link PAOSInitiator}.
+     */
     private static final org.xmlsoap.schemas.soap.envelope.ObjectFactory soapOF = new org.xmlsoap.schemas.soap.envelope.ObjectFactory();
+  
+    /**
+     * The used {@link org.w3._2005._03.addressing.ObjectFactory} to address webservices correctly. 
+     */
     private static final org.w3._2005._03.addressing.ObjectFactory wsaOF = new org.w3._2005._03.addressing.ObjectFactory();
 
+    /**
+     * The used message id as a {@link QName}.
+     */
     private static final QName wsa_messageID = new QName("http://www.w3.org/2005/03/addressing", "MessageID");
 
+    /**
+     * The used {@link PAOSInitiatorFactory}.
+     */
     private static PAOSInitiatorFactory paosInitiatorFactory;
 
+    /**
+     * Sets a new {@link PAOSInitiatorFactory}.
+     * 
+     * @param paosInitiatorFactory - The {@link PAOSInitiatorFactory} to set.
+     */
     public static void setPaosInitiatorFactory(PAOSInitiatorFactory paosInitiatorFactory) {
         PAOSInitiator.paosInitiatorFactory = paosInitiatorFactory;
     }
-
+    
+    /**
+     * The {@link JAXBContext}, which is used to convert Strings into JAXB-format.
+     */
     protected static JAXBContext jaxbCtx;
 
+    /**
+     * The current used {@link WSContainer}.
+     */
     protected WSContainer wsCtx;
+    
+	/**
+	 * The current used MiniHttpClient for handling the connection and
+	 * dispatching data.
+	 */
     protected MiniHttpClient mhc;
+    
+    /**
+     * The service URL of the {@link MiniHttpClient}.
+     */
     protected URL serviceURL;
+    
+    /**
+     * The current <tt>session id</tt>.
+     */
     protected String sessionID;
 
+    /**
+     * The created pre-shared key.
+     */
     protected byte[] pskKey;
 
+    /**
+     * The id of the last message.
+     */
     protected String lastMessageID;
+    
+    /**
+     * Used to provide access to JAXB xml binding data for a JAXB object.
+     */
     protected final JAXBIntrospector jaxbIS;
 
+    /**
+     * The used {@link Marshaller} to create xml-documents from objects.
+     */
     protected final Marshaller marshaller;
+    
+    /**
+     * The used {@link Unmarshaller} to create objects from xml-documents.
+     */
     protected final Unmarshaller unmarshaller;
 
+    /**
+     * Constructs a new instance of the {@link PAOSInitiator}.
+     * 
+     * @throws JAXBException Throws a <tt>JAXBException</tt>
+     */
     protected PAOSInitiator() throws JAXBException {
         if (jaxbCtx == null) {
             jaxbCtx = createJAXBContext();
@@ -142,6 +256,26 @@ public class PAOSInitiator {
         //marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
     }
 
+	/**
+	 * Constructs a new instance of the {@link PAOSInitiator}.
+	 * 
+	 * @param wsCtx
+	 *            - The webservice context to access the different methods and
+	 *            security informations.
+	 * @param endpoint
+	 *            - The webservice endpoint which contains the different
+	 *            methods.
+	 * @param sessionID
+	 *            - The currently session id.
+	 * @param pskKey
+	 *            - The currently used pre shared key.
+	 * 
+	 * @throws IOException
+	 *             If a error occurs during the creation process of the
+	 *             {@link PAOSInitiator}-object.
+	 * @throws JAXBException
+	 *             If a error occurs during the <tt>JAXB-format</tt> process.
+	 */
     public PAOSInitiator(WSContainer wsCtx, URI endpoint, String sessionID, byte[] pskKey) throws IOException, JAXBException {
         this();
 
@@ -173,6 +307,11 @@ public class PAOSInitiator {
         }
     }
 
+    /**
+     * Retrieves a so called "pre-start instance" of a {@link PAOSInitiator}.
+     * 
+     * @return Retrieves the "pre-start instance" of a {@link PAOSInitiator}.
+     */
     public static PAOSInitiator getPreStartInstance() {
         if (paosInitiatorFactory == null) {
             paosInitiatorFactory = new PAOSInitiatorFactory();
@@ -181,6 +320,11 @@ public class PAOSInitiator {
         return paosInitiatorFactory.createPreStartPAOSInitiator();
     }
 
+    /**
+     * This function creates and returns a new {@link JAXBContext}.
+     * 
+     * @return Returns the newly created {@link JAXBContext}.
+     */
     protected JAXBContext createJAXBContext() {
         Class<?>[] objectFactories = new Class<?>[] {
                 org.xmlsoap.schemas.soap.envelope.ObjectFactory.class,	// SOAP Envelope
@@ -197,6 +341,18 @@ public class PAOSInitiator {
         }
     }
 
+    /**
+     * Retrieves a new instance of the {@link PAOSInitiator}.
+     *  
+     * @param wsCtx - The used {@link WSContainer}.
+     * @param endpoint - The used endpoint.
+     * @param sessionID - The used sessionID.
+     * @param pskKey - The used pre-shared key.
+     * 
+     * @return Returns a new instance of the {@link PAOSInitiator}.
+     * 
+     * @throws IOException Throws {@link IOException} if a error occurs during the creation process of a new instance.
+     */
     public static PAOSInitiator getInstance(WSContainer wsCtx, URI endpoint, String sessionID, byte[] pskKey) throws IOException {
         if (paosInitiatorFactory == null) {
             paosInitiatorFactory = new PAOSInitiatorFactory();
@@ -205,6 +361,14 @@ public class PAOSInitiator {
         return paosInitiatorFactory.createPAOSInitiator(wsCtx, endpoint, sessionID, pskKey);
     }
 
+	/**
+	 * Creates a new {@link MiniHttpClient}.
+	 * 
+	 * @return Returns the created {@link MiniHttpClient}.
+	 * 
+	 * @throws IOException
+	 *             If a error occurs during the creation process.
+	 */
     private MiniHttpClient createClient() throws IOException {
         final MiniHttpClient mhcInstance = new MiniHttpClient(serviceURL);
         mhcInstance.setSocketFactory(new BCTlsSocketFactoryImpl(sessionID.getBytes(), pskKey));
@@ -222,6 +386,11 @@ public class PAOSInitiator {
         return mhcInstance;
     }
 
+    /**
+     * Retrieves the peer {@link Certificate}.
+     * 
+     * @return The peer {@link Certificate}.
+     */
     public final Certificate getPeerCertificate() {
         try {
             return this.mhc.getSSLSession().getPeerCertificates()[0];
@@ -231,15 +400,34 @@ public class PAOSInitiator {
         }
     }
 
+    /**
+     * Retrieves the current running {@link SSLSession}.
+     * 
+     * @return The current running {@link SSLSession}.
+     */
     public SSLSession getSSLSession() {
         return this.mhc.getSSLSession();
     }
 	
-
 	/*
 	 * create SOAP-Envelope
 	 */
-
+	/**
+	 * Creates the <tt>SOAP</tt>-Envelope with the given parameters.
+	 * 
+	 * @param messageHeader
+	 *            - The given message header.
+	 * @param messageID
+	 *            - The given message id.
+	 * @param relatesTo
+	 *            - The given relates to.
+	 * @param action
+	 *            - The given action for setting into the header.
+	 * @param message
+	 *            - The message to send.
+	 * 
+	 * @return The created envelope in <tt>JAXB-Format</tt>.
+	 */
     public final JAXBElement<Envelope> createEnvelope(final JAXBElement<PaosType> messageHeader,
                                                       final String messageID, final String relatesTo, final String action, final Object message) {
         final Header header = new Header();
@@ -280,8 +468,16 @@ public class PAOSInitiator {
     /*
      * create PAOS-Header for SOAP-Envelope
      */
+    /**
+     * Create the PAOS-Header for SOAP-Envelope.
+     */
     final Random															random			= new Random();
 
+	/**
+	 * Creates a PAOSHeader.
+	 * 
+	 * @return The PAOSHeader in <tt>JAXB</tt>-Format.
+	 */
     public final JAXBElement<PaosType> createPAOSHeader() {
         final PaosType pt = new PaosType();
         pt.setMustUnderstand(true);
@@ -303,12 +499,30 @@ public class PAOSInitiator {
         return paosOF.createPAOS(pt);
     }
 
+    /**
+     * Creates a new messageId.
+     * 
+     * @return The created message id.
+     */
     private String createMessageID() {
         final byte[] randomID = new byte[16];
         random.nextBytes(randomID);
         return "urn:uuid" + Hex.toString(randomID);
     }
 
+    /**
+	 * Dispatches the given message as <tt>JAXBElement</tt>.
+	 * 
+	 * @param msg
+	 *            - The given message to send.
+	 * 
+	 * @return The response in JAXB-Format. If no response is received, the
+	 *         function returns <strong>null</strong>.
+	 * 
+	 * @throws IOException
+	 *             - If some error occurs during the use of the established
+	 *             connection.
+	 */
     private JAXBElement<Envelope> jaxbDispatch(final JAXBElement<Envelope> msg) throws IOException {
         try {
             final ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -333,6 +547,18 @@ public class PAOSInitiator {
         }
     }
 
+	/**
+	 * Dispatches the given object and returns the message name and the message
+	 * itself, which was received from the response.
+	 * 
+	 * @param in
+	 *            - The given object.
+	 * @return Returns the message name and the message id in a 2 elements sized
+	 *         object array.
+	 * 
+	 * @throws IOException
+	 *             If a error occurs during the sending process.
+	 */
     public final Object[] dispatch(final Object in) throws IOException {
         final JAXBElement<Envelope> env = jaxbDispatch(createEnvelope(createPAOSHeader(), createMessageID(),
                 lastMessageID, null, in));
@@ -389,6 +615,21 @@ public class PAOSInitiator {
         return new Object[] { msgName, message };
     }
 
+	/**
+	 * Starts the {@link PAOSInitiator}.
+	 * 
+	 * @param contextHandle
+	 *            - The used contextHandle.
+	 * @param slotHandle
+	 *            - The used slotHandle.
+	 * 
+	 * @return Returns the {@link ResponseType} of the paosMsg or
+	 *         <strong>null</strong> if no response is received.
+	 * 
+	 * @throws IOException
+	 *             If something goes wrong with the dispatching process of the
+	 *             {@link StartPAOS} object.
+	 */
     public final ResponseType start(final byte[] contextHandle, final byte[] slotHandle) throws IOException {
         final StartPAOS sp = new StartPAOS();
         sp.setSessionIdentifier(sessionID);

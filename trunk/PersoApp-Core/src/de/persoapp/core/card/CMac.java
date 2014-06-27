@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -53,6 +53,7 @@ import javax.crypto.Cipher;
 
 import de.persoapp.core.util.ArrayTool;
 
+// TODO: Auto-generated Javadoc
 /**
  * <p>
  * CMac using standard Java cipher interface as a base. Inspired by
@@ -81,27 +82,28 @@ public class CMac {
 	 * The starting offset of the buffer.
 	 */
 	private int					bufOff;
+	
+	/**
+	 * The used cipher.
+	 */
 	private final Cipher		cipher;
 
+	/**
+	 * The size of the mac.
+	 */
 	private final int			macSize;
 
+	
+	/** The L values. */
 	private final byte[]		L, Lu, Lu2;
 
 	/**
 	 * Creates and initializes a new cipher based message authentication code.
 	 * The {@link CMac} is block cipher based.
-	 * 
-	 * @param cipher
-	 *            - The starting cipher.
-	 * @param macSize
-	 *            - The size of the message authentication code.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             If the macSize is greater than the cipher blocksize or if the
-	 *             blocksize not equal to 16 bytes.
-	 *             
-	 * @throws GeneralSecurityException
-	 *             If a error occurs during the creation process of the cipher.
+	 *
+	 * @param cipher            - The starting cipher.
+	 * @param macSize            - The size of the message authentication code.
+	 * @throws GeneralSecurityException             If a error occurs during the creation process of the cipher.
 	 */
 	public CMac(final Cipher cipher, final int macSize) throws GeneralSecurityException {
 		if (macSize > cipher.getBlockSize()) {
@@ -128,7 +130,10 @@ public class CMac {
 	}
 
 	/**
-	 *Further informations follow in MR3.
+	 * Further informations follow in MR3.
+	 *
+	 * @param in the in
+	 * @return the byte[]
 	 */
 	private byte[] doubleLu(final byte[] in) {
 		final int FirstBit = (in[0] & 0xFF) >> 7;
@@ -225,8 +230,8 @@ public class CMac {
 
 	/**
 	 * Reset the mac generator.
-	 * 
-	 * @throws GeneralSecurityException
+	 *
+	 * @throws GeneralSecurityException the general security exception
 	 */
 	public void reset() throws GeneralSecurityException {
 		/*

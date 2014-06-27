@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -57,31 +57,71 @@ import java.util.Random;
 
 import de.persoapp.core.util.ArrayTool;
 
+// TODO: Auto-generated Javadoc
 /**
- * A small, self-contained PACE implementation using BigInteger. Quite a bit an
- * experiment based on the fast-ECDSA-Signer code using a x86-native replacement
- * for BigInteger.
+ * A small, self-contained PACE(
+ * <tt>Password Authenticated Connection Establishment</tt>) implementation
+ * using BigInteger. Quite a bit an experiment based on the fast-ECDSA-Signer
+ * code using a x86-native replacement for BigInteger. The internal functions
+ * encode a ephemeral key as a elliptic curve point diffie hellmann (ECDH),
+ * according to ISO 7816.
+ * <p>
+ * <code>public class PACE</code>
+ * </p>
  * 
  * XXX: Might be replaced with standard-BouncyCastle code later.
  * 
- * @author ckahlo
- * 
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class PACE {
+	
+	/**
+	 * The BigInteger constant <tt>ZERO</tt>, which is necessary for encryption and decryption.
+	 */
 	private static final BigInteger		ZERO		= BigInteger.ZERO;
+	
+	/**
+	 * The BigInteger constant <tt>ONE</tt>, which is necessary for encryption and decryption.
+	 */
 	private static final BigInteger		ONE			= BigInteger.ONE;
+	
+	/**
+	 * The BigInteger constant <tt>INFINITY</tt>, which is necessary for encryption and decryption.
+	 */
 	private static final BigInteger[]	INFINITY	= new BigInteger[] { null, null, null };
 
+	/**
+	 * A pseudorandom number generator.
+	 */
 	private Random						random;
 
+	/** The q. */
 	private final BigInteger			Q;
+	
+	/** The a. */
 	private final BigInteger			A;
+	
+	/** The pre comp. */
 	private final BigInteger[][]		preComp;
 
+	/**
+	 * The value of <tt>nonce</tt>.
+	 */
 	private final BigInteger			nonce;
 
+	/** The ephemeral key. */
 	private BigInteger					ephemeralKey;
 
+	/**
+	 * Initializes a creation of the <tt>ECDH</tt> according to the given
+	 * <tt>ecSpec</tt>.
+	 * 
+	 * @param ecSpec
+	 *            - The given elliptic curve specifications.
+	 * @param nonce
+	 *            - The nonce-value.
+	 */
 	public PACE(final ECParameterSpec ecSpec, final BigInteger nonce) {
 		try {
 			this.random = SecureRandom.getInstance("SHA1PRNG");
@@ -102,19 +142,41 @@ public class PACE {
 		this.nonce = nonce;
 	}
 
+	/**
+	 * Precomputes <tt>pcData</tt> to achieve higher calculation speed of the
+	 * <tt>ECDH</tt>.
+	 * 
+	 * @param pcData
+	 *            - The data to precompute.
+	 */
 	private final void preComputation(final BigInteger[][] pcData) {
 		final BigInteger[] Ptwice = multiplyBy2NEW(pcData[0]);
 		for (int i = 1; i < pcData.length; i++) {
 			pcData[i] = add(Ptwice, pcData[i - 1]);
 		}
 	}
-
+	
+	/**
+	 * Creates and returns a new private key.
+	 * 
+	 * @return Creates and returns a new private key.
+	 */
 	private BigInteger createPrivateKey() {
 		final byte[] keyArray = new byte[(Q.bitLength() + 7) / 8];
 		random.nextBytes(keyArray);
 		return new BigInteger(1, keyArray);
 	}
 
+	/**
+	 * Reduces the given <tt>BigInteger</tt> and returns it as a
+	 * <tt>byte array</tt>. Deletes the MSB, if it is set to <em>zero</em>.
+	 * 
+	 * @param i
+	 *            - The <tt>BigInteger</tt> which is about to be reduced. Can't
+	 *            be <strong>null</strong>.
+	 * 
+	 * @return returns the reduced BigInteger.
+	 */
 	private byte[] reduceBigInt(final BigInteger i) {
 		byte[] result = i.toByteArray();
 		while (result[0] == 0) {
@@ -123,11 +185,30 @@ public class PACE {
 		return result;
 	}
 
+	/**
+	 * Encodes the point, which is identified through the parameter <em>p</em>
+	 * and returns it as a <tt>byte array</tt>.
+	 * 
+	 * @param p
+	 *            - The array of <tt>BigInteger</tt> values, which needs to be encoded. Can't be
+	 *            <strong>null</strong>.
+	 * 
+	 * @return The encoded point as a <tt>byte array</tt>.
+	 */
 	private byte[] encodePoint(final BigInteger[] p) {
 		return ArrayTool
 				.arrayconcat(new byte[] { 0x04 }, ArrayTool.arrayconcat(reduceBigInt(p[0]), reduceBigInt(p[1])));
 	}
 
+	/**
+	 * Decodes the given <tt>byte array</tt> to a array of <tt>BigInteger</tt>
+	 * -values.
+	 * 
+	 * @param in
+	 *            - The <tt>byte array</tt>, which needs to be encoded to
+	 *            identify a point.
+	 * @return Returns the decoded array of <tt>BigInteger</tt> values.
+	 */
 	private BigInteger[] decodePoint(final byte[] in) {
 		if (in[0] != 0x04) {
 			return null;
@@ -137,12 +218,26 @@ public class PACE {
 		return new BigInteger[] { new BigInteger(1, ArrayTool.subArray(in, 1, xyLen)),
 				new BigInteger(1, ArrayTool.subArray(in, 1 + xyLen, xyLen)), ONE };
 	}
-
+	
+	/**
+	 * Creates a <tt>ephemeral Key</tt> and returns the.
+	 *
+	 * @return Returns the public key of key-pair on base-curve from card
+	 */
 	public final byte[] init() {
 		this.ephemeralKey = createPrivateKey();
 		return encodePoint(this.fastMultiply(this.ephemeralKey));
 	}
 
+	/**
+	 * Proceeds with the creation of the ECDH. Calculates the public point
+	 * relative to 'G'.
+	 * 
+	 * @param mapData
+	 *            - The mapping function.
+	 * 
+	 * @return Retrieve public point relative to 'G'.
+	 */
 	public final byte[] step(final byte[] mapData) {
 		final BigInteger[] G_ = fastMultiply(this.nonce);
 
@@ -158,6 +253,14 @@ public class PACE {
 		return encodePoint(this.fastMultiply(this.ephemeralKey));
 	}
 
+	/**
+	 * Finishes the creation of a ECDH and returns the created curve as a two
+	 * dimensional array of bytes.
+	 * 
+	 * @param mapData
+	 *            - The mapping function.
+	 * @return Returns the created ECDH.
+	 */
 	public final byte[][] finish(final byte[] mapData) {
 		this.preComp[0] = decodePoint(mapData);
 		preComputation(this.preComp);
@@ -180,6 +283,20 @@ public class PACE {
 	 * turned out to be quite fast.
 	 */
 
+	/**
+	 * Determines the non adjacent form. The non-adjacent form (NAF) of a number
+	 * is a unique signed-digit representation. Like the name suggests, non-zero
+	 * values cannot be adjacent.
+	 * 
+	 * @param e
+	 *            - The number, which non adjacent form is requested.
+	 * @param w
+	 *            - The <em>w</em> value.
+	 * @param b
+	 *            - The bitlength of <em>e</em>.
+	 * 
+	 * @return Returns the non adjacent form
+	 */
 	private static int[] determineNaf(final BigInteger e, final int w, final int b) {
 		final int power2wi = 1 << w;
 		int j, u;
@@ -212,6 +329,17 @@ public class PACE {
 		return N;
 	}
 
+	/**
+	 * Multiplies the parameter <em>k</em> with the <tt>Naf</tt> determined by
+	 * the function <tt>determineNaf</tt>. Returns the result after the multiply
+	 * has finished.
+	 * 
+	 * @param k
+	 *            - The BigInteger, which has to be multiplied.
+	 * 
+	 * @return Returns the Result as a <tt>array</tt> of <tt>BigInteger</tt>
+	 *         values.
+	 */
 	public BigInteger[] fastMultiply(final BigInteger k) {
 		final int[] N = determineNaf(k, 5, k.bitLength());
 
@@ -239,6 +367,17 @@ public class PACE {
 		return new BigInteger[] { x.mod(Q), y.mod(Q), ONE };
 	}
 
+	/**
+	 * Adds the two points together and returns the result.
+	 * 
+	 * @param a
+	 *            - The first point. Must be three digits long. Can't be
+	 *            <strong>null</strong>.
+	 * @param b
+	 *            - The second point. Must be three digits long. Can't be
+	 *            <strong>null</strong>.
+	 * @return The combined added value.
+	 */
 	private BigInteger[] add(final BigInteger[] a, final BigInteger[] b) {
 		if (a[0] == null && a[1] == null) {
 			return b;
@@ -328,11 +467,26 @@ public class PACE {
 
 		return new BigInteger[] { x.mod(Q), y.mod(Q), z.mod(Q) };
 	}
-
+	
+	/**
+	 * Further informations follow in MR3.
+	 * 
+	 * @param a
+	 *            - The first <tt>BigInteger</tt>. Must be three digits long.
+	 *            Can't be <strong>null</strong>.
+	 * @param b
+	 *            - The second <tt>BigInteger</tt>. Must be three digits long.
+	 *            Can't be <strong>null</strong>.
+	 * 
+	 * @return The calculated array.
+	 */
 	private BigInteger[] subtract(final BigInteger[] a, final BigInteger[] b) {
 		return add(a, new BigInteger[] { b[0], b[1].negate(), b[2] });
 	}
 
+	/**
+	 * Further informations follow in MR3.
+	 */
 	public BigInteger[] multiplyBy2NEW(final BigInteger[] p) {
 		final BigInteger pX = p[0], pY = p[1], pZ = p[2];
 

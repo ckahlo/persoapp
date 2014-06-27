@@ -58,15 +58,50 @@ import org.bouncycastle.crypto.tls.ProtocolVersion;
 import org.bouncycastle.crypto.tls.TlsAuthentication;
 
 /**
- * @author ckahlo
+ * The <tt>TLSClient</tt> is the contains all functions to allow
+ * <tt>KeyExchanges</tt>.
+ * <p>
+ * <code>public class TLSClient extends DefaultTlsClient</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class TLSClient extends DefaultTlsClient {
 
+	/**
+	 * The currently used authentication
+	 */
 	private final TlsAuthentication	authentication	= new BCTlsAuthentication();
 
+	/**
+	 * The currently acquired hostname.
+	 */
 	private final String			hostname;
 
+	/**
+	 * The implemented cipher suites for encryption. The implemented array have
+	 * a size of 12 elements.
+	 * <p>
+	 * <table border=1>
+	 * <tr>
+	 * <th>Place</th>
+	 * <th>Cipher</th>
+	 * </tr>
+	 * <tr>
+	 * <td>[0]-[3]</td>
+	 * <td>RSA</td>
+	 * </tr>
+	 * <tr>
+	 * <td>[4]-[7]</td>
+	 * <td>ECDHE_ECDSA</td>
+	 * </tr>
+	 * <tr>
+	 * <td>[8]-[11]</td>
+	 * <td>ECDHE_RSA</td>
+	 * </tr>
+	 * </table>
+	 * </p>
+	 */
 	private static final int[]		defaultCS		= new int[] {
 													//
 			0x002F, 0x0035, 0x003C, 0x003D, 		// TLS_RSA_*
@@ -74,30 +109,58 @@ public class TLSClient extends DefaultTlsClient {
 			0xC013, 0xC014, 0xC027, 0xC028			// TLS_ECDHE_RSA_*
 													};
 
+	/**
+	 * Returns the defined cipher suites for encryption.
+	 * 
+	 * @return Returns the defined cipher suites for encryption.
+	 */
 	@Override
 	public int[] getCipherSuites() {
 		return defaultCS;
 	}
 
+	/**
+	 * Creates a instance of the {@link TLSClient} with a hostname.
+	 * 
+	 * @param hostname
+	 */
 	public TLSClient(final String hostname) {
 		super();
 		this.hostname = hostname;
 	}
 
+	/**
+	 * Creates a instance of the {@link TLSClient} without a hostname.
+	 */
 	public TLSClient() {
 		this(null);
 	}
 
+	/**
+	 * Returns the current authenticator.
+	 *	
+	 * @return Returns the current authenticator.
+	 */
 	@Override
 	public TlsAuthentication getAuthentication() throws IOException {
 		return this.authentication;
 	}
 
+	/**
+	 * Returns the minimal version of the used <tt>TLS</tt>-library.
+	 *	
+	 * @return Returns the minimal version of the used <tt>TLS</tt>-library.
+	 */
 	@Override
 	public ProtocolVersion getMinimumVersion() {
 		return ProtocolVersion.TLSv11;
 	}
 
+	/**
+	 * Returns the client specific extensions.
+	 * 
+	 * @return Returns the client specific extensions.
+	 */
 	@Override
 	public Hashtable<Integer, byte[]> getClientExtensions() throws IOException {
 		@SuppressWarnings("unchecked")

@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -55,10 +55,38 @@ import javax.xml.bind.JAXBException;
 import de.persoapp.core.ws.engine.WSContainer;
 
 /**
+ * The <tt>PAOSInitiatorFactory</tt> creates instances from the
+ * {@link PAOSInitiator} object, to allow the use of the <tt>PAOS</tt>
+ * -webservice.
+ * <p>
+ * <code>public class PAOSInitiatorFactory</code>
+ * </p>
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class PAOSInitiatorFactory {
 
+	/**
+	 * Creates and returns a new {@link PAOSInitiator} instance.
+	 * 
+	 * @param wsCtx
+	 *            - The webservice context to access the different methods and
+	 *            security informations.
+	 * @param endpoint
+	 *            - The webservice endpoint which contains the different
+	 *            methods.
+	 * @param sessionID
+	 *            - The currently session id.
+	 * @param pskKey
+	 *            - The currently used pre shared key.
+	 * 
+	 * @return Returns the created instance of {@link PAOSInitiator}.
+	 * 
+	 * @throws IOException
+	 *             - Throws <tt>IOException</tt> if a error occurs during the
+	 *             creation process of the {@link PAOSInitiator}-object.
+	 */
     public PAOSInitiator createPAOSInitiator(WSContainer wsCtx, URI endpoint, String sessionID, byte[] pskKey) throws IOException {
         try {
             return new PAOSInitiator(wsCtx, endpoint, sessionID, pskKey);
@@ -67,6 +95,12 @@ public class PAOSInitiatorFactory {
         }
     }
 
+	/**
+	 * Creates and returns a empty instance of the {@link PAOSInitiator}-class.
+	 * 
+	 * @return Creates and returns a empty instance of the {@link PAOSInitiator}
+	 *         -class.
+	 */
     public PAOSInitiator createPreStartPAOSInitiator() {
         try {
             return new PAOSInitiator();

@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -60,13 +60,32 @@ import org.bouncycastle.crypto.tls.TlsAuthentication;
 import org.bouncycastle.crypto.tls.TlsCredentials;
 
 /**
- * @author ckahlo
+ * The <tt>BCTlsAuthentication</tt> retrieves the username and the password from
+ * a client to allow the authentication.
+ * <p>
+ * <code>public class BCTlsAuthentication implements TlsAuthentication</code>
+ * </p>
  * 
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class BCTlsAuthentication implements TlsAuthentication {
 
+	/**
+	 * The <tt>List</tt> of server certificates.
+	 */
 	List<Certificate>	serverCertList;
 
+	/**
+	 * Adds all certificates, which are collected through <br>
+	 * <code>serverCertificate.getCertificateList()</code> to the internal class
+	 * memory for future use.
+	 * 
+	 * @param serverCertificate
+	 *            - The server certificate, which needs to be notified.
+	 * @throws IOException
+	 *             If an error occurs during the certificate retrieval.
+	 */
 	@Override
 	public void notifyServerCertificate(final org.bouncycastle.crypto.tls.Certificate serverCertificate)
 			throws IOException {
@@ -89,10 +108,22 @@ public class BCTlsAuthentication implements TlsAuthentication {
 		}
 	}
 
+	/**
+	 * Returns the current active <em>server certificates</em>.
+	 * 
+	 * @return Returns a <tt>List</tt> of the current active <em>server certificates</em>.
+	 */
 	final List<Certificate> getServerCertList() {
 		return this.serverCertList;
 	}
-
+	
+	/**
+	 * Returns the <tt>TlsCredentials</tt> of the client, according to the
+	 * incoming <tt>CertificateRequest</tt>.
+	 * 
+	 * @param certificateRequest
+	 *            - The incoming certificate request.
+	 */
 	@Override
 	public TlsCredentials getClientCredentials(final CertificateRequest certificateRequest) throws IOException {
 		// TODO Auto-generated method stub

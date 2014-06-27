@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -51,15 +51,41 @@ import de.persoapp.core.card.ICardHandler;
 import de.persoapp.core.card.TransportProvider;
 import de.persoapp.core.client.IMainView.ChangePINDialogResult;
 
+/**
+ * The <tt>MainViewEventListener</tt> handles all events related to the instance
+ * of <tt>PersoApp</tt>.
+ * <p>
+ * <code>public final class MainViewEventListener implements IMainView.EventListener</code>
+ * </p>
+ * 
+ * @author Christian Kahlo, Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
+ */
 public final class MainViewEventListener implements IMainView.EventListener {
 	final ICardHandler	eCardHandler;
 	final IMainView		mainView;
 
+	/**
+	 * Creates and initializes a new {@link MainViewEventListener}.
+	 * 
+	 * @param eCardHandler
+	 *            - The actual <tt>eCardHandler</tt>.
+	 * @param mainView
+	 *            - The actual instance of <tt>PersoApp</tt>
+	 */
 	public MainViewEventListener(final ICardHandler eCardHandler, final IMainView mainView) {
 		this.eCardHandler = eCardHandler;
 		this.mainView = mainView;
 	}
 
+	/**
+	 * Returns the {@link TransportProvider}, which holds the card.
+	 * 
+	 * @param requireCard
+	 *            - Set to <strong>true</strong>, if a Card is required.
+	 *            Otherwise <strong>false</strong>.
+	 * @return Returns the Returns the {@link TransportProvider}.
+	 */
 	private final TransportProvider getCard(final boolean requireCard) {
 		TransportProvider tp = null;
 		do {

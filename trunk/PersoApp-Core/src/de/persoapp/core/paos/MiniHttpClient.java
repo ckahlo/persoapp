@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -68,22 +68,70 @@ import de.persoapp.core.util.ChunkingInputStream;
 /**
  * This class provides a small HTTP-capable client ensuring connection re-use.
  * (uses only one connection per instance)
+ * <p>
+ * <code>public class MiniHttpClient</code>
+ * </p>
  * 
- * @author ckahlo
- * 
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class MiniHttpClient {
+	
+	/**
+	 * The URL of the {link MiniHttpClient}.
+	 */
 	private final URL					url;
+	
+	/**
+	 * The used socket factory of the {link MiniHttpClient}.
+	 */
 	private SocketFactory				sf;
+	
+	/**
+	 * The {link Socket} of the {link MiniHttpClient} which he uses to set up a
+	 * connection.
+	 */
 	private Socket						socket;
+	
+	/**
+	 * The stored requestHeaders of the {link MiniHttpClient}.
+	 */
 	private final Map<String, String>	requestHeaders	= new HashMap<String, String>();
+	
+	/**
+	 * The stored responseHeaders of the {link MiniHttpClient}.
+	 */
 	private final Map<String, String>	responseHeaders	= new HashMap<String, String>();
 
+	/**
+	 * The used <tt>HTTP_PROTOCOL</tt>.
+	 * <p>
+	 * <code>private final String HTTP_PROTOCOL	= "HTTP/1.1";</code>
+	 * </p>
+	 */
 	private final String				HTTP_PROTOCOL	= "HTTP/1.1";
 
+	/**
+	 * The <tt>carriage return</tt>.
+	 */
 	private static final char			CR				= 13;
+	
+	/**
+	 * The <tt>line feed</tt>.
+	 */
 	private static final char			LF				= 10;
 
+	/**
+	 * Reads a number of characters from a line of a given {@link InputStream}.
+	 * The number is set up through the <strong>limit</strong> argument.
+	 * 
+	 * @param input
+	 *            - The given {@link InputStream}.
+	 * @param limit
+	 *            - The number of characters which will be read from the line of
+	 *            the {@link InputStream}.
+	 * @return The read line.
+	 */
 	private static final String readLine(final InputStream input, final long limit) {
 		long read = 0;
 		final StringBuilder line = new StringBuilder();
@@ -101,18 +149,41 @@ public class MiniHttpClient {
 		return c == -1 && line.length() == 0 ? null : line.toString();
 	}
 
+	/**
+	 * Reads the entire line of the given {@link InputStream}.
+	 * 
+	 * @param input
+	 *            - The given {@link InputStream}, which contains the characters to read.
+	 * 
+	 * @return The read line.
+	 */
 	private static final String readLine(final InputStream input) {
 		return readLine(input, -1);
 	}
 
+	/**
+	 * Constructs a {@link MiniHttpClient} with the given {@link URL}.
+	 * 
+	 * @param url - The given {@link URL}.
+	 */
 	public MiniHttpClient(final URL url) {
 		this.url = url;
 	}
 
+	/**
+	 * Sets the {@link SocketFactory}.
+	 * 
+	 * @param sf - The given {@link SocketFactory}.
+	 */
 	public final void setSocketFactory(final SocketFactory sf) {
 		this.sf = sf;
 	}
 
+	/**
+	 * Retrieves the currently running {@link SSLSession}.
+	 * 
+	 * @return The currently running {@link SSLSession}.
+	 */
 	public final SSLSession getSSLSession() {
 		if (socket == null || socket.isClosed()) {
 			try {
@@ -129,6 +200,14 @@ public class MiniHttpClient {
 		}
 	}
 
+	/**
+	 * Set up a new {@link Socket} and returns it.
+	 * 
+	 * @return The new {@link Socket}.
+	 * 
+	 * @throws IOException
+	 *             If the {@link Socket} can't connected.
+	 */
 	private final Socket getSocket() throws IOException {
 		if (this.sf == null) {
 			this.sf = SocketFactory.getDefault();
@@ -142,10 +221,29 @@ public class MiniHttpClient {
 		return sf.createSocket(url.getHost(), port);
 	}
 
+	/**
+	 * Stores the request header.
+	 * 
+	 * @param key
+	 *            - The key under them the header will be saved.
+	 * @param value
+	 *            - The request header which will be saved.
+	 */
 	public final void setRequestHeader(final String key, final String value) {
 		requestHeaders.put(key, value);
 	}
 
+	/**
+	 * Stores the request header under the given key. Is already a request
+	 * header under this key, in the requestHeader-Map stored, the given header
+	 * will be appended to the currently stored header. The delimiting character
+	 * is a ";".
+	 * 
+	 * @param key
+	 *            - The key under them the header will be saved.
+	 * @param value
+	 *            - The request header which will be saved.
+	 */
 	public final void addRequestHeader(final String key, final String value) {
 		if (!requestHeaders.containsKey(key)) {
 			setRequestHeader(key, value);
@@ -154,14 +252,47 @@ public class MiniHttpClient {
 		}
 	}
 
+	/**
+	 * Retrieves the <tt>response header</tt> which is stored under the given key.
+	 * 
+	 * @param key - The key of the requested response header.
+	 *
+	 * @return The retrieved response header.
+	 */
 	public final String getResponseHeader(final String key) {
 		return responseHeaders.get(key);
 	}
 
+	/**
+	 * Appends the header, which will be identified through the given
+	 * <tt>key/value</tt> pair at the given {@link StringBuilder}.
+	 * 
+	 * @param sb
+	 *            - The {@link StringBuilder}, which contains the result.
+	 * @param key
+	 *            - The key of the requested header.
+	 * @param value
+	 *            - The requested header.
+	 * 
+	 * @return The {@link StringBuilder} with the appended header.
+	 */
 	private static final StringBuilder appendHeader(final StringBuilder sb, final String key, final String value) {
 		return sb.append(key).append(": ").append(value).append("\r\n");
 	}
 
+	/**
+	 * Transmits the given <tt>byte-array</tt> to the connection endpoint of the
+	 * {@link MiniHttpClient}.
+	 * 
+	 * @param in
+	 *            - The given byte-array.
+	 * @return The collected response of the send request. If something went
+	 *         wrong with the request, the given <strong>byte-array</strong> is
+	 *         returned. If the given byte-array was empty,
+	 *         <strong>null</strong> is returned.
+	 * @throws IOException
+	 *             If something went wrong with the connection.
+	 */
 	public final byte[] transmit(final byte[] in) throws IOException {
 		if (socket == null || socket.isClosed()) {
 			socket = getSocket();

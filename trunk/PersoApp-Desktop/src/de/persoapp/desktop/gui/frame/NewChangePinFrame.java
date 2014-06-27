@@ -85,46 +85,165 @@ import de.persoapp.desktop.gui.panel.KeypadPanel;
 import de.persoapp.desktop.gui.panel.PinPanel;
 
 /**
- * @author ckahlo
+ * The <tt>NewChangePinFrame</tt> provides the option for the user interaction.
+ * It is the initially displayed frame in the <tt>PersoApp-DesktopClient</tt>.
+ * <p>
+ * <code>public class NewChangePinFrame extends JFrame implements HelpPanelProvider, SidebarProvider</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class NewChangePinFrame extends JFrame implements HelpPanelProvider, SidebarProvider {
 
+	/**
+	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
+	 */
 	private static final long				serialVersionUID	= 7054039676016930476L;
 
+	/**
+	 * The used class logger.
+	 */
 	private final static Logger				LOGGER				= Logging.getLogger();
 
+	/**
+	 * The <tt>choose</tt> state.
+	 */
 	public final static int					STATE_CHOOSE		= 0;
+	
+	/**
+	 * The <tt>activate</tt> state.
+	 */
 	public final static int					STATE_ACTIVATE		= 1;
+	
+	/**
+	 * The <tt>change</tt> state.
+	 */
 	public final static int					STATE_CHANGE		= 2;
+	
+	/**
+	 * The <tt>unlock</tt> state.
+	 */
 	public final static int					STATE_UNLOCK		= 3;
+	
+	/**
+	 * The <tt>qes_choose</tt> state.
+	 */
 	public final static int					STATE_QES_CHOOSE	= 4;
+	
+	/**
+	 * The <tt>qes_set</tt> state.
+	 */
 	public final static int					STATE_QES_SET		= 5;
+	
+	/**
+	 * The <tt>qes_change</tt> state.
+	 */
 	public final static int					STATE_QES_CHANGE	= 6;
+	
+	/**
+	 * The <tt>qes_unlock</tt> state.
+	 */
 	public final static int					STATE_QES_UNLOCK	= 7;
+	
+	/**
+	 * The <tt>qes_terminate</tt> state.
+	 */
 	public final static int					STATE_QES_TERMINATE	= 8;
 
+	/**
+	 * The <tt>Size</tt> of the {@link NewChangePinFrame}.
+	 */
 	private static final Dimension			SIZE				= new Dimension(361, 234);
 
+	/**
+	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 */
 	private final PropertyResolver.Bundle	textBundle;
 
+	/**
+	 * The panels for containing the components of the {@link NewChangePinFrame}.
+	 */
 	private JPanel							mainPanel, choosePanel, displayedPanel, qesChoosePanel, buttonPanelHolder;
+	
+	/**
+	 * The {@link ButtonPanel} to allow <tt>confirming</tt> and <tt>canceling</tt>.
+	 */
 	private ButtonPanel						buttonPanel;
+	
+	/**
+	 * The different <tt>PinPinals</tt> to provide access to the different
+	 * functions of the <tt>PersoApp-Client</tt>.
+	 * <p>
+	 * The <tt>changePinPanel</tt> provides access to the function for changing
+	 * the currently active <tt>pin</tt>.
+	 * </p>
+	 * <p>
+	 * The <tt>activatePinPanel</tt> provides access to the function for
+	 * activating the <tt>PersoApp-Application</tt> through the insertion of a
+	 * correct pin.
+	 * </p>
+	 * <p>
+	 * the <tt>pukPanel</tt> provides access to the function for unblocking the
+	 * currently blocked pin.
+	 * </p>
+	 */
 	private PinPanel						changePinPanel, activatePinPanel, pukPanel;
+	
+	/**
+	 * The {@link HelpPanel} for displaying further informations.
+	 */
 	private HelpPanel						helpPanel;
+	
+	/**
+	 * Labels for displaying pics and informations.
+	 */
 	private JLabel							pic, claimLabel;
+	
+	/**
+	 * The buttons to allow user interaction.
+	 */
 	private JButton							unlockButton, activateButton, changeButton, abortButton, qesChooseButton,
 			qesSetButton, qesChangeButton, qesUnlockButton, qesTerminateButton, qesAbortButton;
+	
+	/**
+	 * The button-arrays for easy access. The stored buttons are used in the
+	 * <tt>choosePanel</tt> and in the <tt>qesChoosePanel</tt>.
+	 */
 	private JButton[]						choosePanelButton, qesChoosePanelButton;
+	
+	/**
+	 * The used <tt>arrow buttons</tt> of the {@link NewChangePinFrame}.
+	 */
 	private ArrowButton						arrowButton;
+	
+	/**
+	 * The used {@link KeypadPanel}.
+	 */
 	private KeypadPanel						keypadPanel;
 
+	/**
+	 * The state of the currently displayed panel.
+	 */
 	private int								state;
+	
+	/**
+	 * The flag for showing a sidebar.
+	 */
 	private boolean							showSideBar;
 
+	/**
+	 * The frame dimensions with a sidebar and without a sidebar.
+	 */
 	private final Dimension					minSizeNoSidebar, minSizeWithSidebar;
+	
+	/**
+	 * The extension to display the {@link NewChangePinFrame} in a correct way.
+	 */
 	private static final int				extension			= 175;
 
+	/**
+	 * Constructs a new instance of the {@link NewChangePinFrame}.
+	 */
 	public NewChangePinFrame() {
 		super();
 
@@ -153,7 +272,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 
 		setPanelState(STATE_CHOOSE);
 
-		//N√∂tig, da das Feld sonst nach dem erst √ñffnen leer ist, weil sich die Maus noch in der Tray-Anzeige befindet. 
+		//Nˆtig, da das Feld sonst nach dem erst ˆffnen leer ist, weil sich die Maus noch in der Tray-Anzeige befindet. 
 		this.setHelpPanelText(textBundle.get("NewChangePinFrame_Choose_header"),
 				textBundle.get("NewChangePinFrame_Choose_description"));
 
@@ -161,6 +280,10 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		this.requestFocus();
 	}
 
+	/**
+	 * Initializes all panels of the {@link NewChangePinFrame} and creates the
+	 * necessary buttons.
+	 */
 	public void initPanels() {
 		mainPanel = new JPanel(true);
 		mainPanel.setLayout(new GridBagLayout());
@@ -213,6 +336,10 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		displayedPanel = choosePanel;
 	}
 
+	/**
+	 * Draws the panels of the {@link NewChangePinFrame}. The
+	 * {@link GridBagLayout} is used for drawing.
+	 */
 	public void drawPanels() {
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.BOTH;
@@ -252,6 +379,10 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		this.getContentPane().add(mainPanel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Adds {@link WindowListener}, {@link ActionListner} and {@link KeyAdapter}
+	 * to perform the internal logic according to the user input.
+	 */
 	private void addListener() {
 		this.addWindowListener(new WindowAdapter() {
 			@Override
@@ -378,6 +509,17 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		abortButton.addActionListener(actionListener1);
 	}
 
+	/**
+	 * Draws and returns the new <tt>choose panel</tt> or the <tt>qes-choose panel</tt>.
+	 * 
+	 * @param borderTitle
+	 *            - The title of the returned panel.
+	 * @param button
+	 *            - The used buttons for the returned panel. The number of
+	 *            buttons isn't limited.
+	 * 
+	 * @return Returns the created <tt>choose panel</tt>.
+	 */
 	private JPanel getNewChoosePanel(final String borderTitle, final JButton... button) {
 		final JPanel result = new JPanel(true);
 		result.setLayout(new GridBagLayout());
@@ -424,6 +566,13 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		return result;
 	}
 
+	/**
+	 * Creates and returns a {@link JPanel} which contains a {@link ButtonPanel}
+	 * in the <code>CENTER</code>-area and a {@link ArrowButton} in the
+	 * <code>EASTERN</code>-area.
+	 * 
+	 * @return Returns the created {@link JPanel}.
+	 */
 	public JPanel getButtonPanelHolder() {
 		final JPanel result = new JPanel(true);
 		result.setLayout(new BorderLayout());
@@ -466,11 +615,28 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		this.validate();
 	}
 
+	/**
+	 * Sets the given {@link PinPanel} to the {@link KeypadPanel} of the
+	 * {@link NewChangePinFrame}. Also enables or disables the
+	 * {@link KeypadPanel}.
+	 * 
+	 * @param enabled
+	 *            - If enabled is <strong>true</strong>, the {@link KeypadPanel}
+	 *            is enabled, otherwise <strong>false</strong>.
+	 * @param panel
+	 *            - The used {@link PinPanel}.
+	 */
 	public void setKeypadPanelEnabled(final boolean enabled, final PinPanel panel) {
 		keypadPanel.setPinPanel(panel);
 		keypadPanel.setEnabled(enabled);
 	}
 
+	/**
+	 * Sets the state of the displayed panel.
+	 * 
+	 * @param state
+	 *            - The requested state of the displayed panel.
+	 */
 	public void setPanelState(final int state) {
 		if (this.state != state) {
 
@@ -528,9 +694,12 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	}
 
 	/**
-	 * Wird nur verwendet, wenn Leseger√§t mit Pinpad genutzt wird.
+	 * This function is only called, if reading devices with PinPad are used.
+	 * Changes the added {@link MouseListener}, de- and activates the buttons.
 	 * 
-	 * √Ñndert die MouseListener, de- und aktiviert die Button
+	 * @param disabled
+	 *            - <strong>true</strong> if the <tt>Pin</tt> is disabled,
+	 *            otherwise <strong>false</strong>.
 	 */
 	private void setPinDisabledUI(final boolean disabled) {
 		if (disabled) {
@@ -553,6 +722,13 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		}
 	}
 
+	/**
+	 * Returns the {@link PinPanel} according to the current state.
+	 * 
+	 * @param state
+	 *            - The current state.
+	 * @return - The {@link PinPanel} matching to the state.
+	 */
 	private JPanel getStatePanel(final int state) {
 		switch (state) {
 			case STATE_ACTIVATE:
@@ -572,6 +748,14 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		}
 	}
 
+	/**
+	 * Resets the buttons of the {@link NewChangePinFrame} according to the
+	 * <tt>testCard</tt> argument.
+	 * 
+	 * @param testCard
+	 *            - <strong>true</strong> if a card is inserted, otherwise
+	 *            <strong>false</strong>.
+	 */
 	private void resetFields(final boolean testCard) {
 		activatePinPanel.removeContent();
 		changePinPanel.removeContent();
@@ -634,11 +818,20 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	 * ###########################################
 	 */
 
+	/**
+	 * Sets the visibelity of the {@link NewChangePinFrame} to
+	 * <strong>false</strong>.
+	 */
 	public void returnResultAbort() {
 		LOGGER.log(Level.INFO, "Cancel was pressed");
 		this.setVisible(false);
 	}
 
+	/**
+	 * Returns the result of the user input of the {@link PinPanel}. The kind of
+	 * the used {@link PinPanel} is determined by the state of the
+	 * {@link NewChangePinFrame}.
+	 */
 	public void returnResultConfirm() {
 		if (displayedPanel instanceof PinPanel) {
 			final PinPanel panel = (PinPanel) displayedPanel;
@@ -675,6 +868,12 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		}
 	}
 
+	/**
+	 * Executes the action of the pushed button according to the given state.
+	 * 
+	 * @param state
+	 *            - The currently active state of the {@link NewChangePinFrame}.
+	 */
 	private void executeButtonAction(final int state) {
 		LOGGER.log(Level.INFO, "executeDialogAction: " + state);
 
@@ -689,6 +888,17 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		}
 	}
 
+	/**
+	 * Processes the application according to the given state. This includes
+	 * dispatching of events and setting new states of the
+	 * {@link NewChangePinFrame}.
+	 * 
+	 * @param state
+	 *            - The currently state of the {@link NewChangePinFrame}.
+	 * 
+	 * @param eventData
+	 *            - The actual data to dispatch with the next event.
+	 */
 	private void processStateAction(final int state, final Object eventData) {
 		new Thread(new Runnable() {
 			@Override
@@ -720,8 +930,8 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 				}
 
 				if (!abortButton.isEnabled()) {
-					//tritt nur ein, wenn Leseger√§t mit Pinpad verwendet wird.
-					//vorher wurde nichts ver√§ndert, daher brauch jetzt auch nichts ver√§ndert werden.
+					//tritt nur ein, wenn Leseger‰t mit Pinpad verwendet wird.
+					//vorher wurde nichts ver‰ndert, daher brauch jetzt auch nichts ver‰ndert werden.
 					setPinDisabledUI(false);
 				}
 
@@ -753,9 +963,9 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	public void clearHelpPanelText() {
 		/*
 		 * Er soll nichts tun, denn dann bleibt automatisch der Text vom
-		 * aktuellen State stehen, wenn die Maus das Fenster verl√§sst. W√ºrde
-		 * der Text entfernt werden, w√§re das helpPanel leer, wenn die Maus
-		 * au√üerhalb vom Fenster ist, was doch etwas komisch aussieht.
+		 * aktuellen State stehen, wenn die Maus das Fenster verl‰sst. W¸rde
+		 * der Text entfernt werden, w‰re das helpPanel leer, wenn die Maus
+		 * auﬂerhalb vom Fenster ist, was doch etwas komisch aussieht.
 		 */
 	}
 }

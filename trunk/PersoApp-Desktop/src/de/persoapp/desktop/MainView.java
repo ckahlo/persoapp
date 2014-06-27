@@ -72,27 +72,56 @@ import de.persoapp.desktop.gui.frame.MainFrame;
 import de.persoapp.desktop.gui.frame.NewChangePinFrame;
 
 /**
- * Starting point.
+ * The starting point of the <tt>PersoApp-Application</tt>. The
+ * <tt>MainView</tt> is a singleton to prevent the application from launched
+ * multiple times at once. Also, <tt>MainView</tt> provides the application
+ * logic to process events, show dialogs, process user interaction and shutdown
+ * the eID-Client.
  * 
  * @author Ralf Wondratschek
- * 
  */
 
 public class MainView implements IMainView {
 
+	/**
+	 * The currently used <tt>Application-Logger</tt>.
+	 */
 	private final static Logger	LOGGER	= Logging.getLogger();
 
+	/**
+	 * The application instance.
+	 */
 	private static IMainView	instance;
 
+	/**
+	 * Shows the status of the <tt>PersoApp-DesktopClient</tt> and the result of
+	 * the current operation.
+	 */
 	protected StatusIndicator	statusIndicator;
+	
+	/**
+	 * Listens on events.
+	 */
 	private EventListener		listener;
+	
+	/**
+	 * The current displayed frame.
+	 */
 	protected volatile JFrame	currentFrame;
 
-	// Main Dialog
+	/**
+	 * The main frame, which shows all components.
+	 */
 	private MainFrame			mainFrame;
+	
+	/**
+	 * The main dialog result, of inserting different data.
+	 */
 	private MainDialogResult	result;
 
-	// PIN Änderung
+	/**
+	 * The frame for pin-changing.
+	 */
 	private NewChangePinFrame	changePinFrame;
 
 	static {
@@ -100,6 +129,9 @@ public class MainView implements IMainView {
 		installLAF();
 	}
 
+	/**
+	 * Installs the configured Look-and-feel in the system.
+	 */
 	private static void installLAF() {
 		try {
 			UIManager.setLookAndFeel(Configuration.LOOK_AND_FEEL.getName());
@@ -108,10 +140,23 @@ public class MainView implements IMainView {
 		}
 	}
 
+	/**
+	 * Constructs a new instance of {@link MainView} and initializes it.
+	 */
 	protected MainView() {
 		init();
 	}
 
+	/**
+	 * Initializes the {@link SplashScreen} in an extra {@link Thread} and
+	 * retrieves necessary properties to display informations about the
+	 * <tt>PersoApp-DesktopClient</tt> on the <tt>SplashScreen</tt>.
+	 * <p>
+	 * The <tt>SplashScreen</tt> isn't locked to the loading process of the
+	 * underlying application. He just waits <tt>3000</tt> milliseconds before
+	 * he vanishes.
+	 * </p>
+	 */
 	protected void init() {
 		final PropertyResolver.Bundle text_mainBundle = PropertyResolver.getBundle("text");
 		final PropertyResolver.Bundle text_coreBundle = PropertyResolver.getBundle("text_core");
@@ -195,6 +240,11 @@ public class MainView implements IMainView {
 		}
 	}
 
+	/**
+	 * Returns a singleton of {@link MainView}.
+	 * 
+	 * @return Returns a singleton of {@link MainView}.
+	 */
 	public static IMainView getInstance() {
 		if (instance == null) {
 			try {
@@ -208,6 +258,13 @@ public class MainView implements IMainView {
 		return instance;
 	}
 
+	/**
+	 * Returns the {@link MainFrame} of the {@link MainView}.
+	 * 
+	 * @return Returns the currently used {@link MainFrame} or a newly created
+	 *         one. The current displayed frame is set to the returned
+	 *         {@link MainFrame}.
+	 */
 	public MainFrame getMainFrame() {
 		if (this.mainFrame == null) {
 			this.mainFrame = new MainFrame();
@@ -218,6 +275,13 @@ public class MainView implements IMainView {
 		return this.mainFrame;
 	}
 
+	/**
+	 * Returns the {@link NewChangePinFrame} of the {@link NewChangePinFrame}.
+	 * 
+	 * @return Returns the currently used {@link NewChangePinFrame} or a newly
+	 *         created one. The current displayed frame is set to the returned
+	 *         {@link NewChangePinFrame}.
+	 */
 	public NewChangePinFrame getChangePinFrame() {
 		if (this.changePinFrame == null) {
 			this.changePinFrame = new NewChangePinFrame();
@@ -226,7 +290,15 @@ public class MainView implements IMainView {
 		currentFrame = this.changePinFrame;
 		return this.changePinFrame;
 	}
-
+	
+	/**
+	 * Shows the currently active main dialog.
+	 * 
+	 * @param eacInfo
+	 *            - The informations of the used certificate.
+	 * @param MODE
+	 *            - The mode of the underlying {@link PinPanel}.
+	 */
 	@Override
 	public void showMainDialog(final IEAC_Info eacInfo, final int MODE) {
 		this.result = null;
@@ -245,6 +317,13 @@ public class MainView implements IMainView {
 		});
 	}
 
+	/**
+	 * Returns the {@link MainDialogResult}. If no result is set the current
+	 * {@link MainView} switches into the waiting state until a result is set.
+	 * 
+	 * @return Returns the {@link MainDialogResult} and sets the current
+	 *         {@link MainView} in the waiting state.
+	 */
 	@Override
 	public MainDialogResult getMainDialogResult() {
 		while (this.result == null) {
@@ -259,6 +338,19 @@ public class MainView implements IMainView {
 		return this.result;
 	}
 
+	/**
+	 * Sets the {@link MainDialogResult}. After the result is set the Thread of
+	 * the current {@link MainView} is notified.
+	 * 
+	 * @param chat
+	 *            - The marked personal data at the
+	 *            <em>Card Holder Authorization Template</em>.
+	 * @param pin
+	 *            - The inserted pin.
+	 * @param approved
+	 *            - <strong>true</strong> if the inserted data is correct,
+	 *            otherwise <strong>false</strong>.
+	 */
 	public void setResult(final long chat, final byte[] pin, final boolean approved) {
 		this.result = new MainDialogResult(chat, pin, approved);
 		synchronized (this) {
@@ -266,22 +358,52 @@ public class MainView implements IMainView {
 		}
 	}
 
+	/**
+	 * Shows the progress of the current operation.
+	 * 
+	 * @param message
+	 *            - The message to display.
+	 * @param amount
+	 *            - The amount to fill the progress bar.
+	 * @param enabled
+	 *            - Enables or disables the progress bar.
+	 */
 	@Override
 	public void showProgress(final String message, final int amount, final boolean enabled) {
 		this.getMainFrame().showProgress(message, amount, enabled);
 	}
-
+	
+	/**
+	 * Shows the given message in a separate {@link JOptionPane}.
+	 * 
+	 * @param title
+	 *            - The title of the message.
+	 * @param message
+	 *            - The message which is going to be displayed in a {@link JOptionPane}.
+	 */
 	@Override
 	public boolean showQuestion(final String title, final String message) {
 		return JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(currentFrame, message, title,
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 	}
 
+	/**
+	 * Shows the <tt>error message</tt> and the given <tt>title</tt> in a
+	 * separate frame.
+	 * 
+	 * @param title
+	 *            - The <tt>title</tt> of the <tt>error message</tt>.
+	 * @param message
+	 *            - The <tt>error message</tt>.
+	 */
 	@Override
 	public void showError(final String title, final String message) {
 		JOptionPane.showMessageDialog(currentFrame, message, title, JOptionPane.ERROR_MESSAGE);
 	}
 
+	/**
+	 * Hides all visible dialogs.
+	 */
 	@Override
 	public void closeDialogs() {
 		if (mainFrame != null) {
@@ -293,6 +415,9 @@ public class MainView implements IMainView {
 		}
 	}
 
+	/**
+	 * Closes all open dialogs and shuts the application down.
+	 */
 	@Override
 	public void shutdown() {
 		closeDialogs();
@@ -302,6 +427,9 @@ public class MainView implements IMainView {
 		}
 	}
 
+	/**
+	 * Hides the <tt>mainFrame</tt> and shows the <tt>ChangePinDialog</tt>.
+	 */
 	@Override
 	public void showChangePinDialog() {
 		if (mainFrame != null) {
@@ -312,11 +440,29 @@ public class MainView implements IMainView {
 		getChangePinFrame().setVisible(true);
 	}
 
+	/**
+	 * Displays the given message in the {@link StatusIndicator}.
+	 * 
+	 * @param info
+	 *            - The given info-message.
+	 * @param type
+	 *            - The message type.
+	 */
 	@Override
 	public void showMessage(final String info, final int type) {
 		statusIndicator.displayMessage(null, info, type);
 	}
 
+	/**
+	 * Triggers the specific <tt>event</tt> with the given <tt>eventData</tt>.
+	 * 
+	 * @param event
+	 *            - The <tt>event</tt> which is about to be triggered.
+	 * @param eventData
+	 *            - The necessary data of the <tt>event</tt>.
+	 * 
+	 * @return Returns the <tt>event</tt> result.
+	 */
 	@Override
 	public Object triggerEvent(final int event, final Object... eventData) {
 		synchronized (listener) {
@@ -324,11 +470,25 @@ public class MainView implements IMainView {
 		}
 	}
 
+	/**
+	 * Sets the given {@link EventListener}.
+	 * 
+	 * @param listener - The {@link EventListener} to set.
+	 */
 	@Override
 	public void setEventLister(final EventListener listener) {
 		this.listener = listener;
 	}
 
+	/**
+	 * Shows the <tt>CANDialog</tt> with the given message. Returns the
+	 * {@link SecureHolder} of the <tt>CANDialog</tt>.
+	 * 
+	 * @param msg
+	 *            - The message to display in the <tt>CANDialog</tt>.
+	 *            
+	 * @return Returns the {@link SecureHolder} of the <tt>CANDialog</tt>.
+	 */
 	@Override
 	public SecureHolder showCANDialog(final String msg) {
 		return CANDialog.show(currentFrame, PropertyResolver.getBundle("text").get("MainView_can_title"), msg);

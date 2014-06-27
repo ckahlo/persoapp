@@ -58,11 +58,25 @@ import de.persoapp.desktop.Configuration;
 import de.persoapp.desktop.gui.LAFFacade;
 
 /**
- * @author ckahlo
- * 
+ * The <tt>DefaultLAF</tt>-class set up the <tt>Default Look and Feel</tt>. A new
+ * instance is gathering the system informations and a small set of basic text
+ * fonts and background colors to maintain a stable <tt>Look and Feel</tt>,
+ * independent from the underlying platform.
+ * <p>
+ * <code>public class DefaultLAF extends LAFFacade</code>
+ * </p>
+ *
+ * @author Christian Kahlo
  */
 public class DefaultLAF extends LAFFacade {
 
+	/**
+	 * Creates a new instance of the {@link DefaultLAF}. The constructor sets up
+	 * an {@link UIManager} and sets up a small set of colors and fonts to
+	 * maintain the <tt>Look and Feel</tt> from calling applications.
+	 * Additionally, the <tt>System Look and Feel</tt> is set as a target to the
+	 * {@link LAFFacade}.
+	 */
 	public DefaultLAF() {
 		super();
 

@@ -63,13 +63,26 @@ import javax.imageio.ImageIO;
 import de.persoapp.core.util.Util;
 
 /**
- * @author ckahlo
+ * The <tt>Utils</tt>-class provides some utility functions, for managing the
+ * <em>screen</em> and resources.
+ * <p>
+ * <code>public class Utils</code>
+ * </p>
  * 
+ * @author Christian Kahlo
  */
 public class Utils {
 
+	/**
+	 * The resource folder path.
+	 */
 	private static final String	RESOURCE_FOLDER	= "/resources/";
 
+	/**
+	 * Calculates the real screen size, which can be used to display windows.
+	 * 
+	 * @return Returns the real screen size.
+	 */
 	public static Dimension getRealScreenSize() {
 		//Don't cache. Size changes.
 		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -83,14 +96,37 @@ public class Utils {
 				(int) (screenSize.getHeight() - screenInsets.top - screenInsets.bottom));
 	}
 
+	/**
+	 * Returns the file of the given filename as a {@link InputStream}.
+	 * 
+	 * @param fileName
+	 *            - The filename from the resource.
+	 * 
+	 * @return The resource as an {@link InputStream}, which can be read.
+	 */
 	public static InputStream getResourceStream(final String fileName) {
 		return Util.class.getResourceAsStream(RESOURCE_FOLDER + fileName);
 	}
 
+	/**
+	 * Returns the {@link URL} of the specified file.
+	 * 
+	 * @param fileName
+	 *            - The filename from the resource.
+	 * 
+	 * @return Returns the {@link URL} from the specified resource.
+	 */
 	public static URL getResourceUrl(final String fileName) {
 		return Util.class.getResource(RESOURCE_FOLDER + fileName);
 	}
 
+	/**
+	 * Returns the {@link BufferedImage} of the specified file.
+	 * 
+	 * @param fileName
+	 *            - The filename of the specified resource.
+	 * @return Returns the {@link BufferedImage} of the specified file.
+	 */
 	public static BufferedImage getImage(final String fileName) {
 		try {
 			return ImageIO.read(getResourceUrl(fileName));

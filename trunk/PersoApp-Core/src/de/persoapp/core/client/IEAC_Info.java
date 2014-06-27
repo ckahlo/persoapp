@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -49,50 +49,161 @@ package de.persoapp.core.client;
 
 import java.util.Date;
 
+// TODO: Auto-generated Javadoc
+/**
+ * <p>
+ * A implementation of the interface <tt>IEAC_Info</tt> provides all
+ * informations for the user about the <em>eID-process</em>.
+ * <p>
+ * <code>public interface IEAC_Info</code>
+ * <p>
+ * 
+ * @author Christian Kahlo, Ralf Wondratschek.
+ * @author Rico Klimsa - added javadoc comments.
+ */
 public interface IEAC_Info {
+	
+	/** The Constant OID_BSI_DE. */
 	public static final String	OID_BSI_DE						= "0.4.0.127.0.7";
+	
+	/** The Constant OID_BSI_DE_APPS. */
 	public static final String	OID_BSI_DE_APPS					= "0.4.0.127.0.7.3";
+	
+	/** The Constant OID_BSI_DE_MRTD. */
 	public static final String	OID_BSI_DE_MRTD					= "0.4.0.127.0.7.3.1";
 
+	/** The Constant OID_BSI_DE_MRTD_ROLES. */
 	public static final String	OID_BSI_DE_MRTD_ROLES			= "0.4.0.127.0.7.3.1.2";
+	
+	/** The Constant OID_BSI_DE_MRTD_ROLES_IS. */
 	public static final String	OID_BSI_DE_MRTD_ROLES_IS		= "0.4.0.127.0.7.3.1.2.1";
+	
+	/** The Constant OID_BSI_DE_MRTD_ROLES_AT. */
 	public static final String	OID_BSI_DE_MRTD_ROLES_AT		= "0.4.0.127.0.7.3.1.2.2";
+	
+	/** The Constant OID_BSI_DE_MRTD_ROLES_ST. */
 	public static final String	OID_BSI_DE_MRTD_ROLES_ST		= "0.4.0.127.0.7.3.1.2.3";
 
+	/** The Constant OID_BSI_DE_MRTD_EXT. */
 	public static final String	OID_BSI_DE_MRTD_EXT				= "0.4.0.127.0.7.3.1.3";
+	
+	/** The Constant OID_BSI_DE_MRTD_EXT_DESC. */
 	public static final String	OID_BSI_DE_MRTD_EXT_DESC		= "0.4.0.127.0.7.3.1.3.1";
+	
+	/** The Constant OID_BSI_DE_MRTD_EXT_DESC_TEXT. */
 	public static final String	OID_BSI_DE_MRTD_EXT_DESC_TEXT	= "0.4.0.127.0.7.3.1.3.1.1";
+	
+	/** The Constant OID_BSI_DE_MRTD_EXT_DESC_HTML. */
 	public static final String	OID_BSI_DE_MRTD_EXT_DESC_HTML	= "0.4.0.127.0.7.3.1.3.1.2";
+	
+	/** The Constant OID_BSI_DE_MRTD_EXT_DESC_PDF. */
 	public static final String	OID_BSI_DE_MRTD_EXT_DESC_PDF	= "0.4.0.127.0.7.3.1.3.1.3";
+	
+	/** The Constant OID_BSI_DE_MRTD_EXT_SECT. */
 	public static final String	OID_BSI_DE_MRTD_EXT_SECT		= "0.4.0.127.0.7.3.1.3.2";
 
+	/**
+	 * Returns the EffectiveDate.
+	 * 
+	 * @return Returns the EffectiveDate.
+	 */
 	public Date getEffectiveDate();
 
+	/**
+	 * Returns the ExpirationDate.
+	 * 
+	 * @return Returns the ExpirationDate.
+	 */
 	public Date getExpirationDate();
 
+	/**
+	 * Returns the TransactionInfo.
+	 * 
+	 * @return Returns the TransactionInfo.
+	 */
 	public String getTransactionInfo();
 
+	/**
+	 * Returns the DescriptionType.
+	 * 
+	 * @return Returns the DescriptionType.
+	 */
 	public String getDescriptionType();
 
+	/**
+	 * Returns the IssuerName.
+	 * 
+	 * @return Returns the IssuerName.
+	 */
 	public String getIssuerName();
 
+	/**
+	 * Returns the IssuerURL.
+	 * 
+	 * @return Returns the IssuerURL.
+	 */
 	public String getIssuerURL();
 
+	/**
+	 * Returns the SubjectName.
+	 * 
+	 * @return Returns the SubjectName.
+	 */
 	public String getSubjectName();
 
+	/**
+	 * Returns the SubjectURL.
+	 * 
+	 * @return Returns the SubjectURL.
+	 */
 	public String getSubjectURL();
 
+	/**
+	 * Returns the TermsOfUsage.
+	 * 
+	 * @return Returns the TermsOfUsage.
+	 */
 	public String getTermsOfUsage();
 
+	/**
+	 * Returns the RedirectURL.
+	 * 
+	 * @return Returns the RedirectURL.
+	 */
 	public String getRedirectURL();
 
+	/**
+	 * Returns the RequiredChat.
+	 * 
+	 * @return Returns the RequiredChat.
+	 */
 	public long getRequiredChat();
 
+	/**
+	 * Returns the OptionalChat.
+	 * 
+	 * @return Returns the OptionalChat.
+	 */
 	public long getOptionalChat();
 
+	/**
+	 * Returns the AuxiliaryData.
+	 *
+	 * @return Returns the AuxiliaryData.
+	 */
 	public byte[] getAuxiliaryData();
 
+	/**
+	 * Returns the VerifyCommunityID.
+	 * 
+	 * @return Returns the VerifyCommunityID.
+	 */
 	String getVerifyCommunityID();
 
+	/**
+	 * Returns the verifyAge.
+	 * 
+	 * @return Returns the verifyAge.
+	 */
 	long getVerifyAge();
 }

@@ -62,7 +62,7 @@ import com.sun.net.httpserver.HttpHandler;
 import de.persoapp.core.client.PropertyResolver;
 
 /**
- * Further Informations follow in MR3.
+ * Further Informations will follow in MR3.
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
@@ -73,6 +73,7 @@ public final class ECApiHttpHandler implements HttpHandler {
 	 * The <tt>user-agent</tt> who emits the communication channel.
 	 */
 	private static final String	HTTP_USER_AGENT	= "eID-Client";
+	
 	/**
 	 * The used <tt>http-charset</tt>.
 	 */
@@ -82,10 +83,12 @@ public final class ECApiHttpHandler implements HttpHandler {
 	 * The http-method <tt>HEAD</tt>.
 	 */
 	private static final String	HTTP_METH_HEAD	= "HEAD";
+	
 	/**
 	 * The http-method <tt>GET</tt>.
 	 */
 	private static final String	HTTP_METH_GET	= "GET";
+	
 	/**
 	 * The http-method <tt>POST</tt>.
 	 */
@@ -95,6 +98,7 @@ public final class ECApiHttpHandler implements HttpHandler {
 	 * The used <tt>token-requester</tt>.
 	 */
 	private static final String	TC_TOKEN_REQ	= "/eID-Client";
+	
 	/**
 	 * The used <tt>token-url</tt>.
 	 */
@@ -278,7 +282,8 @@ public final class ECApiHttpHandler implements HttpHandler {
 	 * Various responses are send with this function.
 	 * 
 	 * @param he
-	 *            - The used {@link HttpExchange}-Object.
+	 *            - The used {@link HttpExchange}, to process requests and fetch
+	 *            responses.
 	 * @param code
 	 *            - The used html status code.
 	 * @param refreshURI

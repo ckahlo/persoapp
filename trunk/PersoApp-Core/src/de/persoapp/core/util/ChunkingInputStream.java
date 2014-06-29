@@ -53,7 +53,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Basic class which provides utilities to handle data from the underlying {@link FilterInputStream}. 
+ * Basic class which provides utilities to handle data from the underlying
+ * {@link FilterInputStream}.
  * 
  * @author Christian Kahlo, Ralf Wondratschek
  */

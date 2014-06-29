@@ -82,14 +82,17 @@ import de.persoapp.core.ws.engine.WSContainer;
 
 /**
  * <p>
- * The <tt>ECardWorker</tt> contains all functions to process incoming
- * eID-Requests and supervise the communication between the <em>PAOS</em>-stack
- * and the target eID-Server.
+ * The <tt>ECardWorker</tt> contains all functions to process the initial
+ * requests, to establish a PAOS-Connection between the integrated ISO 24727 web
+ * services and the eID-Server, to process incoming eID-Requests and to
+ * supervise the initial communication between the <em>PAOS</em>-stack and the
+ * target eID-Server about the integrated ISO 24727 web services.
  * </p>
  * <p>
- * The <tt>ECardWorker</tt> listens during his supervising process on
- * <em>Cancel</em>, <em>Error</em>, <em>Timeout</em> and <em>Success</em> events
- * and notifies the gui and the browser, if an event occurs.
+ * The <tt>ECardWorker</tt> listens after the initial requests of the
+ * alternative call on <em>Cancel</em>, <em>Error</em>, <em>Timeout</em> and
+ * <em>Success</em> events and notifies the gui and the browser, if an event
+ * occurs.
  * </p>
  * 
  * @author Christian Kahlo
@@ -228,9 +231,9 @@ public final class ECardWorker {
 	 * @param mainView
 	 *            - The used {@link IMainView}, as the current <tt>PersoApp-Application</tt> instance.
 	 * @param wsCtx
-	 *            - The used {@link WSContainer}, to access methods and security informations according to the incoming request.
+	 *            - The used {@link WSContainer}, which contains the used <em>webservices</em>.
 	 * @param eCardHandler
-	 *            - The used {@link ICardHandler}, to access the current used ECard.
+	 *            - The used {@link ICardHandler}, as abstract interface to the current used <em>ECard</em>.
 	 */
 	public static final void init(final IMainView mainView, final WSContainer wsCtx, final ICardHandler eCardHandler) {
 		if (ECardWorker.mainView == null) {
@@ -601,7 +604,11 @@ public final class ECardWorker {
 	 * Creates a ECardWorker and setup all his components.
 	 * 
 	 * @param ch
-	 *            - The used {@link ChannelHandleType}.
+	 *            - The used {@link ChannelHandleType}, contains the server
+	 *            address of the eID-Server and the session identifier. The
+	 *            parameter <em>ch</em> is from the type
+	 *            <tt>iso.std.iso_iec._24727.tech
+	 *            .schema.ChannelHandleType</tt>
 	 * @param sessionPSK
 	 *            - The used session pre-shared key.
 	 * @param tcTokenURL

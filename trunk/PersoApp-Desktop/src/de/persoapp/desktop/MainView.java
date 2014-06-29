@@ -1,6 +1,6 @@
 /**
  * 
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  * 
  * Authors Christian Kahlo, Ralf Wondratschek
  * 
@@ -79,6 +79,7 @@ import de.persoapp.desktop.gui.frame.NewChangePinFrame;
  * the eID-Client.
  * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 
 public class MainView implements IMainView {

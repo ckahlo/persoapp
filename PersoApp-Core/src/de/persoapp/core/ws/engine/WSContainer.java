@@ -239,7 +239,7 @@ public final class WSContainer implements WebServiceContext {
 
 	/**
 	 * Injects the currently instance through the given target. Invokes all
-	 * methods. TODO: Comment
+	 * methods.
 	 * 
 	 * @param target
 	 *            - The target, which is injected in the currently instance.
@@ -294,7 +294,7 @@ public final class WSContainer implements WebServiceContext {
 	// namespace is not unique per service
 	/**
 	 * Invokes the provided method through the given qualified name and
-	 * processes the message to the invoked method. TODO: comment.
+	 * processes the message to the invoked method.
 	 * 
 	 * @param name
 	 *            - The method name.

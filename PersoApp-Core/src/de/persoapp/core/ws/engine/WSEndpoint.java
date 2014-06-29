@@ -221,7 +221,7 @@ public final class WSEndpoint {
 	}
 
 	/**
-	 * Returns the xml-like files. TODO: Comment
+	 * Returns the xml-like files.
 	 * 
 	 * @return Returns the xml-like files.
 	 */

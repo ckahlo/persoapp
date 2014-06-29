@@ -1,6 +1,6 @@
 /**
  * 
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  * 
  * Authors Christian Kahlo, Ralf Wondratschek
  * 
@@ -70,6 +70,7 @@ import de.persoapp.core.util.Util;
  * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class Utils {
 

@@ -64,6 +64,7 @@ import de.persoapp.desktop.gui.ArrowButton;
  * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class StatusBarPanel extends JPanel {
 

@@ -54,7 +54,14 @@ package de.persoapp.core.ws;
  */
 public interface EcAPIProvider {
 
+	/**
+	 * The result, if the request to the eID-Server is ok.
+	 */
 	public static final String	ECARD_API_RESULT_OK		= "http://www.bsi.bund.de/ecard/api/1.1/resultmajor#ok";
+	
+	/**
+	 * The result, if the request to the eID-Server is failed.
+	 */
 	public static final String	ECARD_API_RESULT_ERROR	= "http://www.bsi.bund.de/ecard/api/1.1/resultmajor#error";
 
 }

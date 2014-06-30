@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -72,6 +72,7 @@ import de.persoapp.core.client.ECardSession;
  * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 @WebService(serviceName = "IFD", portName = "IFDPort", targetNamespace = "urn:iso:std:iso-iec:24727:tech:schema")
 public final class IFDService implements IFD {

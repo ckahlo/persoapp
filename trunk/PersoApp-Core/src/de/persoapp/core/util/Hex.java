@@ -76,6 +76,8 @@ package de.persoapp.core.util;
 
 /**
  * Static methods for converting to and from hexadecimal strings.
+ * 
+ * @author Christian Kahlo
  */
 public class Hex {
 	private Hex() {

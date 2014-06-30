@@ -97,7 +97,7 @@ public class EACProtocolHandler {
 	private final IMainView					mainView;
 	
 	/**
-	 * 
+	 * The currently activ session.
 	 */
 	private final ECardSession				session;
 
@@ -115,6 +115,7 @@ public class EACProtocolHandler {
 	}
 
 	/**
+	 * Informations follow in MR3
 	 * 
 	 * @param in
 	 * @return

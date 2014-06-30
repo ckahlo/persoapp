@@ -62,7 +62,11 @@ import java.security.spec.EllipticCurve;
 public class EC_Globals {
 	// curves from RFC 5639  / BSI TR-03111
 	// ordering according to TR-03110
-
+	
+	/**
+	 * curves from RFC 5639  / BSI TR-03111
+	 * ordering according to TR-03110
+	 */
 	private static final String[][]	DOMAIN_PARAMETERS	= new String[][] {
 														// #0 1024-bit MODP Group with 160-bit Prime Order Subgroup
 			null,

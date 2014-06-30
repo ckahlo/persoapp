@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -71,20 +71,21 @@ import org.w3c.dom.Element;
 
 /**
  * <p>
- * The <tt>WSContainer</tt> bind and initializes the <em>ISO 24727</em>
- * webservices in <em>JAX-WS 2.0</em> style. The services are defined in
- * <em>BSI TR-03112</em>.
+ * The <tt>WSContainer</tt> is part of the <em>Network Layer</em>. Also, he bind
+ * and initializes the <em>ISO 24727</em> webservices in <em>JAX-WS 2.0</em>
+ * style. The services are defined in <em>BSI TR-03112</em>.
  * </p>
  * <p>
  * <code>public final class WSContainer implements WebServiceContext</code>
  * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public final class WSContainer implements WebServiceContext {
 	
 	/**
-	 * Contains all created <tt>endpoints</tt>.
+	 * Contains all bind <tt>endpoints</tt>.
 	 */
 	private final Map<String, WSEndpoint>	endpointsMap	= new HashMap<String, WSEndpoint>();
 	

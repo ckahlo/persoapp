@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -101,6 +101,7 @@ import de.persoapp.core.util.TLV;
  * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 @WebService(serviceName = "SAL", portName = "SALPort", targetNamespace = "urn:iso:std:iso-iec:24727:tech:schema")
 public class SALService implements SAL {

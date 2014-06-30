@@ -77,16 +77,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import de.persoapp.core.tls.BCTlsSocketFactoryImpl;
 
-/*
- * Project: PersoApp
- * $Header: 1.0
- * Author:  Christian Kahlo, Ralf Wondratschek
- * Last Change:
- *    by:   Rico Klimsa
- *    date: 23.04.2014 - 15:29
- * Copyright (c): AGETO Innovation GmbH, 2014
- */
-
 /**
  * The util class provides functions for setting up 
  * SSL-Sockets, opening urls, validating 

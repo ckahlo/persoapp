@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -54,10 +54,14 @@ import java.util.List;
 
 /**
  * Tag-Length-Value encoding utilities for encoding/decoding issues.
- * Additionally, functions for building a <tt>object identifier-(OID)</tt> are
+ * Additionally, functions for building <tt>object identifier-(OID)</tt> are
  * also included.
+ * <p>
+ * <code>public class TLV</code>
+ * </p>
  * 
  * @author Christian Kahlo, based on VX4.NET code
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class TLV {
 

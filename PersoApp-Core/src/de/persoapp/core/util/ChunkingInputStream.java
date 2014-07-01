@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -55,8 +55,12 @@ import java.io.InputStream;
 /**
  * Basic class which provides utilities to handle data from the underlying
  * {@link FilterInputStream}.
+ * <p>
+ * <code>public class ChunkingInputStream extends FilterInputStream</code>
+ * </p>
  * 
  * @author Christian Kahlo, Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class ChunkingInputStream extends FilterInputStream {
 

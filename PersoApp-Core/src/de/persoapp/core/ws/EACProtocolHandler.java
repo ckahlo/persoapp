@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -76,8 +76,12 @@ import de.persoapp.core.util.TLV;
 
 /**
  * The <tt>Extended Access Protocol Handler</tt> 
+ * <p>
+ * <code>public class EACProtocolHandler</code>
+ * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class EACProtocolHandler {
 	
@@ -97,13 +101,14 @@ public class EACProtocolHandler {
 	private final IMainView					mainView;
 	
 	/**
-	 * The currently activ session.
+	 * The currently active session.
 	 */
 	private final ECardSession				session;
 
 	/**
 	 * Creates and initializes a new {@link EACProtocolHandler}.
-	 * @param session
+	 * 
+	 * @param session - The current active {@link ECardSession}.
 	 */
 	public EACProtocolHandler(final ECardSession session) {
 		this.session = session;

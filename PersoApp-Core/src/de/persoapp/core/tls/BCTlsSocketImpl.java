@@ -79,6 +79,7 @@ import org.bouncycastle.crypto.tls.TlsProtocol;
  * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public final class BCTlsSocketImpl extends SSLSocket {
 

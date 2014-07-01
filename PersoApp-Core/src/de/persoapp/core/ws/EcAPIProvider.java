@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -49,8 +49,12 @@ package de.persoapp.core.ws;
 
 /**
  * The <tt>EcAPIProvider</tt> contains namespaces for the <tt>ECard</tt>.
+ * <p>
+ * <code>public interface EcAPIProvider</code>
+ * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public interface EcAPIProvider {
 

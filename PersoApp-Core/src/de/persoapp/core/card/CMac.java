@@ -53,7 +53,6 @@ import javax.crypto.Cipher;
 
 import de.persoapp.core.util.ArrayTool;
 
-// TODO: Auto-generated Javadoc
 /**
  * <p>
  * CMac using standard Java cipher interface as a base. Inspired by
@@ -230,8 +229,10 @@ public class CMac {
 
 	/**
 	 * Reset the mac generator.
-	 *
-	 * @throws GeneralSecurityException the general security exception
+	 * 
+	 * @throws GeneralSecurityException
+	 *             If an error occurs during the call of the <tt>doFinal</tt>
+	 *             method.
 	 */
 	public void reset() throws GeneralSecurityException {
 		/*

@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -76,10 +76,18 @@ package de.persoapp.core.util;
 
 /**
  * Static methods for converting to and from hexadecimal strings.
+ * <p>
+ * <code>public class Hex</code>
+ * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class Hex {
+	
+	/**
+	 * Creates a new instance of {@link Hex}.
+	 */
 	private Hex() {
 	}
 

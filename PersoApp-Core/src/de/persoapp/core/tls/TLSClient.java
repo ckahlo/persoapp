@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -65,6 +65,7 @@ import org.bouncycastle.crypto.tls.TlsAuthentication;
  * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class TLSClient extends DefaultTlsClient {
 
@@ -120,9 +121,11 @@ public class TLSClient extends DefaultTlsClient {
 	}
 
 	/**
-	 * Creates a instance of the {@link TLSClient} with a hostname.
+	 * Creates a instance of the {@link TLSClient} with the name of the current
+	 * activ host.
 	 * 
 	 * @param hostname
+	 *            - The used hostname.
 	 */
 	public TLSClient(final String hostname) {
 		super();

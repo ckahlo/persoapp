@@ -108,6 +108,7 @@ public interface ICardHandler {
 
 	/**
 	 * Unblocks the blocked active pin through the insertion of the <em>PUK</em>
+	 * .
 	 * 
 	 * @param tp
 	 *            - The {@link TransportProvider}, which is used to transmit

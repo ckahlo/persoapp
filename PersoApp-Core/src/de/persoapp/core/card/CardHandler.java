@@ -456,8 +456,9 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Gets the HAL transport, which signals events and data in a PC/SC connection.
-	 *
+	 * Gets the HAL transport, which signals events and data in a PC/SC
+	 * connection.
+	 * 
 	 * @return the HAL transport
 	 */
 	protected TransportProvider getHALTransport() {
@@ -575,12 +576,16 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Execute remote pace.
-	 *
-	 * @param keyReference the key reference
-	 * @param CHAT the chat
-	 * @param termDesc the term desc
-	 * @return the int
+	 * Executes pace remotely.
+	 * 
+	 * @param keyReference
+	 *            - The key reference.
+	 * @param CHAT
+	 *            - The <em>Card Holder Authorization Template</em>.
+	 * @param termDesc
+	 *            - The terminal description.
+	 * @return Returns <tt>0x9000</tt> if the execution was successful and
+	 *         <tt>-1</tt> otherwise.
 	 */
 	private int executeRemotePACE(final byte keyReference, final byte[] CHAT, final byte[] termDesc) {
 		byte[] pace_res = null;
@@ -816,7 +821,7 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Executed the <em>PACE</em>-protocol.
+	 * Executes the <em>PACE</em>-protocol.
 	 * 
 	 * @param keyReference
 	 *            - The key reference.
@@ -824,7 +829,7 @@ public class CardHandler implements ICardHandler {
 	 *            - The inserted eID-pin during pinChange or transport pin
 	 *            during cardActivation.
 	 * @param CHAT
-	 *            - The <em>Card Holder Autorization Template</em>.
+	 *            - The <em>Card Holder Authorization Template</em>.
 	 * @return Returns the received status word.
 	 */
 	private int executePACE(final byte keyReference, final byte[] secret, final byte[] CHAT) {
@@ -832,7 +837,7 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Executed the <em>PACE</em>-protocol.
+	 * Executes the <em>PACE</em>-protocol.
 	 * 
 	 * @param keyReference
 	 *            - The key reference.
@@ -840,7 +845,7 @@ public class CardHandler implements ICardHandler {
 	 *            - The inserted eID-pin during pinChange or transport pin
 	 *            during cardActivation.
 	 * @param CHAT
-	 *            - The <em>Card Holder Autorization Template</em>.
+	 *            - The <em>Card Holder Authorization Template</em>.
 	 * @param termDesc
 	 *            - The terminal description.
 	 * @return Returns the received status word.
@@ -1143,11 +1148,13 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Select esign.
-	 *
-	 * @param tp0 the tp0
-	 * @param verifySecret the verify secret
-	 * @return the int
+	 * Further informations will follow in MR3.
+	 * 
+	 * @param tp0
+	 *            - The used transport provider.
+	 * @param verifySecret
+	 *            - The verify secret.
+	 * @return Returns the last status word.
 	 */
 	private int selectESIGN(final TransportProvider tp0, final byte verifySecret) {
 		this.tp = tp0;
@@ -1241,21 +1248,24 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Open_e sign.
+	 * Further informations will follow in MR3.
 	 *
-	 * @param tp0 the tp0
-	 * @return the int
+	 * @param tp0 - The used transport provider.
+	 * @return Returns the received status word.
 	 */
 	public int open_eSign(final TransportProvider tp0) {
 		return open_eSign(tp0, true);
 	}
 
 	/**
-	 * Open_e sign.
-	 *
-	 * @param tp0 the tp0
-	 * @param validatePin the validate pin
-	 * @return the int
+	 * Further informations will follow in MR3.
+	 * 
+	 * @param tp0
+	 *            - The used transport provider.
+	 * @param validatePin
+	 *            - Can be <strong>true</strong>, to validate the eSignPin. Set
+	 *            to <strong>false</strong>, no validation is done.
+	 * @return Returns the received status word.
 	 */
 	public int open_eSign(final TransportProvider tp0, final boolean validatePin) {
 		int status = selectESIGN(tp0, (byte) 0x02);
@@ -1266,10 +1276,11 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Validate_e sign pin.
-	 *
-	 * @param tp0 the tp0
-	 * @return the int
+	 * Validates the eSign <em>PIN</em>.
+	 * 
+	 * @param tp0
+	 *            - The used transport provider.
+	 * @return Returns the last status word.
 	 */
 	public int validate_eSignPin(final TransportProvider tp0) {
 		int status = -1;
@@ -1285,19 +1296,20 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Do e sign.
-	 *
-	 * @param dataTBS the data tbs
-	 * @return the byte[]
+	 * Further informations will follow in MR3.
+	 * 
+	 * @param dataTBS
+	 *            - The used data.
+	 * @return Returns the <em>APDU</em>-Response.
 	 */
 	public byte[] doESign(final byte[] dataTBS) {
 		return tp.transmit(buildCmd((byte) 0x00, (byte) 0x2A, (byte) 0x9E, (byte) 0x9A, dataTBS, 0));
 	}
 
 	/**
-	 * Do e sign get certificates.
-	 *
-	 * @return the list
+	 * Returns the used certificates for the eSigning process.
+	 * 
+	 * @return The list of certificates.
 	 */
 	public List<byte[]> doESignGetCertificates() {
 		final List<byte[]> certs = new ArrayList<byte[]>();

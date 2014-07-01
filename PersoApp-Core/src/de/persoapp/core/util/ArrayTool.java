@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -63,10 +63,13 @@ package de.persoapp.core.util;
  * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class ArrayTool {
 
-	/** Creates a new instance of ArrayTool */
+	/**
+	 * Creates a new instance of {@link ArrayTool}.
+	 */
 	public ArrayTool() {
 	}
 

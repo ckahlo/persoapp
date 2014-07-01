@@ -307,11 +307,11 @@ public class PAOSInitiator {
         }
     }
 
-    /**
-     * Retrieves a so called "pre-start instance" of a {@link PAOSInitiator}.
-     * 
-     * @return Retrieves the "pre-start instance" of a {@link PAOSInitiator}.
-     */
+	/**
+	 * Retrieves a so called "pre-start instance" of a {@link PAOSInitiator}.
+	 * 
+	 * @return Retrieves the "pre-start instance" of a {@link PAOSInitiator}.
+	 */
     public static PAOSInitiator getPreStartInstance() {
         if (paosInitiatorFactory == null) {
             paosInitiatorFactory = new PAOSInitiatorFactory();
@@ -341,18 +341,24 @@ public class PAOSInitiator {
         }
     }
 
-    /**
-     * Retrieves a new instance of the {@link PAOSInitiator}.
-     *  
-     * @param wsCtx - The used {@link WSContainer}.
-     * @param endpoint - The used endpoint.
-     * @param sessionID - The used sessionID.
-     * @param pskKey - The used pre-shared key.
-     * 
-     * @return Returns a new instance of the {@link PAOSInitiator}.
-     * 
-     * @throws IOException Throws {@link IOException} if a error occurs during the creation process of a new instance.
-     */
+	/**
+	 * Retrieves a new instance of the {@link PAOSInitiator}.
+	 * 
+	 * @param wsCtx
+	 *            - The used {@link WSContainer}.
+	 * @param endpoint
+	 *            - The used endpoint.
+	 * @param sessionID
+	 *            - The used sessionID.
+	 * @param pskKey
+	 *            - The used pre-shared key.
+	 * 
+	 * @return Returns a new instance of the {@link PAOSInitiator}.
+	 * 
+	 * @throws IOException
+	 *             Throws {@link IOException} if a error occurs during the
+	 *             creation process of a new instance.
+	 */
     public static PAOSInitiator getInstance(WSContainer wsCtx, URI endpoint, String sessionID, byte[] pskKey) throws IOException {
         if (paosInitiatorFactory == null) {
             paosInitiatorFactory = new PAOSInitiatorFactory();

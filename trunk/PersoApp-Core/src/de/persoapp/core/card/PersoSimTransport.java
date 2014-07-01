@@ -88,6 +88,14 @@ public class PersoSimTransport implements TransportProvider {
 	 */
 	private Socket			socket;
 
+	/**
+	 * Creates and initializes a new instance of {@link PersoSimTransport}.
+	 * 
+	 * @param host
+	 *            - The used host.
+	 * @param port
+	 *            - The used port.
+	 */
 	private PersoSimTransport(final String host, final int port) {
 		this.host = host;
 		this.port = port;

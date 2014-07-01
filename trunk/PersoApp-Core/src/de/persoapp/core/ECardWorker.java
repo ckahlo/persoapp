@@ -293,7 +293,7 @@ public final class ECardWorker {
 	 * @throws IllegalArgumentException
 	 *             If the given URL is no <tt>https</tt> URL.
 	 * @throws FileNotFoundException
-	 *             If the parameter config file cant be found.
+	 *             If the parameter config file can't be found.
 	 */
 	public static final String start(final URL tcTokenURL) throws Exception {
 		final List<Certificate> sourceCerts = new ArrayList<Certificate>();

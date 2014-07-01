@@ -98,7 +98,9 @@ public class ECardSession {
 	 * Creates and initializes a <tt>ECardSession</tt>.
 	 * 
 	 * @param mainView
+	 *            - The used <em>mainView</em>.
 	 * @param ch
+	 *            - The handler to the currently inserted card.
 	 */
 	public ECardSession(final IMainView mainView, final ICardHandler ch) {
 		if (mainView == null || ch == null) {

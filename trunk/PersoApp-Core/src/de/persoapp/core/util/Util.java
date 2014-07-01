@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -81,8 +81,12 @@ import de.persoapp.core.tls.BCTlsSocketFactoryImpl;
  * The util class provides functions for setting up 
  * SSL-Sockets, opening urls, validating 
  * URLIdentitys, getEcApiParams and parsing Objects.
+ * <p>
+ * <code>public class Util</code>
+ * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class Util {
 
@@ -104,17 +108,15 @@ public class Util {
 	}
 	
 	/**
-	 * Reads a given {@link InputStream} line by line and returns it 
-	 * contents as a {@link String} object. Returns <b>null</b>, 
-	 * if noting is read from the {@link InputStream}.
+	 * Reads a given {@link InputStream} line by line and returns it contents as
+	 * a {@link String} object. Returns <b>null</b>, if noting is read from the
+	 * {@link InputStream}.
 	 * 
-	 * @param is - The <u>final</u> input-stream to be read.
+	 * @param is
+	 *            - The <u>final</u> input-stream to be read.
 	 * @return The contents of the stream, or null.
-	 * @throws IOException If the application is trying to read a empty stream.
-	 * 
-	 * @see {@link InputStream}
-	 * @see {@link BufferedReader}
-	 * @see {@link StringBuffer}
+	 * @throws IOException
+	 *             If the application is trying to read a empty stream.
 	 */
 	public static String readStream(final InputStream is) throws IOException {
 		final StringBuffer sb = new StringBuffer();
@@ -130,16 +132,14 @@ public class Util {
 
 
 	/**
-	 * Retrieves the EcApiParams with a {@link EcApi_TCTokenHandler} 
-	 * from a httpObject in a basic map object or otherwise null, 
-	 * if no EcApiParams can be retrieved.
+	 * Retrieves the EcApiParams with a {@link EcApi_TCTokenHandler} from a
+	 * httpObject in a basic map object or otherwise null, if no EcApiParams can
+	 * be retrieved.
 	 * 
-	 * @param httpObject - The object which EcApiParams are about to be retrieved.
-	 * @return A map<<u>Key</u>,<u>Value</u>> Object which has
-	 * 		   the EcApiParams stored, or <strong>null</strong>.
-	 * 
-	 * @see {@link EcApi_TCTokenHandler}
-	 * @see {@link Map}
+	 * @param httpObject
+	 *            - The object which EcApiParams are about to be retrieved.
+	 * @return A map<<u>Key</u>,<u>Value</u>> Object which has the EcApiParams
+	 *         stored, or <strong>null</strong>.
 	 */
 	public static Map<String, String> getEcApiParams(String httpObject) {
 		if (httpObject.contains("<TCTokenType>")) {
@@ -159,11 +159,13 @@ public class Util {
 
 	/**
 	 * Parses the given httpObject with the ContentHandler through a XMLReader.
-	 * Every time a searched element in the httpObject is reached, a individually 
-	 * event is triggered.
+	 * Every time a searched element in the httpObject is reached, a
+	 * individually event is triggered.
 	 * 
-	 * @param httpObject - The HttpObject which has to be parsed.
-	 * @param ch - The content handler of the httpObject.
+	 * @param httpObject
+	 *            - The HttpObject which has to be parsed.
+	 * @param ch
+	 *            - The content handler of the httpObject.
 	 */
 	private static void parseObject(final String httpObject, final ContentHandler ch) {
 		try {
@@ -190,23 +192,17 @@ public class Util {
 	}
 
 	/**
-	 * Establishes a connection through the ProxySelector and returns
-	 * the connection or the value <strong>null</strong> if an error 
-	 * occurs.
+	 * Establishes a connection through the ProxySelector and returns the
+	 * connection or the value <strong>null</strong> if an error occurs.
 	 * 
 	 * This function works with <u>http</u> {@link HttpURLConnection} and
-	 *  <u>https</u> {@link HttpsURLConnection}.
-	 *
-	 * @param url - The given {@link URL}, to connect to.
+	 * <u>https</u> {@link HttpsURLConnection}.
+	 * 
+	 * @param url
+	 *            - The given {@link URL}, to connect to.
 	 * @return The established <i>http</i>connection as
-	 * 		   {@link HttpURLConnection} or
-	 * 		   {@link HttpsURLConnection}, or <strong>null</strong>. 
-	 *
-	 * @see {@link URLConnection}
-	 * @see {@link HttpURLConnection}
-	 * @see {@link HttpsURLConnection}
-	 * @see {@link Proxy}
-	 * @see {@link ProxySelector}
+	 *         {@link HttpURLConnection} or {@link HttpsURLConnection}, or
+	 *         <strong>null</strong>.
 	 */
 	public static URLConnection openURL(final URL url) {
 		URLConnection uc = null;
@@ -244,9 +240,6 @@ public class Util {
 	 *            - The given {@link URI}.
 	 * @return Returns <b>true</b> if the identity of the certificate is
 	 *         correct, otherwise <b>false</b>.
-	 * 
-	 * @see {@link X509Certificate}
-	 * @see {@link URI}
 	 */
 	public static boolean validateIdentity(final X509Certificate cert, final URI uri) {
 		try {

@@ -148,7 +148,8 @@ public class EAC_Info implements IEAC_Info {
 	private Date				expirationDate;
 
 	/**
-	 * The chats for marking the personal data which is needed.
+	 * The
+	 * <em>Card Holder Authorization Templates<em> for marking the personal data which is needed.
 	 */
 	private final long			reqCHAT, optCHAT;
 	
@@ -329,10 +330,13 @@ public class EAC_Info implements IEAC_Info {
 	/**
 	 * Initializes the certificate description, of the given certificate.
 	 * 
-	 * @param cvcert - The given certificate.
-	 * @param certDescription - The certificate description.
+	 * @param cvcert
+	 *            - The given certificate.
+	 * @param certDescription
+	 *            - The certificate description.
 	 * 
-	 * @throws IOException If an error occurs during the initialization.
+	 * @throws IOException
+	 *             If an error occurs during the initialization.
 	 */
 	private final void initDescription(byte[] cvcert, final byte[] certDescription) throws IOException {
 		cvcert = TLV.get(cvcert, (short) 0x7F21);

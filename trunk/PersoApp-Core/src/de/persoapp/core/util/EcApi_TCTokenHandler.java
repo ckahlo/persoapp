@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -59,8 +59,12 @@ import org.xml.sax.SAXException;
  * Utilities to handle tokens with the <tt>Electronic Card</tt>-Api. The
  * <tt>EcApi_TCTokenHandler</tt> provides functions to work with documents and
  * namespaces.
+ * <p>
+ * <code>public class EcApi_TCTokenHandler implements ContentHandler</code>
+ * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class EcApi_TCTokenHandler implements ContentHandler {
 

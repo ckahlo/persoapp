@@ -49,7 +49,6 @@ package de.persoapp.core.client;
 
 import java.util.Date;
 
-// TODO: Auto-generated Javadoc
 /**
  * <p>
  * A implementation of the interface <tt>IEAC_Info</tt> provides all

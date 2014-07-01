@@ -57,7 +57,6 @@ import java.util.Random;
 
 import de.persoapp.core.util.ArrayTool;
 
-// TODO: Auto-generated Javadoc
 /**
  * A small, self-contained PACE(
  * <tt>Password Authenticated Connection Establishment</tt>) implementation

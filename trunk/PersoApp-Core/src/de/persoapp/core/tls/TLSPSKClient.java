@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -66,6 +66,7 @@ import org.bouncycastle.crypto.tls.TlsPSKIdentity;
  * </p>
  * 
  * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class TLSPSKClient extends PSKTlsClient {
 
@@ -112,10 +113,20 @@ public class TLSPSKClient extends PSKTlsClient {
 	 */
 	public TLSPSKClient(final String hostname, final byte[] pskId, final byte[] pskSecret) {
 		super(new TlsPSKIdentity() {
+			
+			/**
+			 * Skips the identity hint.
+			 */
 			@Override
 			public void skipIdentityHint() {
 			}
 
+			/**
+			 * Displays a <em>psk_identity_hint</em> at the console.
+			 * 
+			 * @param psk_identity_hint
+			 *            - The psk hint of identity.
+			 */
 			@Override
 			public void notifyIdentityHint(final byte[] psk_identity_hint) {
 				System.out.println("PSK id hint: " + new String(psk_identity_hint));

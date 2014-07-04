@@ -93,7 +93,7 @@ import de.persoapp.core.util.Hex;
 public class JSCIOTransport implements TransportProvider, CCID {
 
 	/**
-	 * The command code for the <em>smart card vendor exchange</em>.
+	 * The command code for the <em>smart card vendor exchange</em> process.
 	 */
 	private static final int	IOCTL_SMARTCARD_VENDOR_IFD_EXCHANGE	= SCARD_CTL_CODE(2048);
 	
@@ -103,7 +103,7 @@ public class JSCIOTransport implements TransportProvider, CCID {
 	private static final int	CM_IOCTL_GET_FEATURE_REQUEST		= SCARD_CTL_CODE(3400);
 
 	/**
-	 * The escape command code for an <em>CCID</em>
+	 * The escape command code for an <em>CCID</em>.
 	 */
 	private static final int	IOCTL_CCID_ESCAPE					= SCARD_CTL_CODE(3500);
 
@@ -124,10 +124,12 @@ public class JSCIOTransport implements TransportProvider, CCID {
 
 
 	/**
-	 * Informations follow in MR3.
+	 * Computes the smart card control code according to the underlying
+	 * operating system.
 	 * 
 	 * @param code
-	 * @return
+	 *            - The code of the command which needs to be computed.
+	 * @return Returns the computed control code.
 	 */
 	private static final int SCARD_CTL_CODE(final int code) {
 		final String os_name = System.getProperty("os.name").toLowerCase();
@@ -139,7 +141,7 @@ public class JSCIOTransport implements TransportProvider, CCID {
 	}
 
 	/**
-	 * The used card channel.
+	 * The used card channel to the icc.
 	 */
 	private final CardChannel			cc;
 	
@@ -216,7 +218,7 @@ public class JSCIOTransport implements TransportProvider, CCID {
 	 * are installed.
 	 * </p>
 	 * <p>
-	 * Additionally, it installs for every installed <em>card terminal</em> an
+	 * Additionally, it installs for every found <em>card terminal</em> an
 	 * {@link FutureTask} to call the inserted card. If the protocol of the
 	 * inserted card did not equals <tt>T=1</tt>, the <em>card terminal</em>
 	 * terminates the connection to the inserted card and re-establishes the

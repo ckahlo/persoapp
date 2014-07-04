@@ -57,10 +57,11 @@ import de.persoapp.core.client.IMainView;
 import de.persoapp.desktop.gui.frame.ProxyPassFrame;
 
 /**
+ * <p>
  * The <tt>ProxyAuthenticator</tt>-class provides a function for the
  * <code>Password Authentication</code> and is used to authenticate a user name
  * and a password against a web service.
- * 
+ * </p>
  * <p>
  * <code>public final class ProxyAuthenticator extends Authenticator</code>
  * </p>

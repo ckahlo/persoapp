@@ -60,8 +60,10 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 /**
- * The <tt>PropertyResolver</tt> offers static methods for the access of
- * property files and properties.
+ * <p>
+ * The <tt>PropertyResolver</tt> offers static methods to access property files
+ * and properties.
+ * </p>
  * <p>
  * <code>public class PropertyResolver</code>
  * </p>

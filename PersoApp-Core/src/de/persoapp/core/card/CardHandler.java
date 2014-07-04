@@ -76,14 +76,23 @@ import de.persoapp.core.util.Hex;
 import de.persoapp.core.util.TLV;
 
 /**
- * The Class CardHandler. Informations will follow in the MR3.
- *
+ * <p>
+ * The <tt>CardHandler</tt> implements an abstract interface of the inserted
+ * <em>ECard</em> and is responsible to provide all functions related to the
+ * inserted <em>ECard</em>. 
+ * </p>
+ * <p>
+ * <code>public class CardHandler implements ICardHandler</code>
+ * </p>
+ * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
  */
 public class CardHandler implements ICardHandler {
 	
-	/** The Constant PACE_AES128CBC. */
+	/**
+	 * The crypto mechanism which is used by the <em>PACE</em>-protocol.
+	 */
 	private static final String				PACE_AES128CBC	= "04007F00070202040202";
 
 	/**
@@ -91,13 +100,17 @@ public class CardHandler implements ICardHandler {
 	 */
 	private final PropertyResolver.Bundle	textBundle		= PropertyResolver.getBundle("text_core");
 
-	/** The last cert subject. */
+	/** 
+	 * The last cert subject. 
+	 */
 	private byte[]							lastCertSubject;
 
 	/** The TA key. */
 	private byte[]							TAKey;
 
-	/** The CA references. */
+	/**
+	 * The reference of the certificate authority.
+	 */
 	private List<byte[]>					CAReferences;
 	
 	/**
@@ -114,18 +127,24 @@ public class CardHandler implements ICardHandler {
 	/** The tp. */
 	private TransportProvider				tp;
 
-	/** Indicates if the card handler is initialized.*/
+	/** 
+	 * Indicates if the card handler is initialized.
+	 */
 	private boolean							initialized		= false;
 	
-	/** The currently running instance of the <tt>PersoApp-Application</tt>.*/
+	/** 
+	 * The currently running instance of the <tt>PersoApp-Application</tt>.
+	 */
 	private final IMainView					mainView;
 
-	/** this is the default curve if the field is not present in EFCardAccess, or EFCardAccess doesn't exist at all -> brainpoolP256r1. */
+	/** 
+	 * This is the default curve if the field is not present in EFCardAccess, or EFCardAccess doesn't exist at all -> brainpoolP256r1. 
+	 */
 	private int								PACEv2_curveID	= 13;
 
 	/**
 	 * Creates and initializes the {@link CardHandler} with the actual
-	 * {@link IMainView}
+	 * {@link IMainView}.
 	 * 
 	 * @param mainView
 	 *            - The actual <tt>mainview</tt>.
@@ -456,10 +475,10 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Gets the HAL transport, which signals events and data in a PC/SC
-	 * connection.
+	 * Gets the <em>Hardware Abstraction Layer TransportProvider</em>, which
+	 * signals events and data in a PC/SC connection.
 	 * 
-	 * @return the HAL transport
+	 * @return Returns the <em>HAL TransportProvider</em>.
 	 */
 	protected TransportProvider getHALTransport() {
 		TransportProvider tpNew = null;
@@ -1148,7 +1167,7 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Further informations will follow in MR3.
+	 * Selects the application to sign data electronic.
 	 * 
 	 * @param tp0
 	 *            - The used transport provider.
@@ -1248,9 +1267,11 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Further informations will follow in MR3.
-	 *
-	 * @param tp0 - The used transport provider.
+	 * Starts the function to sign data electronic. Validates the
+	 * <em>eSignPin</em> before the data is signed.
+	 * 
+	 * @param tp0
+	 *            - The used transport provider.
 	 * @return Returns the received status word.
 	 */
 	public int open_eSign(final TransportProvider tp0) {
@@ -1258,7 +1279,9 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Further informations will follow in MR3.
+	 * Starts the function to sign data electronic. The PIN is validated if the
+	 * second flag is set to <strong>true</strong>, otherwise no validation is
+	 * done.
 	 * 
 	 * @param tp0
 	 *            - The used transport provider.
@@ -1276,7 +1299,7 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Validates the eSign <em>PIN</em>.
+	 * Validates the <em>eSignPin</em>.
 	 * 
 	 * @param tp0
 	 *            - The used transport provider.
@@ -1296,10 +1319,10 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Further informations will follow in MR3.
+	 * Signs the given data.
 	 * 
 	 * @param dataTBS
-	 *            - The used data.
+	 *            - The used data, to be signed.
 	 * @return Returns the <em>APDU</em>-Response.
 	 */
 	public byte[] doESign(final byte[] dataTBS) {

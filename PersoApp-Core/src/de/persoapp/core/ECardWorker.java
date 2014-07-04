@@ -94,6 +94,10 @@ import de.persoapp.core.ws.engine.WSContainer;
  * <em>Success</em> events and notifies the gui and the browser, if an event
  * occurs.
  * </p>
+ * <p>
+ * The <em>PAOS</em>-stack consists of the integrated http-client, the
+ * <em>SOAP</em>-client and the the <em>PAOS</em>-initiator and -dispatcher.
+ * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.

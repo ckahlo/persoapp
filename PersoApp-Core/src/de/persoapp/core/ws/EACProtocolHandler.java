@@ -106,7 +106,7 @@ public class EACProtocolHandler {
 	private final ECardSession				session;
 
 	/**
-	 * Creates and initializes a new {@link EACProtocolHandler}.
+	 * Creates and initializes a new {@link EACProtocolHandler} for the given {@link ECardSession}.
 	 * 
 	 * @param session - The current active {@link ECardSession}.
 	 */

@@ -128,10 +128,13 @@ public class ServiceProviderPanel extends JPanel {
 	}
 
 	/**
-	 * Adds the given <tt>text</tt> in the given <tt>style</tt> to the {@link ServiceProviderPanel}.
+	 * Adds the given <tt>text</tt> in the given <tt>style</tt> to the
+	 * {@link ServiceProviderPanel}.
 	 * 
-	 * @param text - The given text.
-	 * @param style - The given style.
+	 * @param text
+	 *            - The given text.
+	 * @param style
+	 *            - The given style.
 	 */
 	private void addText(final String text, final String style) {
 		final Document doc = textPane.getDocument();

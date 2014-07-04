@@ -180,6 +180,9 @@ public interface CCID {
 	 * @param ctrlCommand
 	 *            - The control command to transmit.
 	 * @return Returns the received response.
+	 * 
+	 * @throw CardException Thrown if the requested feature is not provided by
+	 *        the card.
 	 */
 	public byte[] transmitControlCommand(final byte feature, final byte[] ctrlCommand);
 }

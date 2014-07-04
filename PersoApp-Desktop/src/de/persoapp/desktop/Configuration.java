@@ -57,9 +57,11 @@ import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.desktop.gui.laf.DefaultLAF;
 
 /**
- * The <tt>Configuration</tt>-class contains the <code>PropertyResolver</code>
- * and the used properties. The <tt>Icons</tt> and the common constants are also
- * inserted here.
+ * The <tt>Configuration</tt> provides the common flags for the application like
+ * icons and layout.
+ * <p>
+ * <code>public class Configuration</code>
+ * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.

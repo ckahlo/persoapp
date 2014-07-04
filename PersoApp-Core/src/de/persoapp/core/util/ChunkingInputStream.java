@@ -177,7 +177,7 @@ public class ChunkingInputStream extends FilterInputStream {
 	 *             System.in happens.
 	 * @throws IllegalArgumentException
 	 *             Thrown if the offset and the length of the data is greater
-	 *             than the whole chunk of data.
+	 *             than the given bytestream to store the read data.
 	 */
 	private int readChunk(final byte[] out, int offset, final int size) throws IOException {
 		if (out.length < offset + size) {

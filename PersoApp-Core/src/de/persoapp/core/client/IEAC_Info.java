@@ -52,7 +52,7 @@ import java.util.Date;
 /**
  * <p>
  * A implementation of the interface <tt>IEAC_Info</tt> provides all
- * informations for the user about the <em>eID-process</em>.
+ * informations for the user about the <em>eID-process</em>. The user
  * <p>
  * <code>public interface IEAC_Info</code>
  * <p>
@@ -102,23 +102,23 @@ public interface IEAC_Info {
 	public static final String	OID_BSI_DE_MRTD_EXT_SECT		= "0.4.0.127.0.7.3.1.3.2";
 
 	/**
-	 * Returns the EffectiveDate.
+	 * Returns the date on which the certificate was issued.
 	 * 
-	 * @return Returns the EffectiveDate.
+	 * @return Returns the date on which the certificate was issued.
 	 */
 	public Date getEffectiveDate();
 
 	/**
-	 * Returns the ExpirationDate.
+	 * Returns the date on which the certificate expires.
 	 * 
-	 * @return Returns the ExpirationDate.
+	 * @return Returns the date on which the certificate expires.
 	 */
 	public Date getExpirationDate();
 
 	/**
-	 * Returns the TransactionInfo.
+	 * Returns the informations about the current transaction.
 	 * 
-	 * @return Returns the TransactionInfo.
+	 * @return Returns the informations about the current transaction.
 	 */
 	public String getTransactionInfo();
 

@@ -72,11 +72,15 @@ import de.persoapp.desktop.gui.frame.MainFrame;
 import de.persoapp.desktop.gui.frame.NewChangePinFrame;
 
 /**
- * The starting point of the <tt>PersoApp-Application</tt>. The
- * <tt>MainView</tt> is a singleton to prevent the application from launched
+ * <p>
+ * The <tt>MainView</tt> is a singleton to prevent the application from launched
  * multiple times at once. Also, <tt>MainView</tt> provides the application
  * logic to process events, show dialogs, process user interaction and shutdown
- * the eID-Client.
+ * the eID-Client (<em>PersoApp</em>).
+ * </p>
+ * <p>
+ * <code>public class MainView implements IMainView</code>
+ * </p>
  * 
  * @author Ralf Wondratschek
  * @author Rico Klimsa - added javadoc comments.

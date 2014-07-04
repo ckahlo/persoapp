@@ -622,7 +622,7 @@ public class PAOSInitiator {
     }
 
 	/**
-	 * Starts the {@link PAOSInitiator}.
+	 * The initial request by the client to start the <tt>PAOS</tt>-session. 
 	 * 
 	 * @param contextHandle
 	 *            - The used contextHandle.

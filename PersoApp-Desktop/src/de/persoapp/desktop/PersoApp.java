@@ -72,7 +72,16 @@ import de.persoapp.core.ws.engine.WSContainer;
  * <p>
  * The <tt>PersoApp</tt> class is the starting point of the
  * <em>PersoApp-Application</em>. Every application layer is initialized and
- * started in a individual thread.
+ * started in a individual thread. The following list shows the most important
+ * steps.
+ * </p>
+ * <p>
+ * <ul>
+ * <li>Initialization and start of the {@link HttpServer} and of the {@link ECApiHttpHandler}, to process the <em>alternative</em> request.</li>
+ * <li>Initialization of the {@link CardHandler} to gain an interface to the inserted card.</li>
+ * <li>Initialization of the {@link WSContainer} as well as the individual <em>ISO-24727</em> services (<em>SAL-service</em>, <em>IFD-service</em>).</li>
+ * <li>Creation of the {@link MainView}</li>.
+ * </ul>
  * </p>
  * 
  * @author Christian Kahlo

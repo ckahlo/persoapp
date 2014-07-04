@@ -59,8 +59,12 @@ import org.bouncycastle.crypto.tls.TlsAuthentication;
 import org.bouncycastle.crypto.tls.TlsPSKIdentity;
 
 /**
+ * <p>
  * The <tt>TLSPSKClient</tt> uses a <tt>pre-shared key</tt> to get further
- * security by exchanging keys.
+ * security by exchanging keys and is used by the <tt>MiniHttpClient</tt> to
+ * exchange data in a secure way between the <em>PersoApp</em> and the
+ * <em>eIDServer</em>.
+ * </p>
  * <p>
  * <code>public class TLSPSKClient extends PSKTlsClient</code>
  * </p>
@@ -102,7 +106,7 @@ public class TLSPSKClient extends PSKTlsClient {
 	}
 
 	/**
-	 * Creates and initializes a instance of the {@link TLSPSKClient}-class.
+	 * Creates and initializes an instance of the {@link TLSPSKClient}-class.
 	 * 
 	 * @param hostname
 	 *            - The name of the host.

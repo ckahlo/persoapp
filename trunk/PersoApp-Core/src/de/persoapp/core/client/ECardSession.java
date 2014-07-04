@@ -53,8 +53,15 @@ import java.util.Map;
 import de.persoapp.core.card.ICardHandler;
 
 /**
- * The <tt>ECardSession</tt> handles all functions to maintain a session with a
- * inserted <tt>ECard</tt>.
+ * <p>
+ * The <tt>ECardSession</tt> provides all functions to maintain a session with
+ * an inserted <tt>ECard</tt>. The session is started after the
+ * <em>alternative</em> request is processed correctly against a
+ * <em>eIDServer</em> and the <em>ECardSession-instance</em> is created. The
+ * <em>ECardSession-instance</em> is deleted and the <tt>ECardSession</tt> is
+ * stopped after the event to close <em>PersoApp</em> is received by the
+ * <tt>MainView.EventListener</tt>.
+ * </p>
  * <p>
  * <code>public class ECardSession</code>
  * </p>

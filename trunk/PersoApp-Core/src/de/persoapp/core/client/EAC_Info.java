@@ -61,8 +61,17 @@ import de.persoapp.core.util.Hex;
 import de.persoapp.core.util.TLV;
 
 /**
+ * <p>
  * The <tt>EAC_Info</tt> contains all informations about the initialized
- * certificate and the data for the <em>eID</em>-process of the user.
+ * certificate and the data for the <em>eID</em>-process of the user. The GUI is
+ * able to present all informations which are delivered in the EAC_Info to
+ * inform the user about the actual state of the current performed operation.
+ * </p>
+ * <p>
+ * An <tt>EAC_Info</tt> is only transfered to the eID-Client if the attempt to
+ * establish a connection to the eID-Server of the service provider is
+ * successful.
+ * </p>
  * <p>
  * <code>public class EAC_Info implements IEAC_Info<code>
  * </p>
@@ -138,18 +147,19 @@ public class EAC_Info implements IEAC_Info {
 	private byte[][]			certificateHashes;
 	
 	/**
-	 * The current date.
+	 * The date of the creation of the certificate.
 	 */
 	private Date				effectiveDate;
 	
 	/**
-	 * The date of expiration.
+	 * The date of expiration of the certificate.
 	 */
 	private Date				expirationDate;
 
 	/**
-	 * The
-	 * <em>Card Holder Authorization Templates<em> for marking the personal data which is needed.
+	 * The <em>Card Holder Authorization Templates<em> for marking the personal
+	 * data which is needed. The visibility of the individual chats depends on
+	 * the information usage of the current request.
 	 */
 	private final long			reqCHAT, optCHAT;
 	

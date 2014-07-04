@@ -85,10 +85,15 @@ public interface ICardHandler {
 	public static final String	AID_eSign	= "A000000167455349474E";
 
 	/**
+	 * <p>
 	 * Returns the {@link TransportProvider} of the current inserted
 	 * <tt>ECard</tt>. Additionally informations of the card terminal
 	 * are displayed in the console during the function.
-	 * 
+	 * </p>
+	 * <p>
+	 * The 
+	 * </p>
+	 *
 	 * @return Returns the {@link TransportProvider} of the current inserted
 	 *         <tt>ECard</tt>.
 	 */

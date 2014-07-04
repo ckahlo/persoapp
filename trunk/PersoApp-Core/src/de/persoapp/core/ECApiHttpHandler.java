@@ -62,7 +62,14 @@ import com.sun.net.httpserver.HttpHandler;
 import de.persoapp.core.client.PropertyResolver;
 
 /**
- * Further Informations will follow in MR3.
+ * <p>
+ * The <tt>ECApiHttpHandler</tt> handles the communication between the
+ * <em>PersoApp</em> and the <em>eIDServer</em>, by providing a function
+ * to handle the communication between a server and a client and to .
+ * </p>
+ * <p>
+ * <code>public final class ECApiHttpHandler implements HttpHandler</code>
+ * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.

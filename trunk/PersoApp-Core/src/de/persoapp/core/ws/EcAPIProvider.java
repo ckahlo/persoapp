@@ -48,7 +48,8 @@
 package de.persoapp.core.ws;
 
 /**
- * The <tt>EcAPIProvider</tt> contains namespaces for the <tt>ECard</tt>.
+ * The <tt>EcAPIProvider</tt> provides the different results for requests
+ * related to the <tt>ECard</tt>.
  * <p>
  * <code>public interface EcAPIProvider</code>
  * </p>

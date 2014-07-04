@@ -68,7 +68,13 @@ import de.persoapp.desktop.Configuration;
 import de.persoapp.desktop.gui.panel.ButtonPanel;
 
 /**
- * Informations follow in MR3.
+ * <p>
+ * The <tt>ProxyPassFrame</tt> is showed to retrieve the credentials of the user
+ * for authentication.
+ * </p>
+ * <p>
+ * <code>public class ProxyPassFrame extends JFrame</code>
+ * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.

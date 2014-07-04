@@ -59,7 +59,7 @@ import org.bouncycastle.crypto.tls.TlsAuthentication;
 
 /**
  * The <tt>TLSClient</tt> is the contains all functions to allow
- * <tt>KeyExchanges</tt>.
+ * <tt>KeyExchanges</tt> according to the supported TLS version.
  * <p>
  * <code>public class TLSClient extends DefaultTlsClient</code>
  * </p>

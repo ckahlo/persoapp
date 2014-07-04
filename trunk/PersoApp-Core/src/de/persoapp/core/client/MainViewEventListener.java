@@ -52,8 +52,8 @@ import de.persoapp.core.card.TransportProvider;
 import de.persoapp.core.client.IMainView.ChangePINDialogResult;
 
 /**
- * The <tt>MainViewEventListener</tt> handles all events related to the instance
- * of <tt>PersoApp</tt>.
+ * The <tt>MainViewEventListener</tt> handles all events related to the running
+ * instance of <tt>PersoApp</tt>.
  * <p>
  * <code>public final class MainViewEventListener implements IMainView.EventListener</code>
  * </p>

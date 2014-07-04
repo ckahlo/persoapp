@@ -93,26 +93,22 @@ public interface IMainView {
 	 */
 	public static final int	QUESTION		= 5;
 
-	/* request and submit PIN and CHAT */
 	/**
 	 * Request and submit PIN and CHAT.
 	 */
 	public static final int	MODE_PIN_CHAT	= 0;
 
-	/* request only CHAT, PIN is entered on reader keyboard */
 	/**
 	 * Request only CHAT, PIn is entered on reader keyboard.
 	 */
 	public static final int	MODE_CHATONLY	= 1;
 
 	/* i.e. for RID-only authentication = login */
-	/* request only PIN, CHAT is fixed */
 	/**
 	 * Request only PIN, CHAT is fixed. 
 	 */
 	public static final int	MODE_PINONLY	= 2;
 
-	/* request only "OK" or "CANCEL" */
 	/**
 	 * Request only "OK" or "CANCEL".
 	 */

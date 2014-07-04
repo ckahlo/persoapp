@@ -96,7 +96,7 @@ public class PAOSInitiatorFactory {
     }
 
 	/**
-	 * Creates and returns a empty instance of the {@link PAOSInitiator}-class.
+	 * Creates and returns a empty instance of the {@link PAOSInitiator}.
 	 * 
 	 * @return Creates and returns a empty instance of the {@link PAOSInitiator}
 	 *         -class.

@@ -28,17 +28,17 @@
  * 
  *          Diese Datei ist Teil von PersoApp.
  * 
- *          PersoApp ist Freie Software: Sie können es unter den Bedingungen
- *          der GNU Lesser General Public License, wie von der Free Software
+ *          PersoApp ist Freie Software: Sie können es unter den Bedingungen der
+ *          GNU Lesser General Public License, wie von der Free Software
  *          Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder
  *          späteren veröffentlichten Version, weiterverbreiten und/oder
  *          modifizieren.
  * 
- *          PersoApp wird in der Hoffnung, dass es nützlich sein wird, aber
- *          OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
- *          Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN
- *          BESTIMMTEN ZWECK. Siehe die GNU Lesser General Public License für
- *          weitere Details.
+ *          PersoApp wird in der Hoffnung, dass es nützlich sein wird, aber OHNE
+ *          JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
+ *          Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN
+ *          ZWECK. Siehe die GNU Lesser General Public License für weitere
+ *          Details.
  * 
  *          Sie sollten eine Kopie der GNU Lesser General Public License
  *          zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
@@ -77,68 +77,81 @@ import de.persoapp.core.util.TLV;
 
 /**
  * <p>
- * The <tt>CardHandler</tt> implements an abstract interface of the inserted
- * <em>ECard</em> and is responsible to provide all functions related to the
- * inserted <em>ECard</em>. 
- * </p>
- * <p>
- * <code>public class CardHandler implements ICardHandler</code>
+ * <tt>CardHandler</tt> provides a high-level interface for supported
+ * <em>ECard</em>s. It connects directly to lower level hardware interfaces such
+ * as PC/SC, NFC or proprietary terminals.
+ * 
  * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
  */
 public class CardHandler implements ICardHandler {
-	
+
 	/**
-	 * The crypto mechanism which is used by the <em>PACE</em>-protocol.
+	 * The default encryption algorithm to be used by while initiating the
+	 * <em>PACE</em>-protocol. TBD: make this dynamic by parsing
+	 * EF.CardSecurity.
+	 * 
 	 */
 	private static final String				PACE_AES128CBC	= "04007F00070202040202";
 
 	/**
-	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 * Local instance of core message bundle for localized output.
 	 */
 	private final PropertyResolver.Bundle	textBundle		= PropertyResolver.getBundle("text_core");
 
-	/** 
-	 * The last cert subject. 
+	/**
+	 * The certificate holder reference ("subject") of the last verified CVC.
+	 * 
 	 */
 	private byte[]							lastCertSubject;
 
-	/** The TA key. */
+	/**
+	 * ephemeral key for terminal authencation
+	 * */
 	private byte[]							TAKey;
 
 	/**
-	 * The reference of the certificate authority.
+	 * Certificate Authority References of the PKIs known by the ECard. Usually
+	 * current root and predecessor.
 	 */
 	private List<byte[]>					CAReferences;
-	
+
 	/**
-	 * The EF.CardAccess file.
+	 * raw contents of EF.CardAccess
 	 */
 	private byte[]							EFCardAccess;
-	
-	/** The idpicc. */
+
+	/**
+	 * IDPICC-value calculated while processing PACE
+	 * */
 	private byte[]							IDPICC;
 
-	/** The tp0. */
+	/**
+	 * (shadow) plain transport provider (direct IFD access)
+	 * */
 	private TransportProvider				tp0;
-	
-	/** The tp. */
+
+	/**
+	 * current transport provider in use (logical access, i.e. with
+	 * ISOSMTransport)
+	 * */
 	private TransportProvider				tp;
 
-	/** 
+	/**
 	 * Indicates if the card handler is initialized.
 	 */
 	private boolean							initialized		= false;
-	
-	/** 
-	 * The currently running instance of the <tt>PersoApp-Application</tt>.
+
+	/**
+	 * Instance of main GUI for user interaction.
 	 */
 	private final IMainView					mainView;
 
-	/** 
-	 * This is the default curve if the field is not present in EFCardAccess, or EFCardAccess doesn't exist at all -> brainpoolP256r1. 
+	/**
+	 * This is the default curve if the field is not present in EFCardAccess, or
+	 * EFCardAccess doesn't exist at all -> brainpoolP256r1.
 	 */
 	private int								PACEv2_curveID	= 13;
 
@@ -156,7 +169,8 @@ public class CardHandler implements ICardHandler {
 	/**
 	 * Logs the given <tt>message</tt> to the console.
 	 * 
-	 * @param msg - The given <tt>message</tt>.
+	 * @param msg
+	 *            - The given <tt>message</tt>.
 	 */
 	public void log(final String msg) {
 		System.out.println(msg);
@@ -211,9 +225,8 @@ public class CardHandler implements ICardHandler {
 	 * </tr>
 	 * <tr>
 	 * <td>Case 4</td>
-	 * <td>The 'case 4'-<em>APDU</em>-command contains command data and
-	 * expect a response. The Structure of a 'case 4'-<em>APDU</em>-command
-	 * looks like:
+	 * <td>The 'case 4'-<em>APDU</em>-command contains command data and expect a
+	 * response. The Structure of a 'case 4'-<em>APDU</em>-command looks like:
 	 * <table border="1">
 	 * <tr>
 	 * <td>Header</td>
@@ -223,7 +236,7 @@ public class CardHandler implements ICardHandler {
 	 * </tr>
 	 * </table>
 	 * </tr>
-
+	 * 
 	 * </table>
 	 * 
 	 * @param cla
@@ -263,7 +276,6 @@ public class CardHandler implements ICardHandler {
 		}
 	}
 
-	
 	/**
 	 * Set Authentication Template for mutual authentication.
 	 * 
@@ -390,7 +402,9 @@ public class CardHandler implements ICardHandler {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#getECard()
 	 */
 	@Override
@@ -421,6 +435,10 @@ public class CardHandler implements ICardHandler {
 
 		if (tpNew != null) {
 			this.tp0 = tpNew;
+
+			// select ROOT / MF in case the card accepted selection of the application instead of replying
+			// with SW6982
+			tpNew.transmit(new byte[] { (byte) 0x00, (byte) 0xA4, (byte) 0x00, (byte) 0x00, (byte) 0x00 });
 
 			final String manufacturer = new String(tpNew.transmit(new byte[] { (byte) 0xFF, (byte) 0x9A, 0x01, 0x01,
 					0x00 }));
@@ -580,7 +598,9 @@ public class CardHandler implements ICardHandler {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#hasPACE(java.lang.Object)
 	 */
 	@Override
@@ -921,8 +941,11 @@ public class CardHandler implements ICardHandler {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see de.persoapp.core.card.ICardHandler#startAuthentication(byte[], de.persoapp.core.client.SecureHolder, byte[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.persoapp.core.card.ICardHandler#startAuthentication(byte[],
+	 * de.persoapp.core.client.SecureHolder, byte[])
 	 */
 	@Override
 	public synchronized boolean startAuthentication(final byte CHAT[], final SecureHolder secret, final byte[] termDesc) {
@@ -956,8 +979,12 @@ public class CardHandler implements ICardHandler {
 		return initialized;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.persoapp.core.card.ICardHandler#doPINUnblock(de.persoapp.core.card.TransportProvider, byte, de.persoapp.core.client.SecureHolder, byte)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.persoapp.core.card.ICardHandler#doPINUnblock(de.persoapp.core.card
+	 * .TransportProvider, byte, de.persoapp.core.client.SecureHolder, byte)
 	 */
 	@Override
 	public int doPINUnblock(final TransportProvider tp0, final byte verifySecret, final SecureHolder verifySecretInput,
@@ -973,8 +1000,13 @@ public class CardHandler implements ICardHandler {
 		return tp.lastSW();
 	}
 
-	/* (non-Javadoc)
-	 * @see de.persoapp.core.card.ICardHandler#doPINChange(de.persoapp.core.card.TransportProvider, byte, de.persoapp.core.client.SecureHolder, byte, de.persoapp.core.client.SecureHolder)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.persoapp.core.card.ICardHandler#doPINChange(de.persoapp.core.card.
+	 * TransportProvider, byte, de.persoapp.core.client.SecureHolder, byte,
+	 * de.persoapp.core.client.SecureHolder)
 	 */
 	@Override
 	public int doPINChange(final TransportProvider tp0, final byte verifySecret, final SecureHolder verifySecretInput,
@@ -1005,7 +1037,9 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#getCAReferences()
 	 */
 	@Override
@@ -1013,7 +1047,9 @@ public class CardHandler implements ICardHandler {
 		return CAReferences;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#getEFCardAccess()
 	 */
 	@Override
@@ -1021,7 +1057,9 @@ public class CardHandler implements ICardHandler {
 		return EFCardAccess;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#getIDPICC()
 	 */
 	@Override
@@ -1029,7 +1067,9 @@ public class CardHandler implements ICardHandler {
 		return IDPICC;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#verifyCertificate(byte[])
 	 */
 	@Override
@@ -1049,7 +1089,9 @@ public class CardHandler implements ICardHandler {
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#initTA(byte[], byte[])
 	 */
 	@Override
@@ -1064,7 +1106,9 @@ public class CardHandler implements ICardHandler {
 		tp.transmit(buildCmd((byte) 0x00, (byte) 0x22, (byte) 0x81, (byte) 0xA4, data, -1));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#getTAChallenge()
 	 */
 	@Override
@@ -1072,7 +1116,9 @@ public class CardHandler implements ICardHandler {
 		return tp.transmit(new byte[] { 0x00, (byte) 0x84, 0x00, 0x00, 0x08 });
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#verifyTASignature(byte[])
 	 */
 	@Override
@@ -1084,7 +1130,9 @@ public class CardHandler implements ICardHandler {
 		return false;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#getEFCardSecurity()
 	 */
 	@Override
@@ -1094,8 +1142,9 @@ public class CardHandler implements ICardHandler {
 
 	/**
 	 * Read file.
-	 *
-	 * @param FID the fid
+	 * 
+	 * @param FID
+	 *            the fid
 	 * @return the byte[]
 	 */
 	private byte[] readFile(final short FID) {
@@ -1134,7 +1183,9 @@ public class CardHandler implements ICardHandler {
 		return baos.toByteArray();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#execCA()
 	 */
 	@Override
@@ -1144,7 +1195,9 @@ public class CardHandler implements ICardHandler {
 		return generalAUTH(tp, TLV.build(0x80, Hex.fromString("04" + Hex.toString(TAKey))), true);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#reset()
 	 */
 	@Override
@@ -1157,7 +1210,9 @@ public class CardHandler implements ICardHandler {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.persoapp.core.card.ICardHandler#transmit(byte[])
 	 */
 	@Override
@@ -1189,12 +1244,16 @@ public class CardHandler implements ICardHandler {
 
 	/** The Constant ESIGN_PIN_ID. */
 	private static final byte	ESIGN_PIN_ID	= (byte) 0x81;
-	
+
 	/** The Constant ESIGN_PRK_QES. */
 	private static final byte	ESIGN_PRK_QES	= (byte) 0x84;
 
-	/* (non-Javadoc)
-	 * @see de.persoapp.core.card.ICardHandler#doESignInit(de.persoapp.core.card.TransportProvider)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.persoapp.core.card.ICardHandler#doESignInit(de.persoapp.core.card.
+	 * TransportProvider)
 	 */
 	@Override
 	public int doESignInit(final TransportProvider tp0) {
@@ -1219,8 +1278,12 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.persoapp.core.card.ICardHandler#doESignChange(de.persoapp.core.card.TransportProvider)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.persoapp.core.card.ICardHandler#doESignChange(de.persoapp.core.card
+	 * .TransportProvider)
 	 */
 	@Override
 	public int doESignChange(final TransportProvider tp0) {
@@ -1240,8 +1303,12 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.persoapp.core.card.ICardHandler#doESignUnblock(de.persoapp.core.card.TransportProvider)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.persoapp.core.card.ICardHandler#doESignUnblock(de.persoapp.core.card
+	 * .TransportProvider)
 	 */
 	@Override
 	public int doESignUnblock(final TransportProvider tp0) {
@@ -1252,8 +1319,12 @@ public class CardHandler implements ICardHandler {
 		return status;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.persoapp.core.card.ICardHandler#doESignTerminate(de.persoapp.core.card.TransportProvider)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.persoapp.core.card.ICardHandler#doESignTerminate(de.persoapp.core.
+	 * card.TransportProvider)
 	 */
 	@Override
 	public int doESignTerminate(final TransportProvider tp0) {

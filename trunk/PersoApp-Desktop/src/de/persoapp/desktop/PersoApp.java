@@ -65,22 +65,23 @@ import de.persoapp.core.client.IMainView;
 import de.persoapp.core.client.MainViewEventListener;
 import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.core.ws.IFDService;
+import de.persoapp.core.ws.ManagementService;
 import de.persoapp.core.ws.SALService;
 import de.persoapp.core.ws.engine.WSContainer;
 
 /**
  * <p>
- * The <tt>PersoApp</tt> class is the starting point of the
- * <em>PersoApp-Application</em>. Every application layer is initialized and
- * started in a individual thread. The following list shows the most important
- * steps.
+ * The <tt>PersoApp</tt> class is the main class and entry point of the whole
+ * <em>PersoApp</em> application.
  * </p>
  * <p>
  * <ul>
- * <li>Initialization and start of the {@link HttpServer} and of the {@link ECApiHttpHandler}, to process the <em>alternative</em> request.</li>
- * <li>Initialization of the {@link CardHandler} to gain an interface to the inserted card.</li>
- * <li>Initialization of the {@link WSContainer} as well as the individual <em>ISO-24727</em> services (<em>SAL-service</em>, <em>IFD-service</em>).</li>
- * <li>Creation of the {@link MainView}</li>.
+ * <li>Initialization and start of the local {@link HttpServer} and
+ * {@link ECApiHttpHandler} to handle invocations via tcTokenURL eID activation
+ * requests.</li>
+ * <li>Initialization of the {@link CardHandler}.</li>
+ * <li>Initialization of the {@link WSContainer} and PAOS web-services.</li>
+ * <li>Creation of the {@link MainView} GUI instance.</li>
  * </ul>
  * </p>
  * 
@@ -91,22 +92,22 @@ public final class PersoApp implements Runnable {
 
 	// avoid "localhost" name spoofing
 	/**
-	 * The host name for the <tt>eID-Client</tt>. 
+	 * use the IP address of the localhost interface to bind the http server to
 	 */
 	private static final String	EID_HTTP_HOST_NAME	= "127.0.0.1";
-	
+
 	/**
-	 * The used port of the <tt>eID-Client</tt>.
+	 * port (as defined in BSI TR-03112-7 and BSI TR-03124-1)
 	 */
 	private static final int	EID_HTTP_PORT		= 24727;
-	
+
 	/**
-	 * The used ctx name of the <tt>eID-Client</tt>. 
+	 * URL path for the {@link ECApiHttpHandler}
 	 */
 	private static final String	EID_HTTP_CTX_NAME	= "/eID-Client";
 
 	/**
-	 * The <tt>PersoApp-Application</tt> logger.
+	 * local logger instance
 	 */
 	private final static Logger	log					= Logger.getLogger(PersoApp.class.getName());
 
@@ -202,7 +203,7 @@ public final class PersoApp implements Runnable {
 				mainView.shutdown();
 				return;
 			}
-			
+
 			try {
 				final ICardHandler eCardHandler = new CardHandler(mainView);
 
@@ -210,6 +211,8 @@ public final class PersoApp implements Runnable {
 				mainView.setEventLister(new MainViewEventListener(eCardHandler, mainView));
 
 				final WSContainer wsCtnr = new WSContainer();
+				// ManagementService, only for InitializeFramework handling
+				wsCtnr.addService(new ManagementService());
 				// external SAL
 				wsCtnr.addService(new SALService());
 				// external IFD
@@ -231,8 +234,9 @@ public final class PersoApp implements Runnable {
 
 	/**
 	 * The main method.
-	 *
-	 * @param args the arguments
+	 * 
+	 * @param args
+	 *            command line arguments, unused for now
 	 */
 	public static final void main(final String[] args) {
 		new PersoApp().run();

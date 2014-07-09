@@ -77,10 +77,8 @@ import de.persoapp.core.util.TLV;
 
 /**
  * <p>
- * <tt>CardHandler</tt> provides a high-level interface for supported
- * <em>ECard</em>s. It connects directly to lower level hardware interfaces such
- * as PC/SC, NFC or proprietary terminals.
- * 
+ * <tt>CardHandler</tt> is an implementation of {@link ICardHandler} for the
+ * German national eID card.
  * </p>
  * 
  * @author Christian Kahlo
@@ -89,8 +87,8 @@ import de.persoapp.core.util.TLV;
 public class CardHandler implements ICardHandler {
 
 	/**
-	 * The default encryption algorithm to be used by while initiating the
-	 * <em>PACE</em>-protocol. TBD: make this dynamic by parsing
+	 * The default cryptographic mechanism to be used while initiating the
+	 * <em>PACE</em> protocol. TBD: make this dynamic by parsing
 	 * EF.CardSecurity.
 	 * 
 	 */
@@ -103,18 +101,17 @@ public class CardHandler implements ICardHandler {
 
 	/**
 	 * The certificate holder reference ("subject") of the last verified CVC.
-	 * 
 	 */
 	private byte[]							lastCertSubject;
 
 	/**
-	 * ephemeral key for terminal authencation
-	 * */
+	 * ephemeral key for terminal authentication
+	 **/
 	private byte[]							TAKey;
 
 	/**
 	 * Certificate Authority References of the PKIs known by the ECard. Usually
-	 * current root and predecessor.
+	 * the current root and its predecessor.
 	 */
 	private List<byte[]>					CAReferences;
 
@@ -124,8 +121,9 @@ public class CardHandler implements ICardHandler {
 	private byte[]							EFCardAccess;
 
 	/**
-	 * IDPICC-value calculated while processing PACE
-	 * */
+	 * IDPICC-value calculated while processing PACE (compressed base point of
+	 * second ECDHE)
+	 */
 	private byte[]							IDPICC;
 
 	/**
@@ -156,11 +154,11 @@ public class CardHandler implements ICardHandler {
 	private int								PACEv2_curveID	= 13;
 
 	/**
-	 * Creates and initializes the {@link CardHandler} with the actual
-	 * {@link IMainView}.
+	 * Create and initialize the {@link CardHandler} with the {@link IMainView}
+	 * instance of the applications GUI.
 	 * 
 	 * @param mainView
-	 *            - The actual <tt>mainview</tt>.
+	 *            - {@link IMainView} instance of the GUI
 	 */
 	public CardHandler(final IMainView mainView) {
 		this.mainView = mainView;
@@ -177,82 +175,23 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Builds the <em>APDU</em>-Command. The structure of the created
-	 * <em>APDU</em>-Command is determined by the inserted data.
-	 * <table border="1">
-	 * <tr>
-	 * <th>Case</th>
-	 * <th>Structure</th>
-	 * </tr>
-	 * <tr>
-	 * <td>Case 1</td>
-	 * <td>The 'case 1'-<em>APDU</em>-command is a simple command, which doesn't
-	 * contains further data and response data. Therefore, the command contains
-	 * just the <em>class</em>-byte, the <em>instruction</em>-byte and the two
-	 * <em>parameter</em>-bytes. The structure of a 'case 1'-<em>APDU</em>
-	 * -command looks like:
-	 * <table border="1">
-	 * <tr>
-	 * <td>Header</td>
-	 * </tr>
-	 * </table>
-	 * </td>
-	 * </tr>
-	 * <tr>
-	 * <td>Case 2</td>
-	 * <td>The 'case 2'-<em>APDU</em>-command doesn't contain further command
-	 * data, but expects a response. The structure of an 'case 2'-<em>APDU</em>
-	 * -command looks like:
-	 * <table border="1">
-	 * <tr>
-	 * <td>Header</td>
-	 * <td>Le</td>
-	 * </tr>
-	 * </table>
-	 * </tr>
-	 * <tr>
-	 * <td>Case 3</td>
-	 * <td>The 'case 3'-<em>APDU</em>-command contains command data and doesn't
-	 * expect a response. The Structure of a 'case 3'-<em>APDU</em>-command
-	 * looks like:
-	 * <table border="1">
-	 * <tr>
-	 * <td>Header</td>
-	 * <td>Lc</td>
-	 * <td>Data</td>
-	 * </tr>
-	 * </table>
-	 * </tr>
-	 * <tr>
-	 * <td>Case 4</td>
-	 * <td>The 'case 4'-<em>APDU</em>-command contains command data and expect a
-	 * response. The Structure of a 'case 4'-<em>APDU</em>-command looks like:
-	 * <table border="1">
-	 * <tr>
-	 * <td>Header</td>
-	 * <td>Lc</td>
-	 * <td>Data</td>
-	 * <td>Le</td>
-	 * </tr>
-	 * </table>
-	 * </tr>
-	 * 
-	 * </table>
+	 * Builds an <em>APDU</em> from instruction class, instruction command,
+	 * parameters and data. See ISO 7816-3 for details.
 	 * 
 	 * @param cla
-	 *            - The class byte.
+	 *            - instruction class byte
 	 * @param ins
-	 *            - The instruction byte.
+	 *            - instruction command byte
 	 * @param p1
-	 *            - The byte p1.
+	 *            - instruction parameter P1
 	 * @param p2
-	 *            - The byte p2.
+	 *            - instruction parameter P2
 	 * @param data
-	 *            - The send data.
+	 *            - data to be transferred
 	 * @param le
 	 *            - The expected length of the <em>APDU</em>-Response.
 	 * 
-	 * @return Returns the <em>APDU</em>-command.
+	 * @return <em>APDU</em> to be sent to card
 	 */
 	private byte[] buildCmd(final byte cla, final byte ins, final byte p1, final byte p2, final byte[] data,
 			final int le) {
@@ -277,17 +216,21 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Set Authentication Template for mutual authentication.
+	 * Manage Security Environment for authentication terminal or signature
+	 * terminal (CAN, empty CHAT)
 	 * 
 	 * @param tp
-	 *            - The used <tt>transport provider</tt>.
+	 *            - {@link TransportProvider} to be used
 	 * @param cryptoMechanism
-	 *            - The used <tt>cryptoMechanism</tt>.
+	 *            - the cryptographic mechanism to be set for the next
+	 *            authentication step as hex string encoded OID
 	 * @param keyReference
-	 *            - The reference of the used key.
+	 *            - reference ID of the key to be used in conjunction with the
+	 *            cryptographic algorithm
 	 * @param CHAT
-	 *            - The used <em>Card Holder Authorization Template</em>
-	 * @return Returns the status value of the <em>APDU</em>-Response.
+	 *            - <em>Card Holder Authorization Template</em> to be used in
+	 *            case of an authentication terminal
+	 * @return the status word of the command
 	 */
 	private int setMSE_AT(final TransportProvider tp, final String cryptoMechanism, final byte keyReference,
 			final byte[] CHAT) {
@@ -295,6 +238,7 @@ public class CardHandler implements ICardHandler {
 			final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			baos.write(TLV.build(0x80, Hex.fromString(cryptoMechanism)));
 			baos.write(TLV.build(0x83, new byte[] { keyReference }));
+
 			if (CHAT != null) {
 				baos.write(CHAT);
 			}
@@ -309,101 +253,39 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * The general authentication is used to perform the protocol <tt>PACE</tt>.
-	 * The keys and protocol are implicitly known and the data are protocol
-	 * specific data objects.
+	 * General Authenticate to process <tt>PACE</tt> protocol steps. The
+	 * cryptographic mechanism and key reference is already set by Manage
+	 * Security Environment.
 	 * 
 	 * @param tp
-	 *            - The used <tt>transport provider</tt>.
+	 *            - {@link TransportProvider} to be used
 	 * @param authData
 	 *            - The auth data encoded as <em>BER-TLV</em>.
 	 * @param lastCommand
-	 *            the last command
-	 * @return <p>
-	 *         Returns the response of the general authentication command in
-	 *         case of a successful authentication. Otherwise
-	 *         <strong>null</strong> is returned. The returned response can
-	 *         contain the following bytes.
-	 *         <table border="1">
-	 *         <tr>
-	 *         <td>Data</td>
-	 *         <td>0x7C</td>
-	 *         <td><em>Dynamic Authentication Data</em><br/>
-	 *         Protocol specific data objects.</td>
-	 *         </tr>
-	 *         <tr>
-	 *         <td>Status Bytes</td>
-	 *         <td>
-	 *         <table>
-	 *         <tr>
-	 *         <td>0x9000</td>
-	 *         <td><em>Normal Operation</em><br/>
-	 *         The protocol (step) was successful.</td>
-	 *         </tr>
-	 *         <tr>
-	 *         <td>0x6300</td>
-	 *         <td><em>Authentication failed</em><br/>
-	 *         The protocol (step) failed.</td>
-	 *         </tr>
-	 *         <tr>
-	 *         <td>0x63CX</td>
-	 *         <td><em>Authentication failed</em><br/>
-	 *         The protocol (step) failed. X indicates the number of remaining
-	 *         verification tries: X=1: The password is suspended. The password
-	 *         MUST be resumed. X=0: The password is blocked. The password MUST
-	 *         be unblocked.</td>
-	 *         </tr>
-	 *         <tr>
-	 *         <td>0x6982</td>
-	 *         <td><em>Security status not satisfied</em><br/>
-	 *         The terminal is not authorized to perform the protocol (e.g. the
-	 *         password is blocked, deactivated, or suspended).</td>
-	 *         </tr>
-	 *         <tr>
-	 *         <td>0x6983</td>
-	 *         <td><em>Authentication method blocked</em><br/>
-	 *         The password is blocked.</td>
-	 *         </tr>
-	 *         <tr>
-	 *         <td>0x6984</td>
-	 *         <td><em>Reference data not usable</em><br/>
-	 *         The password is deactivated.</td>
-	 *         </tr>
-	 *         <tr>
-	 *         <td>0x6985</td>
-	 *         <td><em>Conditions of use not satisfied</em><br/>
-	 *         The password is suspended.</td>
-	 *         </tr>
-	 *         <tr>
-	 *         <td>0x6A80</td>
-	 *         <td><em>Incorrect parameters in data field</em><br/>
-	 *         Provided data is invalid.</td>
-	 *         </tr>
-	 *         <tr>
-	 *         <td>other</td>
-	 *         <td><em>Operating system dependent error</em><br/>
-	 *         The protocol (step) failed.</td>
-	 *         </tr>
-	 *         <table></td>
-	 *         </tr>
-	 *         </table>
-	 *         </p>
+	 *            - <em>true</em> if this is the last command, <em>false</em> if
+	 *            more commands follow
+	 * @return the result of the executed General Authenticate / PACE step.
 	 */
+
 	private byte[] generalAUTH(final TransportProvider tp, byte[] authData, final boolean lastCommand) {
 		if (authData == null) {
 			authData = new byte[0];
 		}
+
+		// apply command chaining indication if not last command
 		authData = tp.transmit(buildCmd(!lastCommand ? (byte) 0x10 : (byte) 0x00, (byte) 0x86, (byte) 0x00,
 				(byte) 0x00, TLV.build((byte) 0x7C, authData), 0));
 
+		// if there is no error extract embedded protocol response
 		if (tp.lastSW() == 0x9000) {
 			return TLV.get(authData, (byte) 0x7C);
 		}
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Search for a supported card and return a TransportProvider corresponding
+	 * to the communication channel.
 	 * 
 	 * @see de.persoapp.core.card.ICardHandler#getECard()
 	 */
@@ -493,20 +375,23 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Gets the <em>Hardware Abstraction Layer TransportProvider</em>, which
-	 * signals events and data in a PC/SC connection.
+	 * Searches for supported ECards through available TransportProviders. This
+	 * method may be overriden, i.e. in Android as an interface to the hardware
+	 * abstraction layer (USB, NFC, TCP/IP, Bluetooth).
 	 * 
-	 * @return Returns the <em>HAL TransportProvider</em>.
+	 * @return connected {@link TransportProvider}
 	 */
 	protected TransportProvider getHALTransport() {
 		TransportProvider tpNew = null;
 		try {
+			// try to find a PC/SC terminal
 			tpNew = JSCIOTransport.open(Hex.fromString(AID_NPA));
 		} catch (final Exception e) {
 
 		}
 
 		if (tpNew == null) {
+			// try to connect to PersoSim (http://www.persosim.de)
 			tpNew = PersoSimTransport.getInstance("localhost", 9876);
 
 			if (tpNew != null) {
@@ -525,12 +410,13 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Gets the <em>CCID</em> of the given Transport provider.
+	 * For transport providers supporting CCID features return the lowest level
+	 * CCID implementation if available
 	 * 
 	 * @param transport
-	 *            - The currently used transport provider.
+	 *            - the transport provider in question
 	 * 
-	 * @return Returns the <em>CCID</em>.
+	 * @return the CCID instance
 	 */
 	private CCID getCCID(Object transport) {
 		CCID ccid = null;
@@ -550,18 +436,19 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Send pace command to the <em>CCID</em>.
+	 * Send PACE commands to the terminal if it supports CCID / PC/SC and the
+	 * PACE feature.
 	 * 
 	 * @param transport
-	 *            - The used <tt>transport provider</tt>.
+	 *            - {@link TransportProvider} to be used
 	 * @param function
-	 *            - The used function of the <tt>PACE</tt>-protocol application.
+	 *            - PACE function (GetReaderPACECapabilities,
+	 *            EstablishPACEChannel, DestroyPACEChannel)
 	 * @param data
-	 *            - The send data.
+	 *            - optional data as input to the function
 	 * 
-	 * @return Returns the <em>APDU</em>-response in little endian byte order,
-	 *         or <strong>null</strong>, if the <em>CCID</em> terminates the
-	 *         processing of the <tt>PACE</tt>-command.
+	 * @return the PACE feature result message if successful, otherwise
+	 *         <em>null<em>
 	 */
 	private byte[] sendPACECommand(final Object transport, final int function, byte[] data) {
 		final CCID ccid = getCCID(transport);
@@ -598,8 +485,7 @@ public class CardHandler implements ICardHandler {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see de.persoapp.core.card.ICardHandler#hasPACE(java.lang.Object)
 	 */
@@ -615,16 +501,19 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Executes pace remotely.
+	 * Execute PACE inside the terminal if supported
 	 * 
 	 * @param keyReference
-	 *            - The key reference.
+	 *            - referenced password, 1 = MRZ, 2 = CAN, 3 = PIN, 4 = PUK
 	 * @param CHAT
-	 *            - The <em>Card Holder Authorization Template</em>.
+	 *            - the <em>Card Holder Authorization Template</em> if
+	 *            authentication terminal is used
+	 * 
 	 * @param termDesc
-	 *            - The terminal description.
-	 * @return Returns <tt>0x9000</tt> if the execution was successful and
-	 *         <tt>-1</tt> otherwise.
+	 *            - the terminal description of the authentication terminal
+	 * 
+	 * @return <tt>0x9000</tt> if execution was successful, <tt>-1</tt>
+	 *         otherwise.
 	 */
 	private int executeRemotePACE(final byte keyReference, final byte[] CHAT, final byte[] termDesc) {
 		byte[] pace_res = null;
@@ -692,23 +581,21 @@ public class CardHandler implements ICardHandler {
 		return -1;
 	}
 
-	// Key-Derivation Function, usually SHA-1 with limit=16 only
 	/**
 	 * <p>
-	 * The key derivation function uses the inserted key and a
-	 * {@link ByteBuffer} to derive keying material that can be employed by
-	 * cryptographic algorithms. The counter is inserted at the end of the
-	 * <tt>byte-array</tt> and the limit determines the size of the created key.
+	 * The key derivation function uses the supplied secret (seed) and counter
+	 * to derive keying material to be used by {@link ISOSMTransport}.
 	 * </p>
 	 * 
 	 * @param md
-	 *            - The used message digest algorithm.
+	 *            - message digest algorithm for key derivation
 	 * @param secret
-	 *            - The public key(shared secret).
+	 *            - the secret used as seed
 	 * @param counter
-	 *            - The counter.
+	 *            - counter for derivation of different keys from same secret
 	 * @param limit
-	 *            - The limit.
+	 *            - maximum output size if message digest result size is too
+	 *            large
 	 * 
 	 * @return Returns material that can be employed by cryptographic
 	 *         algorithms.
@@ -729,36 +616,37 @@ public class CardHandler implements ICardHandler {
 	// secretType: 0x00 = ??, 0x01 = MRZ, 0x02 = CAN, 0x03 = PIN, 0x04 = PUK,
 	// ..??
 	/**
-	 * Executes the <tt>PACE</tt>-protocol locally.
+	 * Execute PACE without external keypad.
 	 * 
-	 * @param algorithm
-	 *            - The used algorithm.
+	 * @param cryptoMechanism
+	 *            - cryptographic mechanism to be used
 	 * @param keyReference
-	 *            - The used key reference.
+	 *            - reference password
 	 * @param secret
-	 *            - The inserted eID-pin.
+	 *            - the password (CAN, PIN) or secret (MRZ)
 	 * @param CHAT
-	 *            - The used data from the
-	 *            <em>Card Holder Authorization Template</em>.
+	 *            - the <em>Card Holder Authorization Template</em> if
+	 *            authentication terminal
 	 * 
-	 * @return Returns the received status word.
+	 * @return ISO status word of failing instruction or -1 for internal error
 	 */
-	private int executeLocalPACE(final String algorithm, final byte keyReference, final byte[] secret, final byte[] CHAT) {
+	private int executeLocalPACE(final String cryptoMechanism, final byte keyReference, final byte[] secret,
+			final byte[] CHAT) {
 		int status = -1;
 
 		if (secret == null) {
 			return status;
 		}
 
-		status = setMSE_AT(tp, algorithm, keyReference, CHAT);
+		status = setMSE_AT(tp, cryptoMechanism, keyReference, CHAT);
 		if (keyReference == 0x03 && status == 0x63C1) {
 			// request CAN before PACE
 			final SecureHolder can = mainView.showCANDialog(textBundle.get("CardHandler_can_dialog_text"));
-			status = executeLocalPACE(algorithm, (byte) 0x02, can.getValue(), null);
+			status = executeLocalPACE(cryptoMechanism, (byte) 0x02, can.getValue(), null);
 			if (status != 0x9000) {
 				return status;
 			}
-			setMSE_AT(tp, algorithm, keyReference, CHAT);
+			setMSE_AT(tp, cryptoMechanism, keyReference, CHAT);
 		}
 
 		MessageDigest mdSHA1 = null;
@@ -804,7 +692,6 @@ public class CardHandler implements ICardHandler {
 
 		/* calculate common secret point between A and B */
 		final byte[][] paceRes = pace.finish(paceYA);
-		IDPICC = paceRes[0];
 		final byte[] sharedSecret = paceRes[1];
 
 		final byte[] kEnc = KDF(mdSHA1, sharedSecret, 0x0000001, 16);
@@ -816,14 +703,14 @@ public class CardHandler implements ICardHandler {
 			c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(kMac_, "AES"), new IvParameterSpec(new byte[16]));
 			final CMac cmac = new CMac(c, 8);
 
-			byte[] authToken = TLV.build(0x7F49, TLV.buildOID(algorithm, TLV.build(0x86, paceYA)));
+			byte[] authToken = TLV.build(0x7F49, TLV.buildOID(cryptoMechanism, TLV.build(0x86, paceYA)));
 			cmac.update(authToken, 0, authToken.length);
 
 			final byte[] macResultA = generalAUTH(tp, TLV.build(0x85, cmac.doFinal()), true);
 			status = tp.lastSW();
 
 			if (status == 0x9000) {
-				authToken = TLV.build(0x7F49, TLV.buildOID(algorithm, TLV.build(0x86, paceYB)));
+				authToken = TLV.build(0x7F49, TLV.buildOID(cryptoMechanism, TLV.build(0x86, paceYB)));
 				cmac.update(authToken, 0, authToken.length);
 
 				authToken = cmac.doFinal();
@@ -860,34 +747,36 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Executes the <em>PACE</em>-protocol.
+	 * Short-hand executePACE without terminal description
 	 * 
 	 * @param keyReference
-	 *            - The key reference.
+	 *            - referenced password
 	 * @param secret
-	 *            - The inserted eID-pin during pinChange or transport pin
-	 *            during cardActivation.
+	 *            - password (CAN, PIN) or secret (MRZ)
 	 * @param CHAT
-	 *            - The <em>Card Holder Authorization Template</em>.
-	 * @return Returns the received status word.
+	 *            - <em>Card Holder Authorization Template</em> if
+	 *            authentication terminal
+	 * @return status word of failing instruction or -1 for internal error
 	 */
 	private int executePACE(final byte keyReference, final byte[] secret, final byte[] CHAT) {
 		return executePACE(keyReference, secret, CHAT, null);
 	}
 
 	/**
-	 * Executes the <em>PACE</em>-protocol.
+	 * Execute the PACE protocol either remote (terminal with external pin-pad)
+	 * or locally.
 	 * 
 	 * @param keyReference
-	 *            - The key reference.
+	 *            - referenced password
 	 * @param secret
-	 *            - The inserted eID-pin during pinChange or transport pin
-	 *            during cardActivation.
+	 *            - password (CAN, PIN) or secret (MRZ)
 	 * @param CHAT
-	 *            - The <em>Card Holder Authorization Template</em>.
+	 *            - <em>Card Holder Authorization Template</em> if
+	 *            authentication terminal
 	 * @param termDesc
-	 *            - The terminal description.
-	 * @return Returns the received status word.
+	 *            - terminal description if authentication terminal
+	 * 
+	 * @return status word of failing instruction or -1 for internal error
 	 */
 	private int executePACE(final byte keyReference, final byte[] secret, final byte[] CHAT, final byte[] termDesc) {
 		this.EFCardAccess = tp.transmit(new byte[] { 0x00, (byte) 0xB0, (byte) 0x9C, 0x00, 0x00, 0x00, 0x00 });
@@ -941,11 +830,10 @@ public class CardHandler implements ICardHandler {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
 	 * @see de.persoapp.core.card.ICardHandler#startAuthentication(byte[],
-	 * de.persoapp.core.client.SecureHolder, byte[])
+	 *      de.persoapp.core.client.SecureHolder, byte[])
 	 */
 	@Override
 	public synchronized boolean startAuthentication(final byte CHAT[], final SecureHolder secret, final byte[] termDesc) {
@@ -1141,24 +1029,24 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Read file.
+	 * Read elementary file from card using current transport provider.
 	 * 
 	 * @param FID
-	 *            the fid
-	 * @return the byte[]
+	 *            - file identifier
+	 * @return contents of elementary file
 	 */
 	private byte[] readFile(final short FID) {
 		return readFile(this.tp, FID);
 	}
 
 	/**
-	 * Reads the file from the <em>ICC</em>.
+	 * Read elementary file using specified transport probider.
 	 * 
 	 * @param tp
-	 *            - The used <tt>transport provider</tt>.
+	 *            - {@link TransportProvider} to be used
 	 * @param FID
-	 *            - The used <tt>file identifier</tt>.
-	 * @return Returns the content of the read file.
+	 *            - file identifier
+	 * @return contents of elementary file
 	 */
 	private byte[] readFile(final TransportProvider tp, final short FID) {
 		tp.transmit(new byte[] { 0x00, (byte) 0xA4, 0x02, 0x0C, 0x02, (byte) (FID >> 8), (byte) (FID & 0xFF) });
@@ -1190,6 +1078,7 @@ public class CardHandler implements ICardHandler {
 	 */
 	@Override
 	public byte[] execCA() {
+		// TODO: make cryptographic mechanism dynamic
 		tp.transmit(new byte[] { 0x00, 0x22, 0x41, (byte) 0xA4, 0x0C, (byte) 0x80, 0x0A, 0x04, 0x00, 0x7F, 0x00, 0x07,
 				0x02, 0x02, 0x03, 0x02, 0x02 });
 		return generalAUTH(tp, TLV.build(0x80, Hex.fromString("04" + Hex.toString(TAKey))), true);
@@ -1222,13 +1111,14 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Selects the application to sign data electronic.
+	 * Initiate PACE with signature terminal and select signature application
+	 * (DF_ESIGN).
 	 * 
 	 * @param tp0
-	 *            - The used transport provider.
+	 *            - {@link TransportProvider} to be used
 	 * @param verifySecret
-	 *            - The verify secret.
-	 * @return Returns the last status word.
+	 *            - referenced password for signature application
+	 * @return status word of application selection
 	 */
 	private int selectESIGN(final TransportProvider tp0, final byte verifySecret) {
 		this.tp = tp0;
@@ -1242,10 +1132,10 @@ public class CardHandler implements ICardHandler {
 		return tp0.lastSW();
 	}
 
-	/** The Constant ESIGN_PIN_ID. */
+	/** password reference for signature PIN */
 	private static final byte	ESIGN_PIN_ID	= (byte) 0x81;
 
-	/** The Constant ESIGN_PRK_QES. */
+	/** key reference for signature key */
 	private static final byte	ESIGN_PRK_QES	= (byte) 0x84;
 
 	/*
@@ -1338,28 +1228,25 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Starts the function to sign data electronic. Validates the
-	 * <em>eSignPin</em> before the data is signed.
+	 * Select signature application and validate signature PIN (short hand).
 	 * 
 	 * @param tp0
-	 *            - The used transport provider.
-	 * @return Returns the received status word.
+	 *            - {@link TransportProvider} to be used
+	 * @return last status word
 	 */
 	public int open_eSign(final TransportProvider tp0) {
 		return open_eSign(tp0, true);
 	}
 
 	/**
-	 * Starts the function to sign data electronic. The PIN is validated if the
-	 * second flag is set to <strong>true</strong>, otherwise no validation is
-	 * done.
+	 * Select signature application and validate signature PIN.
 	 * 
 	 * @param tp0
-	 *            - The used transport provider.
+	 *            - {@link TransportProvider} to be used
 	 * @param validatePin
-	 *            - Can be <strong>true</strong>, to validate the eSignPin. Set
-	 *            to <strong>false</strong>, no validation is done.
-	 * @return Returns the received status word.
+	 *            - <em>true</em> to (re-)validate PIN, false only select
+	 *            signature applicatios
+	 * @return last status word
 	 */
 	public int open_eSign(final TransportProvider tp0, final boolean validatePin) {
 		int status = selectESIGN(tp0, (byte) 0x02);
@@ -1370,11 +1257,11 @@ public class CardHandler implements ICardHandler {
 	}
 
 	/**
-	 * Validates the <em>eSignPin</em>.
+	 * Validate the signature PIN.
 	 * 
 	 * @param tp0
-	 *            - The used transport provider.
-	 * @return Returns the last status word.
+	 *            - {@link TransportProvider} to be used
+	 * @return last status word
 	 */
 	public int validate_eSignPin(final TransportProvider tp0) {
 		int status = -1;
@@ -1393,17 +1280,17 @@ public class CardHandler implements ICardHandler {
 	 * Signs the given data.
 	 * 
 	 * @param dataTBS
-	 *            - The used data, to be signed.
-	 * @return Returns the <em>APDU</em>-Response.
+	 *            - data to be signed (hash)
+	 * @return raw signature
 	 */
 	public byte[] doESign(final byte[] dataTBS) {
 		return tp.transmit(buildCmd((byte) 0x00, (byte) 0x2A, (byte) 0x9E, (byte) 0x9A, dataTBS, 0));
 	}
 
 	/**
-	 * Returns the used certificates for the eSigning process.
+	 * Read and return signature certificate chain if existent.
 	 * 
-	 * @return The list of certificates.
+	 * @return signature certificate chain
 	 */
 	public List<byte[]> doESignGetCertificates() {
 		final List<byte[]> certs = new ArrayList<byte[]>();

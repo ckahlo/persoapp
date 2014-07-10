@@ -1,60 +1,63 @@
 /**
- *
+ * 
  * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
- *
+ * 
  * Authors Christian Kahlo, Ralf Wondratschek
- *
+ * 
  * All Rights Reserved.
- *
+ * 
  * Contact: PersoApp, http://www.persoapp.de
- *
+ * 
  * @version 1.0, 30.07.2013 13:50:47
- *
+ * 
  *          This file is part of PersoApp.
- *
+ * 
  *          PersoApp is free software: you can redistribute it and/or modify it
  *          under the terms of the GNU Lesser General Public License as
  *          published by the Free Software Foundation, either version 3 of the
  *          License, or (at your option) any later version.
- *
+ * 
  *          PersoApp is distributed in the hope that it will be useful, but
  *          WITHOUT ANY WARRANTY; without even the implied warranty of
  *          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  *          Lesser General Public License for more details.
- *
+ * 
  *          You should have received a copy of the GNU Lesser General Public
  *          License along with PersoApp. If not, see
  *          <http://www.gnu.org/licenses/>.
- *
+ * 
  *          Diese Datei ist Teil von PersoApp.
- *
+ * 
  *          PersoApp ist Freie Software: Sie können es unter den Bedingungen der
  *          GNU Lesser General Public License, wie von der Free Software
  *          Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder
  *          späteren veröffentlichten Version, weiterverbreiten und/oder
  *          modifizieren.
- *
+ * 
  *          PersoApp wird in der Hoffnung, dass es nützlich sein wird, aber OHNE
  *          JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
  *          Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN
  *          ZWECK. Siehe die GNU Lesser General Public License für weitere
  *          Details.
- *
+ * 
  *          Sie sollten eine Kopie der GNU Lesser General Public License
  *          zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
  *          <http://www.gnu.org/licenses/>.
- *
+ * 
  */
 package de.persoapp.core.card;
 
 import java.util.List;
 
 import de.persoapp.core.client.SecureHolder;
+import de.persoapp.core.ws.IFDService;
 
 /**
- * The <tt>ICardHandler</tt> interface declares methods to enable the different
- * card- and card communication-functions and behaves as a abstract interface to
- * the functions of a smart card.
+ * The <tt>ICardHandler</tt> interface describes basic functionality to handle
+ * retrieval of transport providers, do PIN management, process extended access
+ * control and digital signature requests as well as tunneling commands from the
+ * {@link IFDService} to the ICC.
+ * 
  * <p>
  * <code>public interface ICardHandler</code>
  * </p>
@@ -63,166 +66,154 @@ import de.persoapp.core.client.SecureHolder;
  * @author Rico Klimsa - added javadoc comments.
  */
 public interface ICardHandler {
-	
+
 	/**
-	 * The application identifier for the main application of the <tt>NPA</tt>.
+	 * application identifier for BSI TR-03110 eID application, oid =
+	 * 0.4.0.127.0.7.3.2
 	 */
 	public static final String	AID_NPA		= "E80704007F00070302";
-	
+
 	/**
-	 * The application identifier for the main <tt>ICAO</tt>-application.
+	 * application identifier for ICAO 9303 MRTD application
 	 */
 	public static final String	AID_ICAO	= "A0000002471001";
-	
+
 	/**
-	 * The application identifier for the main <tt>VX4</tt>-application.
-	 */
-	public static final String	AID_VX4		= "D2760000930101";
-	
-	/**
-	 * The application identifier for the electronic signing application.
+	 * application identifier for CEN 14890 DF.eSign
 	 */
 	public static final String	AID_eSign	= "A000000167455349474E";
 
 	/**
 	 * <p>
-	 * Returns the {@link TransportProvider} of the current inserted
-	 * <tt>ECard</tt>. Additionally informations of the card terminal
-	 * are displayed in the console during the function.
+	 * Search through all connected terminals and returns a transport provider
+	 * if a suitable ICC was found.
 	 * </p>
-	 * <p>
-	 * The 
-	 * </p>
-	 *
-	 * @return Returns the {@link TransportProvider} of the current inserted
-	 *         <tt>ECard</tt>.
+	 * 
+	 * @return {@link TransportProvider} if ECard found, <em>null<em> if
+	 * no card is available.
 	 */
 	TransportProvider getECard();
 
 	/**
-	 * Returns <em>zero</em> if the connected terminal doesn't support
-	 * <tt>PACE</tt>.
+	 * Checks for terminal support of <em>PACE</em> feature.
 	 * 
 	 * @param transport
-	 *            - The object to transport according to the <tt>PACE</tt>
-	 *            -Protocol.
-	 * @return Returns <em>zero</em> if the connected terminal doesn't support
-	 *         <tt>PACE</tt>. 
+	 *            - {@link TransportProvider} to be used
+	 * @return supported PACE features or <em>0</em> if not supported
 	 */
 	int hasPACE(Object transport);
 
 	/**
-	 * Unblocks the blocked active pin through the insertion of the <em>PUK</em>
-	 * .
+	 * Handles PIN unblocking with PACE and reset retry counter.
 	 * 
 	 * @param tp
-	 *            - The {@link TransportProvider}, which is used to transmit
-	 *            data.
+	 *            - {@link TransportProvider} to be used
 	 * @param verifySecret
-	 *            - The verify secret.
+	 *            - password reference (i.e. PUK)
 	 * @param verifySecretInput
-	 *            - The inserted currently active <em>PIN</em>.
+	 *            - unblocking password (PUK) or null if terminal supports PACE
+	 *            (pinpad and display available)
 	 * @param unblockSecret
-	 *            - The unblock secret.
-	 * @return Returns the status code of the <em>APDU</em>-Response.
+	 *            - password reference of blocked password
+	 * @return status word of unblock sequence
 	 */
 	int doPINUnblock(TransportProvider tp, byte verifySecret, SecureHolder verifySecretInput, byte unblockSecret);
 
 	/**
-	 * Changes the currently active pin, through the insertion of the new pin.
+	 * Handles PIN change with PACE and PIN MODIFY.
 	 * 
 	 * @param tp
-	 *            - The used transport provider.
+	 *            - {@link TransportProvider} to be used
 	 * @param verifySecret
-	 *            - The verify secret.
+	 *            - password reference of secret to verify
 	 * @param verifySecretInput
-	 *            - The inserted active <em>PIN</em>.
+	 *            - secret or null if terminal supports PACE
 	 * @param modifySecret
-	 *            - The modify secret.
+	 *            - password reference of secret to modify
 	 * @param modifySecretInput
-	 *            - The inserted new <em>PIN</em>.
-	 * @return Returns the status code of the <em>APDU</em>-Response.
+	 *            - new secret or null if terminal supports PACE
+	 * @return last status word of pin modify sequence
 	 */
 	int doPINChange(TransportProvider tp, byte verifySecret, SecureHolder verifySecretInput, byte modifySecret,
 			SecureHolder modifySecretInput);
 
 	/**
-	 * Initializes the electronic signing process.
+	 * Select signing application (only with signature terminal), requires CAN
+	 * input on terminal pinpad
 	 * 
 	 * @param tp0
-	 *            - The used transport provider.
-	 * @return Returns the status code of the <em>APDU</em>-Response.
+	 *            - {@link TransportProvider} to be used
+	 * @return last status word
 	 */
 	public int doESignInit(TransportProvider tp0);
 
 	/**
-	 * Changes the actual electronic signature pin.
+	 * Handle pin change of signature PIN.
 	 * 
 	 * @param tp0
-	 *            - The used transport provider.
-	 * @return Returns the status code of the <em>APDU</em>-Response.
+	 *            - {@link TransportProvider} to be used
+	 * @return last status word
 	 */
 	public int doESignChange(TransportProvider tp0);
 
 	/**
-	 * Unblocks the actual electronic signature pin.
+	 * Handle unblock of signature PIN.
 	 * 
 	 * @param tp0
-	 *            - The used transport provider.
-	 * @return Returns the status code of the <em>APDU</em>-Response.
+	 *            - {@link TransportProvider} to be used
+	 * @return last status word
 	 */
 	public int doESignUnblock(TransportProvider tp0);
 
 	/**
-	 * Terminates the electronic signing process.
+	 * Deletes signature key and terminates signature PIN.
 	 * 
 	 * @param tp0
-	 *            - The used transport provider.
-	 * @return Returns the status code of the <em>APDU</em>-Response.
+	 *            - {@link TransportProvider} to be used
+	 * @return last status word
 	 */
 	public int doESignTerminate(TransportProvider tp0);
 
 	/**
-	 * Starts the authentication of the user against the eID-Server.
+	 * Initiate authentication process with eID card.
 	 * 
 	 * @param CHAT
-	 *            - The user data to send.
+	 *            - <em>Card Holder Authorization Template</em> describing which
+	 *            data groups are to be read
 	 * @param secret
-	 *            - The inserted pin.
+	 *            - eID PIN or null if PACE is supported
 	 * @param termDesc
-	 *            - The description of the used terminal.
+	 *            - terminal description of authorization certificate to be
+	 *            displayed on terminals (card readers) with display
 	 * 
-	 * @return Returns <strong>true</strong>, if the authentication was a
-	 *         success, otherwise <strong>false</strong>.
+	 * @return <em>true</em> is successful, <em>false</em> otherwise
 	 */
 	boolean startAuthentication(byte[] CHAT, SecureHolder secret, byte[] termDesc);
 
 	/**
-	 * Resets the <tt>CardHandler</tt>. Sets the <tt>initialized</tt> state, of
-	 * the <tt>CardHandler</tt> to <strong>false</strong>, executes the
-	 * <tt>close</tt> function of the {@link TransportProvider} and deletes the
-	 * reference to the used {@link TransportProvider}.
+	 * Close transport providers and set card handler initialization state to
+	 * false.
 	 */
 	void reset();
 
 	/**
-	 * Returns the <tt>IDPICC</tt>, the currently used
-	 * <tt>Internetwork Datagram Protocol</tt>.
+	 * Retrieve IDPICC-value calculated while processing PACE (compressed base
+	 * point of second ECDHE)
 	 * 
-	 * @return Returns the <tt>IDPICC</tt>.
+	 * @return IDPICC
 	 */
 	byte[] getIDPICC();
 
 	/**
-	 * Returns the <tt>CAReference</tt>.
+	 * Retrieve Certificate Authority References of the PKIs known by the ECard.
+	 * Usually the current root and its predecessor.
 	 * 
-	 * @return Returns <tt>CAReference</tt>.
+	 * @return list of byte array containing CA reference of the card
 	 */
 	List<byte[]> getCAReferences();
 
 	/**
-	 * Returns the content of the file <tt>EF.CardAccess</tt>. The file contains
-	 * the following security informations according to [TR-03110].
+	 * Returns the raw content of <tt>EF.CardAccess</tt> file containing:
 	 * <ul>
 	 * <li>PACEInfo</li>
 	 * <li>ChipAuthenticationInfo</li>
@@ -232,58 +223,55 @@ public interface ICardHandler {
 	 * <li>CardInfoLocator</li>
 	 * </ul>
 	 * 
-	 * @return Returns the <tt>EF.CardAccess</tt>-file.
+	 * @return raw <tt>EF.CardAccess</tt> content
 	 * 
 	 */
 	byte[] getEFCardAccess();
 
 	/**
-	 * The command <tt>PSO:Verify Certificate</tt> is used to verify and import
-	 * certificates for Terminal Authentication.
+	 * Verify a single certificate from terminal certificate chain. This
+	 * function is intended to be called multiple times beginning with the root
+	 * (link) certificate, then document verifier CA and finally the terminal
+	 * certificate itself.
 	 * 
 	 * @param cvc
-	 *            - Certificate to valid.
+	 *            - card verifiable certificate from certificate chain
 	 * 
-	 * @return Returns <strong>true</strong> if the given certificate is valid.
-	 *         Otherwise <strong>false</strong>.
+	 * @return <em>true</em> if successfully verified, <em>false</em> otherwise
 	 */
 	boolean verifyCertificate(byte[] cvc);
 
 	/**
-	 * Initializes the terminal authentication. The terminal authentication
-	 * protocol is a two move challenge-response protocol that provides explicit
-	 * unilateral authentication of the terminal.
-	 * <p>
-	 * The ephemeral key is used to create the ECDH.
-	 * </p>
+	 * Initializes the terminal authentication for extended access control
+	 * protocol.
 	 * 
-	 * @param ephemeralKey - The ephemeral key.
-	 * @param auxData - The auxiliary data.
+	 * @param ephemeralKey
+	 *            - ephemeral terminal key
+	 * @param auxData
+	 *            - auxiliary data to be verified (document expiration date,
+	 *            community id, age)
 	 */
 	void initTA(byte[] ephemeralKey, byte[] auxData);
 
 	/**
-	 * The command Get Challenge is used to perform Terminal Authentication.
+	 * Retrieve card challenge for terminal authentication.
 	 * 
-	 * @return Returns the <em>APDU</em>-Response.
+	 * @return card challenge
 	 */
 	byte[] getTAChallenge();
 
 	/**
-	 * Verifies the terminal signature during the Terminal
-	 * Authentication-Process.
+	 * Verify terminal signature for terminal authentication.
 	 * 
 	 * @param taSignature
-	 *            - The given signature.
-	 * @return Returns <strong>true</strong>, if the signature is valid.
-	 *         Otherwise <strong>false</strong>.
+	 *            - signature from terminal (eID server)
+	 * @return <em>true</em> if valid, false otherwise
 	 */
 	boolean verifyTASignature(byte[] taSignature);
 
 	/**
 	 * <p>
-	 * Returns the content of the file <tt>EF.CardAccess</tt>. The file contains
-	 * the following security informations according to [TR-03110].
+	 * Returns the raw content of <tt>EF.CardAccess</tt> file containing:
 	 * <ul>
 	 * <li>PACEInfo</li>
 	 * <li>ChipAuthenticationInfo</li>
@@ -296,26 +284,24 @@ public interface ICardHandler {
 	 * </ul>
 	 * </p>
 	 * 
-	 * @return Returns the content of the file <tt>EF.CardSecurity</tt>.
+	 * @return raw content of <tt>EF.CardSecurity</tt> file
 	 */
 	byte[] getEFCardSecurity();
 
 	/**
-	 * Executes the card access to access the inserted card.
+	 * Execute chip authentication.
 	 * 
-	 * @return Returns the response of the general authentication.
+	 * @return result of GENERAL AUTHENTICATE
 	 */
 	byte[] execCA();
 
 	/**
-	 * Transmits the provided <em>cmd</em> in order to fulfill the <tt>PACE</tt>
-	 * -protocol.
+	 * Transparently transmit <em>APDU</em> from IFDService to card.
 	 * 
 	 * @param cmd
-	 *            - The provided <em>command</em>.
+	 *            - <em>APDU</em>
 	 * 
-	 * @return Returns the <em>response</em> or <strong>null</strong>, if no
-	 *         response was sent.
+	 * @return response APDU from card
 	 */
 	byte[] transmit(byte[] cmd);
 }

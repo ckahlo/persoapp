@@ -1,52 +1,53 @@
 /**
- *
+ * 
  * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
- *
+ * 
  * Authors Christian Kahlo, Ralf Wondratschek
- *
+ * 
  * All Rights Reserved.
- *
+ * 
  * Contact: PersoApp, http://www.persoapp.de
- *
+ * 
  * @version 1.0, 30.07.2013 13:50:47
- *
+ * 
  *          This file is part of PersoApp.
- *
+ * 
  *          PersoApp is free software: you can redistribute it and/or modify it
  *          under the terms of the GNU Lesser General Public License as
  *          published by the Free Software Foundation, either version 3 of the
  *          License, or (at your option) any later version.
- *
+ * 
  *          PersoApp is distributed in the hope that it will be useful, but
  *          WITHOUT ANY WARRANTY; without even the implied warranty of
  *          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  *          Lesser General Public License for more details.
- *
+ * 
  *          You should have received a copy of the GNU Lesser General Public
  *          License along with PersoApp. If not, see
  *          <http://www.gnu.org/licenses/>.
- *
+ * 
  *          Diese Datei ist Teil von PersoApp.
- *
+ * 
  *          PersoApp ist Freie Software: Sie können es unter den Bedingungen der
  *          GNU Lesser General Public License, wie von der Free Software
  *          Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder
  *          späteren veröffentlichten Version, weiterverbreiten und/oder
  *          modifizieren.
- *
+ * 
  *          PersoApp wird in der Hoffnung, dass es nützlich sein wird, aber OHNE
  *          JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
  *          Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN
  *          ZWECK. Siehe die GNU Lesser General Public License für weitere
  *          Details.
- *
+ * 
  *          Sie sollten eine Kopie der GNU Lesser General Public License
  *          zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
  *          <http://www.gnu.org/licenses/>.
- *
+ * 
  */
 package de.persoapp.core.ws;
 
+import iso.std.iso_iec._24727.tech.schema.DIDAuthenticate;
 import iso.std.iso_iec._24727.tech.schema.DIDAuthenticateResponse;
 import iso.std.iso_iec._24727.tech.schema.DIDAuthenticationDataType;
 import iso.std.iso_iec._24727.tech.schema.EAC1InputType;
@@ -90,14 +91,12 @@ import de.persoapp.core.util.Hex;
 import de.persoapp.core.util.TLV;
 
 /**
- * The <tt>SALService</tt> is a webservice of the <em>Service-Access Layer</em>.
+ * ISO 24727 Service Access Layer web service
  * <p>
- * The Service-Access-Layer provides, in particular, functions for cryptographic
- * primitives and biometric mechanisms in connection with cryptographic tokens,
- * and comprises the ISO24727-3-Interface and the Support-Interface.
- * </p>
- * <p>
- * <code>public class SALService implements SAL</code>
+ * The Service-Access-Layer web service handles differential identity protocol
+ * requests related to the Extended Access Control protocol. The implementation
+ * of this service is a reduced function set providing only strictly required
+ * implementations of didAuthenticate and EAC protocol messages.
  * </p>
  * 
  * @author Christian Kahlo
@@ -107,14 +106,13 @@ import de.persoapp.core.util.TLV;
 public class SALService implements SAL {
 
 	/**
-	 * The {@link WebServiceContext} is stored here, for accessing methods
-	 * and security informations according to incoming requests.
+	 * injected local web service context providing access to message contexts
 	 */
 	@Resource
 	protected final WebServiceContext	wsCtx	= null;
 
 	/**
-	 * Initializes the {@link SALService}.
+	 * container initialization hook
 	 */
 	@PostConstruct
 	public final void init() {
@@ -122,74 +120,21 @@ public class SALService implements SAL {
 	}
 
 	/**
-	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 * local message bundle for user interaction
 	 */
 	private static final PropertyResolver.Bundle	textBundle	= PropertyResolver.getBundle("text_core");
 
 	/**
-	 * The DIDAuthenticate function can be used to execute an authentication
-	 * protocol using a DID addressed by DIDName.
-	 * <p>
-	 * The following data is included in the provided <em>parameters</em>.<br>
-	 * <table border="1">
-	 * <tr>
-	 * <th>Parameter</th>
-	 * <th>Description</th>
-	 * </tr>
-	 * <tr>
-	 * <td>ConnectionHandle</td>
-	 * <td>Contains a handle with which the connection to a card application is
-	 * addressed</td>
-	 * </tr>
-	 * <tr>
-	 * <td>
-	 * DIDScope</td>
-	 * <td>
-	 * Resolves any ambiguity between local and global DIDs with the same name.</td>
-	 * </tr>
-	 * <tr>
-	 * <td>DIDName</td>
-	 * <td>Contains the name of the DID which is to be used for authentication.
-	 * The authentication protocol to be used is determined by the mandatory
-	 * Protocol-attribute element in the AuthenticationProtocolData-element
-	 * below, which corresponds to the Protocol-attribute in the
-	 * DIDMarker-element of the DIDStructure-element</td>
-	 * </tr>
-	 * <tr>
-	 * <td>Authentication ProtocolData</td>
-	 * <td>Contains the data necessary for the respective authentication
-	 * protocol. The structure of the DIDAuthenticationDataType is specified on
-	 * the basis of the protocol. The required Protocol-attribute specifies the
-	 * authentication protocol of the DID; the concrete specification of the
-	 * child elements of AuthenticationProtocolData depends on the individual
-	 * protocol specifications.
-	 * <p>
-	 * Note that the protocol identifies the used cryptographic protocol
-	 * including the used commands as well as the secure messaging to be used
-	 * after successful completion of the cryptographic protocol.
-	 * </p>
-	 * </tr>
-	 * <tr>
-	 * <td>SAMConnection Handle</td>
-	 * <td>MAY address a connection to a card application, which serves as
-	 * Security Access Module (SAM). The detailed role of the SAM within the
-	 * authentication protocol MUST be defined within the specification of the
-	 * authentication protocol.</td>
-	 * </tr>
-	 * </table>
+	 * DIDAuthenticate transports higher level authentication protocol messages
+	 * in conjunction with a scope, differential identity name, connection and
+	 * slot handle.
 	 * 
 	 * @param parameters
-	 *            - The <em>parameters</em> for authentication.
-	 * @return The returned
-	 *         {@link iso.std.iso_iec._24727.tech.schema.DIDAuthenticateResponse}
-	 *         is divided in two pieces.
-	 *         <p>
-	 *         <ul>
-	 *         <li>dss:Result - Contains the status information and the errors of an
-	 *         executed action.</li>
-	 *         <li>Authentication ProtocolData - Contains the data necessary for
-	 *         the respective authentication protocol.</li>
-	 *         </ul>
+	 *            - EAC protocol message as {@link DIDAuthenticationDataType}
+	 *            embedded in {@link DIDAuthenticate}
+	 * @return The returned EAC protocol response as
+	 *         {@link DIDAuthenticationDataType} embedded in
+	 *         {@link DIDAuthenticate}
 	 */
 	@Override
 	// enhace WSS-runtime to be able to remove
@@ -299,12 +244,12 @@ public class SALService implements SAL {
 				}
 			}
 
-			if (verified < 2) {
-				mainView.showMainDialog(eacInfo, IMainView.MODE_NONE);
-				mainView.showError(textBundle.get("SALService_certificate_error_title"),
-						textBundle.get("SALService_certificate_error_text"));
-				return null;
-			}
+			//			if (verified < 2) {
+			//				mainView.showMainDialog(eacInfo, IMainView.MODE_NONE);
+			//				mainView.showError(textBundle.get("SALService_certificate_error_title"),
+			//						textBundle.get("SALService_certificate_error_text"));
+			//				return null;
+			//			}
 
 			session.setAttribute(EAC_Info.class.getName(), eacInfo);
 
@@ -314,26 +259,33 @@ public class SALService implements SAL {
 			 * as of BSI TR-03112 V1.1.2 the client is required to check the
 			 * tcTokenURL for same-origin policy (RFC6454) with the subjectURL
 			 */
-			final URI tcTokenURL = (URI) session.getAttribute(ECardSession.KEYS.tcTokenURL.name());
+			final URI tcTokenURL = ((URI) session.getAttribute(ECardSession.KEYS.tcTokenURL.name())).resolve("/")
+					.normalize();
 
 			try {
 				final URI subjectURL = eacInfo.getSubjectURL() != null
 						&& eacInfo.getSubjectURL().toLowerCase().startsWith("https://") ? new URL(
-						eacInfo.getSubjectURL()).toURI().resolve("/") : null;
-				if (subjectURL == null || !tcTokenURL.resolve("/").equals(subjectURL.resolve("/"))) {
-					final String tcTokenWarn = "Die Seite\n " + tcTokenURL.resolve("/") + "\nwill im Namen von\n "
-							+ eacInfo.getSubjectURL() + "\neine Online-Authentisierung durchführen.\n";
+						eacInfo.getSubjectURL()).toURI().resolve("/").normalize() : null;
+
+				if (subjectURL == null
+						|| !(tcTokenURL.getScheme().equalsIgnoreCase(subjectURL.getScheme())
+								&& tcTokenURL.getHost().equalsIgnoreCase(subjectURL.getHost())
+								&& (tcTokenURL.getPort() == subjectURL.getPort() || tcTokenURL.getPort() == -1
+										&& subjectURL.getPort() == 443 || tcTokenURL.getPort() == 443
+										&& subjectURL.getPort() == -1) && tcTokenURL.getPath().equals(
+								subjectURL.getPath()))) {
+
+					final String tcTokenWarn = "Die Seite\n " + tcTokenURL + "\nwill im Namen von\n " + subjectURL
+							+ "\neine Online-Authentisierung durchführen.\n";
 					System.out.println(tcTokenWarn);
 					mainView.showMessage(tcTokenWarn, IMainView.WARNING);
 
-					if ("true".equals(System.getProperty("de.persoapp.forceStrictMode"))) {
-						// XXX: authentication failed
-						if (ecw != null) {
-							ecw.callback(ECardWorker.CALLBACK_RESULT.TA_ERROR);
-						}
-
-						return null;
+					// XXX: authentication failed
+					if (ecw != null) {
+						ecw.callback(ECardWorker.CALLBACK_RESULT.TA_ERROR);
 					}
+
+					return null;
 				}
 			} catch (final Exception e) {
 				e.printStackTrace();

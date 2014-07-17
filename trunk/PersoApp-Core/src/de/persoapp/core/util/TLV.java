@@ -1,49 +1,49 @@
 /**
- *
+ * 
  * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
- *
+ * 
  * Authors Christian Kahlo, Ralf Wondratschek
- *
+ * 
  * All Rights Reserved.
- *
+ * 
  * Contact: PersoApp, http://www.persoapp.de
- *
+ * 
  * @version 1.0, 30.07.2013 13:50:47
- *
+ * 
  *          This file is part of PersoApp.
- *
+ * 
  *          PersoApp is free software: you can redistribute it and/or modify it
  *          under the terms of the GNU Lesser General Public License as
  *          published by the Free Software Foundation, either version 3 of the
  *          License, or (at your option) any later version.
- *
+ * 
  *          PersoApp is distributed in the hope that it will be useful, but
  *          WITHOUT ANY WARRANTY; without even the implied warranty of
  *          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  *          Lesser General Public License for more details.
- *
+ * 
  *          You should have received a copy of the GNU Lesser General Public
  *          License along with PersoApp. If not, see
  *          <http://www.gnu.org/licenses/>.
- *
+ * 
  *          Diese Datei ist Teil von PersoApp.
- *
+ * 
  *          PersoApp ist Freie Software: Sie können es unter den Bedingungen der
  *          GNU Lesser General Public License, wie von der Free Software
  *          Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder
  *          späteren veröffentlichten Version, weiterverbreiten und/oder
  *          modifizieren.
- *
+ * 
  *          PersoApp wird in der Hoffnung, dass es nützlich sein wird, aber OHNE
  *          JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
  *          Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN
  *          ZWECK. Siehe die GNU Lesser General Public License für weitere
  *          Details.
- *
+ * 
  *          Sie sollten eine Kopie der GNU Lesser General Public License
  *          zusammen mit diesem Programm erhalten haben. Wenn nicht, siehe
  *          <http://www.gnu.org/licenses/>.
- *
+ * 
  */
 package de.persoapp.core.util;
 
@@ -53,133 +53,129 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Tag-Length-Value encoding utilities for encoding/decoding issues.
- * Additionally, functions for building <tt>object identifier-(OID)</tt> are
- * also included.
- * <p>
- * <code>public class TLV</code>
- * </p>
+ * Utility class for en-/decoding TLV data structures
  * 
  * @author Christian Kahlo, based on VX4.NET code
  * @author Rico Klimsa - added javadoc comments.
  */
 public class TLV {
 
-	// Tag Classes
-	/** The Constant UNIVERSAL. */
+	/** universal tag class */
 	public static final byte	UNIVERSAL		= (byte) 0x00;
-	
-	/** The Constant APPLICATION. */
+
+	/** application tag class */
 	public static final byte	APPLICATION		= (byte) 0x40;
-	
-	/** The Constant CONTEXT. */
+
+	/** context specific tag class */
 	public static final byte	CONTEXT			= (byte) 0x80;
-	
-	/** The Constant PRIVATE. */
+
+	/** private tag class */
 	public static final byte	PRIVATE			= (byte) 0xA0;
 
-	/** The Constant CONSTRUCTED. */
+	/** constructed data object */
 	public static final byte	CONSTRUCTED		= (byte) 0x20;
 
-	// Tag Types
-	/** The Constant EOC. */
-	public static final byte	EOC				= (byte) 0x00;					// End Of Content
-	
-	/** The Constant BOOLEAN. */
+	/** universal tag EOC (End-of-Content). */
+	public static final byte	EOC				= (byte) 0x00;
+
+	/** universal tag BOOLEAN. */
 	public static final byte	BOOLEAN			= (byte) 0x01;
-	
-	/** The Constant INTEGER. */
+
+	/** universal tag INTEGER. */
 	public static final byte	INTEGER			= (byte) 0x02;
-	
-	/** The Constant BITSTRING. */
+
+	/** universal tag BITSTRING. */
 	public static final byte	BITSTRING		= (byte) 0x03;
-	
-	/** The Constant OCTETSTRING. */
+
+	/** universal tag OCTETSTRING. */
 	public static final byte	OCTETSTRING		= (byte) 0x04;
-	
-	/** The Constant NULL. */
+
+	/** universal tag NULL. */
 	public static final byte	NULL			= (byte) 0x05;
-	
-	/** The Constant OID. */
+
+	/** universal tag OID (object identifier). */
 	public static final byte	OID				= (byte) 0x06;
-	//	public static final byte UNK1			= (byte)0x07;
-	//	public static final byte UNK2			= (byte)0x08;
-	/** The Constant REAL. */
+
+	/** universal tag object descriptor. */
+	public static final byte	ODESC			= (byte) 0x07;
+
+	/** universal tag EXTERNAL. */
+	public static final byte	EXTERNAL		= (byte) 0x08;
+
+	/** universal tag REAL. */
 	public static final byte	REAL			= (byte) 0x09;
-	
-	/** The Constant ENUMERATED. */
+
+	/** universal tag ENUMERATED. */
 	public static final byte	ENUMERATED		= (byte) 0x0A;
-	//	public static final byte UNK3			= (byte)0x0B;
-	/** The Constant RELATIV_OID. */
-	public static final byte	RELATIV_OID		= (byte) 0x0D;
 
-	/** The Constant STRING_UTF8. */
+	/** universal tag EMBEDDED PDV */
+	public static final byte	EMB_PDV			= (byte) 0x0B;
+
+	/** universal tag UTF8String */
 	public static final byte	STRING_UTF8		= (byte) 0x0C;
-	
-	/** The Constant STRING_NUM. */
-	public static final byte	STRING_NUM		= (byte) 0x12;
-	
-	/** The Constant STRING_PRINT. */
-	public static final byte	STRING_PRINT	= (byte) 0x13;
-	
-	/** The Constant STRING_T61. */
-	public static final byte	STRING_T61		= (byte) 0x14;
-	
-	/** The Constant STRING_VTXT. */
-	public static final byte	STRING_VTXT		= (byte) 0x15;
-	
-	/** The Constant STRING_IA5. */
-	public static final byte	STRING_IA5		= (byte) 0x16;
-	
-	/** The Constant STRING_GRAPHIC. */
-	public static final byte	STRING_GRAPHIC	= (byte) 0x19;
-	
-	/** The Constant STRING_ISO646. */
-	public static final byte	STRING_ISO646	= (byte) 0x1A;
-	
-	/** The Constant STRING_GENERAL. */
-	public static final byte	STRING_GENERAL	= (byte) 0x1B;
-	
-	/** The Constant STRING_UNI. */
-	public static final byte	STRING_UNI		= (byte) 0x1C;
-	
-	/** The Constant STRING_BMP. */
-	public static final byte	STRING_BMP		= (byte) 0x1E;
 
-	/** The Constant TIME_UTC. */
+	/** universal tag RELATIVE_OID. */
+	public static final byte	RELATIVE_OID	= (byte) 0x0D;
+
+	/** universal tag NumericString */
+	public static final byte	STRING_NUM		= (byte) 0x12;
+
+	/** universal tag PrintableString */
+	public static final byte	STRING_PRINT	= (byte) 0x13;
+
+	/** universal tag T61String */
+	public static final byte	STRING_T61		= (byte) 0x14;
+
+	/** universal tag VideotexString */
+	public static final byte	STRING_VTXT		= (byte) 0x15;
+
+	/** universal tag IA5String */
+	public static final byte	STRING_IA5		= (byte) 0x16;
+
+	/** universal tag UTCTime */
 	public static final byte	TIME_UTC		= (byte) 0x17;
-	
-	/** The Constant TIME_GENERAL. */
+
+	/** universal tag GeneralizedTime */
 	public static final byte	TIME_GENERAL	= (byte) 0x18;
 
-	/** The Constant MORE. */
+	/** universal tag GraphicString */
+	public static final byte	STRING_GRAPHIC	= (byte) 0x19;
+
+	/** universal tag VisibleString */
+	public static final byte	STRING_ISO646	= (byte) 0x1A;
+
+	/** universal tag GeneralString */
+	public static final byte	STRING_GENERAL	= (byte) 0x1B;
+
+	/** universal tag UniversalString */
+	public static final byte	STRING_UNI		= (byte) 0x1C;
+
+	/** universal tag CHARACTER STRING */
+	public static final byte	STRING_CHAR		= (byte) 0x1D;
+
+	/** universal tag BMPString */
+	public static final byte	STRING_BMP		= (byte) 0x1E;
+
+	/** indicator for "use long-form" */
 	public static final byte	MORE			= (byte) 0x1F;
 
-	/** The Constant SEQ. */
+	/** universal tag SEQUENCE of. */
 	public static final byte	SEQ				= CONSTRUCTED | (byte) 0x10;
-	
-	/** The Constant SET. */
+
+	/** universal tag SET of. */
 	public static final byte	SET				= CONSTRUCTED | (byte) 0x11;
 
-	
 	/**
-	 * <p>
-	 * Converts the value of the parameter <strong>value</strong> into a signed
-	 * byte and copies it in the <strong>dest</strong> array.
-	 * </p>
-	 * <p>
-	 * The position of the element in the dest array is determined by the
-	 * starting offset and the size of the copied value.
-	 * </p>
+	 * convert tagID to byte-array
 	 * 
 	 * @param dst
-	 *            - The destination array.
+	 *            - destination array
 	 * @param ofs
-	 *            - The starting offset.
+	 *            - destination offset
 	 * @param value
-	 *            - The value, to copie.
+	 *            - tag value
 	 * @param valSize
-	 *            - The size of the value.
+	 *            - size of tag value (amount of bytes)
 	 */
 	private static void val2dst(final byte[] dst, final int ofs, final int value, final byte valSize) {
 		for (int i = 0; i < valSize; i++) {
@@ -192,10 +188,10 @@ public class TLV {
 	 * <em>ASN.1</em>.
 	 * 
 	 * @param tagID
-	 *            - The given Tag-ID.
+	 *            - tagID
 	 * @param data
-	 *            - THe given data.
-	 * @return Returns the <em>BER-TLV</em>-object.
+	 *            - content
+	 * @return <em>BER-TLV</em> object
 	 */
 	public static byte[] build(final int tagID, final byte[] data) {
 		final byte tagLen = (byte) (tagID < 0x100 ? 1 : tagID < 0x10000 ? 2 : tagID < 0x10000 ? 3 : 4);
@@ -222,16 +218,14 @@ public class TLV {
 	}
 
 	/**
-	 * Builds the <em>BER-TLV</em> data structure according to
-	 * <em>ISO/IEC8825</em> and the <em>ASN.1</em>. Previously converts the
-	 * given <em>String</em> in <tt>UTF-8</tt> format.
+	 * Encode an UTF-8 string as BER-TLV
 	 * 
 	 * @param tagID
-	 *            - The given tag id.
+	 *            - enclosing tag ID
 	 * @param value
-	 *            - The given String.
-	 *            
-	 * @return Returns the <em>BER-TLV</em>-object.
+	 *            - content
+	 * 
+	 * @return input string as <em>BER-TLV</em> object.
 	 */
 	public static byte[] buildUTF8(final int tagID, final String value) {
 		try {
@@ -243,32 +237,14 @@ public class TLV {
 	}
 
 	/**
-	 * The result of this function is determined by the inserted <em>oid</em>.
-	 * <p>
-	 * If the <em>oid</em> does not contain a dot, the function encodes the
-	 * <em>oid</em> after the <em>BER</em> and returns a <tt>byte array</tt>
-	 * that has the following content:
-	 * <table border="1">
-	 * <tr>
-	 * <td>The <em>oid</em> as <em>BER-TLV object</em></td>
-	 * <td>The given data</td>
-	 * </tr>
-	 * </table>
-	 * </p>
-	 * <p>
-	 * If the given <em>oid</em> contains one or more dots, the dots are removed
-	 * and the given <em>oid</em> is parsed and encoded in hexadecimal format.
-	 * The return value has the same structure as in the case that there arn't
-	 * any dots from beginning.
-	 * </p>
+	 * Encode an object ID as <em>BER-TLV</em> object
 	 * 
 	 * @param oid
-	 *            - The oid.
+	 *            - object ID
 	 * @param data
-	 *            - The given data.
-	 * @return Returns a <tt>byte-array</tt> with the digits of the created
-	 *         <em>BER-TLV object</em> at the beginning and the digits of the
-	 *         given <em>data</em> at the end.
+	 *            - content
+	 * @return BER-TLV encoded object ID and content
+	 * 
 	 */
 	public static byte[] buildOID(final String oid, final byte[] data) {
 		final byte[] binOID;
@@ -303,33 +279,29 @@ public class TLV {
 	}
 
 	/**
-	 * This function builds the object identifier (oid) through the given
-	 * byte-array.
+	 * Simply concatenate given object identifier and content
 	 * 
 	 * @param oid
-	 *            - The non actual object identifier.
+	 *            - object id
 	 * @param data
-	 *            - The data which needs to be identified through a oid.
-	 * @return A chained byte-array with the digits of the given
-	 *         <strong>oid</strong> at the beginning and the digits of the given
-	 *         <strong>data</strong> right after them.
+	 *            - content
+	 * @return object identifier and content as one byte-array
 	 */
 	public static byte[] buildOID(final byte[] oid, final byte[] data) {
 		return concat(oid, data);
 	}
 
 	/**
-	 * This function returns a byte-array, which contains just the digits which
-	 * fit to the given tags.
+	 * get first occurrence of given tag
 	 * 
 	 * @param data
-	 *            - The given byte-array.
+	 *            - <em>BER-TLV</em> encoded input data
 	 * @param tag
-	 *            - The given tags which identify the searched data.
-	 * @return The hexadecimal digits in binary form which fits to the given
-	 *         tag.
+	 *            - tag to find
+	 * @return content of tag or null if no data available or found
 	 * 
-	 * @see {@link #get(byte[], byte[])}
+	 * @see {@link #get(byte[], byte)}
+	 * @see {@link #get(byte[], short)}
 	 */
 	public static byte[] get(final byte[] data, final byte[] tag) {
 		if (data == null || tag == null || data.length == 0 || tag.length == 0) {
@@ -340,8 +312,8 @@ public class TLV {
 			int i = 0, datalen = 0, sizelen = 0;
 			while (i + tag.length + 1 < data.length) {
 				int tagLength = 1;
-				if ((data[i] & 0x1F) == 0x1F) {
-					while ((data[i + tagLength++] & 0x1F) == 0x1F) {
+				if ((data[i] & MORE) == MORE) {
+					while ((data[i + tagLength++] & 0x80) != 0) {
 						;
 					}
 				}
@@ -378,35 +350,32 @@ public class TLV {
 	}
 
 	/**
-	 * This function returns a byte-array, which contains just the data part
-	 * from the <em>BER-TLV objects</em>, which tagId fits to the given tag.
+	 * get first occurrence of given single-byte tag
 	 * 
 	 * @param data
-	 *            - The given <em>BER-TLV objects</em>
+	 *            - <em>BER-TLV</em> encoded input data
 	 * @param tag
-	 *            - The tag which identifies the searched data.
-	 * @return The data parts of the given <em>BER-TLV object</em> that tagId
-	 *         fits to the given tag.
+	 *            - tag to find
+	 * @return - content or null if not found
 	 * 
 	 * @see {@link #get(byte[], byte[])}
+	 * @see {@link #get(byte[], short)}
 	 */
 	public static byte[] get(final byte[] data, final byte tag) {
 		return get(data, new byte[] { tag });
 	}
 
 	/**
-	 * This function returns a byte-array, which contains just the digits which
-	 * fit to the tag.
+	 * get first occurrence of given two-byte tag
 	 * 
 	 * @param data
-	 *            - The given byte-array.
+	 *            - <em>BER-TLV</em> encoded input data
 	 * @param tag
-	 *            - The given short-valued-tag which identifies the searched
-	 *            data.
-	 * @return The hexadecimal digits in binary form which fits to the given
-	 *         tag.
+	 *            - tag to find
+	 * @return - content or null if not found
 	 * 
 	 * @see {@link #get(byte[], byte)}
+	 * @see {@link #get(byte[], byte[])}
 	 */
 	public static byte[] get(final byte[] data, final short tag) {
 		return get(data, new byte[] { (byte) (tag >> 8 & 0xFF), (byte) (tag & 0xFF) });
@@ -417,13 +386,11 @@ public class TLV {
 	 * IOException("Invalid DER: can't handle UCS-4 string"); //$NON-NLS-1$
 	 */
 	/**
-	 * Returns a string-representation of the given byte-array, according to the
-	 * first element of the byte-array. The first element is responsible for
-	 * setting the used format.
+	 * Parse BER-TLV string representations and return string.
 	 * 
 	 * @param data
-	 *            - The given byte array.
-	 * @return A string-representation of the given byte-array.
+	 *            - BER-TLV encoded string
+	 * @return {@link String} from input data
 	 */
 	public static String getString(final byte[] data) {
 		if (data == null) {
@@ -450,19 +417,15 @@ public class TLV {
 		return new String(TLV.get(data, data[0]));
 	}
 
-	/*
-	 * getC, getConstructed
-	 */
 	/**
-	 * This function returns all values of the given byte-array
-	 * <strong>data</strong> which fit on the given <strong>tag</strong>.
+	 * return a list of all matching occurrences of given tag
 	 * 
 	 * @param data
-	 *            - The given array of bytes, which contains the digits.
+	 *            - <em>BER-TLV</em> encoded input data
 	 * @param tag
-	 *            - The given array of tags, which identifies the searched
-	 *            values in the given data-array.
-	 * @return A List of byte-arrays. Every byte-array refers to a given tag.
+	 *            - tag to find
+	 * 
+	 * @return {@link List} of byte-array containing content
 	 * 
 	 * @see {@link #getM(byte[], short)}
 	 * @see {@link #getM(byte[], byte)}
@@ -477,11 +440,12 @@ public class TLV {
 			int datalen = 0, sizelen = 0;
 			while (i + tag.length + 1 < data.length) {
 				int tagLength = 1;
-				if ((data[i] & 0x1F) == 0x1F) {
-					while ((data[i + tagLength++] & 0x1F) == 0x1F) {
+				if ((data[i] & MORE) == MORE) {
+					while ((data[i + tagLength++] & 0x80) != 0) {
 						;
 					}
 				}
+
 				datalen = data[i + tagLength] & 0xFF;
 				sizelen = 1;
 				if (datalen > 0x7F) {
@@ -529,53 +493,54 @@ public class TLV {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * This function returns the data parts of the given <em>BER-TLV</em> values
-	 * which are identified through the given tag.
+	 * return a list of all matching occurrences of given single-byte tag
 	 * 
 	 * @param data
-	 *            - The given <em>BER-TLV</em> values.
+	 *            - <em>BER-TLV</em> encoded input data
 	 * @param tag
-	 *            - The given tag.
-	 * @return A List of the identified data parts.
+	 *            - tag to find
+	 * 
+	 * @return {@link List} of byte-array containing content
+	 * 
 	 */
 	public static List<byte[]> getM(final byte[] data, final byte tag) {
 		return getM(data, new byte[] { tag });
 	}
 
 	/**
-	 * This function returns the data parts of the given <em>BER-TLV</em> values
-	 * which are identified through the given tag.
+	 * return a list of all matching occurrences of given two-byte tag
 	 * 
 	 * @param data
-	 *            - The given <em>BER-TLV</em> values.
+	 *            - <em>BER-TLV</em> encoded input data
 	 * @param tag
-	 *            - The given tag.
-	 * @return A List of the identified data parts.
+	 *            - tag to find
+	 * 
+	 * @return {@link List} of byte-array containing content
+	 * 
 	 */
 	public static List<byte[]> getM(final byte[] data, final short tag) {
 		return getM(data, new byte[] { (byte) (tag >> 8 & 0xFF), (byte) (tag & 0xFF) });
 	}
 
 	/**
-	 * This function stores the digits of defined range from the byte-arrays b1
-	 * and b2 into a new byte-array.
+	 * concatenate two byte arrays
 	 * 
 	 * @param b1
-	 *            - The first byte-array.
+	 *            - first source array
 	 * @param offset1
-	 *            - The starting offset of the first byte-array.
+	 *            - offset in first source array
 	 * @param length1
-	 *            - The length of the data, which is going to be stored.
+	 *            - length for first source array
 	 * @param b2
-	 *            - The second byte-array.
+	 *            - second source array
 	 * @param offset2
-	 *            - The starting offset of the second byte-array.
+	 *            - offset in second source array
 	 * @param length2
-	 *            - The length of the data, which is going to be stored.
-	 * @return This function returns a byte-array, which stores the copied
-	 *         values from b1 and b2.
+	 *            - length for second source array
+	 * 
+	 * @return first and second source array concatenated
 	 */
 	public static final byte[] concat(final byte[] b1, final int offset1, final int length1, final byte[] b2,
 			final int offset2, final int length2) {
@@ -590,15 +555,13 @@ public class TLV {
 	}
 
 	/**
-	 * This function chains the arrays b1 and b2 together.
+	 * concatenate two byte arrays
 	 * 
 	 * @param b1
-	 *            - The first byte array, which values are situated at the
-	 *            beginning of the returned array.
+	 *            - first source array
 	 * @param b2
-	 *            - The second byte array, which values are situated after the
-	 *            values of b2.
-	 * @return The concatenated array which holds now the values of b1 and b2
+	 *            - second source array
+	 * @return first and second source array concatenated
 	 * 
 	 * @see #concat(byte[], byte[])
 	 */

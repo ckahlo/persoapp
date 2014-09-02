@@ -692,6 +692,7 @@ public class CardHandler implements ICardHandler {
 
 		/* calculate common secret point between A and B */
 		final byte[][] paceRes = pace.finish(paceYA);
+		IDPICC = paceRes[0];
 		final byte[] sharedSecret = paceRes[1];
 
 		final byte[] kEnc = KDF(mdSHA1, sharedSecret, 0x0000001, 16);

@@ -35,10 +35,10 @@
             <fileset dir="build/classes"/>
 
 <!--     	
-            <zipfileset excludes="META-INF/*.SF" src="../../PersoApp-Core/lib/bcmail-jdk15on-150.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="../../PersoApp-Core/lib/bcpkix-jdk15on-150.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="../../PersoApp-Core/lib/bcmail-jdk15on-151.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="../../PersoApp-Core/lib/bcpkix-jdk15on-151.jar"/>
 -->
-            <zipfileset excludes="META-INF/*.SF" src="../../PersoApp-Core/lib/bcprov-jdk15on-150.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="../../PersoApp-Core/lib/bcprov-jdk15on-151.jar"/>
         </jar>
     	
 		<!-- run optimizer on build-package -->
@@ -84,7 +84,7 @@
 	<mkdir dir="build/classes" />
 	<javac srcdir="../../PersoApp-Core/src" 
 		destdir="build/classes" 
-		classpath="../../PersoApp-Core/lib/bcmail-jdk15on-150.jar:../../PersoApp-Core/lib/bcpkix-jdk15on-150.jar:../../PersoApp-Core/lib/bcprov-jdk15on-150.jar" 
+		classpath="../../PersoApp-Core/lib/bcmail-jdk15on-151.jar:../../PersoApp-Core/lib/bcpkix-jdk15on-151.jar:../../PersoApp-Core/lib/bcprov-jdk15on-151.jar" 
 		source="1.6"
 		target="1.6"
 		encoding="iso-8859-1"

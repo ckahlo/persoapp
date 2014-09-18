@@ -284,7 +284,7 @@ public class PAOSInitiator {
 	 * @throws JAXBException
 	 *             - on error during JAXB context creation
 	 */
-	public PAOSInitiator(final WSContainer wsCtx, URI endpoint, final String sessionID, final byte[] pskKey)
+	public PAOSInitiator(final WSContainer wsCtx, final URI endpoint, final String sessionID, final byte[] pskKey)
 			throws IOException, JAXBException {
 		this();
 
@@ -295,17 +295,6 @@ public class PAOSInitiator {
 		this.wsCtx = wsCtx;
 		this.sessionID = sessionID;
 		this.pskKey = pskKey;
-
-		if (endpoint.getPath().isEmpty()) {
-			endpoint = endpoint.resolve("/").normalize();
-		}
-
-		/*
-		 * TODO: remove?
-		 */
-		if (sessionID != null) {
-			endpoint = endpoint.resolve("?sessionid=" + sessionID);
-		}
 
 		this.serviceURL = endpoint.toURL();
 

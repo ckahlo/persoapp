@@ -52,6 +52,7 @@ import java.io.File;
 import java.net.Authenticator;
 import java.net.InetSocketAddress;
 import java.net.URL;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -191,9 +192,11 @@ public final class PersoApp implements Runnable {
 			try {
 				final ECApiHttpHandler ecApiHttp = new ECApiHttpHandler();
 
-				final HttpServer server = HttpServer.create(new InetSocketAddress(EID_HTTP_HOST_NAME, EID_HTTP_PORT),
-						10);
+				final HttpServer server = HttpServer
+						.create(new InetSocketAddress(EID_HTTP_HOST_NAME, EID_HTTP_PORT), 0);
+				server.setExecutor(Executors.newCachedThreadPool());
 				server.start();
+
 				server.createContext("/").setHandler(ecApiHttp);
 				server.createContext(EID_HTTP_CTX_NAME).setHandler(ecApiHttp);
 			} catch (final Exception e) {

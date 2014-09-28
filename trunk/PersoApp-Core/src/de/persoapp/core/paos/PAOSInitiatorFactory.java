@@ -55,12 +55,9 @@ import javax.xml.bind.JAXBException;
 import de.persoapp.core.ws.engine.WSContainer;
 
 /**
- * The <tt>PAOSInitiatorFactory</tt> creates instances from the
- * {@link PAOSInitiator} object, to allow the use of the <tt>PAOS</tt>
- * -webservice.
- * <p>
- * <code>public class PAOSInitiatorFactory</code>
- * </p>
+ * The PAOSInitiatorFactory creates instances from the
+ * {@link PAOSInitiator} object, to allow the use of the PAOS
+ * -protocol.
  * 
  * @author Ralf Wondratschek
  * @author Rico Klimsa - added javadoc comments.
@@ -68,24 +65,26 @@ import de.persoapp.core.ws.engine.WSContainer;
 public class PAOSInitiatorFactory {
 
 	/**
-	 * Creates and returns a new {@link PAOSInitiator} instance.
+	 * Creates, initializes and returns a new {@link PAOSInitiator}.
 	 * 
 	 * @param wsCtx
-	 *            - The webservice context to access the different methods and
-	 *            security informations.
+	 *            - The container for local web-services to dispatch PAOS
+	 *            requests.
+	 * 
 	 * @param endpoint
-	 *            - The webservice endpoint which contains the different
-	 *            methods.
+	 *            - The webservice endpoint which contains the callable methods
+	 *            of the webservice.
+	 * 
 	 * @param sessionID
-	 *            - The currently session id.
+	 *            - The eID session ID (PSK user name).
 	 * @param pskKey
-	 *            - The currently used pre shared key.
+	 *            - The pre-shared key for TLS_RSA_PSK connection.
 	 * 
 	 * @return Returns the created instance of {@link PAOSInitiator}.
 	 * 
 	 * @throws IOException
-	 *             - Throws <tt>IOException</tt> if a error occurs during the
-	 *             creation process of the {@link PAOSInitiator}-object.
+	 *             Throws IOException if a error occurs during the
+	 *             creation process of the {@link PAOSInitiator}.
 	 */
     public PAOSInitiator createPAOSInitiator(WSContainer wsCtx, URI endpoint, String sessionID, byte[] pskKey) throws IOException {
         try {
@@ -96,10 +95,11 @@ public class PAOSInitiatorFactory {
     }
 
 	/**
-	 * Creates and returns a empty instance of the {@link PAOSInitiator}.
+	 * Creates and returns a new instance {@link PAOSInitiator} with initialized
+	 * JAXB components.
 	 * 
-	 * @return Creates and returns a empty instance of the {@link PAOSInitiator}
-	 *         -class.
+	 * @return Creates and returns a new instance {@link PAOSInitiator} with
+	 *         initialized JAXB components.
 	 */
     public PAOSInitiator createPreStartPAOSInitiator() {
         try {

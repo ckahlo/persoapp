@@ -78,11 +78,10 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import de.persoapp.core.tls.BCTlsSocketFactoryImpl;
 
 /**
- * The util class provides functions for setting up 
- * SSL-Sockets, opening urls, validating 
- * URLIdentitys, getEcApiParams and parsing Objects.
  * <p>
- * <code>public class Util</code>
+ * The util class provides functions for setting up SSL-SocketFactorys,
+ * establishing connections, validating URLIdentitys, getEcApiParams and parsing
+ * Objects.
  * </p>
  * 
  * @author Christian Kahlo
@@ -98,7 +97,7 @@ public class Util {
 	/**
 	 * The basic factory method for new SSL-Sockets.
 	 * 
-	 * @return a new {@link BCTlsSocketFactoryImpl} in ssLSF
+	 * @return a new {@link BCTlsSocketFactoryImpl}
 	 */
 	private static SSLSocketFactory getSSLSocketFactory() {
 		if (sslSF == null) {
@@ -113,10 +112,13 @@ public class Util {
 	 * {@link InputStream}.
 	 * 
 	 * @param is
-	 *            - The <u>final</u> input-stream to be read.
+	 *            - The {@link InputStream} to be read.
+	 * 
 	 * @return The contents of the stream, or null.
+	 * 
 	 * @throws IOException
-	 *             If the application is trying to read a empty stream.
+	 *             If the application is trying to read a empty stream or if the
+	 *             stream already closed.
 	 */
 	public static String readStream(final InputStream is) throws IOException {
 		final StringBuffer sb = new StringBuffer();
@@ -159,11 +161,9 @@ public class Util {
 
 	/**
 	 * Parses the given httpObject with the ContentHandler through a XMLReader.
-	 * Every time a searched element in the httpObject is reached, a
-	 * individually event is triggered.
 	 * 
 	 * @param httpObject
-	 *            - The HttpObject which has to be parsed.
+	 *            - The HttpObject, to be parsed.
 	 * @param ch
 	 *            - The content handler of the httpObject.
 	 */
@@ -192,17 +192,19 @@ public class Util {
 	}
 
 	/**
+	 * <p>
 	 * Establishes a connection through the ProxySelector and returns the
-	 * connection or the value <strong>null</strong> if an error occurs.
-	 * 
+	 * connection or the value <strong>null</strong>, if no connection can be
+	 * established.<br/> 
 	 * This function works with <u>http</u> {@link HttpURLConnection} and
 	 * <u>https</u> {@link HttpsURLConnection}.
+	 * </p>
 	 * 
 	 * @param url
 	 *            - The given {@link URL}, to connect to.
 	 * @return The established <i>http</i>connection as
 	 *         {@link HttpURLConnection} or {@link HttpsURLConnection}, or
-	 *         <strong>null</strong>.
+	 *         <strong>null</strong>, if no connection can be established.
 	 */
 	public static URLConnection openURL(final URL url) {
 		URLConnection uc = null;
@@ -232,12 +234,12 @@ public class Util {
 	}
 
 	/**
-	 * Validates the identity of the certificate.
+	 * Checks server certificate for matching hostname.
 	 * 
 	 * @param cert
-	 *            - The given {@link X509Certificate}.
+	 *            - The {@link X509Certificate}, to check.
 	 * @param uri
-	 *            - The given {@link URI}.
+	 *            - The {@link URI}, to match.
 	 * @return Returns <b>true</b> if the identity of the certificate is
 	 *         correct, otherwise <b>false</b>.
 	 */

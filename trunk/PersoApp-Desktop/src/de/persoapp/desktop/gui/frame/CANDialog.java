@@ -68,11 +68,10 @@ import de.persoapp.desktop.gui.panel.ButtonPanel;
 import de.persoapp.desktop.gui.panel.PinPanel;
 
 /**
- * The <tt>CANDialog</tt> provides the option to insert a Pin in the included
- * {@link PinPanel}, in order to activate the suspended pin, after the pin
- * insertion fails the second time.
  * <p>
- * <code>public class CANDialog extends JDialog</code>
+ * The CANDialog provides the option to insert a <em>CAN</em> in the
+ * belonged {@link PinPanel}, in order to activate the suspended <em>PIN</em>,
+ * after a wrong pin is inserted the second time in a row.
  * </p>
  * 
  * @author Christian Kahlo
@@ -80,9 +79,6 @@ import de.persoapp.desktop.gui.panel.PinPanel;
  */
 public class CANDialog extends JDialog {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long	serialVersionUID	= -7427161104872715697L;
 
 	/**
@@ -96,7 +92,7 @@ public class CANDialog extends JDialog {
 	private JButton				confirm, cancel;
 	
 	/**
-	 * The {@link PinPanel} to insert the needed <tt>Pin</tt>.
+	 * The {@link PinPanel} to insert the needed CAN.
 	 */
 	private PinPanel			pinPanel;
 	
@@ -111,12 +107,13 @@ public class CANDialog extends JDialog {
 	private JLabel				label;
 	
 	/**
-	 * The monitoring object.
+	 * The monitoring object, which signals the correctly entering of the
+	 * <em>CAN</em>.
 	 */
 	private Object				monitor;
 
 	/**
-	 * Creates a new instance of the {@link CANDialog}.
+	 * Creates and initializes a new {@link CANDialog}.
 	 * 
 	 * @param parent
 	 *            - The parent frame.
@@ -176,8 +173,7 @@ public class CANDialog extends JDialog {
 	}
 
 	/**
-	 * Sets the <tt>content pane</tt> of the {@link CANDialog}, using the
-	 * {@link GridBagLayout}.
+	 * Creates and sets the content pane of the {@link CANDialog}.
 	 */
 	private void setContentPane() {
 		final Container contentPane = this.getContentPane();
@@ -203,8 +199,9 @@ public class CANDialog extends JDialog {
 	}
 
 	/**
-	 * Stores the result of the user input, notifies the monitoring object and
-	 * disposes the {@link CANDialog}.
+	 * Stores the result of the user input, notifies the monitoring object to
+	 * signal the successful entering of the <em>CAN</em> and disposes the
+	 * {@link CANDialog} after all.
 	 */
 	private void setResult() {
 		result = new SecureHolder(pinPanel.getPinCode(0));
@@ -215,8 +212,13 @@ public class CANDialog extends JDialog {
 	}
 
 	/**
+	 * <p>
 	 * Retrieves the result of the user input of the {@link CANDialog}. As long
 	 * as the result is <strong>null</strong>, the monitoring object is waiting.
+	 * </p>
+	 * <p>
+	 * The monitoring object is notified by setting the result.
+	 * </p>
 	 * 
 	 * @return Returns the result of the user input in a {@link SecureHolder}.
 	 */
@@ -234,7 +236,7 @@ public class CANDialog extends JDialog {
 	}
 	
 	/**
-	 * Shows the {@link CANDialog} and retrieves the result.
+	 * Shows the {@link CANDialog} and pulls the result of the user input.
 	 * 
 	 * @param parent
 	 *            - The parent frame of the {@link CANDialog}.
@@ -243,7 +245,7 @@ public class CANDialog extends JDialog {
 	 * @param msg
 	 *            - The message, which is going to be displayed in the dialog.
 	 * 
-	 * @return Returns the result of the user input in the {@link SecureHolder}.
+	 * @return Returns the result of the user input in a {@link SecureHolder}.
 	 */
 	public static SecureHolder show(final Frame parent, final String title, final String msg) {
 		return new CANDialog(parent, title, msg).getResult();

@@ -71,10 +71,11 @@ import de.persoapp.desktop.Configuration;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * The <tt>HelpPanel</tt> provides helping informations in the
- * desktop client, like the pin state or the need additionally input.
  * <p>
- * <code>public class HelpPanel extends JPanel</code>
+ * The HelpPanel provides helping informations in the desktop client,
+ * like the pin state, the need additionally input or informations about the
+ * current running operation and how to execute the specific operation in a
+ * correct way.
  * </p>
  * 
  * @author Christian Kahlo
@@ -82,19 +83,10 @@ import de.persoapp.desktop.gui.MyTitledBorder;
  */
 public class HelpPanel extends JPanel {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
+
 	private static final long				serialVersionUID	= 4377094333650746341L;
 
-	/**
-	 * The constant for <tt>bold</tt> text style.
-	 */
 	public static final String				BOLD				= "Bold";
-	
-	/**
-	 * The constant for <tt>normal</tt> text style.
-	 */
 	public static final String				NORMAL				= "Normal";
 
 	/**
@@ -103,24 +95,29 @@ public class HelpPanel extends JPanel {
 	private JTextPane						textPane;
 	
 	/**
-	 * The {@link JScrollPane} for the scrolling.
+	 * The {@link JScrollPane}, which enables the scrolling mechanism.
 	 */
 	private JScrollPane						scrollPane;
 	
 	/**
-	 * The <tt>JLabels</tt> for displaying informations in the {@link HelpPanel}. 
+	 * The JLabels for displaying information and to guide user interactions. 
 	 */
 	private JLabel							pinStatus, inputRequired;
 
 	/**
-	 * The <tt>bundle</tt> which resolves the necessary properties.
-	 */
+	  *Localized message bundle for user interaction.	 
+	  */
 	private final PropertyResolver.Bundle	textBundle;
 
 	/**
-	 * Constructs a new instance of the {@link HelpPanel}. This includes the
-	 * drawing and the initialization of all defined components. The constructed
-	 * Panel is double-buffered for advanced displaying.
+	 * <p>
+	 * Constructs a new instance of the {@link HelpPanel}.
+	 * </p>
+	 * <p>
+	 * This includes the drawing and the initialization of all defined
+	 * components. The constructed panel is double-buffered to achieve
+	 * benefits by the extended use of memory.
+	 * </p>
 	 */
 	public HelpPanel() {
 		super();
@@ -183,13 +180,13 @@ public class HelpPanel extends JPanel {
 	}
 
 	/**
-	 * Sets the description as text in the {@link HelpPanel}. The
+	 * Sets the text as description in the {@link HelpPanel}. The
 	 * style-information of the text is provided through the style argument.
 	 * 
 	 * @param text
-	 *            - The given text.
+	 *            - The text that will be set.
 	 * @param style
-	 *            - The provided style-information.
+	 *            - The provided style-informations of the text.
 	 */
 	private void setDescription(final String text, final String style) {
 		final Document doc = textPane.getDocument();
@@ -201,8 +198,9 @@ public class HelpPanel extends JPanel {
 	}
 
 	/**
-	 * Removes all content from the included document of the {@link HelpPanel}.
-	 * This function is called before new text is set in the {@link HelpPanel}.
+	 * Removes the written text from the {@link HelpPanel}. This function is
+	 * called, in order to free the currently used memory of the text. before
+	 * the new text is set.
 	 */
 	public void clear() {
 		final Document doc = textPane.getDocument();
@@ -216,15 +214,19 @@ public class HelpPanel extends JPanel {
 	}
 
 	/**
+	 * <p>
 	 * Clears the content from the {@link HelpPanel} and sets the given header
 	 * as the title and the description as the corresponding text in the
-	 * {@link HelpPanel}. The scroll-state is set to the top of the
-	 * {@link HelpPanel} after repainting.
+	 * {@link HelpPanel}.
+	 * </p>
 	 * 
 	 * @param header
-	 *            - The given Header.
+	 *            - The title of the description.
 	 * @param description
-	 *            - The given Description.
+	 *            - The description which shows valuable news related to the
+	 *            state of the identity card or to the current operation.
+	 * 
+	 * @see {@link #setText(String, String, boolean)}
 	 */
 	public void setText(final String header, final String description) {
 		clear();
@@ -234,18 +236,21 @@ public class HelpPanel extends JPanel {
 	}
 
 	/**
-	 * Clears the content from the {@link HelpPanel}. Sets the given header as
+	 * <p>
+	 * Removes the content from the {@link HelpPanel}. Sets the given header as
 	 * the title and the description as the corresponding text in the
 	 * {@link HelpPanel}. The current scroll state is saved if
 	 * <code>saveScrollState</code> equals <strong>true</strong>. Otherwise it
 	 * is set to the top after repainting the {@link HelpPanel}.
+	 * </p>
 	 * 
 	 * @param header
-	 *            - The given header.
+	 *            - The title of the description.
 	 * @param description
-	 *            - The corresponding text.
+	 *            - The description which shows valuable news related to the
+	 *            state of the identity card or to the current operation.
 	 * @param saveScrollState
-	 *            - Saves the current view position if true.
+	 *            - Saves the current view position if set to <b>true</b>.
 	 * 
 	 * @see #setText(String, String)
 	 */
@@ -266,10 +271,52 @@ public class HelpPanel extends JPanel {
 	}
 	
 	/**
-	 * The function displays the current PinState in the {@link HelpPanel}.
+	 * <p>
+	 * The function displays Informations about the current state of the
+	 * <em>PIN</em> and additional informations.
+	 * </p>
+	 * <p>
+	 * The parameter attempts can be one of the following values.
+	 * <table border="1">
+	 * <tr>
+	 * <th>Value</th>
+	 * <th>Description</th>
+	 * </tr>
+	 * <tr>
+	 * <td>3</td>
+	 * <td>There are 3 remaining attempts to enter the correct <em>PIN</em>.</td>
+	 * </tr>
+	 * <tr>
+	 * <td>2</td>
+	 * <td>There are 2 remaining attempts to enter the correct <em>PIN</em>.</td>
+	 * </tr>
+	 * <tr>
+	 * <td>1</td>
+	 * <td>There are 1 remaining attempt to enter the correct <em>PIN</em>. <br/>
+	 * The <em>CAN</em> must be entered before a new <em>PIN</em> can be set.</td>
+	 * </tr>
+	 * <tr>
+	 * <td>0</td>
+	 * <td>There are 0 remaining attempts to enter the correct <em>PIN</em>. <br/>
+	 * The <em>PUK</em> must be entered to unlock the identity card and to
+	 * enable further attempts to insert a <em>PIN</em> correctly.</td>
+	 * </tr>
+	 * <tr>
+	 * <td>255</td>
+	 * <td>The used PIN is already deactivated.</td>
+	 * </tr>
+	 * <tr>
+	 * <td>-1</td>
+	 * <td>No identity card can be found.</td>
+	 * </tr>
+	 * </table>
+	 * </p>
 	 * 
 	 * @param attempts
-	 *            - The remaining attempts to insert the correct pin.
+	 *            - This parameter may represent the remaining attempts to enter
+	 *            the correct <em>PIN</em> and the need of the <em>PUK</em>.
+	 *            It is possible, to use values which signals error
+	 *            states.
 	 */
 	public void setPINState(final int attempts) {
 		inputRequired.setVisible(false);

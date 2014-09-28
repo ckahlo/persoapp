@@ -58,12 +58,9 @@ import de.persoapp.core.util.TLV;
 
 /**
  * <p>
- * The <tt>ISOSMTransport</tt> implements the way, how data is transmitted to
- * the inserted card according to <em>ISO 7816-4</em>, after a <em>PACE</em>
+ * The ISOSMTransport implements the channel, that transmits the data
+ * to the inserted card according to <em>ISO 7816-4</em>, after a <em>PACE</em>
  * -tunnel to the smart card is established.
- * </p>
- * <p>
- * <code>public class ISOSMTransport implements TransportProvider</code>
  * </p>
  * 
  * @author Christian Kahlo
@@ -87,10 +84,10 @@ public class ISOSMTransport implements TransportProvider {
 	private final TransportProvider	parent;
 
 	/**
-	 * The keys for creating a message authentication code (mac) and the encryption. 
+	 * The used keys.
 	 */
 	private byte[]					kEnc, kMac;
-	//
+
 	/**
 	 * The ciphers for encoding, decoding and the initialization vector.
 	 */
@@ -100,17 +97,17 @@ public class ISOSMTransport implements TransportProvider {
 	 * The used block-cipher based message authentication code.
 	 */
 	private CMac					cmac;
-	//
+	
 	/**
 	 * The buffer of the initialization vector.
 	 */
 	private ByteBuffer				ivBuf			= null;
 	
 	/**
-	 * Changes the initialization vector with every call on <tt>getIV()</tt>.
+	 * Changes the initialization vector with every call on <code>getIV()</code>.
 	 */
 	private long					ssc				= 0;
-	//
+	
 	/**
 	 * The last status word.
 	 */
@@ -166,7 +163,7 @@ public class ISOSMTransport implements TransportProvider {
 	}
 
 	/**
-	 * Sets the EncKey and the MacKey.
+	 * Sets the EncKey and the MacKey. Initializes the used ciphers.
 	 * 
 	 * @param newkEnc
 	 *            - The EncKey.
@@ -212,16 +209,19 @@ public class ISOSMTransport implements TransportProvider {
 	}
 
 	/**
-	 * The <tt>PAD</tt> for enlarging a block to its needed size.
+	 * The padding.
 	 */
 	private static final byte[]	SM_PAD	= new byte[] { (byte) 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 	/**
-	 * Decodes the <tt>Secure Message</tt> and returns the decoded message.
+	 * Decodes the given data.
 	 * 
 	 * @param in
-	 *            - The encoded message.
+	 *            - The encoded message, as ANS1-structure.
 	 * @return Returns the decoded message.
+	 * 
+	 * @throws IllegalStateException
+	 *             If the cmac is corrupted.
 	 */
 	private byte[] decodeSM(final byte[] in) {
 		try {
@@ -274,13 +274,15 @@ public class ISOSMTransport implements TransportProvider {
 	}
 
 	/**
-	 * Encodes the secure message and returns the encoded message. The message
-	 * isn't exented with padding.
+	 * Encodes the given APDU after <em>ISO 7816-4</em>.
 	 * 
 	 * @param in
-	 *            - The not encoded message.
+	 *            - The APDU, to encode.
 	 * 
-	 * @return Returns the encoded message.
+	 * @return Returns the encoded APDU.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             If the APDU has an malformed structure.
 	 */
 	private byte[] encodeSM(final byte[] in) {
 		try {

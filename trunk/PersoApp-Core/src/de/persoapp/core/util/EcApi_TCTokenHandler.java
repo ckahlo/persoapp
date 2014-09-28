@@ -56,11 +56,8 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 /**
- * Utilities to handle tokens with the <tt>Electronic Card</tt>-Api. The
- * <tt>EcApi_TCTokenHandler</tt> provides functions to work with documents and
- * namespaces.
  * <p>
- * <code>public class EcApi_TCTokenHandler implements ContentHandler</code>
+ * Utility functions to handle the tcToken.
  * </p>
  * 
  * @author Christian Kahlo

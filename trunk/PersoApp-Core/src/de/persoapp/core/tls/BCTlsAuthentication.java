@@ -60,10 +60,9 @@ import org.bouncycastle.crypto.tls.TlsAuthentication;
 import org.bouncycastle.crypto.tls.TlsCredentials;
 
 /**
- * The <tt>BCTlsAuthentication</tt> retrieves the username and the password from
- * a client to allow the authentication.
  * <p>
- * <code>public class BCTlsAuthentication implements TlsAuthentication</code>
+ * The BCTlsAuthentication provides the functionality to notify the
+ * related list of server certificate of a specific server certificate.
  * </p>
  * 
  * @author Christian Kahlo
@@ -72,17 +71,17 @@ import org.bouncycastle.crypto.tls.TlsCredentials;
 public class BCTlsAuthentication implements TlsAuthentication {
 
 	/**
-	 * The <tt>List</tt> of server certificates.
+	 * The List of server certificates.
 	 */
 	List<Certificate>	serverCertList;
 
 	/**
-	 * Adds all certificates, which are collected through <br>
-	 * <code>serverCertificate.getCertificateList()</code> to the internal class
-	 * memory for future use.
+	 * Notifies the related server certificate list of the provided server
+	 * certificate.
 	 * 
 	 * @param serverCertificate
-	 *            - The server certificate, which needs to be notified.
+	 *            - The server certificate, which related server certificate
+	 *            list needs to be notified.
 	 * @throws IOException
 	 *             If an error occurs during the certificate retrieval.
 	 */
@@ -109,21 +108,16 @@ public class BCTlsAuthentication implements TlsAuthentication {
 	}
 
 	/**
-	 * Returns the current active <em>server certificates</em>.
+	 * Returns the current available list of <em>server certificates</em>.
 	 * 
-	 * @return Returns a <tt>List</tt> of the current active <em>server certificates</em>.
+	 * @return Returns a List of the current available
+	 *         <em>server certificates</em>.
 	 */
 	final List<Certificate> getServerCertList() {
 		return this.serverCertList;
 	}
 	
-	/**
-	 * Returns the <tt>TlsCredentials</tt> of the client, according to the
-	 * incoming <tt>CertificateRequest</tt>.
-	 * 
-	 * @param certificateRequest
-	 *            - The incoming certificate request.
-	 */
+	
 	@Override
 	public TlsCredentials getClientCredentials(final CertificateRequest certificateRequest) throws IOException {
 		// TODO Auto-generated method stub

@@ -65,10 +65,9 @@ import org.bouncycastle.crypto.tls.TlsClient;
 import org.bouncycastle.crypto.tls.TlsPeer;
 
 /**
- * This class implements all methods to enable the secure communication between
- * two endpoints.
  * <p>
- * <code>public class BCTlsSession implements SSLSession</code>
+ * This class implements methods to handle the communication session by
+ * retrieving certificates.
  * </p>
  * 
  * @author Christian Kahlo
@@ -77,7 +76,7 @@ import org.bouncycastle.crypto.tls.TlsPeer;
 public class BCTlsSession implements SSLSession {
 
 	/**
-	 * The currently used <tt>TlsPeer</tt>, which refers to this application as
+	 * The currently used TlsPeer, which refers to this application as
 	 * the starting point of the tls-connection.
 	 */
 	final TlsPeer	tlsPeer;
@@ -86,7 +85,7 @@ public class BCTlsSession implements SSLSession {
 	 * Creates a new instance of the {@link BCTlsSession}.
 	 * 
 	 * @param bcTlsSocketImpl
-	 *            - The currently used implementation for <tt>TLS-Sockets</tt>.
+	 *            - The currently used implementation for TLS-Sockets.
 	 */
 	public BCTlsSession(final BCTlsSocketImpl bcTlsSocketImpl) {
 		this.tlsPeer = bcTlsSocketImpl.getPeerHandler();

@@ -65,10 +65,9 @@ import javax.xml.ws.Provider;
 import javax.xml.ws.WebServiceProvider;
 
 /**
- * The <tt>WSEndpoint</tt> provides the whole implementation of a
- * <tt>WebServiceEndpont</tt>.
  * <p>
- * <code>public final class WSEndpoint</code>
+ * The WSEndpoint provides an interface of the functions of an
+ * WebService-Endpoint.
  * </p>
  * 
  * @author Christian Kahlo
@@ -112,16 +111,15 @@ public final class WSEndpoint {
 	private final Map<String, Method>			methodMap	= new HashMap<String, Method>();
 	
 	/**
-	 * Sets the xml description map.
+	 * The classes which are bound by the JAXB implementation.
 	 */
 	private final Set<Class<? extends Object>>	xmlSeeAlso	= new HashSet<Class<? extends Object>>();
 
 	/**
 	 * Creates a new instance of the {@link WSEndpoint}. The <em>impl</em>
-	 * parameter refers to the callable port of the webservice endpoint. The
-	 * endppoint is set up and ready for use.
+	 * parameter refers to the port of the endpoint.
 	 * 
-	 * @param impl - The callable port of the {@link WSEndpoint}.
+	 * @param impl - The implementation of the webservice.
 	 */
 	public WSEndpoint(final Object impl) {
 		port = impl;
@@ -186,7 +184,7 @@ public final class WSEndpoint {
 	/**
 	 * Returns the servicename, of the specific {@link WSEndpoint}.
 	 * 
-	 * @return Returns the servicename, of the specific {@link WSEndpoint}.
+	 * @return The service name.
 	 */
 	public final String getServiceName() {
 		return this.serviceName;
@@ -195,16 +193,16 @@ public final class WSEndpoint {
 	/**
 	 * Returns the port name of the {@link WebEndpoint}.
 	 * 
-	 * @return Returns the port name of the {@link WebEndpoint}.
+	 * @return The port name.
 	 */
 	public final String getPortName() {
 		return this.portName;
 	}
 
 	/**
-	 * Returns the callable port of the {@link WebEndpoint}.
+	 * Returns the port of the {@link WebEndpoint}.
 	 * 
-	 * @return Returns the port of the {@link WebEndpoint}.
+	 * @return The port.
 	 */
 	public final Object getPort() {
 		return this.port;
@@ -214,31 +212,29 @@ public final class WSEndpoint {
 	 * Returns the method, who fits to the given name.
 	 * 
 	 * @param qname
-	 *            - The qualified name of the method.
-	 * @return Returns the method, who fits to the given name.
+	 *            - The qualified name, to resolve.
+	 * @return The method.
 	 */
 	public final Method resolveMethod(final String qname) {
 		return methodMap.get(qname);
 	}
 
 	/**
-	 * Returns the xml-like files.
+	 * <p>
+	 * Returns classes which are bound by the JAXB implementation.
+	 * </p>
 	 * 
-	 * @return Returns the xml-like files.
+	 * @return The classes, which have to be known to JAXBContext.
 	 */
 	public final Set<Class<? extends Object>> getXmlSeeAlso() {
 		return this.xmlSeeAlso;
 	}
 
 	/**
-	 * Collects the methods of the handed class in a map. The <tt>key/value</tt>
-	 * -value pair is situated as follows.
-	 * <p>
-	 * code>qualified methodname/method</code>
-	 * </p>
+	 * Stores the web methods of the given class in the buffer.
 	 * 
 	 * @param clz
-	 *            - The class, which methods are checked.
+	 *            - The class, which web methods are processed.
 	 */
 	private final void processMethods(final Class<?> clz) {
 		if (clz == null) {
@@ -260,17 +256,16 @@ public final class WSEndpoint {
 	}
 
 	/**
-	 * Verifies the occurrence of <code>WebServiceProvider</code>- and
-	 * <code>WebService</code>-annotations in the handed class. Also it checks,
-	 * if the checked class implements a <code>Provider</code>- or a
-	 * <code>AsyncProvider</code>-interface.
+	 * Evaluates the given class about an implementation of an WebService or an
+	 * WebServiceProvider. Checks further, that the given class implements an
+	 * Provider or AsyncProvider interface.
 	 * 
 	 * @param clz
-	 *            - The class, which is verified.
+	 *            - The class, to verify.
 	 * 
 	 * @return Returns <strong>true</strong>, if the given class has
 	 *         <code>WebServiceProvider</code>- and <code>WebService</code>
-	 *         -annotations and implements a <code>Provider</code> or a
+	 *         -annotations and also implements an <code>Provider</code> or an
 	 *         <code>AsyncProvider</code>-interface.
 	 */
 	private static boolean verifyImplementorClass(final Class<?> clz) {
@@ -292,16 +287,14 @@ public final class WSEndpoint {
 	}
 
 	/**
-	 * Returns the privileged class annotations from the <em>clazz</em>, which
-	 * is a nested class of the class <em>T<em>.
+	 * Returns the privileged class annotations from the given <em>clazz</em>.
 	 * 
 	 * @param clazz
-	 *            - The specific class, which annotations are returned.
+	 *            - The specific class, to search for annotations.
 	 * @param T
-	 *            - The specific class, which nests the <em>clazz</em>.
+	 *            - The annotation class, to return.
 	 * 
-	 * @return Returns the privileged annotations of the specific <em>clazz</em>
-	 *         .
+	 * @return Returns the privileged annotations of the specific <em>clazz</em>.
 	 */
 	private static <T extends Annotation> T getPrivClassAnnotation(final Class<?> clazz, final Class<T> T) {
 		return AccessController.doPrivileged(new PrivilegedAction<T>() {
@@ -313,14 +306,12 @@ public final class WSEndpoint {
 	}
 	
 	/**
-	 * Returns the privileged method annotations from the <em>method</em> of the
-	 * handed <em>class</em>. The given <em>class</em> has to be a subclass of
-	 * {@link Annotation}.
+	 * Returns the privileged method annotations from the method.
 	 * 
 	 * @param method
 	 *            - The specific method, which annotations are returned.
 	 * @param T
-	 *            - The specific class, which owns the method.
+	 *            - The annotation class, to return.
 	 * @return Returns the privileged annotations of the specific method.
 	 */
 	private static <T extends Annotation> T getPrivMethodAnnotation(final Method method, final Class<T> T) {

@@ -62,18 +62,14 @@ import de.persoapp.core.util.TLV;
 
 /**
  * <p>
- * The <tt>EAC_Info</tt> contains all informations about the initialized
- * certificate and the data for the <em>eID</em>-process of the user. The GUI is
- * able to present all informations which are delivered in the EAC_Info to
- * inform the user about the actual state of the current performed operation.
+ * The EAC_Info-structure contains all informations about the
+ * initialized certificate and the data to process the actual <em>eID</em>
+ * -service.
  * </p>
  * <p>
- * An <tt>EAC_Info</tt> is only transfered to the eID-Client if the attempt to
+ * An EAC_Info is only transfered to the eID-Client if the attempt to
  * establish a connection to the eID-Server of the service provider is
  * successful.
- * </p>
- * <p>
- * <code>public class EAC_Info implements IEAC_Info<code>
  * </p>
  * 
  * @author Christian Kahlo, Ralf Wondratschek
@@ -82,22 +78,22 @@ import de.persoapp.core.util.TLV;
 public class EAC_Info implements IEAC_Info {
 	
 	/**
-	 * Shows the validity of the certificate informations.
+	 * The validity of the underlying eID-Document.
 	 */
 	private boolean				valid	= false;
 
 	/**
-	 * The currently used cv certificates.
+	 * The currently used card verifiable certificates.
 	 */
 	private final List<byte[]>	cvcerts;
 	
 	/**
-	 * The certificate of a terminal.
+	 * The certificate of the terminal.
 	 */
 	private byte[]				terminalCertificate;
 	
 	/**
-	 * The description of a terminal.
+	 * The cv certificate description of the terminal.
 	 */
 	private final byte[]		terminalDescription;
 
@@ -112,22 +108,22 @@ public class EAC_Info implements IEAC_Info {
 	private String				descriptionType;
 	
 	/**
-	 * The name of the current issuer.
+	 * The name of the issuer of the certificate.
 	 */
 	private String				issuerName;
 	
 	/**
-	 * The URL of the current issuer.
+	 * The URL of the issuer of the certificate.
 	 */
 	private String				issuerURL;
 
 	/**
-	 * The name of the current subject.
+	 * The name of the subject.
 	 */
 	private String				subjectName;
 	
 	/**
-	 * The URL of the current subject.
+	 * The URL of the subject.
 	 */
 	private String				subjectURL;
 	
@@ -157,9 +153,9 @@ public class EAC_Info implements IEAC_Info {
 	private Date				expirationDate;
 
 	/**
-	 * The <em>Card Holder Authorization Templates<em> for marking the personal
-	 * data which is needed. The visibility of the individual chats depends on
-	 * the information usage of the current request.
+	 * The <em>Card Holder Authorization Templates</em> for providing an
+	 * overview of the requested data and to retrieve the selected personal data
+	 * which is going to be read from the eID card.
 	 */
 	private final long			reqCHAT, optCHAT;
 	
@@ -189,16 +185,23 @@ public class EAC_Info implements IEAC_Info {
 	private int					verifyAge;
 
 	/**
-	 * Creates and initializes a new {@link EAC_Info} instance. The received
-	 * data from the gui-dialogs is transformed in a readable byteform.
+	 * Creates and initializes a new {@link EAC_Info} instance.
 	 * 
-	 * @param cvcerts 
+	 * @param cvcerts
+	 *            - The card verifiable certificate.
 	 * @param cvcertDescription
+	 *            - The description of the card verifiable certificate.
 	 * @param transactionInfo
+	 *            - The informations about the current transaction.
 	 * @param requiredCHAT
+	 *            - The fields of the data, which is required by the service
+	 *            provider.
 	 * @param optionalCHAT
+	 *            - The fields of the data, which is not required by the
+	 *            service provider.
 	 * @param auxData
-	 * @throws IOException
+	 *            - The meta data of the use of the eID-Services.
+	 * @return Returns the new {@link EAC_Info}.
 	 */
 	private EAC_Info(final List<byte[]> cvcerts, final byte[] cvcertDescription, final String transactionInfo,
 			final byte[] requiredCHAT, final byte[] optionalCHAT, final byte[] auxData) throws IOException {
@@ -230,15 +233,26 @@ public class EAC_Info implements IEAC_Info {
 	}
 
 	/**
-	 * Creates a new instance of the {@link EAC_Info} with the given parameters.
+	 * <p>
+	 * Static function to create and initialize an new instance of the
+	 * {@link EAC_Info} with the given parameters.
+	 * </p>
 	 * 
 	 * @param cvcerts
+	 *            - The card verifiable certificate.
 	 * @param cvcertDescription
+	 *            - The description of the card verifiable certificate.
 	 * @param transactionInfo
+	 *            - The informations about the current transaction.
 	 * @param requiredCHAT
+	 *            - The fields of the data, which is required by the service
+	 *            provider.
 	 * @param optionalCHAT
+	 *            - The fields of the data, which is not required by the
+	 *            service provider.
 	 * @param auxData
-	 * @return
+	 *            - The meta data of the use of the eID-Services.
+	 * @return Returns the new {@link EAC_Info}.
 	 */
 	public static EAC_Info newInstance(final List<byte[]> cvcerts, final byte[] cvcertDescription,
 			final String transactionInfo, final byte[] requiredCHAT, final byte[] optionalCHAT, final byte[] auxData) {
@@ -267,8 +281,8 @@ public class EAC_Info implements IEAC_Info {
 	 * @param cvDate
 	 *            - The date, to convert.
 	 * @param endOfDay
-	 *            - Set to <tt>true</tt> if the date should set to the end of
-	 *            date, otherwise <tt>false</tt>.
+	 *            - Set to true if the date should set to the end of
+	 *            date, otherwise false.
 	 * @return Returns the retrieved date of the certificate.
 	 */
 	private final Date cvDate2Date(final byte[] cvDate, final boolean endOfDay) {
@@ -338,10 +352,10 @@ public class EAC_Info implements IEAC_Info {
 	}
 
 	/**
-	 * Initializes the certificate description, of the given certificate.
+	 * Initializes the {@link EAC_Info} with the received informations from the smart card.
 	 * 
 	 * @param cvcert
-	 *            - The given certificate.
+	 *            - The card verifiable certificate for initializing.
 	 * @param certDescription
 	 *            - The certificate description.
 	 * 

@@ -59,34 +59,30 @@ import javax.swing.text.PlainDocument;
 import de.persoapp.desktop.gui.panel.PinPanel;
 
 /**
- * The <tt>MyPasswordField</tt>-class contains the logic for storing and
- * displaying <tt>Pins</tt> in a safe and correct way.
  * <p>
- * <code>public class MyPasswordField extends JPasswordField</code>
+ * The MyPasswordField contains the logic for safely caching the
+ * numbers of an inserted <em>PIN</em> in a safe and correct way.
  * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
  */
 public class MyPasswordField extends JPasswordField {
-
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
+	
 	private static final long	serialVersionUID	= 5514819391155385931L;
 
 	/**
-	 * The <tt>BULLET</tt> for displaying in exchange for the <tt>LETTER</tt>.
+	 * The BULLET for displaying in exchange for the LETTER.
 	 */
 	private static final char	BULLET				= '\u2022';
 	
 	/**
-	 * The plain <tt>LETTER</tt>.
+	 * The plain LETTER.
 	 */
 	private static final char	LETTER				= '\u0000';
 
 	/**
-	 * The index of the current position of the inserted values.
+	 * The index of the field.
 	 */
 	private int					index;
 	
@@ -96,7 +92,7 @@ public class MyPasswordField extends JPasswordField {
 	private PinPanel			parent;
 
 	/**
-	 * Creates a new instance of {@link MyPasswordField}.
+	 * Creates and initializes a new {@link MyPasswordField}.
 	 */
 	public MyPasswordField() {
 		super();
@@ -124,9 +120,9 @@ public class MyPasswordField extends JPasswordField {
 	}
 
 	/**
-	 * Returns the inserted pin of the field.
+	 * Returns the inserted number of the field.
 	 * 
-	 * @return Returns the inserted pin.
+	 * @return Returns the inserted number.
 	 */
 	public int getValue() {
 		try {
@@ -137,11 +133,14 @@ public class MyPasswordField extends JPasswordField {
 	}
 
 	/**
-	 * Shows the plain text, if <tt>show</tt> is set to <strong>true</strong>,
-	 * otherwise the text is hidden.
+	 * <p>
+	 * Shows the plain number, if <em>show</em> is set to <b>true</b>, otherwise
+	 * the text is hidden.
+	 * </p>
 	 * 
 	 * @param show
-	 *            - Can be true or false.
+	 *            - The inserted numbers are displayed as plain text, if set to
+	 *            <b>true</b>. At the other way, the text is hidden.
 	 */
 	@Deprecated
 	public void showPlainText(final boolean show) {
@@ -149,16 +148,16 @@ public class MyPasswordField extends JPasswordField {
 	}
 
 	/**
-	 * Returns the current index.
+	 * Returns the index of the current field.
 	 * 
-	 * @return Returns the current active index.
+	 * @return Returns the index of the current field.
 	 */
 	public int getIndex() {
 		return index;
 	}
 
 	/**
-	 * Sets the given value as current index.
+	 * Sets the provided value as current index.
 	 * 
 	 * @param index
 	 *            - The current index. Should not be negative.
@@ -168,11 +167,14 @@ public class MyPasswordField extends JPasswordField {
 	}
 
 	/**
-	 * Finds the <tt>parent pin panel</tt> in a recursive way. Stores the
-	 * <tt>parent pin panel</tt> when it is found.
+	 * <p>
+	 * Finds the parent pin panel in a recursive way. Stores the
+	 * parent pin panel in case of a success.
+	 * </p>
 	 * 
 	 * @param c
-	 *            - The container, which haves a <tt>parent pin panel</tt>.
+	 *            - The container <em>c</em>, which is going to be searched
+	 *            after a {@link PinPanel}.
 	 */
 	private void findParentPinPanel(final Container c) {
 		if (c != null) {
@@ -185,22 +187,19 @@ public class MyPasswordField extends JPasswordField {
 	}
 
 	/**
-	 * The class for internal text documents, to store text.
 	 * <p>
-	 * <code>private class IntTextDocument extends PlainDocument</code>
+	 * The InTextDocument contains the logic to process inserted
+	 * digits.
 	 * </p>
 	 * 
 	 * @author Christian Kahlo
 	 */
 	private class IntTextDocument extends PlainDocument {
 
-		/**
-		 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-		 */
 		private static final long	serialVersionUID	= -3244520335727589902L;
 
 		/**
-		 * Creates a new instance of {@link InternalTextDocument}.
+		 * Creates and initializes a new {@link InternalTextDocument}.
 		 */
 		public IntTextDocument() {
 			super();

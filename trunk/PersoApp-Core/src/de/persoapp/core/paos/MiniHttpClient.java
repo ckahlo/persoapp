@@ -67,10 +67,7 @@ import de.persoapp.core.util.ChunkingInputStream;
 
 /**
  * This class provides a small HTTP-capable client ensuring connection re-use.
- * (uses only one connection per instance)
- * <p>
- * <code>public class MiniHttpClient</code>
- * </p>
+ * (uses only one connection per instance).
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
@@ -104,20 +101,17 @@ public class MiniHttpClient {
 	private final Map<String, String>	responseHeaders	= new HashMap<String, String>();
 
 	/**
-	 * The used <tt>HTTP_PROTOCOL</tt>.
-	 * <p>
-	 * <code>private final String HTTP_PROTOCOL	= "HTTP/1.1";</code>
-	 * </p>
+	 * The used HTTP_PROTOCOL.
 	 */
 	private final String				HTTP_PROTOCOL	= "HTTP/1.1";
 
 	/**
-	 * The <tt>carriage return</tt>.
+	 * The carriage return.
 	 */
 	private static final char			CR				= 13;
 	
 	/**
-	 * The <tt>line feed</tt>.
+	 * The line feed.
 	 */
 	private static final char			LF				= 10;
 
@@ -253,7 +247,7 @@ public class MiniHttpClient {
 	}
 
 	/**
-	 * Retrieves the <tt>response header</tt> which is stored under the given key.
+	 * Retrieves the response header which is stored under the given key.
 	 * 
 	 * @param key - The key of the requested response header.
 	 *
@@ -265,7 +259,7 @@ public class MiniHttpClient {
 
 	/**
 	 * Appends the header, which will be identified through the given
-	 * <tt>key/value</tt> pair at the given {@link StringBuilder}.
+	 * key/value pair at the given {@link StringBuilder}.
 	 * 
 	 * @param sb
 	 *            - The {@link StringBuilder}, which contains the result.
@@ -281,7 +275,7 @@ public class MiniHttpClient {
 	}
 
 	/**
-	 * Transmits the given <tt>byte-array</tt> to the connection endpoint of the
+	 * Transmits the given byte-array to the connection endpoint of the
 	 * {@link MiniHttpClient}.
 	 * 
 	 * @param in

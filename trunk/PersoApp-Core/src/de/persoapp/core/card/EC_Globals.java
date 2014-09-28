@@ -54,10 +54,9 @@ import java.security.spec.ECPoint;
 import java.security.spec.EllipticCurve;
 
 /**
- * The <tt>EC_Globals</tt> includes the curves from RFC 5639 / BSI TR-03111, to
- * construct various elliptic curves for the use by the <tt>PACE</tt>-protocol.
  * <p>
- * <code>public class EC_Globals</code>
+ * The EC_Globals contains the curves from RFC 5639 / BSI TR-03111, to
+ * construct elliptic curves for the use by the PACE-protocol.
  * </p>
  * 
  * @author Christian Kahlo, Ralf Wondratschek

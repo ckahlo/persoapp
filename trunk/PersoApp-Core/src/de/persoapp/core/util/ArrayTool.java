@@ -49,17 +49,8 @@
 package de.persoapp.core.util;
 
 /**
- * Basic class which provides simple static array-utility functions to connect
- * arrays together and to retrieve sub-arrays from given arrays. Additionally,
- * the <tt>ArrayTool</tt> class provides functions to transform a
- * <tt>byte-array</tt> into a number and to insert a given number in a existing
- * <tt>byte-array</tt>.
  * <p>
- * The <tt>ArrayTool</tt> contains just static and final functions and thus
- * remains in the memory until the application terminates.
- * </p>
- * <p>
- * <code>public class ArrayTool</code>
+ * The ArrayTool provides utility functions to alter arrays.
  * </p>
  * 
  * @author Christian Kahlo
@@ -74,24 +65,28 @@ public class ArrayTool {
 	}
 
 	/**
-	 * This function concatenates two subarrays of two given byte-arrays in
-	 * their given order. The subarrays have their individual beginning at the
-	 * given starting offsets. Their length is defined through the given length
-	 * for each given byte-array.
+	 * <p>
+	 * This function concatenates two arrays together. The arrays are obtained
+	 * at the provided starting offset of the provided source arrays according
+	 * to each length attribute.
+	 * </p>
 	 * 
 	 * @param b1
 	 *            - The first byte-array.
 	 * @param offset1
-	 *            - The starting offset of the data from the first byte-array.
+	 *            - The starting offset of the data from the first source array.
 	 * @param length1
 	 *            - The length of the data, which will be copied.
 	 * @param b2
 	 *            - The second byte-array.
 	 * @param offset2
-	 *            - The starting offset of the data from the first byte-array.
+	 *            - The starting offset of the data from the second source
+	 *            array.
 	 * @param length2
 	 *            - The length of the data, which will be copied.
-	 * @return The concatenated <em>byte-array</em>.
+	 * @return The concatenated array. Returns <b>null</b> if an provided array
+	 *         is <b>null</b> or the starting offset and the estimated length
+	 *         exceeds the length of the specified source array.
 	 */
 	public static final byte[] arrayconcat(final byte[] b1, final int offset1, final int length1, final byte[] b2,
 			final int offset2, final int length2) {
@@ -106,14 +101,18 @@ public class ArrayTool {
 	}
 
 	/**
+	 * <p>
 	 * This function concatenates two given byte-arrays, with the given order of
 	 * elements.
+	 * </p>
 	 * 
 	 * @param b1
 	 *            - The first byte-array.
 	 * @param b2
 	 *            - The second byte-array.
 	 * @return The concatenated byte-array.
+	 * 
+	 * @see {@link #arrayconcat(byte[], int, int, byte[], int, int)}
 	 */
 	public static final byte[] arrayconcat(final byte[] b1, final byte[] b2) {
 		return arrayconcat(b1, 0, b1.length, b2, 0, b2.length);
@@ -126,13 +125,13 @@ public class ArrayTool {
 	 * </p>
 	 * 
 	 * @param b1
-	 *            - The given byte-array.
+	 *            - The source array.
 	 * @param offset
 	 *            - The starting offset.
 	 * @param length
 	 *            - The length of the subarray.
 	 * @return This function returns the subarray of the data which is defined
-	 *         by the given starting offset and the given length.
+	 *         by the provided starting offset and the related length.
 	 */
 	public static final byte[] subArray(final byte[] b1, final int offset, final int length) {
 		if (b1 == null || offset + length > b1.length) {
@@ -144,12 +143,14 @@ public class ArrayTool {
 	}
 
 	/**
-	 * Evaluates of the two given byte arrays are equal.
+	 * <p>
+	 * Evaluates the equality of the provided byte arrays.
+	 * </p>
 	 * 
 	 * @param b1
-	 *            - The first byte-array.
+	 *            - The first array.
 	 * @param b2
-	 *            - The second byte-array.
+	 *            - The second array.
 	 * 
 	 * @return This function returns <strong>true</strong> if the arrays are
 	 *         equal and <strong>false</strong> otherwise.
@@ -168,15 +169,17 @@ public class ArrayTool {
 	}
 
 	/**
-	 * This function inserts a short-value into the given byte-array at the
-	 * given starting offset.
+	 * <p>
+	 * This function inserts the provided short value into the given byte array
+	 * at the starting offset.
+	 * </p>
 	 * 
 	 * @param b
-	 *            - The given byte-array.
+	 *            - The array, to modify.
 	 * @param ofs
-	 *            - The given starting-offset.
+	 *            - The offset, to start.
 	 * @param s
-	 *            - the given value.
+	 *            - The value, to insert.
 	 * 
 	 * @see {@link #insertIntInByteArray(byte[], int, int)}
 	 * @see {@link #insertLongInByteArray(byte[], int, long)}
@@ -187,15 +190,17 @@ public class ArrayTool {
 	}
 
 	/**
-	 * This function inserts the given int-value into the given byte-array at
-	 * the starting offset.
+	 * <p>
+	 * This function inserts the provided integer value into the given
+	 * byte array at the starting offset.
+	 * </p>
 	 * 
 	 * @param b
-	 *            - The given byte-array.
+	 *            - The array, to modify.
 	 * @param ofs
-	 *            - The given starting offset.
+	 *            - The offset, to start.
 	 * @param i
-	 *            - The given value.
+	 *            - The valuek, to insert.
 	 * 
 	 * @see {@link #insertShortInByteArray(byte[], int, short)}
 	 * @see {@link #insertLongInByteArray(byte[], int, long)}
@@ -208,15 +213,17 @@ public class ArrayTool {
 	}
 
 	/**
-	 * This function inserts the given long-value into the given byte-array at
+	 * <p>
+	 * This function inserts the provided long value into the given byte array at
 	 * the starting offset.
+	 * </p>
 	 * 
 	 * @param b
-	 *            - The given byte-array.
+	 *            - The array, to modify.
 	 * @param ofs
-	 *            - The given starting offset.
+	 *            - The offset, to start.
 	 * @param i
-	 *            - The given value.
+	 *            - The value, to insert.
 	 * 
 	 * @see {@link #insertShortInByteArray(byte[], int, short)}
 	 * @see {@link #insertIntInByteArray(byte[], int, int)}
@@ -233,13 +240,16 @@ public class ArrayTool {
 	}
 
 	/**
-	 * This function creates a short value from a byte-array.
+	 * <p>
+	 * This function creates an short value by using the contents of the source
+	 * array at the starting offset.
+	 * </p>
 	 * 
 	 * @param b
-	 *            - The given byte-array.
+	 *            - The source array.
 	 * @param ofs
-	 *            - The given starting offset.
-	 * @return This function returns the created short-value.
+	 *            - The offset, to start.
+	 * @return The created short value.
 	 * 
 	 * @see {@link #createIntfromByteArray(byte[], int)}
 	 * @see {@link #createLongfromByteArray(byte[], int)}
@@ -251,13 +261,16 @@ public class ArrayTool {
 	}
 
 	/**
-	 * This function creates a int-value from a byte-array.
+	 * <p>
+	 * This function creates an integer value by using the contents of the 
+	 * source array at the starting offset.
+	 * </p>
 	 * 
 	 * @param b 
-	 * 			- The given byte-array.
+	 * 			- The source array.
 	 * @param ofs 
-	 * 			- The given starting offset.
-	 * @return This function returns the created int-value.
+	 * 			- The offset, to start.
+	 * @return The created integer value.
 	 * 
 	 * @see {@link #createLongfromByteArray(byte[], int)
 	 * @see {@link #createShortfromByteArray(byte[], int)
@@ -270,13 +283,16 @@ public class ArrayTool {
 	}
 
 	/**
-	 * This function creates a long-value from the given byte-array.
+	 * <p>
+	 * This function creates an long value by using the contents of the source
+	 * array at the starting offset.
+	 * </p>
 	 * 
 	 * @param b
-	 *            - The given byte-array.
+	 *            - The source array.
 	 * @param ofs
-	 *            - The given starting offset.
-	 * @return This function returns the created long-value.
+	 *            - The offset, to start.
+	 * @return The created long-value.
 	 * 
 	 * @see {@link #createIntfromByteArray(byte[], int)}
 	 * @see {@link #createShortfromByteArray(byte[], int)}
@@ -291,10 +307,12 @@ public class ArrayTool {
 	}
 
 	/**
-	 * Sets all elements of the given byte-array to zero (0).
+	 * <p>
+	 * Overrides the content of the given byte array.
+	 * </p>
 	 * 
 	 * @param b
-	 *            - The given byte-array.
+	 *            - The array, to overwrite.
 	 */
 	// overwrite byte arrays
 	public static final void overwrite(final byte[] b) {

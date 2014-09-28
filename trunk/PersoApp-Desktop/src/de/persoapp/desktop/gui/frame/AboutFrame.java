@@ -70,11 +70,9 @@ import de.persoapp.desktop.Configuration;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * The <tt>AboutFrame</tt> displays the links to the homepage and the support
- * and further informations about the <tt>PersoApp-Application</tt>, like the
- * version.
  * <p>
- * <code>public class AboutFrame extends JFrame</code>
+ * The AboutFrame displays the links to the homepage and the support
+ * and further informations about the PersoApp Application.
  * </p>
  * 
  * @author Christian Kahlo
@@ -82,33 +80,32 @@ import de.persoapp.desktop.gui.MyTitledBorder;
  */
 public class AboutFrame extends JFrame {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long				serialVersionUID	= 7707227028876424642L;
 
 	/**
-	 * The panels for providing the functionality of the {@link AboutFrame}.
+	 * The panels, that provides the content and functionality of the
+	 * {@link AboutFrame}.
 	 */
 	private JPanel							mainPanel, contentPanel;
 	
 	/**
-	 * The labels to display necessary informations.
+	 * The labels to display necessary informations and the icon of the
+	 * PersoApp Application.
 	 */
 	private JLabel							pic, homepage, support;
 	
 	/**
-	 * The confirm button.
+	 * The confirm button, to leave the {@link AboutFrame}.
 	 */
 	private JButton							confirm;
 	
 	/**
-	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 * Localized message bundle for user interaction.
 	 */
 	private final PropertyResolver.Bundle	textBundle;
 
 	/**
-	 * Constructs a new instance of the {@link AboutFrame} and shows it in the
+	 * Constructs and initializes a new {@link AboutFrame} and shows it in the
 	 * center of the screen.
 	 */
 	public AboutFrame() {
@@ -139,8 +136,7 @@ public class AboutFrame extends JFrame {
 	}
 
 	/**
-	 * Initializes all panels of the {@link AboutFrame} using the
-	 * {@link GridBagLayout} and creating all buttons.
+	 * Initializes all panels of the {@link AboutFrame}.
 	 */
 	private void initPanels() {
 		mainPanel = new JPanel(true);
@@ -158,9 +154,7 @@ public class AboutFrame extends JFrame {
 	}
 
 	/**
-	 * Adds a {@link ActionListener} to the <code>Confirm</code>-Button. Creates
-	 * and adds a {@link MouseAdapter} to the labels of the <tt>homepage</tt>
-	 * and <tt>support</tt>.
+	 * Adds several listeners to the supported buttons and hyperlinks.
 	 */
 	private void addListener() {
 		confirm.addActionListener(new ActionListener() {
@@ -211,7 +205,10 @@ public class AboutFrame extends JFrame {
 	}
 
 	/**
-	 * Draws all panels, using the {@link GridBagLayout}.
+	 * Draws the panels of the {@link AboutFrame}. The panels have to be
+	 * initialized before.
+	 * 
+	 * @see #initPanels()
 	 */
 	private void drawPanels() {
 		final GridBagConstraints cons = new GridBagConstraints();
@@ -239,8 +236,9 @@ public class AboutFrame extends JFrame {
 	}
 
 	/**
-	 * Creates a new content panel, initializes all of its components and the
-	 * layout and returns it.
+	 * Creates and returns the ContentPanel of the {@link AboutFrame}.
+	 * The ContentPanel displays all components of the whole
+	 * {@link AboutFrame}.
 	 * 
 	 * @return Returns the newly created content panel.
 	 */
@@ -302,17 +300,17 @@ public class AboutFrame extends JFrame {
 	}
 
 	/**
-	 * Returns the text, which is stored in the properties, by using the
-	 * following key template.
 	 * <p>
-	 * <code>this.getName() + "_" + identifier</code>.
+	 * Returns the text, which is stored in the properties according to the
+	 * provided identifier.
 	 * </p>
 	 * 
 	 * @param identifier
 	 *            - The used identifier of the text.
 	 * 
 	 * @return Returns the stored <em>text</em> or <strong>null</strong> if no
-	 *         one is previously stored using the given <tt>identifier</tt>.
+	 *         text is stored in the properties by using the provided
+	 *         identifier.
 	 */
 	private String getText(final String identifier) {
 		return textBundle.get(this.getName() + "_" + identifier);

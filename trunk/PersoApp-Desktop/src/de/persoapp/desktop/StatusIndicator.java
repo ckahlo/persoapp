@@ -81,11 +81,10 @@ import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.desktop.gui.frame.AboutFrame;
 
 /**
- * The <tt>StatusIndicator</tt>-class displays the current state of the
- * <tt>PersoApp-Application</tt> on the info frame.
  * <p>
- * <code>public class StatusIndicator</code>
- * </p> 
+ * The StatusIndicator displays the current state of the
+ * PersoApp-Application on the info frame.
+ * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
@@ -103,7 +102,7 @@ public class StatusIndicator {
 	protected final TrayIcon	trayIcon;
 	
 	/**
-	 * The info frame to display the current status of the <tt>PersoApp-Application</tt>.
+	 * The info frame to display the current status of the PersoApp-Application.
 	 */
 	private final JDialog		infoFrame;
 	
@@ -278,9 +277,10 @@ public class StatusIndicator {
 			});
 
 			/**
-			 * This class provides the mechanism to drag & drop the <tt>infoFrame</tt>.
 			 * <p>
-			 * <code>class MyMouseListener implements MouseListener, MouseMotionListener</code>
+			 * The internal MyMouseListener provides the functionality
+			 * to show the info frame if the mouse is dragged over the component
+			 * which has an appended listener.
 			 * </p>
 			 * 
 			 * @author Christian Kahlo
@@ -288,6 +288,7 @@ public class StatusIndicator {
 			class MyMouseListener implements MouseListener, MouseMotionListener {
 				@Override
 				public void mouseDragged(final MouseEvent arg0) {
+					System.err.println("Dragged");
 					final Point location = arg0.getLocationOnScreen();
 					infoFrame.setLocation(location);
 				}
@@ -353,7 +354,8 @@ public class StatusIndicator {
 
 	/**
 	 * Displays the given <em>message</em> with the given <em>title</em>
-	 * according to the given <em>type</em> of the message.
+	 * according to the given <em>type</em> of the message in a tool tip or in
+	 * an info frame, if the underlying os doesn't support tool tips.
 	 * 
 	 * @param title
 	 *            - The given title.
@@ -408,16 +410,16 @@ public class StatusIndicator {
 	}
 
 	/**
-	 * Returns the default title of the info dialog.
+	 * Returns the default title.
 	 * 
-	 * @return Returns the title of the info dialog.
+	 * @return Returns the title.
 	 */
 	public String getDefaultTitle() {
 		return defaultTitle;
 	}
 	
 	/**
-	 *  Close the application.
+	 * Closes the {@link StatusIndicator} and frees the used resources.
 	 */
 	public void close() {
 		if (tray != null && trayIcon != null) {

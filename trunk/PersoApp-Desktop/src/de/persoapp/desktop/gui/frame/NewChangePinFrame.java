@@ -85,107 +85,101 @@ import de.persoapp.desktop.gui.panel.KeypadPanel;
 import de.persoapp.desktop.gui.panel.PinPanel;
 
 /**
- * The <tt>NewChangePinFrame</tt> provides the option for the user interaction.
- * It is the initially displayed frame in the <tt>PersoApp-DesktopClient</tt>.
- * <p>
- * <code>public class NewChangePinFrame extends JFrame implements HelpPanelProvider, SidebarProvider</code>
- * </p>
+ * The NewChangePinFrame provides the option for the user interaction related to
+ * pin actions. It is the initially displayed frame in the
+ * PersoApp-DesktopClient.
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
  */
 public class NewChangePinFrame extends JFrame implements HelpPanelProvider, SidebarProvider {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long				serialVersionUID	= 7054039676016930476L;
 
 	/**
-	 * The used class logger.
+	 * The used logger.
 	 */
 	private final static Logger				LOGGER				= Logging.getLogger();
 
 	/**
-	 * The <tt>choose</tt> state.
+	 * The choose state.
 	 */
 	public final static int					STATE_CHOOSE		= 0;
 	
 	/**
-	 * The <tt>activate</tt> state.
+	 * The activate state.
 	 */
 	public final static int					STATE_ACTIVATE		= 1;
 	
 	/**
-	 * The <tt>change</tt> state.
+	 * The change state.
 	 */
 	public final static int					STATE_CHANGE		= 2;
 	
 	/**
-	 * The <tt>unlock</tt> state.
+	 * The unlock state.
 	 */
 	public final static int					STATE_UNLOCK		= 3;
 	
 	/**
-	 * The <tt>qes_choose</tt> state.
+	 * The qes_choose state.
 	 */
 	public final static int					STATE_QES_CHOOSE	= 4;
 	
 	/**
-	 * The <tt>qes_set</tt> state.
+	 * The qes_set state.
 	 */
 	public final static int					STATE_QES_SET		= 5;
 	
 	/**
-	 * The <tt>qes_change</tt> state.
+	 * The qes_change state.
 	 */
 	public final static int					STATE_QES_CHANGE	= 6;
 	
 	/**
-	 * The <tt>qes_unlock</tt> state.
+	 * The qes_unlock state.
 	 */
 	public final static int					STATE_QES_UNLOCK	= 7;
 	
 	/**
-	 * The <tt>qes_terminate</tt> state.
+	 * The qes_terminate state.
 	 */
 	public final static int					STATE_QES_TERMINATE	= 8;
 
 	/**
-	 * The <tt>Size</tt> of the {@link NewChangePinFrame}.
+	 * The size of the {@link NewChangePinFrame}.
 	 */
 	private static final Dimension			SIZE				= new Dimension(361, 234);
 
 	/**
-	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 * Localized message bundle for user interaction.
 	 */
 	private final PropertyResolver.Bundle	textBundle;
 
 	/**
-	 * The panels for containing the components of the {@link NewChangePinFrame}.
+	 * The panels for displaying the components of the {@link NewChangePinFrame}
+	 * according to the user interaction.
 	 */
 	private JPanel							mainPanel, choosePanel, displayedPanel, qesChoosePanel, buttonPanelHolder;
 	
 	/**
-	 * The {@link ButtonPanel} to allow <tt>confirming</tt> and <tt>canceling</tt>.
+	 * The {@link ButtonPanel} to allow confirming and canceling.
 	 */
 	private ButtonPanel						buttonPanel;
 	
 	/**
-	 * The different <tt>PinPinals</tt> to provide access to the different
-	 * functions of the <tt>PersoApp-Client</tt>.
+	 * The different PinPinals are showed according to the application
+	 * state.
 	 * <p>
-	 * The <tt>changePinPanel</tt> provides access to the function for changing
-	 * the currently active <tt>pin</tt>.
+	 * The changePinPanel allows the insertion of the actual pin and of
+	 * the new pin and their repetition.
 	 * </p>
 	 * <p>
-	 * The <tt>activatePinPanel</tt> provides access to the function for
-	 * activating the <tt>PersoApp-Application</tt> through the insertion of a
-	 * correct pin.
+	 * The activatePinPanel allows the insertion of the transport pin
+	 * and the new pin.
 	 * </p>
 	 * <p>
-	 * the <tt>pukPanel</tt> provides access to the function for unblocking the
-	 * currently blocked pin.
+	 * the pukPanel allows the insertion of the puk.
 	 * </p>
 	 */
 	private PinPanel						changePinPanel, activatePinPanel, pukPanel;
@@ -196,7 +190,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	private HelpPanel						helpPanel;
 	
 	/**
-	 * Labels for displaying pics and informations.
+	 * Labels to display the icon and further informations about the version of the PersoApp-Application.
 	 */
 	private JLabel							pic, claimLabel;
 	
@@ -207,13 +201,13 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 			qesSetButton, qesChangeButton, qesUnlockButton, qesTerminateButton, qesAbortButton;
 	
 	/**
-	 * The button-arrays for easy access. The stored buttons are used in the
-	 * <tt>choosePanel</tt> and in the <tt>qesChoosePanel</tt>.
+	 * The button-arrays for user interaction. The stored buttons are used in
+	 * the choosePanel and in the qesChoosePanel.
 	 */
 	private JButton[]						choosePanelButton, qesChoosePanelButton;
 	
 	/**
-	 * The used <tt>arrow buttons</tt> of the {@link NewChangePinFrame}.
+	 * The used arrow buttons of the {@link NewChangePinFrame}.
 	 */
 	private ArrowButton						arrowButton;
 	
@@ -238,7 +232,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	private final Dimension					minSizeNoSidebar, minSizeWithSidebar;
 	
 	/**
-	 * The extension to display the {@link NewChangePinFrame} in a correct way.
+	 * The width of the virtual keypad.
 	 */
 	private static final int				extension			= 175;
 
@@ -270,7 +264,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		initPanels();
 		addListener();
 		drawPanels();
-
+		
 		setPanelState(STATE_CHOOSE);
 
 		//Nötig, da das Feld sonst nach dem erst öffnen leer ist, weil sich die Maus noch in der Tray-Anzeige befindet. 
@@ -338,8 +332,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	}
 
 	/**
-	 * Draws the panels of the {@link NewChangePinFrame}. The
-	 * {@link GridBagLayout} is used for drawing.
+	 * Draws the panels of the {@link NewChangePinFrame}.
 	 */
 	public void drawPanels() {
 		final GridBagConstraints cons = new GridBagConstraints();
@@ -511,15 +504,16 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	}
 
 	/**
-	 * Draws and returns the new <tt>choose panel</tt> or the <tt>qes-choose panel</tt>.
+	 * Draws and returns the new choose panel or the qes-choose panel
+	 * according to the user input.
 	 * 
 	 * @param borderTitle
 	 *            - The title of the returned panel.
 	 * @param button
-	 *            - The used buttons for the returned panel. The number of
+	 *            - The used buttons of the returned panel. The number of
 	 *            buttons isn't limited.
 	 * 
-	 * @return Returns the created <tt>choose panel</tt>.
+	 * @return Returns the created choose panel.
 	 */
 	private JPanel getNewChoosePanel(final String borderTitle, final JButton... button) {
 		final JPanel result = new JPanel(true);
@@ -568,11 +562,9 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	}
 
 	/**
-	 * Creates and returns a {@link JPanel} which contains a {@link ButtonPanel}
-	 * in the <code>CENTER</code>-area and a {@link ArrowButton} in the
-	 * <code>EASTERN</code>-area.
+	 * Returns the panel, which holds all button panels.
 	 * 
-	 * @return Returns the created {@link JPanel}.
+	 * @return Returns the ButtonPanelHolder.
 	 */
 	public JPanel getButtonPanelHolder() {
 		final JPanel result = new JPanel(true);
@@ -617,13 +609,14 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	}
 
 	/**
-	 * Sets the given {@link PinPanel} to the {@link KeypadPanel} of the
+	 * Binds the given {@link PinPanel} to the {@link KeypadPanel} of the
 	 * {@link NewChangePinFrame}. Also enables or disables the
-	 * {@link KeypadPanel}.
+	 * {@link KeypadPanel} according to the argument enabled.
 	 * 
 	 * @param enabled
-	 *            - If enabled is <strong>true</strong>, the {@link KeypadPanel}
-	 *            is enabled, otherwise <strong>false</strong>.
+	 *            - If enabled is set to <strong>true</strong>, the
+	 *            {@link KeypadPanel} is enabled, otherwise the
+	 *            {@link KeypadPanel} is disabeld.
 	 * @param panel
 	 *            - The used {@link PinPanel}.
 	 */
@@ -633,7 +626,8 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	}
 
 	/**
-	 * Sets the state of the displayed panel.
+	 * Sets content of the displayed panel according to the actual state of the
+	 * application.
 	 * 
 	 * @param state
 	 *            - The requested state of the displayed panel.
@@ -699,7 +693,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	 * Changes the added {@link MouseListener}, de- and activates the buttons.
 	 * 
 	 * @param disabled
-	 *            - <strong>true</strong> if the <tt>Pin</tt> is disabled,
+	 *            - <strong>true</strong> if the Pin is disabled,
 	 *            otherwise <strong>false</strong>.
 	 */
 	private void setPinDisabledUI(final boolean disabled) {
@@ -724,11 +718,11 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	}
 
 	/**
-	 * Returns the {@link PinPanel} according to the current state.
+	 * Returns the panel according to the current state.
 	 * 
 	 * @param state
-	 *            - The current state.
-	 * @return - The {@link PinPanel} matching to the state.
+	 *            - The current state of the application.
+	 * @return - Returns the panel which refers to the given state.
 	 */
 	private JPanel getStatePanel(final int state) {
 		switch (state) {
@@ -751,7 +745,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 
 	/**
 	 * Resets the buttons of the {@link NewChangePinFrame} according to the
-	 * <tt>testCard</tt> argument.
+	 * testCard argument.
 	 * 
 	 * @param testCard
 	 *            - <strong>true</strong> if a card is inserted, otherwise
@@ -820,8 +814,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	 */
 
 	/**
-	 * Sets the visibelity of the {@link NewChangePinFrame} to
-	 * <strong>false</strong>.
+	 * Cancels the current operation.
 	 */
 	public void returnResultAbort() {
 		LOGGER.log(Level.INFO, "Cancel was pressed");
@@ -890,9 +883,8 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	}
 
 	/**
-	 * Processes the application according to the given state. This includes
-	 * dispatching of events and setting new states of the
-	 * {@link NewChangePinFrame}.
+	 * Processes the application state. This includes dispatching of events and
+	 * setting new states of the {@link NewChangePinFrame}.
 	 * 
 	 * @param state
 	 *            - The currently state of the {@link NewChangePinFrame}.

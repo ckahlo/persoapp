@@ -63,10 +63,9 @@ import javax.imageio.ImageIO;
 import de.persoapp.core.util.Util;
 
 /**
- * The <tt>Utils</tt>-class provides some utility functions, for managing the
- * <em>screen</em> and resources.
  * <p>
- * <code>public class Utils</code>
+ * The Utils provides utility functions, for managing the screen and
+ * resources.
  * </p>
  * 
  * @author Christian Kahlo
@@ -80,7 +79,7 @@ public class Utils {
 	private static final String	RESOURCE_FOLDER	= "/resources/";
 
 	/**
-	 * Calculates the real screen size, which can be used to display windows.
+	 * Calculates and returns the real screen size.
 	 * 
 	 * @return Returns the real screen size.
 	 */
@@ -101,7 +100,7 @@ public class Utils {
 	 * Returns the file of the given filename as a {@link InputStream}.
 	 * 
 	 * @param fileName
-	 *            - The filename from the resource.
+	 *            - The name of the resource.
 	 * 
 	 * @return The resource as an {@link InputStream}, which can be read.
 	 */
@@ -113,7 +112,7 @@ public class Utils {
 	 * Returns the {@link URL} of the specified file.
 	 * 
 	 * @param fileName
-	 *            - The filename from the resource.
+	 *            - The name of the resource.
 	 * 
 	 * @return Returns the {@link URL} from the specified resource.
 	 */
@@ -125,7 +124,7 @@ public class Utils {
 	 * Returns the {@link BufferedImage} of the specified file.
 	 * 
 	 * @param fileName
-	 *            - The filename of the specified resource.
+	 *            - The name of the resource.
 	 * @return Returns the {@link BufferedImage} of the specified file.
 	 */
 	public static BufferedImage getImage(final String fileName) {

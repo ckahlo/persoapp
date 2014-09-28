@@ -76,10 +76,10 @@ import de.persoapp.desktop.gui.frame.MainFrame;
 import de.persoapp.desktop.gui.frame.NewChangePinFrame;
 
 /**
- * The <tt>PinPanel</tt> contains {@link PinRows} to provide the option to
- * insert a <tt>Pin</tt>.
  * <p>
- * <code>public class PinPanel extends JPanel</code>
+ * The PinPanel contains {@link PinRows} to store the numbers which are
+ * inserted via the keyboard, the virtual keypad or the keypad of the used card
+ * reader.
  * </p>
  * 
  * @author Christian Kahlo
@@ -87,18 +87,16 @@ import de.persoapp.desktop.gui.frame.NewChangePinFrame;
  */
 public class PinPanel extends JPanel {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization. 
-	 */
+
 	private static final long				serialVersionUID	= 1L;
 
 	/**
-	 * Stores the index of the <tt>last focused password field</tt>.
+	 * Stores the index of the last focused password field.
 	 */
 	private int								lastFocusedField;
 	
 	/**
-	 * Stores the flag if the pin is activated.
+	 * Stores the flag if the pin panel is activated.
 	 */
 	private boolean							pinActivated;
 
@@ -108,7 +106,7 @@ public class PinPanel extends JPanel {
 	private final boolean					checkLastTwoRows;
 
 	/**
-	 * Stores the used {@link ButtonPanel}.
+	 * The {@link ButtonPanel} for user interaction.
 	 */
 	private final ButtonPanel				buttonPanel;
 	
@@ -123,12 +121,12 @@ public class PinPanel extends JPanel {
 	private Window							window;
 
 	/**
-	 * The used <tt>PasswordField</tt>, which holds the different passwords.
+	 * The used PasswordField, which holds the different passwords.
 	 */
 	private ArrayList<MyPasswordField>		fields;
 	
 	/**
-	 * The used <tt>PinRows</tt>, which holds the different pins.
+	 * The used PinRows, to insert different kinds of pins.
 	 */
 	private PinRow[]						pinRows;
 
@@ -147,17 +145,24 @@ public class PinPanel extends JPanel {
 	 */
 	private final Dimension					mCachedPreferredSize;
 
-	/**
-	 * The <tt>bundle</tt> which resolves the necessary properties.
-	 */
+	 /**
+	  *Localized message bundle for user interaction.	 
+	  */
 	private final PropertyResolver.Bundle	textBundle;
 
 	/**
-	 * Constructs a new instance of the {@link PinPanel} with just one {@link PinRow}.
+	 * Constructs a new instance of the {@link PinPanel} with just one
+	 * {@link PinRow}.
 	 * 
-	 * @param buttonPanel - The given {@link ButtonPanel}.
-	 * @param header - The given header.
-	 * @param fieldCount - The given size of the {@link PinRow}.
+	 * @param buttonPanel
+	 *            - The {@link ButtonPanel} for user interaction. Can not set to
+	 *            <strong>null</strong>.
+	 * @param header
+	 *            - The <em>header</em>, which is a sub-title for the created
+	 *            PinRow to guide the user interaction. Can not set to
+	 *            <strong>null</strong>.
+	 * @param fieldCount
+	 *            - The number of fields of the created PinRow.
 	 */
 	public PinPanel(final ButtonPanel buttonPanel, final String header, final int fieldCount) {
 		this(buttonPanel, new String[] { header }, new int[] { fieldCount });
@@ -168,32 +173,45 @@ public class PinPanel extends JPanel {
 	 * last two rows.
 	 * 
 	 * @param buttonPanel
-	 *            - The given {@link ButtonPanel}.
+	 *            - The {@link ButtonPanel} for user interaction. Can not set to
+	 *            <strong>null</strong>.
 	 * @param header
-	 *            - The given <tt>header-array</tt>.
+	 *            - The <em>headers</em>, which are a sub-title for each created
+	 *            PinRow to guide the user interaction. Can not set to
+	 *            <strong>null</strong> and needs to be at the same length like
+	 *            the <em>fieldCounts</em> array.
 	 * @param fieldCounts
-	 *            - The array of the numbers of <tt>PasswordFields</tt> are
-	 *            going to be created, with their individual size.
+	 *            - The array for specifying the number of fields for each
+	 *            PinRow. The length of this array specifies how many
+	 *            PinRows are going to be created. Can not set to
+	 *            <strong>null</strong>.
 	 */
 	public PinPanel(final ButtonPanel buttonPanel, final String[] header, final int[] fieldCounts) {
 		this(buttonPanel, header, fieldCounts, false);
 	}
 
 	/**
-	 * Constructs a new instance of the {@link PinPanel}. The constructed Panel
-	 * is double-buffered for advanced displaying.
+	 * Constructs a new instance of the {@link PinPanel}. The constructed
+	 * panel is double-buffered to achieve benefits by the extended use
+	 * of memory.
+	 * 
 	 * 
 	 * @param buttonPanel
-	 *            - The given {@link ButtonPanel}.
+	 *            - The {@link ButtonPanel} for user interaction. Can not set to
+	 *            <strong>null</strong>.
 	 * @param header
-	 *            - The given <tt>header-array</tt>.
+	 *            - The <em>headers</em>, which are a sub-title for each created
+	 *            PinRow to guide the user interaction. Can not set to
+	 *            <strong>null</strong> and needs to be at the same length like
+	 *            the <em>fieldCounts</em> array.
 	 * @param fieldCounts
-	 *            - The array of the numbers of the used <tt>PasswordFields</tt>
-	 *            . Each <tt>PasswordField</tt> is going to be created with
-	 *            their individual size.
+	 *            - The array for specifying the number of fields for each
+	 *            PinRow. The length of this array specifies how many
+	 *            PinRows are going to be created. Can not set to
+	 *            <strong>null</strong>.
 	 * @param checkLastTwoRows
-	 *            - Checks the last two rows if <strong>true</strong>, otherwise
-	 *            not.
+	 *            - Checks if the last two PinRows are equal. Can not
+	 *            set to <strong>null</strong>.
 	 */
 	public PinPanel(final ButtonPanel buttonPanel, final String[] header, final int[] fieldCounts,
 			final boolean checkLastTwoRows) {
@@ -206,7 +224,7 @@ public class PinPanel extends JPanel {
 		textBundle = PropertyResolver.getBundle("text");
 		this.setDoubleBuffered(true);
 		this.setLayout(new GridBagLayout());
-
+		
 		this.buttonPanel = buttonPanel;
 		this.lastFocusedField = 0;
 		this.pinActivated = true;
@@ -216,21 +234,24 @@ public class PinPanel extends JPanel {
 		drawComponents();
 
 		checkCompletion();
-
+		
 		mCachedMinimumSize = super.getMinimumSize();
 		mCachedPreferredSize = super.getPreferredSize();
 	}
 
 	/**
+	 * <p>
 	 * Initializes the components of the {@link PinPanel}. Set up every title
-	 * through the given <tt>header-array</tt> and creates the instances of the
-	 * <tt>PinFields</tt>. The <tt>fieldCounts-array</tt> specifies how many
-	 * instances are created.
+	 * through the given header-array and creates the instances of the
+	 * PinFields. The fieldCounts-array specifies how many
+	 * PinRows are created and how many fields does one
+	 * PinRow count.
+	 * </p>
 	 * 
 	 * @param header
-	 *            - The given <tt>header-array</tt>.
+	 *            - The given header-array.
 	 * @param fieldCounts
-	 *            - The array of the numbers of <tt>PasswordFields</tt> are
+	 *            - The array of the numbers of PasswordFields are
 	 *            going to be created, with their individual size.
 	 */
 	private void initCompontents(final String[] header, final int[] fieldCounts) {
@@ -263,7 +284,7 @@ public class PinPanel extends JPanel {
 	}
 
 	/**
-	 * Draws the components of the <tt>PinPanel</tt>.
+	 * Draws the components of the PinPanel.
 	 */
 	private void drawComponents() {
 		final GridBagConstraints cons = new GridBagConstraints();
@@ -284,37 +305,42 @@ public class PinPanel extends JPanel {
 		} else {
 			cons.gridy = 0;
 			cons.weighty = 1;
+			
 			this.add(useReadingDeviceLabel, cons);
 		}
 	}
 
 	/**
-	 * Returns the number of pins.
+	 * <p>
+	 * Returns the number PinRows.
+	 * </p>
 	 * 
-	 * @return Returns the number of pins.
+	 * @return Returns the number PinRows.
 	 */
 	public int getRowCount() {
 		return pinRows.length;
 	}
 
 	/**
-	 * Returns the <tt>PinCode</tt> of the row which is identified through the
-	 * given argument.
+	 * <p>
+	 * Returns the inserted values as a PIN.
+	 * </p>
 	 * 
 	 * @param row
-	 *           - Index of the <tt>PinRow</tt>.
+	 *            - Index of the PinRow.
+	 * @return Returns the inserted values as a PIN.
 	 */
 	public byte[] getPinCode(final int row) {
 		return pinRows[row].getPinCode();
 	}
 
 	/**
-	 * Checks the completion of the creation of the {@link PinPanel}.
+	 * Checks if all PinRows are completely filled up with values and
+	 * if the new pin matches with the repetition.
 	 */
 	public void checkCompletion() {
 		if (pinActivated) {
 			boolean enabled = true;
-
 			for (final PinRow row : pinRows) {
 				if (row.getPinCode() == null) {
 					enabled = false;
@@ -376,7 +402,7 @@ public class PinPanel extends JPanel {
 	}
 
 	/**
-	 * This function is going to be called by the virtual <tt>KeyPad</tt> and removes the
+	 * This function is going to be called by the virtual KeyPad and removes the
 	 * content of the field that last had the focus.
 	 */
 	public void clearField() {
@@ -389,7 +415,8 @@ public class PinPanel extends JPanel {
 	}
 
 	/**
-	 * Removes the content through the <code>Keypad</code> c-Button.
+	 * Removes the content from all fields of the {@link PinPanel}.
+	 * Puts the focus to the first field.
 	 */
 	public void clear() {
 		removeContent();
@@ -406,11 +433,19 @@ public class PinPanel extends JPanel {
 	}
 
 	/**
-	 * Enables the {@link PinPanel} if the argument is <strong>true</strong>, otherwise
-	 * disables the {@link PinPanel}.
+	 * <p>
+	 * This method enables the possibility to use the {@link PinPanel} and the
+	 * virtual keypad or the connected keyboard, if the argument
+	 * <em>enabled</em> is set to <strong>true</strong>. Otherwise the
+	 * PinRows are removed and the user is forced to use his card
+	 * reader for the insertion of the required numbers.
+	 * </p>
 	 * 
 	 * @param enabled
-	 *            - The given argument.
+	 *            - Set to <strong>true</strong>, to use the integrated
+	 *            PinRows and the virtual keypad or the connected
+	 *            keyboard. Set to <strong>false</strong> to use the connected
+	 *            card reader.
 	 */
 	public void setPinEnabled(final boolean enabled) {
 		if (enabled != this.pinActivated) {
@@ -440,15 +475,19 @@ public class PinPanel extends JPanel {
 	}
 
 	/**
-	 * This function is going to be called in {@link MyPasswordField}, if a
-	 * number bigger than 9 is inserted.
+	 * <p>
+	 * This method checks first, if a specific {@link MyPasswordField} with the
+	 * provided <em>index</em> exists in a {@link PinRow}. If such a
+	 * PasswordField can be located and has the specific {@link PinRow}
+	 * the same length as the provided <em>value</em>, it is pasted at the
+	 * provided <em>index</em> in the {@link PinRow}.
+	 * </p>
 	 * 
 	 * @param value
-	 *            The value can just be an Integer greater than 9. This is checked
-	 *            in <tt>MyPasswordField</tt>.
+	 *            - The inserted value as a PIN.
 	 * 
 	 * @param index
-	 *            Index of the specific <tt>MyPasswordField</tt>.
+	 *            Index of the specific MyPasswordField.
 	 */
 	public void paste(final String value, final int index) {
 		PinRow row = null;
@@ -478,29 +517,27 @@ public class PinPanel extends JPanel {
 	}
 
 	/**
-	 * The <tt>PinRow</tt> provides all used <tt>PinFields</tt>.
+	 * The PinRow provides all fields for inserting the numbers of a
+	 * pin.
 	 * 
 	 * @author Christian Kahlo
 	 */
 	private class PinRow extends JPanel {
 
-		/**
-		 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-		 */
 		private static final long		serialVersionUID	= 1L;
 		
 		/**
-		 * The used <tt>Password fields</tt>.
+		 * The fields for inserting the numbers of the pins.
 		 */
 		private final MyPasswordField[]	fields;
 
 		/**
 		 * Constructs a new instance of the {@link PinRow}. Also draws and
-		 * initializes all components. The {@link GridBagLayout} is used for
-		 * drawing.
+		 * initializes all components. The {@link GridBagLayout} and predefined
+		 * {@link GridBagConstraints} are used for drawing.
 		 * 
 		 * @param fields
-		 *            - The given <tt>PinFields</tt>.
+		 *            - The given PinFields.
 		 * 
 		 * @param header
 		 *            - The header as the title.
@@ -543,14 +580,15 @@ public class PinPanel extends JPanel {
 			cons.gridwidth = fields + 2;
 			cons.weightx = 1;
 			cons.weighty = 1;
+
 			this.add(new JPanel(true), cons);
 		}
 
 		/**
-		 * Returns the <tt>PinCode</tt> if anyone is typed in, otherwise
+		 * Returns the PinCode if anyone is typed in, otherwise
 		 * <strong>null</strong>.
 		 * 
-		 * @return Returns the <tt>PinCode</tt> if anyone is typed in, otherwise
+		 * @return Returns the PinCode if anyone is typed in, otherwise
 		 *         <strong>null</strong>.
 		 */
 		public byte[] getPinCode() {
@@ -568,9 +606,9 @@ public class PinPanel extends JPanel {
 		}
 		
 		/**
-		 * Returns the <tt>Array</tt> of the used password fields.
+		 * Returns the Array of the used password fields.
 		 * 
-		 * @return Returns the <tt>Array</tt> of the used password fields.
+		 * @return Returns the Array of the used password fields.
 		 */
 		public MyPasswordField[] getPasswordFields() {
 			return fields;
@@ -578,7 +616,7 @@ public class PinPanel extends JPanel {
 
 		/**
 		 * Checks if a specific {@link MyPasswordField} is located in the array
-		 * of used <tt>MyPasswordFields</tt>.
+		 * of used MyPasswordFields.
 		 * 
 		 * @param index
 		 *            - The index of the specific password field.
@@ -597,8 +635,8 @@ public class PinPanel extends JPanel {
 	}
 
 	/**
-	 * The <ttMyKeyListener</tt> listens to events of the keys of the
-	 * {@link PinPanel} and provides on this way dynamic behavior.
+	 * The <ttMyKeyListener listens to events of the keys of the
+	 * {@link KeypadPanel} and provides on this way dynamic behavior.
 	 * 
 	 * @author Christian Kahlo
 	 */
@@ -665,15 +703,23 @@ public class PinPanel extends JPanel {
 				}
 			}
 		}
-
+		
+		/**
+		 * Checks, if the typed key is a digit.
+		 * 
+		 * @param e
+		 *            - The triggered {@link KeyEvent}.
+		 * @return Returns <strong>true</strong>, if the typed key is a digit
+		 *         and otherwise <strong>false</strong>.
+		 */
 		private boolean isDigit(final KeyEvent e) {
 			return e.getKeyChar() >= '0' && e.getKeyChar() <= '9';
 		}
 	}
 
 	/**
-	 * The <tt>MyFocusListener</tt> listens on <tt>focus events</tt>, like
-	 * <tt>focusLost</tt> and <tt>focusGained</tt>. Also he provides a function to
+	 * The MyFocusListener listens on focus events, like
+	 * focusLost and focusGained. Also he provides a function to
 	 * change the enabled state of the keypad.
 	 * 
 	 * @author Christian Kahlo
@@ -688,6 +734,7 @@ public class PinPanel extends JPanel {
 		@Override
 		public void focusGained(final FocusEvent e) {
 			lastFocusedField = ((MyPasswordField) e.getComponent()).getIndex();
+
 			setKeypadEnabled(true);
 		}
 
@@ -704,7 +751,7 @@ public class PinPanel extends JPanel {
 	}
 
 	/**
-	 * The <tt>MyDocumentListener</tt> listens on updates of <tt>documents</tt>
+	 * The MyDocumentListener listens on updates of documents
 	 * to which the listener is added.
 	 * 
 	 * @author Christian Kahlo.
@@ -725,4 +772,5 @@ public class PinPanel extends JPanel {
 			checkCompletion();
 		}
 	}
+	
 }

@@ -57,10 +57,9 @@ import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.desktop.gui.laf.DefaultLAF;
 
 /**
- * The <tt>Configuration</tt> provides the common flags for the application like
- * icons and layout.
  * <p>
- * <code>public class Configuration</code>
+ * The Configuration provides the constants to configure the
+ * PersoApp-Application manually.
  * </p>
  * 
  * @author Christian Kahlo
@@ -69,13 +68,12 @@ import de.persoapp.desktop.gui.laf.DefaultLAF;
 public class Configuration {
 
 	/**
-	 * The persistent set of defined properties. The properties are defined in
-	 * the <tt>config.properties</tt>.
+	 * The persistent set of defined config properties.
 	 */
 	private static final Properties						PROPS		= PropertyResolver
 																			.getProperties("config.properties");
 	/**
-	 * The initialization of the <tt>Configuration</tt> goes here.
+	 * The initialization of the constants goes here.
 	 */
 	static {
 		LOOK_AND_FEEL = DefaultLAF.class;
@@ -91,17 +89,17 @@ public class Configuration {
 	}
 
 	/**
-	 * The class of the main view of the <tt>PersoApp-Application</tt>.
+	 * The class of the main view of the PersoApp-Application.
 	 */
 	public static final Class<? extends IMainView>		MAINVIEW_CLASS;
 
 	/**
-	 * The <tt>Look and Feel</tt> of the <tt>PersoApp-Application</tt>.
+	 * The class of the Look and Feel of the PersoApp-Application.
 	 */
 	public static final Class<? extends LookAndFeel>	LOOK_AND_FEEL;
 
 	/**
-	 * The way, how to retrieve the requested text.
+	 * The current release level.
 	 */
 	public static final String							CLAIM_TEXT;
 
@@ -116,12 +114,12 @@ public class Configuration {
 	public static final boolean							RESIZABLE	= Boolean.parseBoolean(PROPS.getProperty(
 																			"layout.resizeable", "false"));
 	/**
-	 * The <tt>Layout-Font</tt>.
+	 * The used font.
 	 */
 	public static final String							FONT		= PROPS.getProperty("layout.font", "Arial");
 
 	/**
-	 * The used <tt>window icon</tt>. The <tt>icon.png</tt> is used.
+	 * The used icon.
 	 */
 	public static final BufferedImage					WINDOW_ICON	= Utils.getImage("icon.png");
 

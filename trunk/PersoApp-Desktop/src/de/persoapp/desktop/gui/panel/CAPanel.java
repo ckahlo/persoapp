@@ -63,10 +63,9 @@ import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * This class extends {@link JPanel} and displays all informations
- * about the <tt>Certificate Authority</tt>.
  * <p>
- * <code>public class CAPanel extends JPanel</code>
+ * The CAPanel displays all informations about the currently used
+ * certificates </br>(<em>ISO-7816</em> and <em>TR-03110</em>).
  * </p>
  * 
  * @author Christian Kahlo
@@ -74,36 +73,34 @@ import de.persoapp.desktop.gui.MyTitledBorder;
  */
 public class CAPanel extends JPanel {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long				serialVersionUID	= -1598003679367657336L;
 
-	/**
-	 * The constant for <tt>bold</tt> text style.
-	 */
 	public static final String				BOLD				= "Bold";
-	
-	/**
-	 * The constant for <tt>normal</tt> text style.
-	 */
 	public static final String				NORMAL				= "Normal";
 
 	/**
-	 * The necessary {@link JTextPane} to display the <tt>Certificate
-	 * Authority Informations</tt>.
+	 * The necessary {@link JTextPane} to display the Certificate
+	 * Authority Informations.
 	 */
 	private JTextPane						textPane;
 
 	/**
-	 * The <tt>bundle</tt> which resolves the necessary properties.
-	 */
+	  *Localized message bundle for user interaction.	 
+	  */
 	private final PropertyResolver.Bundle	textBundle;
 
 	/**
-	 * Constructs and initializes a new instance of the <tt>Certificate Authority Panel</tt>.
-	 * Also initializes the belonging attributes and draws the content. The
-	 * constructed panel is double-buffered for advanced displaying.
+	 * <p>
+	 * Constructs and initializes a new instance of the CAPanel. Also
+	 * initializes the defined attributes and draws the content.
+	 * </p>
+	 * <p>
+	 * The constructed panel is double-buffered to achieve benefits by
+	 * the extended use of memory.
+	 * </p>
+	 * <p>
+	 * The {@link BorderLayout} is used for drawing.
+	 * </p>
 	 */
 	public CAPanel() {
 		super();
@@ -117,8 +114,7 @@ public class CAPanel extends JPanel {
 	}
 
 	/**
-	 * Draws the content of the {@link CAPanel}. The way the content is drawn
-	 * can't be changed.
+	 * Draws the content of the {@link CAPanel}.
 	 */
 	private void drawContent() {
 		textPane = new JTextPane();
@@ -133,11 +129,11 @@ public class CAPanel extends JPanel {
 	}
 	
 	/**
-	 * Adds the given text with the given style to the {@link Document} which is
-	 * defined in the {@link #textPane} attribute.
+	 * Adds the given text which is created according to the given style to the
+	 * defined {@link #textPane}.
 	 * 
 	 * @param text
-	 *            - The given text.
+	 *            - The text, to add.
 	 * @param style
 	 *            - The style of the text.
 	 */
@@ -151,23 +147,23 @@ public class CAPanel extends JPanel {
 	}
 	
 	/**
-	 * Removes the content of the {@link #textPane}.
+	 * Removes the text of the {@link CAPanel}.
 	 */
 	public void clear() {
 		textPane.setText("");
 	}
 
 	/**
-	 * Removes the content of the included <tt>textPane</tt> and inserts
+	 * Removes the content of the included textPane and inserts the following
 	 * specific certificate informations from the given {@link IEAC_Info}.
 	 * <p>
 	 * <ul>
-	 * <li>Issuer Name</li>
-	 * <li>Issuer URL</li>
+	 * <li>Issuer Name - The name of the certificate issuer.</li>
+	 * <li>Issuer URL - The url of the certificate issuer.</li>
 	 * </ul>
-	 * 
+	 * </p>
 	 * @param eacInfo
-	 *            - The given {@link IEAC_Info}.
+	 *            - The {@link IEAC_Info}, to fill.
 	 */
 	public void fillCertificate(final IEAC_Info eacInfo) {
 		clear();

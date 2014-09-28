@@ -55,30 +55,28 @@ import de.persoapp.core.util.ArrayTool;
 
 /**
  * <p>
- * CMac using standard Java cipher interface as a base. Inspired by
- * BouncyCastles internal engine.
- * </p>
- * <p>
- * <code>public class CMac</code>
+ * Functions for creating a CMac using standard Java cipher interfaces as a
+ * base. Inspired by BouncyCastles internal engine.
  * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
  */
 public class CMac {
-	
+
 	/**
-	 * The constant used for the mac creation.
+	 * The constant to prevent the first byte from overflowing during doubling the bytes of
+	 * an byte array.
 	 */
 	private static final byte	CONSTANT_128	= (byte) 0x87;
 
 	/**
-	 * The buffer, in which the created parts of the CMac are stored.
+	 * The temporary buffer.
 	 */
 	private final byte[]		buf;
 	
 	/**
-	 * The starting offset of the buffer.
+	 * The offset of the current processed data during the creation of the cmac.
 	 */
 	private int					bufOff;
 	
@@ -93,16 +91,20 @@ public class CMac {
 	private final int			macSize;
 
 	
-	/** The L values. */
+	/** The values for additionally randomness. */
 	private final byte[]		L, Lu, Lu2;
 
 	/**
-	 * Creates and initializes a new cipher based message authentication code.
-	 * The {@link CMac} is block cipher based.
-	 *
-	 * @param cipher            - The starting cipher.
-	 * @param macSize            - The size of the message authentication code.
-	 * @throws GeneralSecurityException             If a error occurs during the creation process of the cipher.
+	 * Create a standard MAC based on a block cipher with the size of the MAC
+	 * been given in bits.
+	 * 
+	 * @param cipher
+	 *            - The cipher to be used as the basis of the MAC generation.
+	 * @param macSize
+	 *            - The size of the MAC in bytes. Must be a multiple of 8 and <=
+	 *            128.
+	 * @throws GeneralSecurityException
+	 *             If a error occurs during the creation process of the cipher.
 	 */
 	public CMac(final Cipher cipher, final int macSize) throws GeneralSecurityException {
 		if (macSize > cipher.getBlockSize()) {
@@ -129,10 +131,11 @@ public class CMac {
 	}
 
 	/**
-	 * Further informations follow in MR3.
-	 *
-	 * @param in the in
-	 * @return the byte[]
+	 * Doubles the values of every byte of the given byte array.
+	 * 
+	 * @param in
+	 *            - The byte array, to modify.
+	 * @return The byte array, which contains the doubled bytes.
 	 */
 	private byte[] doubleLu(final byte[] in) {
 		final int FirstBit = (in[0] & 0xFF) >> 7;
@@ -149,8 +152,8 @@ public class CMac {
 
 	/**
 	 * Continues the multiple-part creation of the {@link CMac}, processing
-	 * another data part. The first <tt>len</tt> bytes in the <tt>input</tt>
-	 * buffer, starting at <tt>inOff</tt> are processed.
+	 * another data part. The first len bytes in the input
+	 * buffer, starting at inOff are processed.
 	 * 
 	 * @param in
 	 *            - The input buffer.
@@ -194,11 +197,9 @@ public class CMac {
 	private static final byte[]	SM_PAD	= new byte[] { (byte) 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 	/**
-	 * Finishes the creation of the cipher-block based message authentication
-	 * code.
 	 * <p>
-	 * The padding is added at the end of the created mac. The finished result
-	 * is stored in a new buffer and returned.
+	 * Encrypts or decrypts data in a single-part operation, or finishes a
+	 * multiple-part operation.
 	 * </p>
 	 * 
 	 * @return Returns the new buffer with the result.
@@ -211,13 +212,14 @@ public class CMac {
 		final int blockSize = cipher.getBlockSize();
 
 		byte[] lu;
+		//Padding doesn't has to be added.
 		if (bufOff == blockSize) {
 			lu = Lu;
 		} else {
+			//Padding is added.
 			System.arraycopy(SM_PAD, 0, buf, bufOff, buf.length - bufOff);
 			lu = Lu2;
 		}
-
 		for (int i = 0; i < buf.length; i++) {
 			buf[i] ^= lu[i];
 		}
@@ -228,10 +230,10 @@ public class CMac {
 	}
 
 	/**
-	 * Reset the mac generator.
+	 * Resets the mac generator.
 	 * 
 	 * @throws GeneralSecurityException
-	 *             If an error occurs during the call of the <tt>doFinal</tt>
+	 *             If an error occurs during the call of the doFinal
 	 *             method.
 	 */
 	public void reset() throws GeneralSecurityException {

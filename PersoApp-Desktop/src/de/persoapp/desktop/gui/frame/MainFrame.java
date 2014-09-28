@@ -80,12 +80,10 @@ import de.persoapp.desktop.gui.panel.ServiceProviderPanel;
 import de.persoapp.desktop.gui.panel.StatusBarPanel;
 
 /**
- * The <tt>MainFrame</tt> is the frame of the <tt>PersoApp-DesktopClient</tt>
- * which provides the main functionality.
  * <p>
- * By using the <tt>MainFrame</tt>, the user has access to the informations
- * about the service provider and the certificate authority and to the main
- * functionality of the application.
+ * The MainFrame displays the necessary informations and provides the
+ * GUI to handle user interactions properly, to maintain the communication
+ * between the user and an eID service provider.
  * </p>
  * 
  * @author Christian Kahlo
@@ -93,9 +91,6 @@ import de.persoapp.desktop.gui.panel.StatusBarPanel;
  */
 public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvider {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long				serialVersionUID	= -7125602795219536236L;
 
 	/**
@@ -122,12 +117,12 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	private PinPanel						pinPanel;
 	
 	/**
-	 * The panel which holds the <tt>Confirm</tt>- and <tt>Cancel</tt>-Button.
+	 * The panel which holds the Confirm- and Cancel-Button.
 	 */
 	private ButtonPanel						buttonPanel;
 	
 	/**
-	 * The shown status bar which includes a progress bar.
+	 * The status bar which includes a progress bar.
 	 */
 	private StatusBarPanel					statusBarPanel;
 	
@@ -138,7 +133,7 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	
 	/**
 	 * The panel, which holds informations about the
-	 * <tt>PersoApp-Application</tt>.
+	 * PersoApp-Application.
 	 */
 	private HelpPanel						helpPanel;
 	
@@ -148,12 +143,12 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	private JPanel							mainPanel;
 	
 	/**
-	 * The displayed picture of the <tt>PersoApp-Application</tt>.
+	 * The displayed picture of the PersoApp-Application.
 	 */
 	private JLabel							pic;
 
 	/**
-	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 * Localized message bundle for user interaction.
 	 */
 	private final PropertyResolver.Bundle	textBundle;
 
@@ -189,7 +184,7 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	}
 
 	/**
-	 * Initializes the Panels of the {@link MainFrame}.
+	 * Initializes the panels of the {@link MainFrame}.
 	 */
 	private void initPanels() {
 		mainPanel = new JPanel(true);
@@ -213,8 +208,7 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	}
 
 	/**
-	 * Draws the different panels of the {@link MainFrame}, using the
-	 * {@link GridBagLayout}.
+	 * Draws the panels of the {@link MainFrame}.
 	 */
 	private void drawPanels() {
 		final GridBagConstraints cons = new GridBagConstraints();
@@ -266,9 +260,8 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	}
 
 	/**
-	 * Adds a {@link WindowAdapter}, {@ink ActionListener}, {@link KeyAdapter}
-	 * to the components of the {@link MainFrame}, to provide the necessary
-	 * internal logic.
+	 * Adds different kinds of listeners to the {@link MainFrame} and their
+	 * components to provide the main functionality.
 	 */
 	private void addListener() {
 		this.addWindowListener(new WindowAdapter() {
@@ -311,7 +304,7 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	}
 
 	/**
-	 * Shows the progress of the current operation.
+	 * Shows the progress of the current operation according to the provided arguments.
 	 * 
 	 * @param message
 	 *            - The message to display.
@@ -325,11 +318,11 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	}
 
 	/**
-	 * Initializes the different panels with the informations from the
+	 * Initializes the different panels according to the informations from the
 	 * {@link IEAC_Info}.
 	 * 
 	 * @param eacInfo
-	 *            - The certificate informations.
+	 *            - The informations about the certificate.
 	 */
 	public void init(final IEAC_Info eacInfo) {
 		pinPanel.clear();
@@ -349,18 +342,17 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	}
 
 	/**
-	 * Returns the marked personal data from the {@link DataPanel}.
+	 * Returns the result of the <em>Card Holder Authorization Template</em>.
 	 * 
-	 * @return Returns the marked personal data of the user.
+	 * @return Returns the result of the <em>Card Holder Authorization Template</em>.
 	 */
 	public long getResultChat() {
 		return dataPanel.getResultChat();
 	}
 
 	/**
-	 * Disables the <tt>Confirm</tt>- and the <tt>Cancel</tt>-Button and sets
-	 * the <tt>Result</tt> of the user interaction in the currently running
-	 * instance of {@link MainView}.
+	 * Fetches the final result, after pressing the <em>confirm</em> button. The
+	 * final result includes the result of the <em>CHAT</em> and the pin code.
 	 */
 	public void returnResultConfirm() {
 		((MainView) MainView.getInstance()).setResult(dataPanel.getResultChat(), pinPanel.getPinCode(0), true);
@@ -370,8 +362,7 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	}
 
 	/**
-	 * Sets the visibility of the <tt>MainFrame</tt> to <strong>false</strong>
-	 * and deletes the <tt>Result</tt> of the user interaction.
+	 * Quits the processing of informations.
 	 */
 	public void returnResultAbort() {
 		this.setVisible(false);
@@ -450,7 +441,8 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	 * Enables the KeypadPanel, if the sidebar is currently shown.
 	 * 
 	 * @param enabled
-	 *            - Can be <strong>true</strong> or <strong>false</strong>.
+	 *            - If set to <b>true</b>, the KeypadPanel is enabled,
+	 *            otherwise <b>false</b>.
 	 */
 	public void setKeypadPanelEnabled(final boolean enabled) {
 		if (showSideBar) {
@@ -472,11 +464,19 @@ public class MainFrame extends JFrame implements HelpPanelProvider, SidebarProvi
 	}
 	
 	/**
-	 * Enables used {@link PinPanel}, if the given argument is <strong>true</strong>,
-	 * otherwise the <tt>PinPanel</tt> is disabled.
+	 * <p>
+	 * This method enables the possibility to use the {@link PinPanel} and the
+	 * virtual keypad or the connected keyboard, if the argument
+	 * <em>enabled</em> is set to <strong>true</strong>. Otherwise the
+	 * PinRows are removed and the user is forced to use his card
+	 * reader for the insertion of the required numbers.
+	 * </p>
 	 * 
 	 * @param enabled
-	 *            - Can be <strong>true</strong> or <strong>false</strong>.
+	 *            - Set to <strong>true</strong>, to use the integrated
+	 *            PinRows and the virtual keypad or the connected
+	 *            keyboard. Set to <strong>false</strong> to use the connected
+	 *            card reader.
 	 */
 	public void setPinEnabled(final boolean enabled) {
 		this.pinEnabled = enabled;

@@ -59,11 +59,9 @@ import javax.swing.UIDefaults;
 import de.persoapp.desktop.Logging;
 
 /**
- * The <tt>LAFFacade</tt>-class has no own behavior, except for setter and getter
- * functions and constructors. All behavior comes from the <tt>target</tt>
- * attribute.
  * <p>
- * <code>public class LAFFacade extends LookAndFeel</code>
+ * The LAFFacade implements the abstract class {@link LookAndFeel} and
+ * delegates function calls of the implemented functions to the target.
  * </p>
  * 
  * @author Christian Kahlo
@@ -72,25 +70,22 @@ import de.persoapp.desktop.Logging;
 public class LAFFacade extends LookAndFeel {
 
 	/**
-	 * The target variable holds the {@link LookAndFeel}-class. All
-	 * functions are going to be called from there.
+	 * The handle to the target of the facade.
 	 */
 	private LookAndFeel	target	= null;
 
 	/**
-	 * Creates a new instance of the {@link LAFFacade}.
+	 * Creates a new instance of the {@link LAFFacade} without specifying a
+	 * target.
 	 */
 	public LAFFacade() {
 		super();
 	}
 
 	/**
-	 * Creates a new instance of the {@link LAFFacade}. Sets the
-	 * {@link LookAndFeel}-class during the creation process.<br>
-	 * </br>
 	 * <p>
-	 * The functions from the given object are going to be used in case of
-	 * function calls.
+	 * Creates a new instance of the {@link LAFFacade}. The target of the facade
+	 * is set during the creation process.
 	 * </p>
 	 * 
 	 * @param laf
@@ -102,8 +97,7 @@ public class LAFFacade extends LookAndFeel {
 	}
 	
 	/**
-	 * Sets the given object as the new functionality providing target. The
-	 * target is going to be used in case of function calls.
+	 * Sets the given object as the functionality providing target.
 	 * 
 	 * @param target
 	 *            - The target to set.
@@ -114,9 +108,9 @@ public class LAFFacade extends LookAndFeel {
 	}
 
 	/**
-	 * Retrieves the current set target.
+	 * Returns the current target.
 	 * 
-	 * @return Returns the current set target.
+	 * @return Returns the current target.
 	 */
 	private LookAndFeel target() {
 		return this.target;

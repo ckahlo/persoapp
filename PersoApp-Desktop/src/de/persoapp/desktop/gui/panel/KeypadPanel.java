@@ -63,10 +63,9 @@ import de.persoapp.core.client.PropertyResolver;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * The <tt>KeypadPanel</tt> holds the buttons of the {@link PinPanel} and
- * provides the option to insert the needed <tt>Pins</tt>.
  * <p>
- * <code>public class KeypadPanel extends JPanel</code>
+ * The panel for <em>PIN</em>-input, in case of the use of a
+ * contactless base reader.
  * </p>
  * 
  * @author Christian Kahlo
@@ -74,9 +73,6 @@ import de.persoapp.desktop.gui.MyTitledBorder;
  */
 public class KeypadPanel extends JPanel {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long	serialVersionUID	= 2807875955848469717L;
 
 	/**
@@ -85,20 +81,27 @@ public class KeypadPanel extends JPanel {
 	private ArrayList<JButton>	keys;
 	
 	/**
-	 * The <tt>JButtons</tt> for additionally functionality like
+	 * The JButtons for additionally functionality like
 	 * <strong>clear</strong> and <strong>delete</strong>.
 	 */
 	private JButton				clear, delete;
 	
 	/**
-	 * The {@link PinPanel} which is necessary for the input of the pin.
+	 * The {@link PinPanel}, which provides fields to show the inserted pins or
+	 * puks.
 	 */
 	private PinPanel			pinPanel;
 
 	/**
+	 * <p>
 	 * Creates a new instance of the {@link KeypadPanel} with the given
-	 * {@link PinPanel}. The constructed Panel is double-buffered for advanced
-	 * displaying.
+	 * {@link PinPanel}. The constructed panel is double-buffered to
+	 * achieve benefits by the extended use of memory.
+	 * </p>
+	 * <p>
+	 * The {@link GridBagLayout} is used to draw the layout of the constructed
+	 * panel.
+	 * </p>
 	 * 
 	 * @param panel
 	 *            - The given {@link PinPanel}.
@@ -157,7 +160,9 @@ public class KeypadPanel extends JPanel {
 	}
 
 	/**
-	 * Draws the <tt>components</tt> of the KeypadPanel.
+	 * <p>
+	 * Draws the components of the KeypadPanel.
+	 * </p>
 	 */
 	private void drawComponents() {
 		final GridBagConstraints cons = new GridBagConstraints();
@@ -191,7 +196,7 @@ public class KeypadPanel extends JPanel {
 	}
 
 	/**
-	 * Shuffles the keys of the {@link KeyPadPanel}.
+	 * Shuffles the buttons of the {@link KeypadPanel}.
 	 */
 	public void shuffle() {
 		for (final JButton button : keys) {
@@ -211,7 +216,7 @@ public class KeypadPanel extends JPanel {
 	 * Sets the {@link PinPanel}.
 	 * 
 	 * @param panel
-	 *            - The given {@link PinPanel}.
+	 *            - The {@link PinPanel} to set.
 	 */
 	public void setPinPanel(final PinPanel panel) {
 		this.pinPanel = panel;

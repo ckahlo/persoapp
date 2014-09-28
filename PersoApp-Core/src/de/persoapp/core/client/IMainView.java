@@ -49,13 +49,10 @@ package de.persoapp.core.client;
 
 /**
  * <p>
- * The <tt>IMainView</tt> Interface is implemented through the GUI to provide a
- * unified, foreclosed communication channel to the GUI. Additionally, the
- * <tt>IMainView</tt> provides a event listener, which is registered to listen
- * and react on events of user interaction.
- * </p>
- * <p>
- * <code>public interface IMainView</code>
+ * The IMainView provides an unified, foreclosed communication channel to the
+ * GUI. Additionally, the IMainView provides a event listener, which is
+ * registered to listen and react on events of the core functions to forward
+ * them to the GUI.
  * </p>
  * 
  * @author Christian Kahlo
@@ -64,48 +61,48 @@ package de.persoapp.core.client;
 public interface IMainView {
 
 	/**
-	 * Is set, if a error occurs.
+	 * Is set, if an error occurs.
 	 */
 	public static final int	ERROR			= 0;
 	
 	/**
-	 * Is set, if a info is given.
+	 * Is set, if an info is given.
 	 */
 	public static final int	INFO			= 1;
 	
 	/**
-	 * Is set, if the <tt>MainView</tt> is reloaded.
+	 * Is set, if the MainView is reloaded.
 	 */
 	public static final int	RELOAD			= 2;
 	
 	/**
-	 * Is set, if a operation is completed successful.
+	 * Is set, if an operation is completed successful.
 	 */
 	public static final int	SUCCESS			= 3;
 	
 	/**
-	 * Is set, if a warning state occurs.
+	 * Is set, if an warning occurs.
 	 */
 	public static final int	WARNING			= 4;
 	
 	/**
-	 * Is set, if a question is handed to the user.
+	 * Is set, if an question is handed to the user.
 	 */
 	public static final int	QUESTION		= 5;
 
 	/**
-	 * Request and submit PIN and CHAT.
+	 * Magic constant for showing the PIN Panel and the CHAT.
 	 */
 	public static final int	MODE_PIN_CHAT	= 0;
 
 	/**
-	 * Request only CHAT, PIn is entered on reader keyboard.
+	 * Request only CHAT
 	 */
 	public static final int	MODE_CHATONLY	= 1;
 
 	/* i.e. for RID-only authentication = login */
 	/**
-	 * Request only PIN, CHAT is fixed. 
+	 * Request only PIN. 
 	 */
 	public static final int	MODE_PINONLY	= 2;
 
@@ -115,20 +112,16 @@ public interface IMainView {
 	public static final int	MODE_NONE		= 3;
 
 	/**
-	 * The <tt>MainDialogResult</tt> contains the marked personal data and the
-	 * inserted actual pin. The argument <em>approved</em> is set to
-	 * <strong>true</strong>, if the user confirms, that the data has to be
-	 * send.
-	 * <p>
-	 * <code>public class MainDialogResult</code>
-	 * </p>
+	 * The MainDialogResult contains the selected personal data and the actual
+	 * inserted pin.
 	 * 
 	 * @author Christian Kahlo, Ralf Wondratschek
 	 */
 	public class MainDialogResult {
 		
 		/**
-		 * The inserted marked personal data.
+		 * The template for selecting personal data which is going to be read
+		 * from the identity card.
 		 */
 		private final long			chat;
 		
@@ -138,23 +131,22 @@ public interface IMainView {
 		private final SecureHolder	pin;
 		
 		/**
-		 * Set to <strong>true</strong>, if the user confirms, that the data
-		 * needs to be send, otherwise <strong>false</strong>.
+		 * Set to <strong>true</strong>, if the user confirms, that he wants to
+		 * proceed.
 		 */
 		private boolean				approved	= false;
 
 		/**
 		 * Creates a new instance of the {@link MainDialogResult}. The marked
-		 * personal data and the pin are set through the handed parameters. The
-		 * argument <em>approved</em> shows the urge to send the given data.
+		 * personal data and the pin are set through the handed parameters.
 		 * 
 		 * @param chat
-		 *            - The marked personal data.
+		 *            - The personal data, which is read and send.
 		 * @param pin
 		 *            - The inserted actual pin.
 		 * @param approved
-		 *            - Set to <strong>true</strong> if the given data needs to
-		 *            be send.
+		 *            - Set to <strong>true</strong> if the user wants to
+		 *            proceed and let the data read from the used eID-Card.
 		 */
 		public MainDialogResult(final long chat, final byte[] pin, final boolean approved) {
 			this.chat = chat;
@@ -182,11 +174,11 @@ public interface IMainView {
 		
 		/**
 		 * Returns <strong>true</strong>, if the data of the
-		 * {@link MainDialogResult} needs to be send. Otherwise
+		 * {@link MainDialogResult} is approved. Otherwise
 		 * <strong>false</strong>.
 		 * 
 		 * @return Returns <strong>true</strong>, if the data of the
-		 *         {@link MainDialogResult} needs to be send. Otherwise
+		 *         {@link MainDialogResult} is approved. Otherwise
 		 *         <strong>false</strong>.
 		 */
 		public boolean isApproved() {
@@ -195,13 +187,7 @@ public interface IMainView {
 	}
 
 	/**
-	 * The <tt>ChangePinDialogResult</tt> contains the old pin, the new pin and
-	 * the result of the attempt to change the pin. The old pin and the new pin
-	 * are stored in {@link SecureHolder}, and can't be changed. Also it
-	 * contains the result of the attempt to change the currently active pin.
-	 * <p>
-	 * <code>public class ChangePINDialogResult</code>
-	 * </p>
+	 * The ChangePinDialogResult contains the old pin and the new pin.
 	 * 
 	 * @author Christian Kahlo, Ralf Wondratschek
 	 */
@@ -218,8 +204,8 @@ public interface IMainView {
 		private final SecureHolder	pinNew;
 		
 		/**
-		 * Set to <strong>true</strong>, if the inserted pins are approved by
-		 * the user.
+		 * Set to <strong>true</strong>, if the user wants to proceed with the
+		 * operation by clicking the specific button.
 		 */
 		private boolean				approved	= false;
 
@@ -273,8 +259,8 @@ public interface IMainView {
 	}
 	
 	/**
-	 * The <tt>EventListener</tt> listens on specific events to ensure the
-	 * functionalities. The <tt>EventListener</tt> listens on the following
+	 * The EventListener listens on specific events to ensure the
+	 * functionalities. The EventListener listens on the following
 	 * events.
 	 * <p>
 	 * <code>
@@ -348,12 +334,12 @@ public interface IMainView {
 		public static final int	EVENT_TERMINATE_ESIGN	= 1024;
 
 		/**
-		 * The event topic, related to events of the change mechanism of the <tt>CAN-Dialog</tt>. 
+		 * The event topic, related to events of the change mechanism of the CAN-Dialog. 
 		 */
 		public static final int	EVENT_CHANGE_CAN		= 1031;
 
 		/**
-		 * The event topic, related to events of showing the electronic <tt>certificates</tt>.
+		 * The event topic, related to events of showing the electronic certificates.
 		 */
 		public static final int	EVENT_SHOW_ESIGN_CERTS	= 1101;
 
@@ -365,7 +351,7 @@ public interface IMainView {
 		 * @param optionalEventData
 		 *            - The optional event-data, which is handled with the
 		 *            event.
-		 * @return Returns the new state of the <tt>MainView</tt>
+		 * @return Returns the new state of the MainView
 		 */
 		Object handleEvent(int event, Object[] optionalEventData);
 	}
@@ -390,9 +376,16 @@ public interface IMainView {
 	 */
 	public Object triggerEvent(int event, Object... eventData);
 
-	 /**
-	  * Display the main screen for online authentication.
-	  */
+	/**
+	 * Shows the main dialog with informations about the actual process and
+	 * creates a asynchronous thread to handle the pin panel during the online
+	 * authentication process according to the given <em>MODE</em>.
+	 * 
+	 * @param eacInfo
+	 *            - The informations about the actual process.
+	 * @param MODE
+	 *            - The MODE of authentication.
+	 */
 	public void showMainDialog(IEAC_Info eacInfo, int MODE);
 
 	/**
@@ -404,7 +397,7 @@ public interface IMainView {
 	public MainDialogResult getMainDialogResult();
 
 	/**
-	 * Show the minimal <tt>CAN-Dialog</tt>.
+	 * Show the minimal CAN-Dialog.
 	 * 
 	 * @param msg
 	 *            - The message which is displayed in the dialog.
@@ -415,7 +408,7 @@ public interface IMainView {
 	public SecureHolder showCANDialog(String msg);
 
 	/**
-	 * Show change <tt>PIN Dialog</tt>.
+	 * Show the change pin dialog.
 	 */
 	public void showChangePinDialog();
 
@@ -433,7 +426,7 @@ public interface IMainView {
 	public void showProgress(String message, int amount, boolean enabled);
 
 	/**
-	 * Display a question, ask for <tt>OK/CANCEL</tt>.
+	 * Display a question, ask for OK/CANCEL.
 	 * 
 	 * @param title
 	 *            - The title of the question.

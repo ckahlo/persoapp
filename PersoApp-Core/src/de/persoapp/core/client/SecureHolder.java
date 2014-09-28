@@ -56,13 +56,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * <p>
- * The <tt>SecureHolder</tt> encrypts and stores data in a safety way. After a
+ * The SecureHolder encrypts and stores data in a safety way. After a
  * PIN is inserted through a {@link PinPanel}, the inserted PIN is transmitted
- * from the gui to the core through a provided instance of the
- * <em>SecureHolder</em>.
- * </p>
- * <p>
- * <code>public class SecureHolder</code>
+ * from the GUI to the core by an <em>SecureHolder</em>.
  * </p>
  * 
  * @author Christian Kahlo, Ralf Wondratschek
@@ -76,7 +72,7 @@ public class SecureHolder {
 	private transient byte[]	value	= null;
 	
 	/**
-	 * The current system time for advanced encryption and decryption.
+	 * The current system time for encryption/decryption issues.
 	 */
 	private transient long		ts		= System.currentTimeMillis();
 

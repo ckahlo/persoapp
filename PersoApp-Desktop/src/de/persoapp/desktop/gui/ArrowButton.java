@@ -59,11 +59,8 @@ import de.persoapp.desktop.Utils;
 import de.persoapp.desktop.gui.frame.SidebarProvider;
 
 /**
- * The <tt>ArrowButton</tt>-class provides the main functionality to work with a
- * <tt>SidebarProvider</tt>. The ArrowButtons can be used to hide and add a
- * sidebar to a <tt>Window</tt>.
  * <p>
- * <code>public class ArrowButton extends JButton implements ActionListener<code>
+ * The ArrowButton provides arrow buttons and the utilizing logic.
  * </p>
  * 
  * @author Christian Kahlo
@@ -71,23 +68,20 @@ import de.persoapp.desktop.gui.frame.SidebarProvider;
  */
 public class ArrowButton extends JButton implements ActionListener {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long	serialVersionUID	= 1L;
 
 	/**
-	 * The constant to set up the left pressed state.
+	 * The constant, which signals that the arrow button points to the left.
 	 */
 	public static final int		STATE_LEFT			= 0;
 	
 	/**
-	 * The constant to set up the right pressed state.
+	 * The constant, which signals that the arrow button points to the right.
 	 */
 	public static final int		STATE_RIGHT			= 1;
 
 	/**
-	 * The <tt>ImageIcons</tt> for displaying the different button states.
+	 * The ImageIcons for showing the different button states.
 	 */
 	private static ImageIcon	left				= new ImageIcon(Utils.getImage("arrow_left.png")),
 			leftPressed = new ImageIcon(Utils.getImage("arrow_left_dark.png")), leftRollover = new ImageIcon(
@@ -96,7 +90,7 @@ public class ArrowButton extends JButton implements ActionListener {
 					Utils.getImage("arrow_right_light.png"));
 
 	/**
-	 * The provider for the sidebar.
+	 * The handle to the {@link SidebarProvider}.
 	 */
 	private SidebarProvider		window;
 
@@ -106,7 +100,7 @@ public class ArrowButton extends JButton implements ActionListener {
 	private int					state;
 
 	/**
-	 * Constructs a new instance of the {@link ArrowButton}.
+	 * Constructs and initializes a new {@link ArrowButton}.
 	 */
 	public ArrowButton() {
 		super();
@@ -122,11 +116,11 @@ public class ArrowButton extends JButton implements ActionListener {
 	}
 
 	/**
-	 * Sets the current icon state.<br>
-	 * </br> The state can be <code>STATE_LEFT</code> for removing the sidebar
-	 * and <code>STATE_RIGHT</code> for adding the sidebar.
+	 * <p>
+	 * Sets the icon according to the current state of the {@link ArrowButton}.
+	 * </p>
 	 * 
-	 * @param state - The state to set.
+	 * @param state - The state of the {@link ArrowButton}.
 	 */
 	public void setIconState(final int state) {
 		switch (state) {

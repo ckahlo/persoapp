@@ -57,10 +57,9 @@ import de.persoapp.core.util.ArrayTool;
 import de.persoapp.core.util.Hex;
 
 /**
- * The <tt>PersoSimTransport</tt>-class simulates the transport and the exchange
- * of data from a new personal identity card with a remotehost.
  * <p>
- * <code>public class PersoSimTransport implements TransportProvider</code>
+ * The PersoSimTransport-class simulates the transport and the exchange
+ * of data from a personal identity card with a remotehost.
  * </p>
  * 
  * @author Christian Kahlo
@@ -69,7 +68,7 @@ import de.persoapp.core.util.Hex;
 public class PersoSimTransport implements TransportProvider {
 
 	/**
-	 * The last status word.
+	 * The last received status word.
 	 */
 	private int				lastSW;
 	
@@ -89,7 +88,7 @@ public class PersoSimTransport implements TransportProvider {
 	private Socket			socket;
 
 	/**
-	 * Creates and initializes a new instance of {@link PersoSimTransport}.
+	 * Creates and initializes a new {@link PersoSimTransport}.
 	 * 
 	 * @param host
 	 *            - The used host.
@@ -134,7 +133,7 @@ public class PersoSimTransport implements TransportProvider {
 	}
 
 	/**
-	 * The value for the empty response. 
+	 * The empty response. 
 	 */
 	private static final byte[]	EMPTY_RESPONSE	= new byte[0];
 

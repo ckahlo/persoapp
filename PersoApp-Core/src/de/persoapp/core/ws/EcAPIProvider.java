@@ -48,10 +48,9 @@
 package de.persoapp.core.ws;
 
 /**
- * The <tt>EcAPIProvider</tt> provides the different results for requests
- * related to the <tt>ECard</tt>.
  * <p>
- * <code>public interface EcAPIProvider</code>
+ * The EcAPIProvider provides the different namespaces of the possible
+ * results of incoming requests.
  * </p>
  * 
  * @author Christian Kahlo
@@ -60,12 +59,14 @@ package de.persoapp.core.ws;
 public interface EcAPIProvider {
 
 	/**
-	 * The result, if the request to the eID-Server is ok.
+	 * The namespace of the result, if the actual operation is done without an
+	 * error.
 	 */
 	public static final String	ECARD_API_RESULT_OK		= "http://www.bsi.bund.de/ecard/api/1.1/resultmajor#ok";
 	
 	/**
-	 * The result, if the request to the eID-Server is failed.
+	 * The namespace of the result, if an error happens during the actual
+	 * operation.
 	 */
 	public static final String	ECARD_API_RESULT_ERROR	= "http://www.bsi.bund.de/ecard/api/1.1/resultmajor#error";
 

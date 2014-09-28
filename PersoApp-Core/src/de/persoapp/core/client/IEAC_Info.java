@@ -51,54 +51,118 @@ import java.util.Date;
 
 /**
  * <p>
- * A implementation of the interface <tt>IEAC_Info</tt> provides all
- * informations for the user about the <em>eID-process</em>. The user
- * <p>
- * <code>public interface IEAC_Info</code>
- * <p>
+ * The <em>IEAC_Info</em> interface provides the magic constants and functions
+ * related to the EAC_Protocol. See for further informations TR-03110.
+ * </p>
  * 
  * @author Christian Kahlo, Ralf Wondratschek.
  * @author Rico Klimsa - added javadoc comments.
  */
 public interface IEAC_Info {
 	
-	/** The Constant OID_BSI_DE. */
+	/**
+	 * Base OID for BSI, Germany
+	 * <p>
+	 * <code>id-bsi OBJECT IDENTIFIER ::= { 0.4.0.127.0.7 }</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE						= "0.4.0.127.0.7";
 	
-	/** The Constant OID_BSI_DE_APPS. */
+	/**
+	 * The base OID, to identify applications.
+	 * <p>
+	 * <code>id-app OBJECT IDENTIFIER ::= { bsi-de applications(3) }</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_APPS					= "0.4.0.127.0.7.3";
 	
-	/** The Constant OID_BSI_DE_MRTD. */
+	/** 
+	 * The base OID, which identifies the machine readable travel documents
+	 * <p>
+	 * <code>id-mrtd OBJECT IDENTIFIER ::= { bsi-de applications(3) 1 }</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD					= "0.4.0.127.0.7.3.1";
 
-	/** The Constant OID_BSI_DE_MRTD_ROLES. */
+	/**
+	 * The base OID, which identifies the roles and authorization levels of
+	 * different terminal types.
+	 * <p>
+	 * <code>id-mrtd OBJECT IDENTIFIER ::= { bsi-de applications(3) mrtd(1) 2 }</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD_ROLES			= "0.4.0.127.0.7.3.1.2";
 	
-	/** The Constant OID_BSI_DE_MRTD_ROLES_IS. */
+	/**
+	 * The OID, which identifies the inspection system.
+	 * <p>
+	 * <code>id-EAC-ePassport OBJECT IDENTIFIER ::= { bsi-de applications(3) mrtd(1) roles(2) 1 }</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD_ROLES_IS		= "0.4.0.127.0.7.3.1.2.1";
 	
-	/** The Constant OID_BSI_DE_MRTD_ROLES_AT. */
+	/**
+	 * The OID, which identifies the authentication terminal.
+	 * <p>
+	 * <code>id-EAC-ePassport OBJECT IDENTIFIER ::= { bsi-de applications(3) mrtd(1) roles(2) 2 }</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD_ROLES_AT		= "0.4.0.127.0.7.3.1.2.2";
 	
-	/** The Constant OID_BSI_DE_MRTD_ROLES_ST. */
+	/**
+	 * The OID, which identifies the secure target.
+	 * <p>
+	 * <code>id-EAC-ePassport OBJECT IDENTIFIER ::= { bsi-de applications(3) mrtd(1) roles(2) 3 }</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD_ROLES_ST		= "0.4.0.127.0.7.3.1.2.3";
 
-	/** The Constant OID_BSI_DE_MRTD_EXT. */
+	/**
+	 * The base OID to identify certificate extensions
+	 * <p>
+	 * <code>id-extensions OBJECT IDENTIFIER ::= { bsi-de applictions(3) mrtd(1) 3 }</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD_EXT				= "0.4.0.127.0.7.3.1.3";
 	
-	/** The Constant OID_BSI_DE_MRTD_EXT_DESC. */
+	/**
+	 * The OID to identify extensions of the description.
+	 * <p>
+	 * <code>id-description OBJECT IDENTIFIER ::= { id-extensions 1 }</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD_EXT_DESC		= "0.4.0.127.0.7.3.1.3.1";
 	
-	/** The Constant OID_BSI_DE_MRTD_EXT_DESC_TEXT. */
+	/**
+	 * The OID to identify the terms of usage in plain text format.
+	 * <p>
+	 * <code>id-plainFormat OBJECT IDENTIFIER ::= { id-description 1 }PlainTermsOfUsage ::= UTF8String</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD_EXT_DESC_TEXT	= "0.4.0.127.0.7.3.1.3.1.1";
 	
-	/** The Constant OID_BSI_DE_MRTD_EXT_DESC_HTML. */
+	/**
+	 * The OID to identify the terms of usage in html format.
+	 * <p>
+	 * <code>id-htmlFormat OBJECT IDENTIFIER ::= { id-description 2 }HtmlTermsOfUsage ::= IA5String</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD_EXT_DESC_HTML	= "0.4.0.127.0.7.3.1.3.1.2";
 	
-	/** The Constant OID_BSI_DE_MRTD_EXT_DESC_PDF. */
+	/**
+	 * The OID to identify the terms of usage in pdf format.
+	 * <p>
+	 * <code>id-pdfFormat OBJECT IDENTIFIER ::= { id-description 3 }PdfTermsOfUsage ::= OCTET STRING</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD_EXT_DESC_PDF	= "0.4.0.127.0.7.3.1.3.1.3";
 	
-	/** The Constant OID_BSI_DE_MRTD_EXT_SECT. */
+	/**
+	 * The OID to identify the terminal sector.
+	 * <p>
+	 * <code>id-termSect OBJECT IDENTIFIER ::= { bsi-de applications(3) mrtd(1) extension(3) 2 }</code>
+	 * </p>
+	 */
 	public static final String	OID_BSI_DE_MRTD_EXT_SECT		= "0.4.0.127.0.7.3.1.3.2";
 
 	/**

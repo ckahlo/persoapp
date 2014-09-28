@@ -60,12 +60,9 @@ import javax.net.ssl.SSLSocketFactory;
  * pre-liminary stub
  */
 /**
- * The <tt>BCTlsSocketFactory</tt> creates <tt>Sockets</tt> and undocks the
- * creation process of the <tt>Sockets</tt> from the <tt>Socket</tt>
+ * The BCTlsSocketFactory creates Sockets and separates the
+ * creation process of the Sockets from the Socket
  * implementation.
- * <p>
- * <code>public final class BCTlsSocketFactoryImpl extends SSLSocketFactory</code>
- * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
@@ -81,18 +78,17 @@ public final class BCTlsSocketFactoryImpl extends SSLSocketFactory {
 	private static final int	SO_CONNECT_TIMEOUT	= 10 * 1000;	// 10 seconds
 
 	/**
-	 * The current pre-shared key id.
+	 * The id of the currently used pre-shared-key.
 	 */
 	final byte[]				pskId;
 	
 	/**
-	 * The current pre-shared key.
+	 * The currently used pre-shared-key.
 	 */
 	final byte[]				pskKey;
 
 	/**
-	 * Creates a new instance of {@link BCTlsSocketFactoryImpl} with
-	 * <tt>pskId</tt> and <tt>pskKey</tt> set to <strong>null</strong>.
+	 * Creates a new {@link BCTlsSocketFactoryImpl}.
 	 */
 	public BCTlsSocketFactoryImpl() {
 		pskId = null;
@@ -100,8 +96,7 @@ public final class BCTlsSocketFactoryImpl extends SSLSocketFactory {
 	}
 
 	/**
-	 * Creates a new instance of {@link BCTlsSocketFactoryImpl} with
-	 * <tt>pskId</tt> and <tt>pskKey</tt> set to the given arguments.
+	 * Creates and initializes an new {@link BCTlsSocketFactoryImpl}.
 	 * 
 	 * @param pskId
 	 *            - The id of the pre-shared key.
@@ -124,7 +119,7 @@ public final class BCTlsSocketFactoryImpl extends SSLSocketFactory {
 	 * If no parameters are set, <strong>null</strong> is returned.
 	 * 
 	 * @return Returns the psk-parameters in a 2-elements sized byte array with
-	 *         the <tt>pskId</tt> on the first place and the <tt>pskKey</tt> on
+	 *         the pskId on the first place and the pskKey on
 	 *         the second place of the returned array. If no parameters are set,
 	 *         <strong>null</strong> is returned.
 	 */

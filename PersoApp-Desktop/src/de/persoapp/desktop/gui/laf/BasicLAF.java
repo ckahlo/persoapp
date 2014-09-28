@@ -51,10 +51,11 @@ import javax.swing.UIDefaults;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 
 /**
- * The <tt>BasicLAF</tt> class defines the so called
- * <tt>Basic Look and Feel</tt> for the <tt>PersoApp-Application</tt>.
  * <p>
- * <code>public class BasicLAF extends BasicLookAndFeel</code>
+ * The BasicLAF class defines standardized design aspects of the gui of
+ * the PersoApp Application. This includes aspects like the used
+ * colors, the behavior of the buttons on user input and the used text fonts and
+ * styles.
  * </p>
  * 
  * @author Christian Kahlo
@@ -62,9 +63,6 @@ import javax.swing.plaf.basic.BasicLookAndFeel;
  */
 public class BasicLAF extends BasicLookAndFeel {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long	serialVersionUID	= -6555138672140374307L;
 
 	@Override

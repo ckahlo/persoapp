@@ -51,7 +51,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The logging class provides the logging functionality.
+ * <p>
+ * The Logging class provides the logging functionality.
+ * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
@@ -59,15 +61,15 @@ import java.util.logging.Logger;
 public class Logging {
 
 	/**
-	 * The basic <tt>application logger</tt>.
+	 * The basic application logger.
 	 */
 	private static Logger	logger	= null;
 
 	/**
-	 * Retrieves the <tt>application logger</tt>. If no logger is set, a new one
-	 * is going to be created and returned.
+	 * Retrieves the application logger. If no logger is set, a new one is going
+	 * to be created and returned.
 	 * 
-	 * @return Returns the <tt>application logger</tt>.
+	 * @return Returns the application logger.
 	 */
 	public static Logger getLogger() {
 

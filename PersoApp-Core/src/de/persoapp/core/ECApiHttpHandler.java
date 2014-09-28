@@ -62,68 +62,72 @@ import com.sun.net.httpserver.HttpHandler;
 import de.persoapp.core.client.PropertyResolver;
 
 /**
- * <p>
- * The <tt>ECApiHttpHandler</tt> handles the communication between the
- * <em>PersoApp</em> and the <em>eIDServer</em>, by providing a function
- * to handle the communication between a server and a client and to .
- * </p>
- * <p>
- * <code>public final class ECApiHttpHandler implements HttpHandler</code>
- * </p>
+ * The ECApiHttpHandler handles incoming requests of the server of the
+ * eID-Client. First of all, it checks if the received query string has an
+ * tcTokenURL attached. If one is attached, the ECApiHttpHandler forwards the
+ * tcTokenURL to the ECardWorker for validating and fetches the response.<br/>
+ * If the response is an valid https://URL the browser is redirected to the
+ * specific URL. <br/>
+ * If an error occurs the browser is receiving the specific error message.<br/>
+ * See: TR-03124-1 for further information.
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
+ * 
+ * @see {@link ECardWorker}
  */
 public final class ECApiHttpHandler implements HttpHandler {
 
 	/**
-	 * The <tt>user-agent</tt> who emits the communication channel.
+	 * The user-agent identifier of the PersoApp.
 	 */
 	private static final String	HTTP_USER_AGENT	= "eID-Client";
 	
 	/**
-	 * The used <tt>http-charset</tt>.
+	 * The http-charset.
 	 */
 	private static final String	HTTP_CHARSET	= "ISO-8859-1";
 
 	/**
-	 * The http-method <tt>HEAD</tt>.
+	 * The http-method HEAD.
 	 */
 	private static final String	HTTP_METH_HEAD	= "HEAD";
 	
 	/**
-	 * The http-method <tt>GET</tt>.
+	 * The http-method GET.
 	 */
 	private static final String	HTTP_METH_GET	= "GET";
 	
 	/**
-	 * The http-method <tt>POST</tt>.
+	 * The http-method POST.
 	 */
 	private static final String	HTTP_METH_POST	= "POST";
 
 	/**
-	 * The used <tt>token-requester</tt>.
+	 * The token context.
 	 */
 	private static final String	TC_TOKEN_REQ	= "/eID-Client";
 	
 	/**
-	 * The used <tt>token-url</tt>.
+	 * The url which shows the address of the eService to retrieve the trusted
+	 * channel token.
 	 */
 	private static final String	TC_TOKEN_URL	= "tcTokenURL=";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.sun.net.httpserver.HttpHandler#handle(com.sun.net.httpserver.HttpExchange
-	 * )
-	 */
 	/**
-	 * This function handles the communication between the <tt>PersoApp</tt> and
-	 * the eID-Server with the given {@link HttpExchange}-object.
+	 * This function checks the query string of the received request. If the
+	 * query string matches the template <local
+	 * address>/eID-Client?tcTokenURL=https://<URI of the service provicer>, the
+	 * ECardWorker is started with the supplied tcTokenURL. If the tcToken can't
+	 * be retrieved through the ECardWorker due to some error or if the query
+	 * string is malformed, an response with an error code and an human readable
+	 * error message is transmitted to the browser as result of the received
+	 * request.
 	 * 
 	 * @param he
-	 *            - The used HttpExchange object.
+	 *            - The object, which examines requests and builds responses.
+	 * @see
+	 * com.sun.net.httpserver.HttpHandler#handle(com.sun.net.httpserver.HttpExchange            
 	 */
 	@Override
 	public final void handle(final HttpExchange he) throws IOException {
@@ -282,24 +286,22 @@ public final class ECApiHttpHandler implements HttpHandler {
 		he.close();
 	}
 
-	/*
-	 * write response
-	 */
 	/**
-	 * Various responses are send with this function.
+	 * This function sends the response of the request with the forwarded
+	 * tcTokenURL.
 	 * 
 	 * @param he
-	 *            - The used {@link HttpExchange}, to process requests and fetch
-	 *            responses.
+	 *            - The {@link HttpExchange}, to build the response.
 	 * @param code
-	 *            - The used html status code.
+	 *            - The html status code, to be send.
 	 * @param refreshURI
-	 *            - The used refresh {@link URI}.
+	 *            - The refresh {@link URI}, to redirect the client after the
+	 *            conclusion of the online authentication.
 	 * @param message
-	 *            - The message to send.
+	 *            - The message to send, within the response.
 	 * 
 	 * @throws IOException
-	 *             If some error occurs during the sending process.
+	 *             If the used {@link OutputStream} is not ready.
 	 */
 	private void sendResponse(final HttpExchange he, final int code, final URI refreshURI, final String message)
 			throws IOException {

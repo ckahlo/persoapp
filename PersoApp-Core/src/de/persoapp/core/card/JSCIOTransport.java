@@ -77,14 +77,10 @@ import de.persoapp.core.util.Hex;
 
 /**
  * <p>
- * The <tt>JSCIOTransport</tt> class implements a {@link TransportProvider} and
- * uses functions of <tt>javax.smartcardio</tt> library and is in general a
- * abstraction of the <em>javax.smartcardio</em> interface. The
- * <tt>JSCIOTransport-provider</tt> allows the generic search for cards on all
- * installed card terminals.
- * </p>
- * <p>
- * <code>public class JSCIOTransport implements TransportProvider, CCID</code>
+ * The JSCIOTransport provider implements the use of the hardware
+ * interfaces to generical find and communicate with installed CCID and inserted
+ * ICCs. The implementation relies on the javax.smartcardio library and
+ * is in general an abstraction of the <em>javax.smartcardio</em> interface.
  * </p>
  * 
  * @author Christian Kahlo
@@ -93,7 +89,7 @@ import de.persoapp.core.util.Hex;
 public class JSCIOTransport implements TransportProvider, CCID {
 
 	/**
-	 * The command code for the <em>smart card vendor exchange</em> process.
+	 * The command code for exchanging the smart card interface device vendors.
 	 */
 	private static final int	IOCTL_SMARTCARD_VENDOR_IFD_EXCHANGE	= SCARD_CTL_CODE(2048);
 	
@@ -108,7 +104,7 @@ public class JSCIOTransport implements TransportProvider, CCID {
 	private static final int	IOCTL_CCID_ESCAPE					= SCARD_CTL_CODE(3500);
 
 	/**
-	 * The <em>Personal Computer</em> / <em>Smart Card</em> service type.
+	 * The service type.
 	 */
 	private static final String	PcscServiceType						= "PC/SC";
 	
@@ -125,10 +121,10 @@ public class JSCIOTransport implements TransportProvider, CCID {
 
 	/**
 	 * Computes the smart card control code according to the underlying
-	 * operating system.
+	 * operating system from the provided code.
 	 * 
 	 * @param code
-	 *            - The code of the command which needs to be computed.
+	 *            - The command code, to convert.
 	 * @return Returns the computed control code.
 	 */
 	private static final int SCARD_CTL_CODE(final int code) {
@@ -141,12 +137,12 @@ public class JSCIOTransport implements TransportProvider, CCID {
 	}
 
 	/**
-	 * The used card channel to the icc.
+	 * The handle of the used card channel.
 	 */
 	private final CardChannel			cc;
 	
 	/**
-	 * The currently in the terminal inserted "integrated circuit card".
+	 * The handle of the currently in the terminal inserted "integrated circuit card".
 	 */
 	private final Card					icc;
 	
@@ -161,13 +157,14 @@ public class JSCIOTransport implements TransportProvider, CCID {
 	private int							lastSW;
 
 	/**
+	 * <p>
 	 * Creates and initializes a {@link JSCIOTransport}-provider. The provided
-	 * {@link CardChannel} is used to get the card and the underlying features,
-	 * for the newly created transport provider.
+	 * handle of the {@link CardChannel} is used to retrieve the handle of the
+	 * card and the underlying features of the <em>CCID</em>.
+	 * </p>
 	 * 
 	 * @param cc
-	 *            - The underlying {@link CardChannel}. Can't be
-	 *            <strong>null</strong>.
+	 *            - The underlying {@link CardChannel}.
 	 */
 	private JSCIOTransport(final CardChannel cc) {
 		this.cc = cc;
@@ -176,9 +173,9 @@ public class JSCIOTransport implements TransportProvider, CCID {
 	}
 
 	/**
-	 * Returns all connected {@link CardTerminal}s.
+	 * Returns all connected and installed <em>CardTerminals</em>.
 	 * 
-	 * @return Returns all connected <tt>CardTerminals</tt>.
+	 * @return Returns all connected and installed IFDs.
 	 */
 	private static final List<CardTerminal> getList() {
 		try {
@@ -207,30 +204,26 @@ public class JSCIOTransport implements TransportProvider, CCID {
 
 	/**
 	 * <p>
-	 * This function initializes with the given application identifier the smart
-	 * card for further commands related to <em>nPA</em>-functions and collects
-	 * the response. A new {@link CardChannel} to the inserted <em>ECard</em> is
-	 * established and returned in an
-	 * <tt>Java Smart Card Input Output Transport-Provider(JSCIOTransport)</tt>.
+	 * This function initializes according to the given application identifier
+	 * the smart card for further commands and examines the response. A new
+	 * handle of the {@link CardChannel} to the inserted <em>ECard</em> is
+	 * created and returned in an Java Smart Card Input Output
+	 * Transport-Provider.
 	 * </p>
 	 * <p>
-	 * The function throws a {@link IllegalArgumentException} if no terminals
-	 * are installed.
-	 * </p>
-	 * <p>
-	 * Additionally, it installs for every found <em>card terminal</em> an
-	 * {@link FutureTask} to call the inserted card. If the protocol of the
-	 * inserted card did not equals <tt>T=1</tt>, the <em>card terminal</em>
-	 * terminates the connection to the inserted card and re-establishes the
-	 * connection according to the protocol <tt>T=1</tt>.
+	 * Additionally, it installs for every found <em>card terminal</em>, which
+	 * has currently a card inserted, an {@link FutureTask} to call the inserted
+	 * card. If the connection protocol of an inserted card did not match T=1,
+	 * the specific card executes disconnect and the card terminal
+	 * re-establishes the connection according to the protocol T=1.
 	 * </p>
 	 * 
 	 * @param AID
-	 *            - The application identifier.
+	 *            - The application identifier, for opening.
 	 * @return Returns a {@link JSCIOTransport}.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             Throws if no terminals are installed.
+	 *             If no terminals are installed.
 	 */
 	public static final JSCIOTransport open(final byte[] AID) {
 		final List<CardTerminal> terminalList = getList();
@@ -300,7 +293,7 @@ public class JSCIOTransport implements TransportProvider, CCID {
 	 * Logs the given message to the console.
 	 * 
 	 * @param msg
-	 *            - Logs the given message to the console.
+	 *            - The message, which is logged to the console.
 	 */
 	private static void log(final String msg) {
 		System.out.println(msg);
@@ -364,11 +357,12 @@ public class JSCIOTransport implements TransportProvider, CCID {
 	 */
 	
 	/**
-	 * Query all supported features of the terminal device.
+	 * Query all supported features of the terminal device, in which the icc is
+	 * inserted.
 	 * 
 	 * @param icc
-	 *            - The inserted card.
-	 * @return Returns a list of all supported features.
+	 *            - The handle to the inserted card.
+	 * @return Returns a map of all supported features.
 	 */
 	private static final Map<Byte, Integer> queryFeatures(final Card icc) {
 		Map<Byte, Integer> features = null;

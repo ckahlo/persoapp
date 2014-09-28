@@ -57,10 +57,10 @@ import javax.swing.JProgressBar;
 import de.persoapp.desktop.gui.ArrowButton;
 
 /**
- * The <tt>StatusBarPanel</tt> holds all informations about the used status bar
- * to show the progress of operations.
  * <p>
- * <code>public class StatusBarPanel extends JPanel</code>
+ * The StatusBarPanel contains all informations about the used status
+ * bar which shows the progress of operations and to operations related
+ * informations.
  * </p>
  * 
  * @author Christian Kahlo
@@ -68,35 +68,52 @@ import de.persoapp.desktop.gui.ArrowButton;
  */
 public class StatusBarPanel extends JPanel {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long	serialVersionUID	= 7386565036232115981L;
 
 	/**
-	 * The <tt>MAX value</tt> of the {@link StatusBarPanel}.
+	 * <p>
+	 * The value, which stands for the completely filled progress bar.
+	 * </p>
 	 */
 	private static final int	MAX					= 99;
 	
 	/**
-	 * The <tt>MIN value</tt> of the {@link StatusBarPanel}.
+	 * <p>
+	 * The value, which stands for the completely emptied progress bar.
+	 * </p>
 	 */
 	private static final int	MIN					= 0;
 
 	/**
-	 * The {@link JProgressBar} which displays the progress.
+	 * <p>
+	 * The {@link JProgressBar} which displays the progress and 
+	 * informations, related to the current attempted operation.
+	 * </p>
 	 */
 	private JProgressBar		progressBar;
 	
 	/**
-	 * The used <tt>arrow buttons</tt> for adding and removing the sidebar.
+	 * <p>
+	 * The used arrow buttons for adding and removing the sidebar.
+	 * </p>
+	 * <p>
+	 * The sidebar comes only to work, if it is necessary to display an virtual pin panel.
+	 * </p>
 	 */
 	private ArrowButton			arrowButton;
 
 	/**
+	 * <p>
 	 * Constructs a new instance of the {@link StatusBarPanel}. Also initializes
-	 * and draws the components. The constructed panel is double-buffered for
-	 * advanced displaying.
+	 * and draws the components.
+	 * </p>
+	 * <p>
+	 * The constructed Panel is double-buffered to achieve benefits by
+	 * extended use of memory.
+	 * </p>
+	 * <p>
+	 * The {@link GridBagLayout} is used for drawing, after the components are initialized.
+	 * </p>
 	 */
 	public StatusBarPanel() {
 		super();
@@ -108,7 +125,9 @@ public class StatusBarPanel extends JPanel {
 	}
 
 	/**
+	 * <p>
 	 * Initializes the components of the {@link StatusBarPanel}.
+	 * </p>
 	 */
 	private void initComponents() {
 		progressBar = new JProgressBar(JProgressBar.HORIZONTAL, MIN, MAX);
@@ -119,7 +138,9 @@ public class StatusBarPanel extends JPanel {
 	}
 
 	/**
+	 * <p>
 	 * Draws the components of the {@link StatusBarPanel}.
+	 * </p>
 	 */
 	private void drawComponents() {
 		final GridBagConstraints cons = new GridBagConstraints();
@@ -141,14 +162,20 @@ public class StatusBarPanel extends JPanel {
 	}
 
 	/**
-	 * Displays the given text in the progress bar of the {@link StatusBarPanel}
-	 * . The given text can be <strong>null</strong>. In this case, no text is
-	 * shown. The second argument enables or disables the progress bar.
+	 * <p>
+	 * Displays the given text in the progress bar. The given text can
+	 * be <strong>null</strong>. In this case, no text is shown. The argument
+	 * <code>enabled</code> alters the state and the behavior of the
+	 * progress bar. If the progress bar is <em>enabled</em>,
+	 * it is able to respond to user input and generate related events. In the
+	 * <em>disabled</em> state, the bar can not respond to user input and thus
+	 * can not generate new events.
+	 * </p>
 	 * 
 	 * @param message
-	 *            - The given text, which is shown in the progress bar.
+	 *            - The text, which is shown in the progress bar. 
 	 * @param enabled
-	 *            - Enables or disables the progress bar.
+	 *            - Enables or disables the progress bar. 
 	 */
 	public void setProgressBarValue(final String message, final boolean enabled) {
 		progressBar.setString(message == null ? "" : message);
@@ -157,20 +184,26 @@ public class StatusBarPanel extends JPanel {
 	}
 
 	/**
-	 * This function works like {@link #setProgressBarValue(String, boolean)},
-	 * but sets the visual state of the bar to the given
-	 * <strong>amount</strong>.
+	 * <p>
+	 * Displays the given text in the progress bar and fills the bar to
+	 * the given <strong>amount</strong>.<br/>
+	 * The argument <code>enabled</code> alters the state and the behavior of
+	 * the progress bar. If the progress bar is
+	 * <em>enabled</em>, it is able to respond to user input and generate
+	 * related events. In the <em>disabled</em> state, the bar can not respond
+	 * to user input and thus can not generate new events.
+	 * </p>
 	 * 
 	 * @param message
-	 *            -The given Text, which is shown in the progress bar.
+	 *            -The text, which is shown in the progress bar.
 	 * 
 	 * @param amount
-	 *            - The <strong>amount</strong>, to which the bar is filled up.<br>
-	 *            </br> If the <strong>amount</strong> is bigger than
-	 *            {@link #MAX}, the bar is filled up completely. The progress
+	 *            - The <strong>amount</strong>, to which the bar is filled up.
+	 *            If the <strong>amount</strong> is bigger than the defined
+	 *            maximal value, the bar is filled up completely. The progress
 	 *            bar is completely emptied if the given <strong>amount</strong>
-	 *            is lower than {@link #MIN}.
-	 *            
+	 *            is lower than the defined minimal value.
+	 * 
 	 * @param enabled
 	 *            - Enables or disables the progress bar.
 	 */

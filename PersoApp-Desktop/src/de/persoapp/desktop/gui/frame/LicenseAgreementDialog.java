@@ -71,10 +71,9 @@ import de.persoapp.core.client.PropertyResolver.Bundle;
 import de.persoapp.desktop.Configuration;
 
 /**
- * The <tt>LicenseAgreementDialog</tt> provides the functionality for confirming
- * or rejecting the license through the user input.
  * <p>
- * <code>public class LicenseAgreementDialog extends JDialog</code>
+ * The LicenseAgreementDialog provides the functionality for confirming
+ * or rejecting the license by the user.
  * </p>
  * 
  * @author Christian Kahlo
@@ -82,18 +81,15 @@ import de.persoapp.desktop.Configuration;
  */
 public class LicenseAgreementDialog extends JDialog {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long	serialVersionUID	= 8412805519732754109L;
 
 	/**
-	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 * Localized message bundle for user interaction.
 	 */
 	private final Bundle		textBundle;
 
 	/**
-	 * The attribute in which the result of the user input is going to be stored.
+	 * Signals if the license is accepted by the user.
 	 */
 	private boolean				accept;
 
@@ -113,7 +109,7 @@ public class LicenseAgreementDialog extends JDialog {
 	private JButton				abort;
 	
 	/**
-	 * The picture of the {@link LicenseAgreementDialog}.
+	 * The label to hold the icon.
 	 */
 	private JLabel				pic;
 	
@@ -133,7 +129,7 @@ public class LicenseAgreementDialog extends JDialog {
 	private JPanel				textAreaPanel;
 
 	/**
-	 * Creates a new instance of the {@link LicenseAgreementDialog}.
+	 * Creates and initializes a new {@link LicenseAgreementDialog}.
 	 */
 	private LicenseAgreementDialog() {
 		super();
@@ -188,8 +184,7 @@ public class LicenseAgreementDialog extends JDialog {
 	}
 
 	/**
-	 * Draws the components of the {@link LicenseAgreementDialog}. The
-	 * {@link GridBagLayout} is used for drawing.
+	 * Draws the components of the {@link LicenseAgreementDialog}.
 	 */
 	private void drawComponents() {
 		final GridBagConstraints cons = new GridBagConstraints();
@@ -230,8 +225,7 @@ public class LicenseAgreementDialog extends JDialog {
 	}
 
 	/**
-	 * Adds a action-listener to the <code>confirm</code>- and the
-	 * <code>abort</code>-button.
+	 * Adds a ActionListener to the supported buttons.
 	 */
 	private void addListener() {
 		final ActionListener listener = new ActionListener() {
@@ -251,7 +245,7 @@ public class LicenseAgreementDialog extends JDialog {
 	}
 
 	/**
-	 * Returns the stored result of the user input.
+	 * Returns the result of the user input.
 	 * 
 	 * @return Returns <strong>true</strong> if the license is accepted,
 	 *         otherwise <strong>false</strong>.
@@ -261,7 +255,8 @@ public class LicenseAgreementDialog extends JDialog {
 	}
 
 	/**
-	 * Returns the result of the user input.
+	 * Creates a new {@link LicenseAgreementDialog} and pulls the result of the
+	 * user input.
 	 * 
 	 * @return Returns <strong>true</strong> if the license is accepted,
 	 *         otherwise <strong>false</strong>.

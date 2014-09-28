@@ -75,10 +75,7 @@
 package de.persoapp.core.util;
 
 /**
- * Static methods for converting to and from hexadecimal strings.
- * <p>
- * <code>public class Hex</code>
- * </p>
+ * Static functions for converting to and from hexadecimal strings.
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
@@ -86,7 +83,7 @@ package de.persoapp.core.util;
 public class Hex {
 	
 	/**
-	 * Creates a new instance of {@link Hex}.
+	 * Utility functions. Constructor is not used.
 	 */
 	private Hex() {
 	}
@@ -99,15 +96,15 @@ public class Hex {
 
 	/**
 	 * <p>
-	 * Returns a string of the hexadecimal representation of the byte array. The
-	 * length of the returned string is 2 * <tt>length</tt>.
+	 * Converts the contents of the given byte buffer in an hexadecimal string.
+	 * The length of the returned string is 2 * length.
 	 * </p>
 	 * <p>
-	 * If offset and length are <tt>null</tt>, the whole array is used.
+	 * If offset and length are null, the whole array is used.
 	 * </p>
 	 * 
 	 * @param ba
-	 *            - The used byte array.
+	 *            - The byte buffer to convert.
 	 * @param offset
 	 *            - The starting offset.
 	 * @param length
@@ -115,7 +112,7 @@ public class Hex {
 	 *            converted.
 	 * 
 	 * @return The string which contains the hexadecimal digits. The length of
-	 *         the returned string is 2 * <tt>length</tt>.
+	 *         the returned string is 2 * length.
 	 */
 	public static String toString(final byte[] ba, final int offset, final int length) {
 		final char[] buf = new char[length * 2];
@@ -131,13 +128,10 @@ public class Hex {
 	}
 
 	/**
-	 * <p>
-	 * Returns a string of the hexadecimal representation of the byte array.
-	 * </p>
+	 * Converts the contents of the given byte buffer in an hexadecimal string.
 	 * 
 	 * @param ba
-	 *            - The byte array which has to be transformed into a
-	 *            {@link String} which contains just hexadecimal digits.
+	 *            - The byte buffer, to convert.
 	 * 
 	 * @return The created String. The length of the returned string is twice
 	 *         the length of the inserted byte array.
@@ -154,7 +148,7 @@ public class Hex {
 	 * </p>
 	 * 
 	 * @param hex
-	 *            - The {@link String} of hexadecimal digits.
+	 *            - The {@link String}, to convert.
 	 * @return The byte array with the hexadecimal digits. The returned byte
 	 *         array is half of the size of the inserted string.
 	 */
@@ -174,14 +168,12 @@ public class Hex {
 	}
 
 	/**
-	 * <p>
-	 * Returns the number from 0 to 15 corresponding to the hex digit <i>ch</i>.
-	 * </p>
+	 * Decodes the given hex digit into an decimal integer.
 	 * 
 	 * @param ch
-	 *            - The given hex digit.
-	 * @return The number from 0 to 15 corresponding to the given hex digit
-	 *         <em>ch</em>.
+	 *            - The hex digit, to decode.
+	 * @return Returns the decimal value.
+	 * 
 	 * @throws IllegalArgumentException
 	 *             If the given hex digit is invalid.
 	 */
@@ -200,13 +192,12 @@ public class Hex {
 	}
 
 	/**
-	 * Creates and returns the <tt>String</tt>-representation of the given byte.
+	 * Encodes the given value as a hex string.
 	 * 
 	 * @param n
-	 *            - The byte value
+	 *            - The value, to encode
 	 * 
-	 * @return Returns the <tt>String</tt>-representation of the
-	 *         <em>Nibbles</em> of the given byte.
+	 * @return Returns the hexadecimal value.
 	 */
 	public static String byteToString(final int n) {
 		final char[] buf = { hexDigits[n >>> 4 & 0x0F], hexDigits[n & 0x0F] };
@@ -214,14 +205,12 @@ public class Hex {
 	}
 
 	/**
-	 * Creates and returns the <tt>String</tt>-representation of the given short
-	 * value.
+	 * Encodes the given value as a hex string.
 	 * 
 	 * @param n
-	 *            - The short value
+	 *            - The value, to encode
 	 * 
-	 * @return Returns the <tt>String</tt>-representation of the
-	 *         <em>Nibbles</em> of the given short value.
+	 * @return Returns the hexadecimal value.
 	 */
 	public static String shortToString(final int n) {
 		final char[] buf = { hexDigits[n >>> 12 & 0x0F], hexDigits[n >>> 8 & 0x0F], hexDigits[n >>> 4 & 0x0F],

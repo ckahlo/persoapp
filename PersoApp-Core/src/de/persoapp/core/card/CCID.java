@@ -51,11 +51,8 @@ import javax.smartcardio.CardException;
 
 /**
  * <p>
- * The <tt>CCID</tt> interface specifies methods and functions for use with a
- * Chip Card Interface Devices. This is a card terminal in general.
- * </p>
- * <p>
- * <code>public interface CCID</code>
+ * The CCID describes basic functionality of an terminal to do feature
+ * verifying, do pin management and to transmit control commands to an ICC.
  * </p>
  * 
  * @author Christian Kahlo
@@ -64,7 +61,7 @@ import javax.smartcardio.CardException;
 public interface CCID {
 	
 	/**
-	 * The feature list.
+	 * The list of relevant features of an CCID.
 	 */
 	static final String[]		FEATURES					= new String[] { "NO_FEATURE", "FEATURE_VERIFY_PIN_START",
 			"FEATURE_VERIFY_PIN_FINISH", "FEATURE_MODIFY_PIN_START", "FEATURE_MODIFY_PIN_FINISH",
@@ -74,115 +71,115 @@ public interface CCID {
 			"FEATURE_WRITE_DISPLAY", "FEATURE_GET_KEY", "FEATURE_IFD_DISPLAY_PROPERTIES" };
 
 	/**
-	 * The feature to start the verify pin process.
+	 * This feature starts an indirect verify PIN procedure in the IFD.
 	 */
 	public static final byte	FEATURE_VERIFY_PIN_START	= 0x01;
 	
 	/**
-	 * The feature to finish the verify pin process.
+	 * This feature ends an indirect verify PIN procedure in the IFD.
 	 */
 	public static final byte	FEATURE_VERIFY_PIN_FINISH	= 0x02;
 	
 	/**
-	 * The feature to start the modify pin process.
+	 * This feature starts an indirect modify PIN procedure in the IFD.
 	 */
 	public static final byte	FEATURE_MODIFY_PIN_START	= 0x03;
 	
 	/**
-	 * The feature to finish the modify pin process.
+	 * This feature ends an indirect modify PIN procedure in the IFD.
 	 */
 	public static final byte	FEATURE_MODIFY_PIN_FINISH	= 0x04;
 	
 	/**
-	 * The feature to retrieve the pressed key.
+	 * This feature transmits a pressed key during a indirect PIN procedure in
+	 * the IFD.
 	 */
 	public static final byte	FEATURE_GET_KEY_PRESSED		= 0x05;
 	
 	/**
-	 * The feature to verify the pin direct.
+	 * This feature performs a complete (direct) verify PIN procedure in the
+	 * IFD.
 	 */
 	public static final byte	FEATURE_VERIFY_PIN_DIRECT	= 0x06;
 	
 	/**
-	 * The feature to modify the pin direct.
+	 * This feature performs a complete (direct) modify PIN procedure in the
+	 * IFD.
 	 */
 	public static final byte	FEATURE_MODIFY_PIN_DIRECT	= 0x07;
 	
 	/**
-	 * The feature to use the reader function of a <em>Multislot Card Terminal</em>.
+	 * This feature can be used to transmit a command to the IFD.
 	 */
 	public static final byte	FEATURE_MCT_READER_DIRECT	= 0x08;
 	
 	/**
-	 * The feature to use all functions of a <em>Multislot Card Terminal</em>.
+	 * This feature can be used to transmit a command to the IFD or the ICC.
 	 */
 	public static final byte	FEATURE_MCT_UNIVERSAL		= 0x09;
 	
 	/**
-	 * The feature to handle the pin properties.
+	 * This feature can be used to retrieve the properties of the IFD regarding
+	 * PIN handling.
 	 */
 	public static final byte	FEATURE_IFD_PIN_PROPERTIES	= 0x0A;
 	
 	/**
-	 * The feature to execute the <em>PACE</em>-protocol.
+	 * This feature is used to command the PACE functionality within the reader.
 	 */
 	public static final byte	FEATURE_EXECUTE_PACE		= 0x20;
 
 	/**
-	 * Returns the name of the <tt>integrated chip card</tt>.
+	 * Returns a string representation of the inserted card.
 	 * 
-	 * @return Returns the name of the <tt>integrated chip card</tt>.
+	 * @return The <em>name</em> of the card.
 	 */
 	public String getName();
 
-	// Card connect() throws CardException;
 	/**
-	 * Returns <strong>true</strong>. if the requested feature is available.
-	 * Otherwise <strong>false</strong>.
+	 * Checks if the requested feature of a <em>CCID</em> is available.
 	 * 
 	 * @param feature
 	 *            - The requested feature.
-	 * @return Returns <strong>true</strong>. if the requested feature is
+	 * @return <strong>True</strong>, if the requested feature is
 	 *         available. Otherwise <strong>false</strong>.
 	 */
 	public boolean hasFeature(final byte feature);
 
 	/**
-	 * Verify the pin direct at the card terminal.
+	 * Does a complete verify pin procedure at the IFD.
 	 * 
 	 * @param PIN_VERIFY
-	 *            - The <em>APDU</em>-command.
-	 * @return Returns the <em>APDU</em>-Response.
+	 *            - The corresponding <em>APDU</em>-command.
+	 * @return The <em>APDU</em>-Response.
 	 * @throws CardException
 	 *             If no card is present.
 	 */
 	public byte[] verifyPinDirect(final byte[] PIN_VERIFY) throws CardException;
 
 	/**
-	 * Modifies the pin direct at the card terminal.
+	 * Does a complete modify pin procedure at the IFD.
 	 * 
 	 * @param PIN_MODIFY
-	 *            - The <em>APDU</em>-command.
-	 * @return Returns the <em>APDU</em>-Response.
+	 *            - The  corresponding<em>APDU</em>-command.
+	 * @return The <em>APDU</em>-Response.
 	 * @throws CardException
 	 *             If no card is present.
 	 */
 	public byte[] modifyPinDirect(final byte[] PIN_MODIFY) throws CardException;
 
-	// executePACE()
 	/**
-	 * Transmits the <em>control command</em>, according to the given
-	 * <tt>feature</tt>, and retrieves the response.
+	 * Transmits the <em>control command</em> to the inserted card.
 	 * 
 	 * @param feature
-	 *            - The feature, which uses the control command.
+	 *            - The feature, to which the control command is related.
 	 * 
 	 * @param ctrlCommand
-	 *            - The control command to transmit.
-	 * @return Returns the received response.
+	 *            - The control command, to transmit.
+	 * @return The examined response.
 	 * 
-	 * @throw CardException Thrown if the requested feature is not provided by
-	 *        the card.
+	 * @throw CardException If the requested feature is not provided by the
+	 *        card.
 	 */
 	public byte[] transmitControlCommand(final byte feature, final byte[] ctrlCommand);
 }

@@ -58,14 +58,10 @@ import java.util.Random;
 import de.persoapp.core.util.ArrayTool;
 
 /**
- * A small, self-contained PACE(
- * <tt>Password Authenticated Connection Establishment</tt>) implementation
- * using BigInteger. Quite a bit an experiment based on the fast-ECDSA-Signer
- * code using a x86-native replacement for BigInteger. The internal functions
- * encode a ephemeral key as a elliptic curve point diffie hellmann (ECDH),
- * according to ISO 7816.
  * <p>
- * <code>public class PACE</code>
+ * A small, self-contained PACE implementation. Quite a bit an experiment based
+ * on the fast-ECDSA-Signer code using a x86-native replacement for BigInteger.
+ * See ISO-7816 for further informations.
  * </p>
  * 
  * XXX: Might be replaced with standard-BouncyCastle code later.
@@ -76,17 +72,17 @@ import de.persoapp.core.util.ArrayTool;
 public class PACE {
 	
 	/**
-	 * The BigInteger constant <tt>ZERO</tt>, which is necessary for encryption and decryption.
+	 * The magic constant ZERO.
 	 */
 	private static final BigInteger		ZERO		= BigInteger.ZERO;
 	
 	/**
-	 * The BigInteger constant <tt>ONE</tt>, which is necessary for encryption and decryption.
+	 * The magic constant ONE.
 	 */
 	private static final BigInteger		ONE			= BigInteger.ONE;
 	
 	/**
-	 * The BigInteger constant <tt>INFINITY</tt>, which is necessary for encryption and decryption.
+	 * The magic constant INFINITY.
 	 */
 	private static final BigInteger[]	INFINITY	= new BigInteger[] { null, null, null };
 
@@ -95,17 +91,17 @@ public class PACE {
 	 */
 	private Random						random;
 
-	/** The q. */
+	/** The point Q. */
 	private final BigInteger			Q;
 	
-	/** The a. */
+	/** The point A. */
 	private final BigInteger			A;
 	
-	/** The pre comp. */
+	/** The precomputed curve. */
 	private final BigInteger[][]		preComp;
 
 	/**
-	 * The value of <tt>nonce</tt>.
+	 * The initial randomized number.
 	 */
 	private final BigInteger			nonce;
 
@@ -113,13 +109,13 @@ public class PACE {
 	private BigInteger					ephemeralKey;
 
 	/**
-	 * Initializes a creation of the <tt>ECDH</tt> according to the given
-	 * <tt>ecSpec</tt>.
+	 * Initializes a creation of the <em>ECDH</em> according to the given
+	 * <em>ecSpec</em>.
 	 * 
 	 * @param ecSpec
-	 *            - The given elliptic curve specifications.
+	 *            - The elliptic curve specifications.
 	 * @param nonce
-	 *            - The nonce-value.
+	 *            - The initial randomized number.
 	 */
 	public PACE(final ECParameterSpec ecSpec, final BigInteger nonce) {
 		try {
@@ -142,8 +138,8 @@ public class PACE {
 	}
 
 	/**
-	 * Precomputes <tt>pcData</tt> to achieve higher calculation speed of the
-	 * <tt>ECDH</tt>.
+	 * Precomputes pcData to achieve higher calculation speed of the
+	 * ECDH.
 	 * 
 	 * @param pcData
 	 *            - The data to precompute.
@@ -167,14 +163,12 @@ public class PACE {
 	}
 
 	/**
-	 * Reduces the given <tt>BigInteger</tt> and returns it as a
-	 * <tt>byte array</tt>. Deletes the MSB, if it is set to <em>zero</em>.
+	 * Deletes leading zeros.
 	 * 
 	 * @param i
-	 *            - The <tt>BigInteger</tt> which is about to be reduced. Can't
-	 *            be <strong>null</strong>.
-	 * 
-	 * @return returns the reduced BigInteger.
+	 *            - The number which leading zeros are going to be deleted.
+	 *            
+	 * @return returns the reduced ByteArray.
 	 */
 	private byte[] reduceBigInt(final BigInteger i) {
 		byte[] result = i.toByteArray();
@@ -186,13 +180,13 @@ public class PACE {
 
 	/**
 	 * Encodes the point, which is identified through the parameter <em>p</em>
-	 * and returns it as a <tt>byte array</tt>.
+	 * and returns it as an byte array.
 	 * 
 	 * @param p
-	 *            - The array of <tt>BigInteger</tt> values, which needs to be encoded. Can't be
+	 *            - The array of BigInteger values, which needs to be encoded. Can't be
 	 *            <strong>null</strong>.
 	 * 
-	 * @return The encoded point as a <tt>byte array</tt>.
+	 * @return The encoded point as an byte array.
 	 */
 	private byte[] encodePoint(final BigInteger[] p) {
 		return ArrayTool
@@ -200,13 +194,12 @@ public class PACE {
 	}
 
 	/**
-	 * Decodes the given <tt>byte array</tt> to a array of <tt>BigInteger</tt>
-	 * -values.
+	 * Decodes the given byte array to a point of the elliptic curve.
 	 * 
 	 * @param in
-	 *            - The <tt>byte array</tt>, which needs to be encoded to
-	 *            identify a point.
-	 * @return Returns the decoded array of <tt>BigInteger</tt> values.
+	 *            - The byte array, which is going to be decoded to a
+	 *            point.
+	 * @return Returns the decoded point.
 	 */
 	private BigInteger[] decodePoint(final byte[] in) {
 		if (in[0] != 0x04) {
@@ -219,9 +212,12 @@ public class PACE {
 	}
 	
 	/**
-	 * Creates a <tt>ephemeral Key</tt> and returns the.
-	 *
-	 * @return Returns the public key of key-pair on base-curve from card
+	 * Creates a ephemeral Key and returns the public key from the key
+	 * pair.
+	 * 
+	 * @return Returns the public key of the key-pair of the base-curve from the
+	 *         communication channel.
+	 * 
 	 */
 	public final byte[] init() {
 		this.ephemeralKey = createPrivateKey();
@@ -235,7 +231,7 @@ public class PACE {
 	 * @param mapData
 	 *            - The mapping function.
 	 * 
-	 * @return Retrieve public point relative to 'G'.
+	 * @return Returns the public point relative to 'G'.
 	 */
 	public final byte[] step(final byte[] mapData) {
 		final BigInteger[] G_ = fastMultiply(this.nonce);
@@ -253,7 +249,7 @@ public class PACE {
 	}
 
 	/**
-	 * Finishes the creation of a ECDH and returns the created curve as a two
+	 * Finishes the data part operation and returns the created curve as a two
 	 * dimensional array of bytes.
 	 * 
 	 * @param mapData
@@ -288,11 +284,11 @@ public class PACE {
 	 * values cannot be adjacent.
 	 * 
 	 * @param e
-	 *            - The number, which non adjacent form is requested.
+	 *            - The number, that is to be converted.
 	 * @param w
-	 *            - The <em>w</em> value.
+	 *            - The entries <em>n</em> of the Naf are smaller than 2^<em>w</em>.
 	 * @param b
-	 *            - The bitlength of <em>e</em>.
+	 *            - The BitLength of e.
 	 * 
 	 * @return Returns the non adjacent form
 	 */
@@ -329,14 +325,14 @@ public class PACE {
 	}
 
 	/**
-	 * Multiplies the parameter <em>k</em> with the <tt>Naf</tt> determined by
-	 * the function <tt>determineNaf</tt>. Returns the result after the multiply
+	 * Multiplies the parameter <em>k</em> with the Naf determined by
+	 * the function determineNaf. Returns the result after the multiply
 	 * has finished.
 	 * 
 	 * @param k
-	 *            - The BigInteger, which has to be multiplied.
+	 *            - The value, to multiply.
 	 * 
-	 * @return Returns the Result as a <tt>array</tt> of <tt>BigInteger</tt>
+	 * @return Returns the Result as a array of BigInteger
 	 *         values.
 	 */
 	public BigInteger[] fastMultiply(final BigInteger k) {
@@ -367,15 +363,17 @@ public class PACE {
 	}
 
 	/**
-	 * Adds the two points together and returns the result.
+	 * <p>
+	 * Adds the two points of a Cartesian-Coordinate system to each other and
+	 * returns the result.
+	 * </p>
 	 * 
 	 * @param a
-	 *            - The first point. Must be three digits long. Can't be
-	 *            <strong>null</strong>.
+	 *            - The first point.
 	 * @param b
-	 *            - The second point. Must be three digits long. Can't be
-	 *            <strong>null</strong>.
-	 * @return The combined added value.
+	 *            - The second point.
+	 * 
+	 * @return The calculated point.
 	 */
 	private BigInteger[] add(final BigInteger[] a, final BigInteger[] b) {
 		if (a[0] == null && a[1] == null) {
@@ -468,23 +466,29 @@ public class PACE {
 	}
 	
 	/**
-	 * Further informations follow in MR3.
+	 * <p>
+	 * Subtracts two points of an Cartesian-Coordinate system from each other
+	 * and returns the result.
+	 * </p>
 	 * 
 	 * @param a
-	 *            - The first <tt>BigInteger</tt>. Must be three digits long.
-	 *            Can't be <strong>null</strong>.
+	 *            - The first point.
 	 * @param b
-	 *            - The second <tt>BigInteger</tt>. Must be three digits long.
-	 *            Can't be <strong>null</strong>.
+	 *            - The second point.
 	 * 
-	 * @return The calculated array.
+	 * @return The calculated point.
 	 */
 	private BigInteger[] subtract(final BigInteger[] a, final BigInteger[] b) {
 		return add(a, new BigInteger[] { b[0], b[1].negate(), b[2] });
 	}
 
 	/**
-	 * Further informations follow in MR3.
+	 * Calculates the double of the given point
+	 * 
+	 * @param p
+	 *            - The point, to double.
+	 * 
+	 * @return Returns the doubled point.
 	 */
 	public BigInteger[] multiplyBy2NEW(final BigInteger[] p) {
 		final BigInteger pX = p[0], pY = p[1], pZ = p[2];

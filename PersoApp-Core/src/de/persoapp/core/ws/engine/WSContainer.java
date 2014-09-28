@@ -71,12 +71,9 @@ import org.w3c.dom.Element;
 
 /**
  * <p>
- * The <tt>WSContainer</tt> is part of the <em>Network Layer</em>. Also, he bind
+ * The WSContainer is part of the <em>Network Layer</em>. Also, he bind
  * and initializes the <em>ISO 24727</em> webservices in <em>JAX-WS 2.0</em>
- * style. The services are defined in <em>BSI TR-03112</em>.
- * </p>
- * <p>
- * <code>public final class WSContainer implements WebServiceContext</code>
+ * style. The services are defined in <em>TR-03112</em>.
  * </p>
  * 
  * @author Christian Kahlo
@@ -85,12 +82,12 @@ import org.w3c.dom.Element;
 public final class WSContainer implements WebServiceContext {
 	
 	/**
-	 * Contains all bind <tt>endpoints</tt>.
+	 * The endpoints of the WebServices.
 	 */
 	private final Map<String, WSEndpoint>	endpointsMap	= new HashMap<String, WSEndpoint>();
 	
 	/**
-	 * The different message contexts of the {@link WSContainer}.
+	 * The message contexts of the {@link WSContainer}.
 	 */
 	private ThreadLocal<MsgCtx>				messageContexts;
 	
@@ -101,29 +98,23 @@ public final class WSContainer implements WebServiceContext {
 	private WebServiceContext				wsCtx			= null;
 
 	/**
-	 * Creates a new empty instance of the {@link WSContainer}.
+	 * Creates a new {@link WSContainer}.
 	 */
 	public WSContainer() {
 	}
 
 	/**
-	 * The <tt>MsgCtx</tt> provides the option to set and get the scope. But the
+	 * The MsgCtx provides the option to set and get the scope. But the
 	 * mechanism is currently not implemented.
-	 * <p>
-	 * <code>public final class MsgCtx extends HashMap<String, Object> implements MessageContext</code>
-	 * </p>
 	 * 
 	 * @author Christian Kahlo, Ralf Wondratschek
 	 */
 	public final class MsgCtx extends HashMap<String, Object> implements MessageContext {
 		
-		/**
-		 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-		 */
 		private static final long	serialVersionUID	= 43022433778691293L;
 
 		/**
-		 * Creates a new instance of {@link MessageContext}. The constructor isn't visible outside of the package. Because of this, he isn't used by another functions.
+		 * Creates a new {@link MessageContext}.
 		 */
 		MsgCtx() {
 		}
@@ -137,10 +128,6 @@ public final class WSContainer implements WebServiceContext {
 			return null;
 		}
 	}
-
-	/*
-	 * 
-	 */
 
 	@Override
 	public final EndpointReference getEndpointReference(final Element... arg0) {
@@ -179,25 +166,25 @@ public final class WSContainer implements WebServiceContext {
 	/**
 	 * Adds a new {@link WSEndpoint}.
 	 * 
-	 * @param wse - The new {@link WSEndpoint}.
+	 * @param wse - The {@link WSEndpoint}, to add.
 	 */
 	public final void addEndpoint(final WSEndpoint wse) {
 		endpointsMap.put(wse.getPortName(), wse);
 	}
 
 	/**
-	 * Adds a new endpoint. The handed parameter <tt>impl</tt> is used to set up
-	 * the port of the created {@link WSEndpoint}.
+	 * Adds a new WebService, by creating a new endpoint and calling
+	 * {@link #addEndpoint(WSEndpoint)}.
 	 * 
 	 * @param impl
-	 *            - The installation parameters for the new {@link WSEndpoint}.
+	 *            - The parameter, to initialize the {@link WSEndpoint}.
 	 */
 	public final void addService(final Object impl) {
 		addEndpoint(new WSEndpoint(impl));
 	}
 
 	/**
-	 * Returns all stored web service endpoints.
+	 * Returns all classes which are bound by the JAXBContext.
 	 * 
 	 * @return Returns all stored web service endpoints.
 	 */
@@ -212,11 +199,13 @@ public final class WSContainer implements WebServiceContext {
 	}
 
 	/**
-	 * Initializes the {@link WSContainer} with the given {@ink
-	 * WebServiceKontext}. If the argument is <strong>null</strong>, the current
-	 * running instance is used to set the web service context.
 	 * <p>
-	 * After the initialization of the context, the stored endpoints are
+	 * Initializes the {@link WSContainer} with the given
+	 * {@link WebServiceContext}. If the given context is <strong>null</strong>,
+	 * the current running instance is used to set the web service context.
+	 * </p>
+	 * <p>
+	 * After the initialization of the context, the connected endpoints are
 	 * injected.
 	 * </p>
 	 * 
@@ -239,11 +228,18 @@ public final class WSContainer implements WebServiceContext {
 	}
 
 	/**
-	 * Injects the currently instance through the given target. Invokes all
-	 * methods.
+	 * <p>
+	 * Injects the target and processes method annotations of the class from
+	 * target.
+	 * </p>
+	 * <p>
+	 * Initializes the attributes with <em>Resource</em> annotation, processes
+	 * methods with <em>Resource</em> annotation and executes the methods with
+	 * <em>PostConstruct</em> annotation.
+	 * </p>
 	 * 
 	 * @param target
-	 *            - The target, which is injected in the currently instance.
+	 *            - The target, to inject.
 	 */
 	private void injectOnInit(final Object target) {
 		final Class<?> clazz = target.getClass();
@@ -298,12 +294,12 @@ public final class WSContainer implements WebServiceContext {
 	 * processes the message to the invoked method.
 	 * 
 	 * @param name
-	 *            - The method name.
+	 *            - The qname of the method.
 	 * @param message
 	 *            - The message, which is processed to the called method.
 	 * @return Returns the return value of the called method. If the method has
 	 *         a <code>WebResult</code>-annotation, the return value is
-	 *         <tt>JAXB</tt>-formatted.
+	 *         JAXB-formatted.
 	 */
 	public final Object processRequest(final QName name, final Object message) {
 		Method m = null;

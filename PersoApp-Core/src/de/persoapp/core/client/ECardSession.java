@@ -54,16 +54,8 @@ import de.persoapp.core.card.ICardHandler;
 
 /**
  * <p>
- * The <tt>ECardSession</tt> provides all functions to maintain a session with
- * an inserted <tt>ECard</tt>. The session is started after the
- * <em>alternative</em> request is processed correctly against a
- * <em>eIDServer</em> and the <em>ECardSession-instance</em> is created. The
- * <em>ECardSession-instance</em> is deleted and the <tt>ECardSession</tt> is
- * stopped after the event to close <em>PersoApp</em> is received by the
- * <tt>MainView.EventListener</tt>.
- * </p>
- * <p>
- * <code>public class ECardSession</code>
+ * The ECardSession provides all functions to maintain a session with
+ * an inserted ECard.
  * </p>
  * 
  * @author Christian Kahlo, Ralf Wondratschek
@@ -87,12 +79,12 @@ public class ECardSession {
 	private boolean						initialized	= false;
 	
 	/**
-	 * The current instance of the <tt>PersoApp-Application</tt>.
+	 * The GUI instance of this application.
 	 */
 	private IMainView					mainView;
 	
 	/**
-	 * The current used <tt>CardHandler</tt>.
+	 * The handle to the used identity card.
 	 */
 	private ICardHandler				cardHandler;
 	
@@ -102,10 +94,10 @@ public class ECardSession {
 	private final Map<Object, Object>	attributes	= new HashMap<Object, Object>();
 
 	/**
-	 * Creates and initializes a <tt>ECardSession</tt>.
+	 * Creates and initializes a new ECardSession.
 	 * 
 	 * @param mainView
-	 *            - The used <em>mainView</em>.
+	 *            - The GUI instance of this application.
 	 * @param ch
 	 *            - The handler to the currently inserted card.
 	 */
@@ -145,10 +137,9 @@ public class ECardSession {
 	 * Stores the given <em>value</em> in the current session attributes.
 	 * 
 	 * @param key
-	 *            - The used <em>key</em>, to map with the value.
+	 *            - The <em>key</em> for mapping and storing issues.
 	 * @param value
-	 *            - The used <em>attribute</em>, to store in the session
-	 *            attributes.
+	 *            - The <em>attribute</em>, to store.
 	 */
 	public void setAttribute(final Object key, final Object value) {
 		this.attributes.put(key, value);
@@ -168,22 +159,20 @@ public class ECardSession {
 	}
 
 	/**
-	 * Returns the current running instance of the <tt>PersoApp-Application</tt>
-	 * .
+	 * Returns the instance of the GUI of this application.
 	 * 
-	 * @return Returns the current running instance of the
-	 *         <tt>PersoApp-Application</tt>.
+	 * @return Returns the instance of the GUI of this application.
 	 */
 	public IMainView getMainView() {
 		return this.mainView;
 	}
 
 	/**
-	 * Returns the <tt>CardHandler</tt>
+	 * Returns the CardHandler
 	 * 
 	 * @param slotHandle
 	 *            - This parameter isn't used and can be <strong>null</strong>.
-	 * @return Returns the <tt>CardHandler</tt>
+	 * @return Returns the CardHandler
 	 */
 	public ICardHandler getCardHandler(final byte[] slotHandle) {
 		return this.cardHandler;

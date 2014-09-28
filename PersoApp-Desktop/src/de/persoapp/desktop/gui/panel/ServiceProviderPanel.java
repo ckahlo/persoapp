@@ -67,10 +67,10 @@ import de.persoapp.core.client.PropertyResolver.Bundle;
 import de.persoapp.desktop.gui.MyTitledBorder;
 
 /**
- * The <tt>ServiceProviderPanel</tt> displays all informations about the used
- * <tt>ServiceProvider</tt>.
  * <p>
- * <code>public class ServiceProviderPanel extends JPanel</code>
+ * The ServiceProviderPanel displays all informations about the
+ * connected Service Provider, which can be a online shop, an
+ * administrative body or an similar entity.
  * </p>
  * 
  * @author Christian Kahlo
@@ -78,30 +78,26 @@ import de.persoapp.desktop.gui.MyTitledBorder;
  */
 public class ServiceProviderPanel extends JPanel {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long	serialVersionUID	= 1064043770147009097L;
 
-	/**
-	 * The constant for <tt>bold</tt> text style.
-	 */
 	public static final String	BOLD				= "Bold";
-	
-	/**
-	 * The constant for <tt>normal</tt> text style.
-	 */
 	public static final String	NORMAL				= "Normal";
 
 	/**
-	 * The necessary {@link JTextPane} to display the
-	 * <tt>ServiceProvider Informations</tt>.
+	 * <p>
+	 * The necessary {@link JTextPane} to display the informations about the
+	 * connected ServiceProvider.
+	 * </p>
 	 */
 	private JTextPane			textPane;
 
 	/**
+	 * <p>
 	 * Constructs a new instance of the {@link ServiceProviderPanel}. The
-	 * constructed panel is double-buffered for advanced displaying.
+	 * {@link BorderLayout} is used for drawing and the
+	 * {@link ServiceProviderPanel} is double-buffered to achieve benefits by
+	 * extended use of memory.
+	 * </p>
 	 */
 	public ServiceProviderPanel() {
 		super();
@@ -113,7 +109,9 @@ public class ServiceProviderPanel extends JPanel {
 	}
 
 	/**
+	 * <p>
 	 * Draws the content of the {@link ServiceProviderPanel}.
+	 * </p>
 	 */
 	private void drawContent() {
 		textPane = new JTextPane();
@@ -128,13 +126,13 @@ public class ServiceProviderPanel extends JPanel {
 	}
 
 	/**
-	 * Adds the given <tt>text</tt> in the given <tt>style</tt> to the
-	 * {@link ServiceProviderPanel}.
+	 * Adds the given text to the internal document. This makes the
+	 * added text visible.
 	 * 
 	 * @param text
-	 *            - The given text.
+	 *            - The text to show.
 	 * @param style
-	 *            - The given style.
+	 *            - The style of the showed text.
 	 */
 	private void addText(final String text, final String style) {
 		final Document doc = textPane.getDocument();
@@ -146,23 +144,27 @@ public class ServiceProviderPanel extends JPanel {
 	}
 
 	/**
-	 * Clears the content of the {@link ServiceProviderPanel}.
+	 * <p>
+	 * Removes the text of the {@link ServiceProviderPanel}.
+	 * </p>
 	 */
 	public void clear() {
 		textPane.setText("");
 	}
 
 	/**
+	 * <p>
 	 * Fills in the certificate informations from the given {@link IEAC_Info}.
-	 * This includes the following informations:
+	 * The certificate is provided by the connected service provider. This
+	 * includes the following informations:
+	 * </p>
 	 * <p>
 	 * <ul>
-	 * <li>Subject Name</li>
-	 * <li>Subject URL</li>
-	 * <li>Effective Date - the current date</li>
-	 * <li>Expiration Date - the date of expiration</li>
-	 * <li>Transaction Info</li>
-	 * <li>Terms of Usage</li>
+	 * <li>Subject Name - The name of the service provider.</li>
+	 * <li>Subject URL - The URL of the service provider.</li>
+	 * <li>Validity Period - The period in which the certificate is valid.</li>
+	 * <li>Transaction Info - The informations about the current transaction.</li>
+	 * <li>Terms of Usage - The terms of usage of the requested informations.</li>
 	 * </ul>
 	 * </p>
 	 * 

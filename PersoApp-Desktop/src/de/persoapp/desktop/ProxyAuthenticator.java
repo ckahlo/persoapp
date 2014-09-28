@@ -58,12 +58,9 @@ import de.persoapp.desktop.gui.frame.ProxyPassFrame;
 
 /**
  * <p>
- * The <tt>ProxyAuthenticator</tt>-class provides a function for the
- * <code>Password Authentication</code> and is used to authenticate a user name
- * and a password against a web service.
- * </p>
- * <p>
- * <code>public final class ProxyAuthenticator extends Authenticator</code>
+ * The ProxyAuthenticator provides the functionality for the
+ * <code>Password Authentication</code> and is used to authenticate a user with
+ * his credentials against a eID-Service-Provider.
  * </p>
  * 
  * @author Christian Kahlo
@@ -72,19 +69,21 @@ import de.persoapp.desktop.gui.frame.ProxyPassFrame;
 public final class ProxyAuthenticator extends Authenticator {
 	
 	/**
-	 * The <tt>mainView</tt> of the <tt>PersoApp-Application</tt>.
+	 * The GUI instance of this application.
 	 */
 	private final IMainView				mainView;
 	
 	/**
-	 * The <tt>Authentication Cache</tt> of the <tt>PersoApp-Application</tt>.
+	 * The Authentication Cache of the PersoApp-Application.
 	 */
 	private final Map<String, String[]>	authCache	= new HashMap<String, String[]>();
 
 	/**
-	 * Constructs a new instance of the {@link ProxyAuthenticator}.
+	 * Constructs a new instance of {@link ProxyAuthenticator} and binds the GUI
+	 * instance of this application to it.
 	 * 
-	 * @param mainView - The <tt>mainView</tt> to set.
+	 * @param mainView
+	 *            - The GUI instance of this application.
 	 */
 	public ProxyAuthenticator(final IMainView mainView) {
 		this.mainView = mainView;

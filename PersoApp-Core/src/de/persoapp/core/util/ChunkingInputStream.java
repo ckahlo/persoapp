@@ -53,10 +53,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Basic class which provides utilities to handle data from the underlying
- * {@link FilterInputStream}.
  * <p>
- * <code>public class ChunkingInputStream extends FilterInputStream</code>
+ * The {@link ChunkingInputStream} provides methods to handle chunks of data and
+ * to simply read data as well.
  * </p>
  * 
  * @author Christian Kahlo, Ralf Wondratschek
@@ -130,15 +129,15 @@ public class ChunkingInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Reads a line of data from the given InputStream. A line of data comes to
-	 * an end with a LF.
+	 * Reads a line of data from the given {@link InputStream}. A line of data
+	 * ends as soon an line feed is hit.
 	 * 
 	 * @param input
-	 *            - The given InputStream.
+	 *            - The InputStream, from which is read.
 	 * @return The read line of the given InputStream as a String
 	 * 
 	 * @throws IOException
-	 *             Thrown if a read-error occurs during the reading process.
+	 *             Thrown if the {@link InputStream} is blocked or already closed..
 	 * @throws EOFException
 	 *             Thrown if the EOF is reached during the reading process.
 	 */
@@ -160,24 +159,24 @@ public class ChunkingInputStream extends FilterInputStream {
 	}
 
 	/**
-	 * Reads a chunk of data.
+	 * Reads a chunk of data. The remaining space is filled up with the data of
+	 * the {@link FilterInputStream}.
 	 * 
 	 * @param out
-	 *            - The chunk of data.
+	 *            - The buffer into which the data is read.
 	 * @param offset
-	 *            - The starting offset.
+	 *            - The start offset in array b at which the data is written.
 	 * @param size
-	 *            - The size the data-chunk which is about to be read.
+	 *            - The maximum number of bytes read.
 	 * @return This function returns <strong>-1</strong> if an error occurs.
-	 *         Otherwise it returns the amount of space which is still
-	 *         available.
+	 *         Otherwise it returns the amount of space which is still available
+	 *         in the buffer.
 	 * 
 	 * @throws IOException
-	 *             Thrown if something during the parsing of the content of
-	 *             System.in happens.
+	 *             Thrown if the {@link FilterInputStream} is blocked or closed.
 	 * @throws IllegalArgumentException
-	 *             Thrown if the offset and the length of the data is greater
-	 *             than the given bytestream to store the read data.
+	 *             Thrown if the amount of data, which is going to be read
+	 *             exceeds the buffer <em>out</em>.
 	 */
 	private int readChunk(final byte[] out, int offset, final int size) throws IOException {
 		if (out.length < offset + size) {

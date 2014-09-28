@@ -61,11 +61,8 @@ import java.util.ResourceBundle;
 
 /**
  * <p>
- * The <tt>PropertyResolver</tt> offers static methods to access property files
- * and properties.
- * </p>
- * <p>
- * <code>public class PropertyResolver</code>
+ * The PropertyResolver offers static functions and instance methods to
+ * access property files and properties.
  * </p>
  * 
  * @author Ralf Wondratschek
@@ -116,7 +113,8 @@ public class PropertyResolver {
     }
 
 	/**
-	 * Stores the file, which is associated to the given <em>filename</em>, in the properties.
+	 * Stores the file, which is associated to the given <em>filename</em>, in
+	 * the properties.
 	 * 
 	 * @param fileName
 	 *            - The name of the file which is stored.
@@ -188,11 +186,11 @@ public class PropertyResolver {
 	 * @param concreteProperty
 	 *            - The specific <em>property</em>.
 	 * 
-	 * @return Returns a specific property <tt>string</tt>, or
+	 * @return Returns a specific property string, or
 	 *         <strong>null</strong>, if the property doesn't exist.
 	 * 
 	 * @throws IllegalArgumentException
-	 *             Throws a <tt>IllegalArgumentException</tt> if the
+	 *             Throws a IllegalArgumentException if the
 	 *             <em>concreteProperty</em> is <strong>null</strong>.
 	 */
     public String getPropertySingle(String key, String concreteProperty) {
@@ -289,12 +287,12 @@ public class PropertyResolver {
     }
 
 	/**
-	 * Retrieves all properties of a file, which is associated with the given
-	 * <em>filename</em>.
+	 * Retrieves all properties with the filename as key. If no properties can
+	 * be retrieved, the file itself is returned as an property.
 	 * 
 	 * @param fileName
 	 *            - The name of the resource file.
-	 *            
+	 * 
 	 * @return Retrieves all properties of a file, which is associated with the
 	 *         given <em>filename</em>.
 	 */
@@ -381,15 +379,15 @@ public class PropertyResolver {
     }
 
 	/**
-	 * The defined <tt>Bundle</tt> interface declares a method to gather string
-	 * representations from resources of a {@link ResourceBundle}.
+	 * The defined Bundle interface declares a method to retrieve an
+	 * string representation of an stored resource, by using the related key.
 	 * 
 	 * @author Christian Kahlo, Ralf Wondratschek
 	 */
     public static interface Bundle {
     	
 		/**
-		 * Returns a <tt>String</tt> representation of the object, which is
+		 * Returns a String representation of the object, which is
 		 * associated with the given <em>key</em>. If no object can't be found
 		 * in the current {@link ResourceBundle} and the parent bundle is
 		 * <strong>not null</strong>, the function tries to obtain the desired
@@ -401,11 +399,11 @@ public class PropertyResolver {
 		 * 
 		 * @param key
 		 *            - The key, which is associated with the searched object.
-		 * @return Returns the <tt>string representation</tt> of the object,
+		 * @return Returns the string representation of the object,
 		 *         which is associated with the key.
 		 *         
 		 * @throws MissingResourceException
-		 *             Throws a <tt>MissingResourceException</tt> if the desired
+		 *             Throws a MissingResourceException if the desired
 		 *             object can't be found.
 		 * @throws NullPointerException
 		 *             If <em>key</em> is <strong>null</strong>.
@@ -414,17 +412,12 @@ public class PropertyResolver {
     }
 
 	/**
-	 * The <tt>ResourceBundleImplementation</tt> provides a <tt>private</tt>
-	 * constructor and a wrapper function of the
 	 * <p>
-	 * <code>public String getString(String key)</code>
-	 * </p>
-	 * method. The <tt>private</tt> constructor ensures the internal creation of
-	 * <tt>ResourceBundle</tt>-objects.
-	 * <p>
-	 * The <tt>ResourceBundleImplementation</tt> is a wrapper class for common
+	 * The ResourceBundleImplementation is a wrapper class for common
 	 * {@link ResourceBundle}-objects.
 	 * </p>
+	 * 
+	 * @see {@link Bundle}
 	 * 
 	 * @author Christian Kahlo, Ralf Wondratschek
 	 */
@@ -460,12 +453,13 @@ public class PropertyResolver {
     }
 
 	/**
-	 * The <tt>PropertyBundleImplementation</tt> is a wrapper class for common
-	 * {@link Properties}. The wrapper class provides a overridden
-	 * <tt>getString()</tt>-Method, to retrieve {@link String} representations
-	 * from properties.
 	 * <p>
-	 * <code> public static class PropertyBundleImplementation implements Bundle </code>
+	 * The PropertyBundleImplementation is a wrapper class for common
+	 * {@link Properties} and provides a overridden getString()-Method,
+	 * to retrieve {@link String} representations from properties.
+	 * </p>
+	 * 
+	 * @see {@link Bundle}
 	 * 
 	 * @author Christian Kahlo, Ralf Wondratschek
 	 */
@@ -476,11 +470,13 @@ public class PropertyResolver {
     	 */
         private final Properties mProperties;
 
-        /**
-         * Creates and initializes a new object of {@link PropertyBundleImplementation}.
-         * 
-         * @param properties 
-         */
+		/**
+		 * Creates and initializes a new {@link PropertyBundleImplementation}
+		 * and stores the given properties.
+		 * 
+		 * @param properties
+		 *            - The properties, to store.
+		 */
         public PropertyBundleImplementation(Properties properties) {
             mProperties = properties;
         }
@@ -502,7 +498,7 @@ public class PropertyResolver {
     }
 
     /**
-     * The <code>ResouceBundle</code> reads <em>property-files</em> as <tt>UTF-8</tt>.
+     * The <code>ResouceBundle</code> reads <em>property-files</em> as UTF-8.
      */
     private static final ResourceBundle.Control UTF8_CONTROL = new ResourceBundle.Control() {
         @Override

@@ -48,8 +48,9 @@
 package de.persoapp.desktop.gui.frame;
 
 /**
- * This interface declares the functions to add and to remove a sidebar. </p>
- * <code>public interface SidebarProvider</code> </p>
+ * <p>
+ * This interface declares the functions to add and to remove a sidebar.
+ * </p>
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.

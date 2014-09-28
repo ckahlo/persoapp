@@ -75,9 +75,9 @@ import de.persoapp.core.util.Hex;
 import de.persoapp.core.util.TLV;
 
 /**
- * The <tt>Extended Access Protocol Handler</tt> 
  * <p>
- * <code>public class EACProtocolHandler</code>
+ * The Extended Access Protocol Handler manages the authentication of
+ * the user against the connected eID-Server.
  * </p>
  * 
  * @author Christian Kahlo
@@ -86,17 +86,17 @@ import de.persoapp.core.util.TLV;
 public class EACProtocolHandler {
 	
 	/**
-	 * The bundle to resolve necessary properties.
+	 * Localized message bundle for user interaction.
 	 */
 	private final PropertyResolver.Bundle	textBundle	= PropertyResolver.getBundle("text_core");
 
 	/**
-	 * The currently used <tt>CardHandler</tt>.
+	 * The handle to the inserted card.
 	 */
 	private final ICardHandler				eCardHandler;
 	
 	/**
-	 * The currently running instance of the <tt>PersoApp-Application</tt>.
+	 * The GUI instance of application.
 	 */
 	private final IMainView					mainView;
 	
@@ -106,9 +106,13 @@ public class EACProtocolHandler {
 	private final ECardSession				session;
 
 	/**
-	 * Creates and initializes a new {@link EACProtocolHandler} for the given {@link ECardSession}.
+	 * <p>
+	 * Creates and initializes a new {@link EACProtocolHandler} and binds the
+	 * provided {@link ECardSession}.
+	 * </p>
 	 * 
-	 * @param session - The current active {@link ECardSession}.
+	 * @param session
+	 *            - The current active {@link ECardSession}.
 	 */
 	public EACProtocolHandler(final ECardSession session) {
 		this.session = session;
@@ -120,7 +124,7 @@ public class EACProtocolHandler {
 	}
 
 	/**
-	 * Informations follow in MR3
+	 * Processes the current attempted operation
 	 * 
 	 * @param in
 	 * @return
@@ -204,7 +208,8 @@ public class EACProtocolHandler {
 			byte[] resultCHAT = null;
 			final String onlineAuthTitle = textBundle.get("SALService_online_auth_title");
 			boolean mainViewOpen = false;
-
+			
+			//Do the eID online authentication. Proceed if a card can be found. (tp != null)
 			while (true) {
 				do {
 					if ((tp = eCardHandler.getECard()) != null) {
@@ -229,9 +234,9 @@ public class EACProtocolHandler {
 				if (tp.lastSW() == 0x63C1) {
 					mainView.showMessage(textBundle.get("SALService_one_pin_try"), IMainView.WARNING);
 				}
-
+				//Fetch the result, which shows what kind of data may be read from the eID card.
 				final MainDialogResult dialogResult = mainView.getMainDialogResult();
-
+				//Make sure, that the user has the reading of his personal data approved.
 				if (dialogResult.isApproved()) {
 					final long dialogCHAT = dialogResult.getCHAT();
 					resultCHAT = new byte[5];
@@ -258,6 +263,7 @@ public class EACProtocolHandler {
 					resultCHAT = TLV.build(0x7F4C, TLV.buildOID("04007F000703010202", TLV.build(0x53, resultCHAT)));
 
 					mainView.showProgress(textBundle.get("SALService_progress_pin"), 10, true);
+					//Initiate the authentication process with the eID card
 					final boolean success = eCardHandler.startAuthentication(resultCHAT, dialogResult.getPIN(),
 							eacInfo.getTerminalDescription());
 					if (success) {
@@ -272,6 +278,7 @@ public class EACProtocolHandler {
 							break;
 						}
 					} else {
+						//Inserted pin is wrong.
 						final boolean retry = mainView.showQuestion(onlineAuthTitle,
 								textBundle.get("SALService_pin_retry"));
 						if (retry) {

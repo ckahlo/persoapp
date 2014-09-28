@@ -58,10 +58,19 @@ import javax.swing.JPanel;
 import de.persoapp.core.client.PropertyResolver;
 
 /**
- * This class extends {@link JPanel} and contains the
- * used buttons of the <tt>PersoApp Desktop Client</tt>.
  * <p>
- * <code>public class ButtonPanel extends JPanel</code>
+ * The ButtonPanel contains the <em>confirm</em>- and the
+ * <em>cancel</em>-button of the PersoApp Desktop Client.
+ * </p>
+ * <p>
+ * The defined buttons have the following purpose:
+ * <ul>
+ * <li>confirm - The button to confirm, that the data, which you have
+ * chosen, can be send to the service provider or to proceed with the selected
+ * operation, like the activation of the electronic identity card.</li>
+ * <li>cancel - The button to cancel the currently active choice of
+ * personal data and to abort the currently running operation.</li>
+ * </ul>
  * </p>
  * 
  * @author Christian Kahlo
@@ -69,25 +78,38 @@ import de.persoapp.core.client.PropertyResolver;
  */
 public class ButtonPanel extends JPanel {
 
-	/**
-	 * The <tt>serialVersionUID</tt> which is necessary for serialization.
-	 */
 	private static final long				serialVersionUID	= -3803650768195073587L;
-	
+
 	/**
-	 * The used <tt>JButtons</tt> of the {@link ButtonPanel}.
+	 * The declared buttons in the button panel.
+	 * <ul>
+	 * <li>confirm - The button to confirm, that the data, which you
+	 * have chosen, can be send to the service provider or to proceed with the
+	 * selected operation, like the activation of the electronic identity card.</li>
+	 * <li>cancel - The button to cancel the currently active choice of
+	 * personal data and to abort the currently running operation.</li>
+	 * </ul>
 	 */
 	private JButton							confirm, cancel;
 	
 	/**
-	 * The <tt>bundle</tt> which resolves the necessary properties.
+	 * Localized message bundle for user interaction.
 	 */
 	private final PropertyResolver.Bundle	textBundle;
 
 	/**
+	 * <p>
 	 * Constructs a new instance of the {@link ButtonPanel}. Also draws the
-	 * components and initializes the member attributes. The constructed Panel
-	 * is double-buffered for advanced displaying.
+	 * components and initializes the member attributes.
+	 * </p>
+	 * <p>
+	 * The constructed panel is double-buffered to achieve benefits by
+	 * the extended use of memory.
+	 * </p>
+	 * <p>
+	 * The {@link GridBagLayout} is used for drawing the components of the
+	 * ButtonPanel.
+	 * </p>
 	 */
 	public ButtonPanel() {
 		super();
@@ -101,7 +123,8 @@ public class ButtonPanel extends JPanel {
 	}
 
 	/**
-	 * Initializes the components of the {@link ButtonPanel}.
+	 * Initializes the components by constructing new instances for every
+	 * button of the {@link ButtonPanel}.
 	 */
 	private void initComponents() {
 		confirm = new JButton(textBundle.get("confirm"));
@@ -109,8 +132,7 @@ public class ButtonPanel extends JPanel {
 	}
 
 	/**
-	 * Draws the components on the {@link ButtonPanel}. The way
-	 * in which the components are drawn can't be changed.
+	 * Draws the components of the {@link ButtonPanel}. 
 	 */
 	private void drawComponents() {
 		final GridBagConstraints cons = new GridBagConstraints();
@@ -132,11 +154,17 @@ public class ButtonPanel extends JPanel {
 	
 	/**
 	 * Sets the focus to the component, which is identified through the given
-	 * index.
+	 * index. This function allows currently to set the focus to the
+	 * <em>cancel</em>- or to the <em>confirm</em>-button.
 	 * 
 	 * @param index
 	 *            - The specified index of the component, which requests the
-	 *            focus.
+	 *            focus. If index is equal to <b>0</b>, the
+	 *            <em>confirm</em>-button gains the focus. The <em>cancel</em>
+	 *            -button gains the focus, if index is equal to
+	 *            <b>1</b>. <b>Null</b> is not allowed and by other values,
+	 *            which are unequal to <b>0</b> and <b>1</b>, nothing is going
+	 *            to happen.
 	 */
 	public void setFocusToComponent(final int index) {
 		switch (index) {
@@ -150,18 +178,18 @@ public class ButtonPanel extends JPanel {
 	}
 
 	/**
-	 * Retrieves the <tt>confirm</tt> button.
+	 * Returns the instance of the confirm button.
 	 * 
-	 * @return Returns the <tt>confirm</tt> button.
+	 * @return Returns the instance of the confirm button.
 	 */
 	public JButton getConfirm() {
 		return confirm;
 	}
 
 	/**
-	 * Retrieves the <tt>cancel</tt> button.
+	 * Returns the instance of the cancel button.
 	 * 
-	 * @return Returns the <tt>cancel</tt> button.
+	 * @return Returns the instance of the cancel button.
 	 */
 	public JButton getCancel() {
 		return cancel;

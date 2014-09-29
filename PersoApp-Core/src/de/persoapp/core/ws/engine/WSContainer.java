@@ -73,7 +73,8 @@ import org.w3c.dom.Element;
  * <p>
  * The WSContainer is part of the <em>Network Layer</em>. Also, he bind
  * and initializes the <em>ISO 24727</em> webservices in <em>JAX-WS 2.0</em>
- * style. The services are defined in <em>TR-03112</em>.
+ * style. The services are defined in <em>TR-03112</em>.<br/>
+ * In general, the WSContainer encapsulates the different webservices.
  * </p>
  * 
  * @author Christian Kahlo

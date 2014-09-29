@@ -120,8 +120,8 @@ public class JSCIOTransport implements TransportProvider, CCID {
 
 
 	/**
-	 * Computes the smart card control code according to the underlying
-	 * operating system from the provided code.
+	 * Computes the smart card control code, according to the underlying
+	 * operating system, from the provided code.
 	 * 
 	 * @param code
 	 *            - The command code, to convert.

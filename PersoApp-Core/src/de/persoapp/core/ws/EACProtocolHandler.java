@@ -124,10 +124,15 @@ public class EACProtocolHandler {
 	}
 
 	/**
-	 * Processes the current attempted operation
+	 * Processes the communication between the eID-Client and the eID-Server
+	 * according to EACv1 and EACv2 (see TR-03110).
 	 * 
 	 * @param in
-	 * @return
+	 *            The part of data, which is received during the EAC-Protocol
+	 * @return Returns the <strong>null</strong>, if the authentication of the
+	 *         eID-Client against the eID-Server fails. Otherwise, the specific
+	 *         output data is returned to the eID-Server to proceed the
+	 *         authentication.
 	 */
 	public DIDAuthenticationDataType process(final DIDAuthenticationDataType in) {
 		DIDAuthenticationDataType out = null;
@@ -209,7 +214,6 @@ public class EACProtocolHandler {
 			final String onlineAuthTitle = textBundle.get("SALService_online_auth_title");
 			boolean mainViewOpen = false;
 			
-			//Do the eID online authentication. Proceed if a card can be found. (tp != null)
 			while (true) {
 				do {
 					if ((tp = eCardHandler.getECard()) != null) {

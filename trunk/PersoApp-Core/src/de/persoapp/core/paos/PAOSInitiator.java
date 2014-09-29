@@ -561,28 +561,36 @@ public class PAOSInitiator {
 	 *             - on communication error
 	 */
 	public final Object[] dispatch(final Object in) throws IOException {
-		final JAXBElement<Envelope> env = jaxbDispatch(createEnvelope(createPAOSHeader(), createMessageID(),
+		final JAXBElement<Envelope> env_je = jaxbDispatch(createEnvelope(createPAOSHeader(), createMessageID(),
 				lastMessageID, null, in));
 
-		if (env == null) {
+		if (env_je == null) {
 			return null;
 		}
 
-		final Envelope e = env.getValue();
-		final Header soapHeader = e.getHeader();
+		final Envelope soapEnv = env_je.getValue();
+		final Header soapHeader = soapEnv.getHeader();
 		if (soapHeader != null) {
 			for (final Object soapHE : soapHeader.getAny()) {
-				final JAXBElement<?> je = (JAXBElement<?>) soapHE;
+				if (soapHE instanceof JAXBElement<?>) {
+					final JAXBElement<?> je = (JAXBElement<?>) soapHE;
 
-				if (wsa_messageID.equals(je.getName())) {
-					final AttributedURIType value = (AttributedURIType) je.getValue();
-					lastMessageID = value.getValue();
+					if (wsa_messageID.equals(je.getName())) {
+						final AttributedURIType value = (AttributedURIType) je.getValue();
+						lastMessageID = value.getValue();
+					}
+				} else if (soapHE instanceof Element) {
+					final Element e = (Element) soapHE;
+					System.out.println("Unknown SOAP header: {" + e.getNamespaceURI() + "}" + e.getLocalName() + " = "
+							+ e.getNodeValue());
+				} else {
+					throw new RuntimeException("Invalid SOAP header element.");
 				}
 			}
 		}
 
 		QName msgName = null;
-		Object message = e.getBody().getAny().size() > 0 ? e.getBody().getAny().get(0) : null;
+		Object message = soapEnv.getBody().getAny().size() > 0 ? soapEnv.getBody().getAny().get(0) : null;
 		if (message != null) {
 			if (message instanceof JAXBElement) {
 				msgName = ((JAXBElement<?>) message).getName();

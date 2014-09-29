@@ -62,9 +62,9 @@ import com.sun.net.httpserver.HttpHandler;
 import de.persoapp.core.client.PropertyResolver;
 
 /**
- * The ECApiHttpHandler handles incoming requests of the server of the
- * eID-Client. First of all, it checks if the received query string has an
- * tcTokenURL attached. If one is attached, the ECApiHttpHandler forwards the
+ * The ECApiHttpHandler handles requests which are send to the internal server
+ * of the eID-Client. First of all, it checks if the received query string has
+ * an tcTokenURL attached. If one is attached, the ECApiHttpHandler forwards the
  * tcTokenURL to the ECardWorker for validating and fetches the response.<br/>
  * If the response is an valid https://URL the browser is redirected to the
  * specific URL. <br/>

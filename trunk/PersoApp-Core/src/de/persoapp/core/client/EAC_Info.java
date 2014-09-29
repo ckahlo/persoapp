@@ -352,7 +352,7 @@ public class EAC_Info implements IEAC_Info {
 	}
 
 	/**
-	 * Initializes the {@link EAC_Info} with the received informations from the smart card.
+	 * Initializes the {@link EAC_Info} with the received informations.
 	 * 
 	 * @param cvcert
 	 *            - The card verifiable certificate for initializing.

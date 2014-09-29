@@ -51,8 +51,8 @@ package de.persoapp.core.client;
  * <p>
  * The IMainView provides an unified, foreclosed communication channel to the
  * GUI. Additionally, the IMainView provides a event listener, which is
- * registered to listen and react on events of the core functions to forward
- * them to the GUI.
+ * registered to listen and react on events of the user input and forward
+ * them to the core.
  * </p>
  * 
  * @author Christian Kahlo

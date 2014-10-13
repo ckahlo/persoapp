@@ -163,7 +163,10 @@ public class ISOSMTransport implements TransportProvider {
 	}
 
 	/**
-	 * Sets the EncKey and the MacKey. Initializes the used ciphers.
+	 * Initializes the used ciphers. This is the cipher for the initialization
+	 * vector, the cipher for encryption and the cipher for decryption. The
+	 * cipher of the message authentication code is also initialized by this
+	 * function.
 	 * 
 	 * @param newkEnc
 	 *            - The EncKey.

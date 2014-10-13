@@ -60,9 +60,8 @@ import javax.net.ssl.SSLSocketFactory;
  * pre-liminary stub
  */
 /**
- * The BCTlsSocketFactory creates Sockets and separates the
- * creation process of the Sockets from the Socket
- * implementation.
+ * The BCTlsSocketFactory works like an regular SSLSocketFactory but stores also
+ * an additional pre shared key and the eID-SessionID.
  * 
  * @author Christian Kahlo
  * @author Rico Klimsa - added javadoc comments.
@@ -78,7 +77,7 @@ public final class BCTlsSocketFactoryImpl extends SSLSocketFactory {
 	private static final int	SO_CONNECT_TIMEOUT	= 10 * 1000;	// 10 seconds
 
 	/**
-	 * The id of the currently used pre-shared-key.
+	 * eID-SessiionID
 	 */
 	final byte[]				pskId;
 	

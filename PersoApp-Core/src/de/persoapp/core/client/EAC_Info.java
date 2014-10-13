@@ -62,14 +62,13 @@ import de.persoapp.core.util.TLV;
 
 /**
  * <p>
- * The EAC_Info-structure contains all informations about the
- * initialized certificate and the data to process the actual <em>eID</em>
- * -service.
+ * The EAC_Info-structure contains all informations about the initialized
+ * certificate and the data to process the actual ongoing EAC authentication
+ * procedure.
  * </p>
  * <p>
- * An EAC_Info is only transfered to the eID-Client if the attempt to
- * establish a connection to the eID-Server of the service provider is
- * successful.
+ * An EAC_Info is only transfered to the eID-Client if the attempt to establish
+ * a connection to the eID-Server was successful.
  * </p>
  * 
  * @author Christian Kahlo, Ralf Wondratschek
@@ -243,7 +242,7 @@ public class EAC_Info implements IEAC_Info {
 	 * @param cvcertDescription
 	 *            - The description of the card verifiable certificate.
 	 * @param transactionInfo
-	 *            - The informations about the current transaction.
+	 *            - The information about the current transaction.
 	 * @param requiredCHAT
 	 *            - The fields of the data, which is required by the service
 	 *            provider.
@@ -265,7 +264,7 @@ public class EAC_Info implements IEAC_Info {
 	}
 
 	/**
-	 * Returns <strong>true</strong>, if the informations of is valid. Otherwise the
+	 * Returns <strong>true</strong>, if the information are valid. Otherwise the
 	 * function returns <strong>false</strong>.
 	 * 
 	 * @return Returns <strong>true</strong>, if the certificate is valid.
@@ -419,12 +418,13 @@ public class EAC_Info implements IEAC_Info {
 	}
 
 	/**
-	 * Initializes the chat through the use of the original chat, which contains
-	 * inserted values. Returns <strong>zero</strong> if the <em>origCHAT</em>
-	 * is <strong>null</strong>.
+	 * Initializes the CHAT through the use of the original CHAT, which contains
+	 * the values to be read from the eID-Card. Returns <strong>zero</strong> if
+	 * the <em>origCHAT</em> is <strong>null</strong>.
 	 * 
 	 * @param origCHAT
-	 *            - The original marked personal data. Can be <strong>null</strong>.
+	 *            - The original marked personal data. Can be
+	 *            <strong>null</strong>.
 	 * 
 	 * @return Returns <strong>zero</strong> if <em>origChat</em> is set to
 	 *         <strong>null</strong>.

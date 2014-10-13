@@ -55,8 +55,9 @@ import de.persoapp.core.util.ArrayTool;
 
 /**
  * <p>
- * Functions for creating a CMac using standard Java cipher interfaces as a
- * base. Inspired by BouncyCastles internal engine.
+ * Functions for creating a CMac -
+ * <em>cipher based message authentication code</em> using standard Java cipher
+ * interfaces as a base. Inspired by BouncyCastles internal engine.
  * </p>
  * 
  * @author Christian Kahlo

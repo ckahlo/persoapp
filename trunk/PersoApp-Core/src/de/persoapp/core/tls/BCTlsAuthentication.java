@@ -61,8 +61,8 @@ import org.bouncycastle.crypto.tls.TlsCredentials;
 
 /**
  * <p>
- * The BCTlsAuthentication provides the functionality to notify the
- * related list of server certificate of a specific server certificate.
+ * The BCTlsAuthentication provides the functionality to retrieve the server
+ * certificates during the tls handshake.
  * </p>
  * 
  * @author Christian Kahlo
@@ -71,13 +71,13 @@ import org.bouncycastle.crypto.tls.TlsCredentials;
 public class BCTlsAuthentication implements TlsAuthentication {
 
 	/**
-	 * The List of server certificates.
+	 * The List of X509 - server certificates.
 	 */
 	List<Certificate>	serverCertList;
 
 	/**
-	 * Notifies the related server certificate list of the provided server
-	 * certificate.
+	 * Converts every server certificate in an X509-certificate and stores it
+	 * globally.
 	 * 
 	 * @param serverCertificate
 	 *            - The server certificate, which related server certificate

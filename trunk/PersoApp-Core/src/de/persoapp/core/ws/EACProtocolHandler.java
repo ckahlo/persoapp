@@ -77,7 +77,8 @@ import de.persoapp.core.util.TLV;
 /**
  * <p>
  * The Extended Access Protocol Handler manages the authentication of
- * the user against the connected eID-Server.
+ * the user against the connected eID-Server according to EACv1 and EACv2.
+ * (see TR-03110)
  * </p>
  * 
  * @author Christian Kahlo

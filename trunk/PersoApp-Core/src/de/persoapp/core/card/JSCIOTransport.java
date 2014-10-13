@@ -204,10 +204,10 @@ public class JSCIOTransport implements TransportProvider, CCID {
 
 	/**
 	 * <p>
-	 * This function initializes according to the given application identifier
-	 * the smart card for further commands and examines the response. A new
-	 * handle of the {@link CardChannel} to the inserted <em>ECard</em> is
-	 * created and returned in an Java Smart Card Input Output
+	 * This function opens the application and thus creates a connection to the
+	 * smart card according to the given application identifier and examines the
+	 * response. A new handle of the {@link CardChannel} to the inserted
+	 * <em>ECard</em> is created and returned in an Java Smart Card Input Output
 	 * Transport-Provider.
 	 * </p>
 	 * <p>

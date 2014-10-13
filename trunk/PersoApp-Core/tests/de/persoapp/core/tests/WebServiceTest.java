@@ -53,6 +53,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
 import iso.std.iso_iec._24727.tech.schema.ConnectionHandleType;
 import iso.std.iso_iec._24727.tech.schema.DIDAuthenticate;
 import iso.std.iso_iec._24727.tech.schema.DIDAuthenticateResponse;
@@ -67,7 +68,6 @@ import iso.std.iso_iec._24727.tech.schema.RequestType;
 import iso.std.iso_iec._24727.tech.schema.Transmit;
 import iso.std.iso_iec._24727.tech.schema.TransmitResponse;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,8 +77,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -221,6 +219,7 @@ public class WebServiceTest {
 	/**
 	 * Function invocation with null as inserted value.<br/>
 	 * <br/>
+	 * <b>References: </b>TR-03112-6, Section 3.2.5 <em>Transmit</em><br/>
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
@@ -255,6 +254,7 @@ public class WebServiceTest {
 	/**
 	 * Function invocation without an {@link ECardSession}.<br/>
 	 * <br/>
+	 * <b>References: </b>TR-03112-6, Section 3.2.5 <em>Transmit</em><br/>
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
@@ -292,6 +292,7 @@ public class WebServiceTest {
 	/**
 	 * Function invocation without an output APDU in {@link Transmit}. <br/>
 	 * <br/>
+	 * <b>References: </b>TR-03112-6, Section 3.2.5 <em>Transmit</em><br/>
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
@@ -336,6 +337,7 @@ public class WebServiceTest {
 	/**
 	 * Function invocation with an empty apdu.<br/>
 	 * <br/>
+	 * <b>References: </b>TR-03112-6, Section 3.2.5 <em>Transmit</em><br/>
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
@@ -387,6 +389,7 @@ public class WebServiceTest {
 	
 	/**
 	 * Function invocation with forbidden apdu.<br/>
+	 * <b>References: </b>TR-03112-6, Section 3.2.5 <em>Transmit</em><br/>
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
@@ -437,7 +440,8 @@ public class WebServiceTest {
 	}
 		
 	/**
-	 * Function invocation with an malformed APDU.<br/>
+	 * Function invocation with an malformed APDU.<br/><br/>
+	 * <b>References: </b>TR-03112-6, Section 3.2.5 <em>Transmit</em><br/>
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
@@ -490,6 +494,7 @@ public class WebServiceTest {
 	/**
 	 * Function invocation with correct parameters.<br/>
 	 * <br/>
+	 * <b>References: </b>TR-03112-6, Section 3.2.5 <em>Transmit</em><br/>
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
@@ -540,12 +545,23 @@ public class WebServiceTest {
 	
 	
 	/**
-	 * Function call without an {@link ECardSession}.<br/>
+	 * Function invocation without an {@link ECardSession}.<br/>
 	 * <br/>
-	 * <b>Pass</b>: Throwing {@link NullpointerException}.<br/>
-	 * <br/>
-	 * <b>Fail</b>: No {@link NullPointerException} or an unexpected
-	 * {@link Throwable} is thrown.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked with
+	 * {@link DIDAuthenticate} and without an {@link ECardSession}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>An {@link NullPointerException} is thrown.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -555,6 +571,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_1() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), null);
+		salservice.response.clear();
 		
 		Random sr = new Random();
 		byte[] slotHandle = new byte[32];
@@ -585,13 +602,23 @@ public class WebServiceTest {
 	 * preventing this test from completing and forcing the test suite into a
 	 * deadlock until the callback in the {@link ECardWorker} is timed out.
 	 * </p>
-	 * Function call without certificates in the first EAC-phase.<br/>
+	 * Function invocation without certificates in the first EAC-phase.<br/>
 	 * <br/>
-	 * <b>Pass</b>: Causes the authentication process and therefore the whole
-	 * alternative call to fail.<br/>
-	 * <br/>
-	 * <b>Pass</b>: Causes the authentication process and therefore the whole
-	 * alternative call to fail.<br/>
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked with
+	 * {@link DIDAuthenticate} and without certificates in the {@link EAC1InputType}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The whole authentication process fails.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -602,6 +629,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_2() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		
 		ArrayList<String> nullList = new ArrayList<String>();
 		//Waiting on callback timeout
@@ -613,16 +641,27 @@ public class WebServiceTest {
 	 * <p>
 	 * <b>Important: </b>Not handled exceptions in {@link SALService} and
 	 * {@link WSContainer} preventing this test from completing and forcing the
-	 * test suite into a deadlock until the callback in the {@link ECardWorker} is
-	 * timed out.
+	 * test suite into a deadlock until the callback in the {@link ECardWorker}
+	 * is timed out.
 	 * </p>
-	 * Function call without certificateDescription in the first EAC-phase.<br/>
+	 * Function invocation without certificateDescription in the first EAC-phase.<br/>
 	 * <br/>
-	 * <b>Pass</b>: Causes the authentication process and therefore the whole
-	 * alternative call to fail.<br/>
-	 * <br/>
-	 * <b>Pass</b>: Causes the authentication process and therefore the whole
-	 * alternative call to fail.<br/>
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and without certificateDescription in the
+	 * {@link EAC1InputType}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The whole authentication process fails.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -633,6 +672,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_3() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("certificateDescription");
@@ -640,13 +680,25 @@ public class WebServiceTest {
 	}
 	
 	/**
-	 * Function call without providerInfo in the first EAC-phase.<br/>
+	 * Function invocation without providerInfo in the first EAC-phase.<br/>
 	 * <br/>
-	 * <b>Pass</b>: The authentication process executes and completes normally
-	 * because this element is deprecated and can be ignored.<br/>
-	 * <br/>
-	 * <b>Pass</b>: Causes the authentication process and therefore the whole
-	 * alternative call to fail.<br/>
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and without providerInfo in the
+	 * {@link EAC1InputType}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The authentication process executes and completes normally
+	 * because this element is deprecated and can be ignored.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -657,6 +709,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_4() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("providerInfo");
@@ -670,13 +723,25 @@ public class WebServiceTest {
 	 * test suite into a deadlock until the callback in the {@link ECardWorker} is
 	 * timed out.
 	 * </p>
-	 * Function call without requiredCHAT in the first EAC-phase.<br/>
+	 * Function invocation without requiredCHAT in the first EAC-phase.<br/>
 	 * <br/>
-	 * <b>Pass</b>: Causes the authentication process and therefore the whole
-	 * alternative call to fail.<br/>
-	 * <br/>
-	 * <b>Fail</b>: No {@link NullPointerException} or an unexpected
-	 * {@link Throwable} is thrown.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and without requiredCHAT in the
+	 * {@link EAC1InputType}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>Causes the authentication process and therefore the whole
+	 * alternative invocation to fail.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -687,6 +752,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_5() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("requiredCHAT");
@@ -695,14 +761,26 @@ public class WebServiceTest {
 	
 	
 	/**
-	 * Function call without optionalCHAT in the first EAC-phase.<br/>
+	 * Function invocation without optionalCHAT in the first EAC-phase.<br/>
 	 * <br/>
-	 * <b>Pass</b>: The authentication process executes and completes normally
-	 * because this element is not required and can be null.<br/>
-	 * <br/>
-	 * <b>Pass</b>: Causes the authentication process and therefore the whole
-	 * alternative call to fail.<br/>
-	 * 
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and without optionalCHAT in the
+	 * {@link EAC1InputType}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The authentication process executes and completes normally
+	 * because this element is not required and can be null.</li>
+	 * </ul>
+	 *
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
 	 * @see DIDAuthenticateResponse
@@ -712,6 +790,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_6() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("optionalCHAT");
@@ -726,13 +805,25 @@ public class WebServiceTest {
 	 * preventing this test from completing and forcing the test suite into a
 	 * deadlock until the callback in the {@link ECardWorker} is timed out.
 	 * </p>
-	 * Function call without authenticatedAuxiliaryData in the first EAC-phase.<br/>
+	 * Function invocation without authenticatedAuxiliaryData in the first EAC-phase.<br/>
 	 * <br/>
-	 * <b>Pass</b>: Causes the authentication process and therefore the whole
-	 * alternative call to fail.<br/>
-	 * <br/>
-	 * <b>Fail</b>: The authentication process completes normally or an
-	 * unexpected {@link Exception} is thrown.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and without authenticatedAuxiliaryData in the
+	 * {@link EAC1InputType}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>Causes the authentication process and therefore the whole
+	 * alternative invocation to fail.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -743,6 +834,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_7() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("authenticatedAuxiliaryData");
@@ -751,12 +843,25 @@ public class WebServiceTest {
 	
 	
 	/**
-	 * Function call without transactionInfo in the first EAC-phase.<br/>
+	 * Function invocation without transactionInfo in the first EAC-phase.<br/>
 	 * <br/>
-	 * <b>Pass</b>: The authentication process executes and completes normally
-	 * because this element is not required and can be null.<br/>
-	 * <br/>
-	 * <b>Fail</b>: An unexpected {@link Exception} is thrown.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and without transactionInfo in the
+	 * {@link EAC1InputType}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li> The authentication process executes and completes normally
+	 * because this element is not required and can be null.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -767,6 +872,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_8() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("transactionInfo");
@@ -774,12 +880,24 @@ public class WebServiceTest {
 	}
 	
 	/**
-	 * Function call without certificates in the second EAC-phase.<br/>
+	 * Function invocation without certificates in the second EAC-phase.<br/>
 	 * <br/>
-	 * <b>Pass</b>: The authentication process executes and completes normally
-	 * because this element is not required and can be null.<br/>
-	 * <br/>
-	 * <b>Fail</b>: An unexpected {@link Exception} is thrown.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and without certificate in the
+	 * {@link EAC2InputType}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li> The authentication process fails.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -790,6 +908,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_9() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("certificate");
@@ -803,12 +922,26 @@ public class WebServiceTest {
 	 * test suite into a deadlock until the callback in the {@link ECardWorker}
 	 * is timed out.
 	 * </p>
-	 * Function call without an ephemeralPublicKey in the second EAC-phase.<br/>
+	 * Function invocation without an ephemeralPublicKey in the second
+	 * EAC-phase.<br/>
 	 * <br/>
-	 * <b>Pass</b>: The authentication process fails and thus the alternative
-	 * call can not complete in a normal way.<br/>
-	 * <br/>
-	 * <b>Fail</b>: An unexpected {@link Exception} is thrown.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and without ephemeralPublicKey in the
+	 * {@link EAC2InputType}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The authentication process fails and can not complete in a normal
+	 * way.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -819,6 +952,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_10() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("ephemeralPublicKey");
@@ -826,12 +960,25 @@ public class WebServiceTest {
 	}	
 	
 	/**
-	 * Function call without the signature in the second EAC-phase.<br/>
+	 * Function invocation without the signature in the second EAC-phase.<br/>
 	 * <br/>
-	 * <b>Pass</b>: The authentication process executes and completes normally
-	 * because this element is not required.<br/>
-	 * <br/>
-	 * <b>Fail</b>: An unexpected {@link Exception} is thrown.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and without the signature in the
+	 * {@link EAC2InputType}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The authentication process executes and completes normally
+	 * because this element is not required.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -842,6 +989,7 @@ public class WebServiceTest {
 	public void testSALServiceNull_11() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("signature");
@@ -849,14 +997,23 @@ public class WebServiceTest {
 	}
 	
 	/**
-	 * Function call without authentication protocol data.<br/>
+	 * Function invocation without authentication protocol data.<br/>
 	 * <br/>
-	 * 
-	 * <b>Pass</b>: No Throwable is thrown. The function completes and returns
-	 * null.<br/>
-	 * <br/>
-	 * <b>Fail</b>: An unexpected {@link Throwable} is thrown or the function
-	 * completes not normally.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The function completes and returns null.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -867,6 +1024,7 @@ public class WebServiceTest {
 	public void testSALServiceInvalidParameter_1() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		salservice.configFlag = DELETE_DATA;
 		
 		try{
@@ -883,15 +1041,28 @@ public class WebServiceTest {
 	/**
 	 * <p>
 	 * <b>Important: </b>The thread does not return into the test case and thus
-	 * the test case remains in a deadlock until the {@link ECardWorker}
-	 * receives the timeout.
+	 * the test case remains in a deadlock until the {@link ECardWorker} times
+	 * out.
 	 * </p>
-	 * Function call with unknown authentication protocol data.<br/>
+	 * Function invocation with unknown authentication protocol data.<br/>
 	 * <br/>
-	 * <b>Pass</b>: No {@link Throwable} is thrown and the function returns an
-	 * {@link DIDAuthenticateResponse} with an error result.<br/>
-	 * <br/>
-	 * <b>Fail</b>: An unexpected {@link Throwable} is thrown.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and {@link DIDAuthenticationDataType} as
+	 * unknown authentication protocol data.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The function returns an {@link DIDAuthenticateResponse} with
+	 * {@link EcAPIProvider#ECARD_API_RESULT_ERROR} as major result.</li>
+	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -903,9 +1074,10 @@ public class WebServiceTest {
 	public void testSALServiceInvalidParameter_2() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		salservice.configFlag = UNKNOWN_AUTH_PROT_DATA;
 		
-		makeAlternativeCall();
+		makeAlternativeInvocationFail();
 		
 		HashMap<DIDAuthenticate,DIDAuthenticateResponse> response = salservice.response;
 		for(Entry<DIDAuthenticate,DIDAuthenticateResponse> entry: response.entrySet())
@@ -926,10 +1098,25 @@ public class WebServiceTest {
 	 * test suite in a deadlock. The PersoApp terminates and the application
 	 * pointer does not return to the test case.
 	 * </p>
-	 * Function call with missing authentication data in the first EAC-Phase. <br/>
+	 * Function invocation with missing authentication data in the first
+	 * EAC-Phase. <br/>
 	 * <br/>
-	 * <b>Pass: </b>The authentication process does not complete normally.<br/>
-	 * <b>Fail: </b> An other {@link Exception} is thrown.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and the {@link EAC1InputType} is missing all
+	 * data.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The authentication process does not complete normally.</li>
+	 * </ul>
 	 * 
 	 * @see SALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -939,9 +1126,10 @@ public class WebServiceTest {
 	public void testSALServiceInvalidParameter_3() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		salservice.configFlag = RENEW_DATA_FIRST_PHASE_OF_EAC;
 		
-		makeAlternativeCall();
+		makeAlternativeInvocationFail();
 	}	
 	
 	/**
@@ -951,10 +1139,25 @@ public class WebServiceTest {
 	 * test suite in a deadlock. The PersoApp terminates and the application
 	 * pointer does not return to the test case.
 	 * </p>
-	 * Function call with missing authentication data in the second EAC-Phase. <br/>
+	 * Function invocation with missing authentication data in the second
+	 * EAC-Phase. <br/>
 	 * <br/>
-	 * <b>Pass: </b>The authentication process does not complete normally.<br/>
-	 * <b>Fail: </b> An other Exception is thrown.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and the {@link EAC2InputType} is missing all
+	 * data.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The authentication process does not complete normally.</li>
+	 * </ul>
 	 * 
 	 * @see SALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -964,20 +1167,34 @@ public class WebServiceTest {
 	public void testSALServiceInvalidParameter_4() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+		salservice.response.clear();
 		salservice.configFlag = RENEW_DATA_SECOND_PHASE_OF_EAC;
 		
-		makeAlternativeCall();
+		makeAlternativeInvocationFail();
 	}
 	
 
 	
 	/**
-	 * Function call with valid parameters.<br/>
+	 * Function invocation with valid parameters.<br/>
 	 * <br/>
-	 * <b>Pass: </b>The authentication completes normally and the alternative
-	 * call succeeds without an error. <br/>
-	 * <b>Fail: </b>The authentication completes not normally or an error occurs
-	 * during the alternative call.
+	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService#didAuthenticate(DIDAuthenticate)} is invoked
+	 * with {@link DIDAuthenticate} and the correct authentication protocol data
+	 * according to the EAC-phases.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The authentication completes normally and the alternative call
+	 * succeeds without an error.</li>
+	 * </ul>
 	 * 
 	 * @see SALService#didAuthenticate(DIDAuthenticate)
 	 * @see DIDAuthenticate
@@ -987,8 +1204,8 @@ public class WebServiceTest {
 	public void testSALServiceValidParameter_1() {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
-
-			makeAlternativeCall();
+		salservice.response.clear();
+			makeAlternativeInvocationSuccess();
 			
 			HashMap<DIDAuthenticate,DIDAuthenticateResponse> response = salservice.response;
 			
@@ -1036,14 +1253,25 @@ public class WebServiceTest {
 	}
 	
 	/**
-	 * Function call with null as inserted value.<br/>
+	 * Function invocation with null as inserted value.<br/>
 	 * <br/>
-	 * <b>Pass</b>: Throwing {@link NullpointerException}.<br/>
-	 * <br/>
-	 * <b>Fail</b>: No {@link NullPointerException} or an unexpected
-	 * {@link Throwable} is thrown.
+	 * <b>References: </b>TR-03112-3, Section 3.1.1 <em>InitializeFramework</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link ManagementService#initializeFramework(RequestType)} is
+	 * invoked with <b>null</b> as inserted value.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>An {@link NullPointerException} is thrown.</li>
+	 * </ul>
 	 * 
-	 * @see de.persoapp.core.ws.ManagementService#initializeFramework(iso.std.iso_iec._24727.tech.schema.RequestType)
+	 * @see ManagementService#initializeFramework(RequestType)
 	 */
 	@Test
 	public void testManagementServiceNull_1() {
@@ -1061,14 +1289,25 @@ public class WebServiceTest {
 	}
 	
 	/**
-	 * Function call without an requestID.<br/>
+	 * Function invocation without an requestID.<br/>
 	 * <br/>
-	 * <b>Pass</b>: No Throwable is thrown. The function completes normally.<br/>
-	 * <br/>
-	 * <b>Fail</b>: No {@link NullPointerException} or an unexpected
-	 * {@link Throwable} is thrown.
+	 * <b>References: </b>TR-03112-3, Section 3.1.1 <em>InitializeFramework</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link ManagementService#initializeFramework(RequestType)} is
+	 * invoked with {@link RequestType} which is missing an requestID.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The function completes normally.</li>
+	 * </ul>
 	 * 
-	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
+	 * @see ManagementService#initializeFramework(RequestType)
 	 * @see RequestType
 	 * @see InitializeFrameworkResponse
 	 */	
@@ -1088,12 +1327,23 @@ public class WebServiceTest {
 	}
 	
 	/**
-	 * Function call with correct parameters.<br/>
+	 * Function invocation with correct parameters.<br/>
 	 * <br/>
-	 * <b>Pass</b>: No Throwable is thrown. The function completes normally<br/>
-	 * <br/>
-	 * <b>Fail</b>: An unexpected {@link Throwable} is thrown or no result is
-	 * returned.
+	 * <b>References: </b>TR-03112-3, Section 3.1.1 <em>InitializeFramework</em><br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link ManagementService#initializeFramework(RequestType)} is
+	 * invoked with {@link RequestType} which has valid parameters.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The function completes normally.</li>
+	 * </ul>
 	 * 
 	 * @see ManagementService#initializeFramework(RequestType)
 	 * @see RequestType
@@ -1121,7 +1371,7 @@ public class WebServiceTest {
 	}
 	
 	/**
-	 * Executes the alternative call and sets the given arguments
+	 * Executes the alternative invocation and sets the given arguments
 	 * in the authentication protocol data to null.
 	 * 
 	 * @param nullList
@@ -1140,15 +1390,19 @@ public class WebServiceTest {
 	}
 	
 	/**
-	 * Does the regular alternative call, in german <em>Alternativer Aufruf</em>,
+	 * Does the regular alternative invocation, in german <em>Alternativer Aufruf</em>,
 	 * with the eID-Client.
 	 */
-	public void makeAlternativeCall() {
+	public void makeAlternativeInvocationSuccess() {
 		makeNull(null,0,false);
 	}
 	
+	public void makeAlternativeInvocationFail() {
+		makeNull(null,0,true);
+	}
+	
 	/**
-	 * Executes the alternative call and sets the given arguments 
+	 * Executes the alternative invocation and sets the given arguments 
 	 * in the authentication protocol data to null.
 	 * 
 	 * @param nullList
@@ -1158,7 +1412,7 @@ public class WebServiceTest {
 	 *            {@link EAC2InputType}.
 	 * @param processFailed
 	 * 			  - Indicates that the missing attribute causes the alternative 
-	 * 				call to fail.
+	 * 				invocation to fail.
 	 *            
 	 * @see {@link SALService#didAuthenticate(DIDAuthenticate)
 	 * @see {@link DIDAuthenticate}

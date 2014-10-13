@@ -121,11 +121,11 @@ public class Complete {
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
-	 * <li>The {@link MainView} is created</li>
+	 * <li>The {@link IMainView} is created</li>
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>The mainView was successfully created.</li>.
+	 * <li>The mainView was successfully created.</li>
 	 * </ul>
 	 */		
 	@Test
@@ -147,12 +147,16 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * <li>No Exception occurred, which indicates an successful result.</li>
 	 * </ul>
 	 */			
 	@Test
 	public void test1_2() {
+		try{
 		Authenticator.setDefault(new ProxyAuthenticator(mainView));
+		} catch (final Exception e) {
+			fail("Exception occurred: "+e.getStackTrace()[0]);
+		}
 	}
 
 	/**
@@ -168,7 +172,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>The {@link CardHandler} is successfully created.</li>.
+	 * <li>The {@link CardHandler} is successfully created.</li>
 	 * </ul>
 	 */			
 	@Test
@@ -190,7 +194,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * <li>No Exception occurred, which indicates an successful result.</li>
 	 * </ul>
 	 */	
 	@Test
@@ -211,7 +215,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>The {@link WSContainer} is successfully created.</li>.
+	 * <li>The {@link WSContainer} is successfully created.</li>
 	 * </ul>
 	 */	
 	@Test
@@ -235,7 +239,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * <li>No Exception occurred, which indicates an successful result.</li>
 	 * </ul>
 	 */
 	@Test
@@ -258,7 +262,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * <li>No Exception occurred, which indicates an successful result.</li>
 	 * </ul>
 	 */	
 	@Test
@@ -281,7 +285,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * <li>No Exception occurred, which indicates an successful result.</li>.
 	 * </ul>
 	 */
 	@Test
@@ -303,7 +307,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * <li>No Exception occurred, which indicates an successful result.</li>.
 	 * </ul>
 	 */
 	@Test
@@ -324,7 +328,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * <li>No Exception occurred, which indicates an successful result.</li>.
 	 * </ul>
 	 */
 	@Test
@@ -406,7 +410,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred and and the refreshURL leads to the eService,
+	 * <li>No Exception occurred and and the refreshURL leads to the eService,
 	 * which indicates an successful result.</li>.
 	 * </ul>
 	 */

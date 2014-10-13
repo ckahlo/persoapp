@@ -143,25 +143,17 @@ public class MainViewTest{
 	/**
 	 * <b>Preconditions:</b>
 	 * <ul>
-	 * <li>The eID-Client offers its services.</li>
-	 * </ul>
-	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * </ul>
-	 * <ul>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
-	 * <li><b>Commands: </b>
-	 * <ul>
+	 * <li>Test the capabilities to of {@link IMainView} to process events.</li>
 	 * <li>Test the card state through - {@link IMainView.EventListener#EVENT_TEST_CARD_STATE}</li>
 	 * </ul>
-	 *  </ul>
-	 * </li>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>The state of the card or zero, if pace is not supported by the CCID</li>.
+	 * <li>The state of the card or zero, if pace is not supported by the CCID.</li>
 	 * </ul>
 	 */
 	@Test
@@ -172,24 +164,17 @@ public class MainViewTest{
 	/**
 	 * <b>Preconditions:</b>
 	 * <ul>
-	 * <li>The eID-Client offers its services.</li>
-	 * </ul>
-	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * </ul>
-	 * <ul>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
-	 * <li><b>Commands: </b>
-	 * <ul>
-	 * <li>Test the card state through - {@link IMainView.EventListener#EVENT_TEST_PIN_STATE}</li>
-	 * </ul>
+	 * <li>Test the capabilities to of {@link IMainView} to process events.</li>
+	 * <li>Test the pin state through - {@link IMainView.EventListener#EVENT_TEST_PIN_STATE}</li>
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>The remaining attempts to insert the correct pin.</li>.
+	 * <li>The remaining attempts to insert the correct pin.</li>
 	 * </ul>
 	 */	
 	@Test
@@ -199,35 +184,43 @@ public class MainViewTest{
 		assertTrue("no Integer result", result instanceof Integer);
 	}
 	
+	/**
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Test the capabilities to of {@link IMainView} to process events.</li>
+	 * <li>Test the pin state through - {@link IMainView.EventListener#EVENT_TEST_PIN_STATE}</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The remaining attempts to insert the correct pin.</li>
+	 * </ul>
+	 */	
 	@Test
 	public void EVENT_SHOW_ESIGN_CERTS_BASEREADER () {
 		Object result = mainView.triggerEvent(IMainView.EventListener.EVENT_SHOW_ESIGN_CERTS);
-		assertNull("base reader esign certs not null",result);
+		assertNull("A base card reader should not support esign",result);
 	}
 	
 	/**
 	 * <b>Preconditions:</b>
 	 * <ul>
-	 * <li>The eID-Client offers its services.</li>
-	 * </ul>
-	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * </ul>
-	 * <ul>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
-	 * <li><b>Commands: </b>
-	 * <ul>
 	 * <li>Create a {@link ChangePINDialogResult} with valid old pin and valid new pin</li>
+	 * <li>Test the capabilities to of {@link IMainView} to process events.</li>
 	 * <li>Test the card state through - {@link IMainView.EventListener#EVENT_CHANGE_PIN_EID}</li>
-	 * </ul>
-	 * </li>
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>True, indicating that the change of the pin was successful.</li>.
+	 * <li>True, indicating that the change of the pin was successful.</li>
 	 * </ul>
 	 */		
 	@Test
@@ -240,7 +233,24 @@ public class MainViewTest{
 		assertNotNull("no pin change result",result);
 		assertTrue("pin change not successful",(boolean)result);
 	}
-	
+
+	/**
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Create a {@link ChangePINDialogResult} with valid old pin and no new pin</li>
+	 * <li>Test the capabilities to of {@link IMainView} to process events.</li>
+	 * <li>Test the card state through - {@link IMainView.EventListener#EVENT_CHANGE_PIN_EID}</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>False, indicating that the change of the pin was not successful.</li>
+	 * </ul>
+	 */			
 	@Test
 	public void EVENT_TEST_CHANGE_PIN_EID_2() {
 		
@@ -252,6 +262,23 @@ public class MainViewTest{
 		assertFalse("pin change successful",(boolean)result);
 	}	
 	
+	/**
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Create a {@link ChangePINDialogResult} with no old pin and a valid new pin</li>
+	 * <li>Test the capabilities to of {@link IMainView} to process events.</li>
+	 * <li>Test the card state through - {@link IMainView.EventListener#EVENT_CHANGE_PIN_EID}</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>False, indicating that the change of the pin was not successful.</li>
+	 * </ul>
+	 */				
 	@Test
 	public void EVENT_TEST_CHANGE_PIN_EID_3() {
 		
@@ -262,6 +289,23 @@ public class MainViewTest{
 		assertNull("pin change result not null",result);
 	}		
 	
+	/**
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Create a {@link ChangePINDialogResult} with no old pin and no new pin</li>
+	 * <li>Test the capabilities to of {@link IMainView} to process events.</li>
+	 * <li>Test the card state through - {@link IMainView.EventListener#EVENT_CHANGE_PIN_EID}</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>False, indicating that the change of the pin was not successful.</li>
+	 * </ul>
+	 */
 	@Test
 	public void EVENT_TEST_CHANGE_PIN_EID_4() {
 		
@@ -272,12 +316,42 @@ public class MainViewTest{
 		assertNull("pin change result not null",result);
 	}		
 	
+	/**
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Create the {@link NewChangePinFrame} through the {@link MainView#getChangePinFrame()}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The {@link NewChangePinFrame} is returned by the function.</li>
+	 * </ul>
+	 */	
 	@Test
 	public void TEST_INTERFACE_GUI_CORE_01 () {
 		NewChangePinFrame result = ((MainView)mainView).getChangePinFrame();
 		assertNotNull("no new chnage pin frame",result);
 	}
-	
+
+	/**
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Create the {@link MainFrame} through the {@link MainView#getMainFrame()}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The {@link MainFrame} is returned by the function.</li>
+	 * </ul>
+	 */
 	@Test
 	public void TEST_INTERFACE_GUI_CORE_02 () {
 		MainFrame result = ((MainView)mainView).getMainFrame();

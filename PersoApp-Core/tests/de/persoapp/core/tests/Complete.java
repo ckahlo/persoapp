@@ -67,6 +67,8 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.sun.xml.internal.ws.api.server.WSEndpoint;
+
 import de.persoapp.core.ECardWorker;
 import de.persoapp.core.card.CardHandler;
 import de.persoapp.core.client.IMainView;
@@ -78,9 +80,10 @@ import de.persoapp.core.ws.SALService;
 import de.persoapp.core.ws.engine.WSContainer;
 
 /**
- * @author ckahlo
+ * Sample test case building up an integration ("complete") test.
  * 
- *         sample test case building up an integration ("complete") test
+ * @author Christian Kahlo
+ * @author Rico Klimsa - added javadoc comments.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class Complete {
@@ -88,7 +91,7 @@ public class Complete {
 	/*
 	 * magic constant for default test service
 	 */
-	private final String	serviceURL	= "https://eid.services.ageto.net/persoapp/eidtest.jsp";
+	private static final String	serviceURL	= "https://eid.services.ageto.net/persoapp/eidtest.jsp";
 	private final String	DEFAULT_PIN	= "123456";
 
 	static {
@@ -99,6 +102,93 @@ public class Complete {
 		System.out.println("Test " + this.getClass().getName() + " created.");
 	}
 
+	/**
+	 * 
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link IMainView} is created</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The mainView was successfully created.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link CardHandler} is created.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The {@link CardHandler} is successfully created.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link MainViewEventListener} is created and set.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No Exceptions occurred, which indicates an successful result.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link WSContainer} is created.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The {@link WSContainer} is successfully created.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link ManagementService} is created and added as a service to
+	 * the {@link WSContainer}. The specific {@link WSEndpoint} is added to the
+	 * {@link WSContainer}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No Exceptions occurred, which indicates an successful result.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link SALService} is created and added as a service to the
+	 * {@link WSContainer}. The specific {@link WSEndpoint} is added to the
+	 * {@link WSContainer}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No Exceptions occurred, which indicates an successful result.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link IFDService} is created and added as a service to the
+	 * {@link WSContainer}. The specific {@link WSEndpoint} is added to the
+	 * {@link WSContainer}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Initializes the {@link WSContainer} and injects all created
+	 * endpoints.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Initializes the {@link ECardWorker}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * </ul>
+	 */	
 	@Test
 	public void test1() {
 		final IMainView mainView = TestMainView.getInstance(DEFAULT_PIN);
@@ -120,6 +210,52 @@ public class Complete {
 		ECardWorker.init(mainView, wsCtx, eCardHandler);
 	}
 
+	/**
+	 * Test case doing the complete alternative call with an supplied
+	 * serviceURL.<br/>
+	 * <b>Preconditions:</b>
+	 * <ul>
+	 * <li>A single basic card reader is connected to the eID-Client system.</li>
+	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>{@link #test_1()} was successful.</li>
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Creates the tcTokenURL from the {@link #serviceURL}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No {@link MalformedURLException} occurred, which indicates an
+	 * successful result.</li>.
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>The {@link ECardWorker} is started with the tcTokenURL.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No {@link MalformedURLException} occurred and an refreshURL is
+	 * received by the test, which indicates an successful result.</li>.
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Creates the refresh from the {@link #refreshURL}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No {@link MalformedURLException} occurred, which indicates an
+	 * successful result.</li>.
+	 * </ul>
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>An connection to the {@link #refreshURL} is established.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No Exceptions occurred and and the refreshURL leads to the eService,
+	 * which indicates an successful result.</li>.
+	 * </ul>
+	 */
 	@Test
 	public void test2() {
 		URL tcTokenURL = null;

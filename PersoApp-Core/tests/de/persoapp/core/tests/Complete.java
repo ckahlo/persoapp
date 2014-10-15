@@ -190,7 +190,7 @@ public class Complete {
 	 * </ul>
 	 */	
 	@Test
-	public void test1() {
+	public void a1_initialization() {
 		final IMainView mainView = TestMainView.getInstance(DEFAULT_PIN);
 		assertNotNull("no main view", mainView);
 
@@ -217,7 +217,7 @@ public class Complete {
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * <li>{@link #test_1()} was successful.</li>
+	 * <li>{@link #a1_initialization()} was successful.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -257,7 +257,7 @@ public class Complete {
 	 * </ul>
 	 */
 	@Test
-	public void test2() {
+	public void b1_alternativeInvocation() {
 		URL tcTokenURL = null;
 
 		try {

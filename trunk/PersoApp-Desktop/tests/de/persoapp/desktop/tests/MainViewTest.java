@@ -52,7 +52,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Field;
 import java.util.logging.Logger;
+
+import javax.swing.JFrame;
 
 import junit.framework.TestCase;
 
@@ -67,6 +70,7 @@ import de.persoapp.core.client.ECardSession;
 import de.persoapp.core.client.IMainView;
 import de.persoapp.core.client.MainViewEventListener;
 import de.persoapp.core.client.IMainView.ChangePINDialogResult;
+import de.persoapp.core.client.IMainView.MainDialogResult;
 import de.persoapp.core.ws.IFDService;
 import de.persoapp.core.ws.ManagementService;
 import de.persoapp.core.ws.SALService;
@@ -317,45 +321,120 @@ public class MainViewTest{
 	}		
 	
 	/**
-	 * <b>Preconditions:</b>
-	 * <ul>
-	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
-	 * <li>Create the {@link NewChangePinFrame} through the {@link MainView#getChangePinFrame()}.</li>
+	 * <li>Show an error message through {@link MainView#showMessage(String, int)}.</li>
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>The {@link NewChangePinFrame} is returned by the function.</li>
+	 * <li>No Exception occurred which indicates an successful result.</li>
 	 * </ul>
 	 */	
 	@Test
 	public void TEST_INTERFACE_GUI_CORE_01 () {
+		mainView.showMessage("Test error field.", IMainView.ERROR);
+	}
+	
+	/**
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Show the can dialog through {@link MainView#showCANDialog(String)}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No Exception occurred which indicates an successful result.</li>
+	 * </ul>
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void TEST_INTERFACE_GUI_CORE_02 () throws InterruptedException {
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				((MainView)mainView).showCANDialog("Test can dialog");
+			}}).start();
+	}
+
+	/**
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Show the can dialog through {@link MainView#showCANDialog(String)}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>No Exception occurred which indicates an successful result.</li>
+	 * </ul>
+	 * 
+	 * @throws InterruptedException
+	 */	
+	@Test
+	public void TEST_INTERFACE_GUI_01() {
+		((MainView)mainView).getChangePinFrame().setVisible(true);
+		((MainView)mainView).getMainFrame().setVisible(true);
+		((MainView)mainView).closeDialogs();
+		assertFalse("change pin frame still visible",((MainView)mainView).getChangePinFrame().isVisible());
+		assertFalse("main frame still visible",((MainView)mainView).getMainFrame().isVisible());
+	}
+	
+	/**
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Create the {@link NewChangePinFrame} through {@link MainView#getChangePinFrame()}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The {@link NewChangePinFrame} is returned.</li>
+	 * </ul>
+	 */	
+	@Test
+	public void TEST_INTERFACE_GUI_02 () {
 		NewChangePinFrame result = ((MainView)mainView).getChangePinFrame();
 		assertNotNull("no new chnage pin frame",result);
 	}
 
 	/**
-	 * <b>Preconditions:</b>
-	 * <ul>
-	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
-	 * <li>Create the {@link MainFrame} through the {@link MainView#getMainFrame()}.</li>
+	 * <li>Create the {@link MainFrame} through {@link MainView#getMainFrame()}.</li>
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>The {@link MainFrame} is returned by the function.</li>
+	 * <li>The {@link MainFrame} is returned.</li>
 	 * </ul>
 	 */
 	@Test
-	public void TEST_INTERFACE_GUI_CORE_02 () {
+	public void TEST_INTERFACE_GUI_03 () {
 		MainFrame result = ((MainView)mainView).getMainFrame();
 		assertNotNull("no main frame",result);
+	}	
+	
+	/**
+	 * <b>TestStep: </b>
+	 * <ul>
+	 * <li>Retrieve an {@link MainDialogResult} through {@link MainView#getMainFrame()}.</li>
+	 * </ul>
+	 * <b>Expected Result: </b>
+	 * <ul>
+	 * <li>The {@link MainDialogResult} is returned.</li>
+	 * </ul>
+	 */	
+	@Test
+	public void TEST_INTERFACE_GUI_04 () throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+		final MainView mainv = ((MainView)mainView);
+
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				assertNotNull("main dialog result null",mainv.getMainDialogResult());
+			}}).start();
+		
+		Field field = mainv.getClass().getDeclaredField("result");
+		field.setAccessible(true);
+		field.set(mainv, new MainDialogResult(0, null, true));
+		field.setAccessible(false);
+		
+		assertNotNull("main dialog result null",mainv.getMainDialogResult());
 	}
 
 }

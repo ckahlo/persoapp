@@ -129,7 +129,7 @@ public class Complete {
 	 * </ul>
 	 */		
 	@Test
-	public void test1_1() {
+	public void a1_initializeMainView() {
 		mainView = MainView.getInstance();
 		assertNotNull("no main view", mainView);
 	}
@@ -139,7 +139,7 @@ public class Complete {
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * <li>{@link #test1_1()} was successful</li>
+	 * <li>{@link #a1_initializeMainView()} was successful</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -151,7 +151,7 @@ public class Complete {
 	 * </ul>
 	 */			
 	@Test
-	public void test1_2() {
+	public void a2_initializeAuthenticator() {
 		try{
 		Authenticator.setDefault(new ProxyAuthenticator(mainView));
 		} catch (final Exception e) {
@@ -164,7 +164,7 @@ public class Complete {
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * <li>{@link #test1_2()} was successful.</li>
+	 * <li>{@link #a2_initializeAuthenticator()} was successful.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -176,7 +176,7 @@ public class Complete {
 	 * </ul>
 	 */			
 	@Test
-	public void test2_1() {
+	public void b1_initializeCardHandler() {
 		eCardHandler = new CardHandler(mainView);
 		assertNotNull("no card handler", eCardHandler);
 	}
@@ -186,7 +186,7 @@ public class Complete {
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * <li>{@link #test2_1()} was successful.</li>
+	 * <li>{@link #b1_initializeCardHandler()} was successful.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -198,7 +198,7 @@ public class Complete {
 	 * </ul>
 	 */	
 	@Test
-	public void test2_2() {
+	public void b2_initializeMainViewEventListener() {
 		mainView.setEventLister(new MainViewEventListener(eCardHandler, mainView));
 	}
 
@@ -207,7 +207,7 @@ public class Complete {
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * <li>{@link #test2_2()} was successful.</li>
+	 * <li>{@link #b2_initializeMainViewEventListener()} was successful.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -219,7 +219,7 @@ public class Complete {
 	 * </ul>
 	 */	
 	@Test
-	public void test3_1() {
+	public void c1_constructWSContainer() {
 		wsCtx = new WSContainer();
 		assertNotNull("no web service container", wsCtx);
 	}
@@ -229,7 +229,7 @@ public class Complete {
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * <li>{@link #test3_1()} was successful.</li>
+	 * <li>{@link #c1_constructWSContainer()} was successful.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -243,7 +243,7 @@ public class Complete {
 	 * </ul>
 	 */
 	@Test
-	public void test3_2() {
+	public void c2_addManagementServiceEndpoint() {
 		wsCtx.addService(new ManagementService());
 	}
 
@@ -252,7 +252,7 @@ public class Complete {
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * <li>{@link #test3_2()} was successful.</li>
+	 * <li>{@link #c2_addManagementServiceEndpoint()} was successful.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -266,7 +266,7 @@ public class Complete {
 	 * </ul>
 	 */	
 	@Test
-	public void test3_3() {
+	public void c3_addSALServiceEndpoint() {
 		wsCtx.addService(new SALService());
 	}
 
@@ -275,7 +275,7 @@ public class Complete {
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * <li>{@link #test3_3()} was successful.</li>
+	 * <li>{@link #c3_addSALServiceEndpoint()} was successful.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -289,7 +289,7 @@ public class Complete {
 	 * </ul>
 	 */
 	@Test
-	public void test3_4() {
+	public void c4_addIFDServiceEndpoint() {
 		wsCtx.addService(new IFDService());
 	}
 
@@ -298,7 +298,7 @@ public class Complete {
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * <li>{@link #test3_4()} was successful.</li>
+	 * <li>{@link #c4_addIFDServiceEndpoint()} was successful.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -311,7 +311,7 @@ public class Complete {
 	 * </ul>
 	 */
 	@Test
-	public void test3_5() {
+	public void c5_initializeWSContainer() {
 		wsCtx.init(null);
 	}
 
@@ -320,7 +320,7 @@ public class Complete {
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
 	 * <li>A single active eID-Card is connected to the card reader.</li>
-	 * <li>{@link #test3_5()} was successful.</li>
+	 * <li>{@link #c5_initializeWSContainer()} was successful.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -332,7 +332,7 @@ public class Complete {
 	 * </ul>
 	 */
 	@Test
-	public void test4() {
+	public void d1_initializeECardWorker() {
 		ECardWorker.init(mainView, wsCtx, eCardHandler);
 	}
 
@@ -363,7 +363,7 @@ public class Complete {
 	 * </ul>
 	 */
 	@Test
-	public void test5() {
+	public void e1_startECardWorker() {
 		URL tcTokenURL = null;
 
 		try {
@@ -415,7 +415,7 @@ public class Complete {
 	 * </ul>
 	 */
 	@Test
-	public void test6() {
+	public void f1_retrieveResponse() {
 		try {
 			System.out.println("refreshURL: " + refreshURL);
 			final URL refresh = new URL(refreshURL);

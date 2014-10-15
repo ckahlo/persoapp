@@ -56,10 +56,10 @@ import iso.std.iso_iec._24727.tech.schema.EACAdditionalInputType;
 import iso.std.iso_iec._24727.tech.schema.SAL;
 
 import java.lang.reflect.Field;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
@@ -68,6 +68,7 @@ import javax.jws.WebService;
 import javax.xml.ws.WebServiceContext;
 
 import de.persoapp.core.client.PropertyResolver;
+import de.persoapp.core.tests.util.ConfigTestcase;
 import de.persoapp.core.ws.SALService;
 
 /**
@@ -88,9 +89,6 @@ import de.persoapp.core.ws.SALService;
  */
 @WebService(serviceName = "SAL", portName = "SALPort", targetNamespace = "urn:iso:std:iso-iec:24727:tech:schema")
 public class TestSALService implements SAL {
-
-	
-	public X509Certificate cert = null;
 	
 	public EAC1InputType tmpEac1 = null;
 	public EAC2InputType tmpEac2 = null;
@@ -99,7 +97,7 @@ public class TestSALService implements SAL {
 	public ArrayList<String> nullListEAC2 = null;
 	public ArrayList<String> nullListEAC2b = null;
 	
-	public int configFlag = 0;
+	public ConfigTestcase configFlag = null;
 	
 	public HashMap<DIDAuthenticate,DIDAuthenticateResponse> response = new HashMap<DIDAuthenticate,DIDAuthenticateResponse>();
 	
@@ -143,8 +141,6 @@ public class TestSALService implements SAL {
 	public iso.std.iso_iec._24727.tech.schema.DIDAuthenticateResponse didAuthenticate(
 			final iso.std.iso_iec._24727.tech.schema.DIDAuthenticate parameters) {
 		
-
-		
 		try {
 			//set the web service context in the real SALService
 			Field field = sal.getClass().getDeclaredField("wsCtx");
@@ -159,14 +155,14 @@ public class TestSALService implements SAL {
 				nullListEAC1 = null;
 			}
 			
-			if(parameters.getAuthenticationProtocolData() instanceof EAC2InputType&&nullListEAC2!=null) {
+			if(parameters.getAuthenticationProtocolData() instanceof EAC2InputType && nullListEAC2!=null) {
 				EAC2InputType eac2= ((EAC2InputType)parameters.getAuthenticationProtocolData());
 				this.makeNull(eac2, nullListEAC2);
 				parameters.setAuthenticationProtocolData(eac2);
 				nullListEAC2 = null;
 			}
 			
-			if(parameters.getAuthenticationProtocolData() instanceof EACAdditionalInputType&&nullListEAC2b!=null) {
+			if(parameters.getAuthenticationProtocolData() instanceof EACAdditionalInputType && nullListEAC2b!=null) {
 				EACAdditionalInputType eait = new EACAdditionalInputType();
 				this.makeNull(eait, nullListEAC2b);
 				parameters.setAuthenticationProtocolData(eait);
@@ -182,50 +178,51 @@ public class TestSALService implements SAL {
 				tmpEac2 =null;
 			}			
 			
-		} catch (SecurityException e) {
+		} catch (final SecurityException e) {
 			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			e.printStackTrace();
-		} catch (NoSuchFieldException e) {
+		} catch (final NoSuchFieldException e) {
 			e.printStackTrace();
 		} 
-		
-		switch(configFlag) {
-			case WebServiceTest.RENEW_DATA_FIRST_PHASE_OF_EAC:{
-				if(parameters.getAuthenticationProtocolData() instanceof EAC1InputType) {
-					configFlag = 0;
-					parameters.setAuthenticationProtocolData(new EAC1InputType());
+		if(configFlag!=null) {
+			switch(configFlag) {
+				case RENEW_DATA_FIRST_PHASE_OF_EAC:{
+					if(parameters.getAuthenticationProtocolData() instanceof EAC1InputType) {
+						configFlag = null;
+						parameters.setAuthenticationProtocolData(new EAC1InputType());
+						break;
+					}
+				}
+				case RENEW_DATA_SECOND_PHASE_OF_EAC: {
+					if(parameters.getAuthenticationProtocolData() instanceof EAC2InputType){
+						configFlag = null;
+						parameters.setAuthenticationProtocolData(new EAC2InputType());
+						break;				
+					}
+				}
+				case RENEW_DATA_ADDITIONAL_PHASE_OF_EAC: {
+					if(parameters.getAuthenticationProtocolData() instanceof EACAdditionalInputType) {
+						configFlag = null;
+						parameters.setAuthenticationProtocolData(new EACAdditionalInputType());
+						break;
+					}
+				}
+				case UNKNOWN_AUTH_PROT_DATA: {
+					configFlag = null;
+					parameters.setAuthenticationProtocolData(new DIDAuthenticationDataType());
 					break;
 				}
-			}
-			case WebServiceTest.RENEW_DATA_SECOND_PHASE_OF_EAC: {
-				if(parameters.getAuthenticationProtocolData() instanceof EAC2InputType){
-					configFlag = 0;
-					parameters.setAuthenticationProtocolData(new EAC2InputType());
-					break;				
-				}
-			}
-			case WebServiceTest.RENEW_DATA_ADDITIONAL_PHASE_OF_EAC: {
-				if(parameters.getAuthenticationProtocolData() instanceof EACAdditionalInputType) {
-					configFlag = 0;
-					parameters.setAuthenticationProtocolData(new EACAdditionalInputType());
+				case DELETE_DATA: {
+					configFlag = null;
+					parameters.setAuthenticationProtocolData(null);
 					break;
 				}
-			}
-			case WebServiceTest.UNKNOWN_AUTH_PROT_DATA: {
-				configFlag = 0;
-				parameters.setAuthenticationProtocolData(new DIDAuthenticationDataType());
-				break;
-			}
-			case WebServiceTest.DELETE_DATA: {
-				configFlag = 0;
-				parameters.setAuthenticationProtocolData(null);
-				break;
+				default: break;
 			}
 		}
-
 		
 		iso.std.iso_iec._24727.tech.schema.DIDAuthenticateResponse response = null;
 		response = sal.didAuthenticate(parameters);
@@ -328,6 +325,7 @@ public class TestSALService implements SAL {
 			f.setAccessible(false);
 		}
 	}	
+	
 	private void makeNull(EACAdditionalInputType eait, List<String> nullList) throws IllegalArgumentException, IllegalAccessException
 	{
 		Field[] fields = eait.getClass().getDeclaredFields();

@@ -72,7 +72,7 @@ public class SecureHolder {
 	private transient byte[]	value	= null;
 	
 	/**
-	 * The current system time for encryption/decryption issues.
+	 * The salt value for encryption/decryption.
 	 */
 	private transient long		ts		= System.currentTimeMillis();
 

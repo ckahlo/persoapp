@@ -3,6 +3,10 @@ apply plugin: 'hugo'
 apply plugin: 'jarjar'
 apply plugin: 'android-apt'
 
+configurations {
+    all*.exclude group: 'com.google.android', module: 'support-v4'
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -16,7 +20,7 @@ dependencies {
 
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
 
-    compile 'com.android.support:support-v4:+'
+    compile 'com.google.android:support-v4:+'
 
     jarjar 'de.persoapp:persoapp-core:1.0.0'
     jarjar 'de.persoapp:persoapp-jaxb:1.0.0'

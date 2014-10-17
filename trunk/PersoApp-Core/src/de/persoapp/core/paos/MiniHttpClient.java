@@ -362,8 +362,6 @@ public class MiniHttpClient {
 		} catch (final Exception e) {
 		}
 
-		//		System.out.println(responseHeaders);
-
 		if ("chunked".equalsIgnoreCase(responseHeaders.get("Transfer-Encoding"))) {
 			is = new ChunkingInputStream(is);
 		}

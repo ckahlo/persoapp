@@ -195,14 +195,12 @@ public class PersoSimTransport implements TransportProvider {
 	 * @return Returns the response.
 	 */
 	private String exchangeApdu(String cmdApdu) {
-		//		if (socket == null || socket.isClosed() || socket.isInputShutdown() || socket.isOutputShutdown()) {
 		try {
 			socket = new Socket(host, port);
 		} catch (final IOException e) {
 			socket = null;
 			return null;
 		}
-		//		}
 
 		PrintStream out = null;
 		BufferedReader in = null;

@@ -243,7 +243,7 @@ public class SALService implements SAL {
 					e1.printStackTrace();
 				}
 			}
-
+			//Kept for debugging issues and as reminder
 			//			if (verified < 2) {
 			//				mainView.showMainDialog(eacInfo, IMainView.MODE_NONE);
 			//				mainView.showError(textBundle.get("SALService_certificate_error_title"),
@@ -484,7 +484,7 @@ public class SALService implements SAL {
 						root = null;
 						break;
 					}
-
+					// Kept as reminder
 					// System.out.println("ERROR: eCard API 1.1.1 mode expected, but received further certificates");
 					// root = null;
 					// validMode = false;
@@ -526,6 +526,7 @@ public class SALService implements SAL {
 							if (certMap.put(ByteBuffer.wrap(CARCert), cvcert) != null) {
 								System.out.println("WARNING: DV-Certificate with ID " + CARCert + "/" + CHRCert
 										+ " doubled.");
+								// Kept as reminder
 								// validMode = false;
 								// root = null;
 								// break;
@@ -598,6 +599,7 @@ public class SALService implements SAL {
 					mainView.showProgress(textBundle.get("SALService_progress_data"), 75, true);
 				} else {
 					eac2out.setChallenge((byte[]) session.getAttribute("TAChallenge"));
+					// Kept for debugging issues
 					// eac2out.setChallenge(cardChallenge);
 				}
 

@@ -158,21 +158,18 @@ public final class MainViewEventListener implements IMainView.EventListener {
 
 					switch (event) {
 						case MainViewEventListener.EVENT_CHANGE_PIN_EID:
-							//int authStatus = tp.lastSW();
 							dr = (ChangePINDialogResult) optionalEventData[0];
 							lastSW = eCardHandler.doPINChange(tp, (byte) 0x03, dr.getPINOld(), (byte) 0x03,
 									dr.getPINNew());
 							break;
 
 						case MainViewEventListener.EVENT_ACTIVATE_PIN_EID:
-							//int authStatus = tp.lastSW();
 							dr = (ChangePINDialogResult) optionalEventData[0];
 							lastSW = eCardHandler.doPINChange(tp, (byte) 0x03, dr.getPINOld(), (byte) 0x03,
 									dr.getPINNew());
 							break;
 
 						case MainViewEventListener.EVENT_UNLOCK_PIN_EID:
-							//int authStatus = tp.lastSW();
 							dr = (ChangePINDialogResult) optionalEventData[0];
 							lastSW = eCardHandler.doPINUnblock(tp, (byte) 0x04, dr.getPINOld(), (byte) 0x03);
 							break;
@@ -197,7 +194,6 @@ public final class MainViewEventListener implements IMainView.EventListener {
 							break;
 					}
 
-					//				tp.close();				
 				}
 				break;
 		}
@@ -207,7 +203,6 @@ public final class MainViewEventListener implements IMainView.EventListener {
 		}
 
 		if (tp != null) {
-			//			tp.close();
 		}
 
 		return result;

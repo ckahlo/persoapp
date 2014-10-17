@@ -149,11 +149,11 @@ public class ISOSMTransport implements TransportProvider {
 			apdu = encodeSM(apdu);
 		}
 
-		//System.out.println("<" + Hex.toString(apdu));
+		//System.out.println("<" + Hex.toString(apdu)); // Kept for debugging issues
 
 		apdu = parent.transmit(apdu);
 
-		//System.out.println(">" + Hex.toString(apdu));
+		//System.out.println(">" + Hex.toString(apdu));  // Kept for debugging issues
 
 		if (ivCipher != null && encCipher != null && decCipher != null) {
 			apdu = decodeSM(apdu);

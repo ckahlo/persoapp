@@ -167,6 +167,7 @@ public final class ECApiHttpHandler implements HttpHandler {
 		} else if (HTTP_METH_GET.equals(requestMethod)) {
 			he.getResponseHeaders().add("Server", HTTP_USER_AGENT);
 			he.getResponseHeaders().set("Connection", "close");
+			//Kept as reminder
 			// he.getResponseHeaders().set("Content-Length", String.valueOf(0));
 			// he.sendResponseHeaders(102, -1);
 
@@ -308,6 +309,7 @@ public final class ECApiHttpHandler implements HttpHandler {
 		final byte[] _msg = message == null ? null : message.getBytes(HTTP_CHARSET);
 
 		final Headers respHeaders = he.getResponseHeaders();
+		//Kept as reminder
 		// respHeaders.set("Connection", "close");
 		// respHeaders.set("Content-Length", String.valueOf(_msg == null ? 0 : _msg.length));
 		respHeaders.set("Content-Type", "text/plain");
@@ -316,6 +318,7 @@ public final class ECApiHttpHandler implements HttpHandler {
 			he.getResponseHeaders().set("Location", refreshURI.toASCIIString());
 		}
 		he.sendResponseHeaders(code, _msg == null ? 0 : _msg.length);
+		//Kept as reminder
 		/*
 		 * os.write(( "HTTP/1.1 " + code + "\r\n" + "Connection: close\r\n" +
 		 * "Content-Length: " + (_msg == null ? 0 : _msg.length) + "\r\n" +

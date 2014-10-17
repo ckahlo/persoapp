@@ -267,7 +267,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		
 		setPanelState(STATE_CHOOSE);
 
-		//Nötig, da das Feld sonst nach dem erst öffnen leer ist, weil sich die Maus noch in der Tray-Anzeige befindet. 
+		//Necessary, because the field would be empty after opening, cause the mouse still remains in the tray area. 
 		this.setHelpPanelText(textBundle.get("NewChangePinFrame_Choose_header"),
 				textBundle.get("NewChangePinFrame_Choose_description"));
 
@@ -427,7 +427,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 			public void keyTyped(final KeyEvent e) {
 				if (e.getKeyChar() == '\n') {
 
-					// produces two events if pressing "Enter"
+					// produces two events by pressing "Enter"
 					//returnResultConfirm();
 					if (showSideBar) {
 						removeSidebar();
@@ -483,10 +483,11 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		qesTerminateButton.addActionListener(actionListener1);
 		qesAbortButton.addActionListener(actionListener1);
 
+		
 		/*
-		 * Reihenfolge der MouseListener-Zuweisungen ist wichtig, da bei einem
-		 * Panel rekursiv jede enthaltene Komponente den Listern und den Namen
-		 * erhÃ¤lt.
+		 * Order of the MouseListener-assignments is important, because every
+		 * component of every panel receives the listener and the name in a
+		 * recursive way.
 		 */
 
 		MyMouseListener.addListener(this, choosePanel, "Choose");
@@ -524,7 +525,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 		result.setMaximumSize(SIZE);
 		result.setPreferredSize(SIZE);
 
-		//erst die Seiten-Panel, dann die die Button mit Zwischen-Panels, dann das letzte Panel
+		//first the side-panel, than the buttons along with the panels in between, than the last panel.
 
 		final GridBagConstraints cons = new GridBagConstraints();
 		cons.fill = GridBagConstraints.BOTH;
@@ -831,7 +832,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 			final PinPanel panel = (PinPanel) displayedPanel;
 			switch (panel.getRowCount()) {
 				case 1:
-					//PUK, auch PIN bei QES
+					//PUK, PIN during QES
 					final byte[] puk = panel.getPinCode(0);
 					if (puk == null) {
 						if (state == STATE_UNLOCK || state == STATE_QES_UNLOCK) {
@@ -848,7 +849,7 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 					processStateAction(state, new ChangePINDialogResult(puk, null, true));
 					break;
 				case 3:
-					//Ã¼berprÃ¼ft Gleichheit der neue PIN & Wiederholung (zeigt Fehlerfall selbststÃ¤ndig an)
+					//checks equivalence of the new pin and their repetition (displays error occurence automatically)
 					panel.checkCompletion();
 
 					if (panel.getPinCode(0) == null) {
@@ -923,8 +924,8 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 				}
 
 				if (!abortButton.isEnabled()) {
-					//tritt nur ein, wenn Lesegerät mit Pinpad verwendet wird.
-					//vorher wurde nichts verändert, daher brauch jetzt auch nichts verändert werden.
+					//happens just by the use of an card reader with pin pad.
+					//nothing changed before, thus there is nothing to change now.
 					setPinDisabledUI(false);
 				}
 
@@ -955,10 +956,10 @@ public class NewChangePinFrame extends JFrame implements HelpPanelProvider, Side
 	@Override
 	public void clearHelpPanelText() {
 		/*
-		 * Er soll nichts tun, denn dann bleibt automatisch der Text vom
-		 * aktuellen State stehen, wenn die Maus das Fenster verlässt. Würde
-		 * der Text entfernt werden, wäre das helpPanel leer, wenn die Maus
-		 * außerhalb vom Fenster ist, was doch etwas komisch aussieht.
+		 * He should do nothing, because then the text of the actual state
+		 * remains in the window, even if the mouse leaves the window. The
+		 * helpPanel would be empty, if the mouse leaves the it, when the 
+		 * text is going to be removed, 
 		 */
 	}
 }

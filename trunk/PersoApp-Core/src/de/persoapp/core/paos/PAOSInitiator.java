@@ -246,7 +246,7 @@ public class PAOSInitiator {
 
 		// omit xml-header
 		marshaller.setProperty("com.sun.xml.internal.bind.xmlDeclaration", false);
-		// print it user-friendly
+		// print it user-friendly - Kept as reminder
 		//marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 		//		marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper",

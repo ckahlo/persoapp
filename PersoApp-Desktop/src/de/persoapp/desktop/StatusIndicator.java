@@ -155,20 +155,7 @@ public class StatusIndicator {
 			menuItem.addActionListener(actionListener);
 			popup.add(menuItem);
 
-			/*
-			 * popup.addSeparator(); menuItem = new MenuItem("Konfiguration");
-			 * menuItem.setActionCommand("config");
-			 * menuItem.addActionListener(actionListener); popup.add(menuItem);
-			 */
-
-			/*
-			 * menuItem = new MenuItem("Status");
-			 * menuItem.setActionCommand("status");
-			 * menuItem.addActionListener(actionListener); popup.add(menuItem);
-			 */
-
 			trayIcon = new TrayIcon(Configuration.TRAY_ICON, null, popup);
-			//trayIcon = new TrayIcon(Configuration.loadImage("/resources/icon_32px.png"), null, popup);
 
 			trayIcon.setImageAutoSize(true);
 			trayIcon.setActionCommand("icon");
@@ -311,18 +298,6 @@ public class StatusIndicator {
 
 				@Override
 				public void mousePressed(final MouseEvent arg0) {
-					//System.out.println(arg0);
-					//					infoFrame.dispose();
-					//					
-					//					if(infoFrame.isUndecorated()) {
-					//						infoFrame.setUndecorated(false);
-					//						infoFrame.setSize(50, 64);
-					//					} else {
-					//						infoFrame.setUndecorated(true);
-					//						infoFrame.setSize(50, 40);
-					//					}
-					//					
-					//					infoFrame.setVisible(true);
 				}
 
 				@Override
@@ -335,7 +310,6 @@ public class StatusIndicator {
 			infoFrame.addMouseMotionListener(mml);
 			infoFrame.addMouseListener(mml);
 
-			//infoFrame.pack();
 			infoFrame.setSize(50, 40);
 			infoFrame.setAlwaysOnTop(true);
 

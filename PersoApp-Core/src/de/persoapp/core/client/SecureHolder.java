@@ -49,6 +49,7 @@ package de.persoapp.core.client;
 
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
+import java.security.SecureRandom;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -74,7 +75,7 @@ public class SecureHolder {
 	/**
 	 * The salt value for encryption/decryption.
 	 */
-	private transient long		ts		= System.currentTimeMillis();
+	private transient long		ts		= Math.abs(new SecureRandom().nextLong());
 
 	/**
 	 * Creates and initializes a new {@link SecureHolder}. The data of the

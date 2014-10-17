@@ -128,7 +128,7 @@ public class MainView implements IMainView {
 	private NewChangePinFrame	changePinFrame;
 
 	static {
-		// install the configured Look-and-feel in the system
+		// install the configured Look-and-feel on the system
 		installLAF();
 	}
 

@@ -367,7 +367,7 @@ public class PinPanel extends JPanel {
 	 * @return Returns <strong>true</false> if the given pins are equal, otherwise <strong>false</strong>. 
 	 */
 	private boolean pinMatch(final int row1, final int row2) {
-		//wenn nicht komplett ausgefüllt, eh null
+		//if not completely filled, it remains as null.
 		final byte[] pin = getPinCode(row1);
 		final byte[] pinRep = getPinCode(row2);
 
@@ -377,8 +377,8 @@ public class PinPanel extends JPanel {
 
 		for (int i = 0; i < pin.length; i++) {
 			if (pin[i] != pinRep[i]) {
-				//Hier kommt er nur rein, wenn alle Felder ausgefüllt sind und die letzten beiden
-				//Reihen überprüft werden sollen, sonst nie!
+				//He just comes to this place if all fields are filled and if the last to rows 
+				//should be checked.
 				MainView.getInstance().showError(textBundle.get("pin_input_error"),
 						textBundle.get("NewChangePinFrame_pin_input_error_new"));
 				return false;

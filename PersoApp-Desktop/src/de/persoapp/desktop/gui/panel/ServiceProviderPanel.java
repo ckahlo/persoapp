@@ -200,7 +200,7 @@ public class ServiceProviderPanel extends JPanel {
 	public Dimension getPreferredSize() {
 		/*
 		 * This fix is needed as the textPane's preferred size differs with
-		 * changing text.
+		 * changes at the text.
 		 */
 		final Dimension d = super.getPreferredSize();
 		d.width = 420;

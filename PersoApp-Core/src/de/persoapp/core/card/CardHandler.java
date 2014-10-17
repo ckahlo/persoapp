@@ -342,13 +342,13 @@ public class CardHandler implements ICardHandler {
 			final byte[] EF_DIR = readFile(tpNew, (short) 0x2F00);
 			if (EF_DIR != null) {
 				System.out.println("EF_DIR: " + Hex.toString(EF_DIR));
-				// System.out.println("EF_DIR: " + new String(EF_DIR));
+				// System.out.println("EF_DIR: " + new String(EF_DIR)); - Reminder
 				final List<byte[]> apps = TLV.getM(EF_DIR, (byte) 0x61);
 
 				for (final byte[] app : apps) {
 					final byte[] appAID = TLV.get(app, (byte) 0x4F);
 					final byte[] appDesc = TLV.get(app, (byte) 0x50);
-					// byte[] appUnk = TLV.get(app, (byte)0x51);
+					// byte[] appUnk = TLV.get(app, (byte)0x51); - Reminder
 					final byte[] appLink = TLV.get(app, (byte) 0x73);
 					final byte[] appLinkDest = TLV.get(appLink, (byte) 0x4F);
 
@@ -399,7 +399,7 @@ public class CardHandler implements ICardHandler {
 				final byte[] selectAID = { (byte) 0x00, (byte) 0xA4, (byte) 0x04, (byte) 0x0C, (byte) aid.length };
 				tpNew.transmit(ArrayTool.arrayconcat(selectAID, aid));
 				if (tpNew.lastSW() == 0x9000 || tpNew.lastSW() == 0x6982) {
-					//	tpNew = tpNew;
+					//	tpNew = tpNew; - Reminder
 				} else {
 					tpNew = null;
 				}
@@ -560,7 +560,7 @@ public class CardHandler implements ICardHandler {
 				bb.get(pace_efca);
 				EFCardAccess = pace_efca;
 
-				// entfällt bei Sig-Terminal
+				// not applicable by sig-terminals
 				if (bb.remaining() > 0) {
 					byte[] temp = new byte[bb.get()];
 					bb.get(temp); // current CA
@@ -575,7 +575,7 @@ public class CardHandler implements ICardHandler {
 				}
 			}
 
-			return 0x9000; // (pace_sw[0] << 8) + pace_sw[1];
+			return 0x9000;
 		}
 
 		return -1;

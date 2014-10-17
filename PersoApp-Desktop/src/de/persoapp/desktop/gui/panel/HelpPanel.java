@@ -370,7 +370,7 @@ public class HelpPanel extends JPanel {
 	public Dimension getPreferredSize() {
 		/*
 		 * This fix is needed as the textPane's preferred size differs with
-		 * changing text.
+		 * changes of the text.
 		 */
 		final Dimension d = super.getPreferredSize();
 		d.width = 178;

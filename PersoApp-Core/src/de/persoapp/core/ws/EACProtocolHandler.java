@@ -117,10 +117,8 @@ public class EACProtocolHandler {
 	 */
 	public EACProtocolHandler(final ECardSession session) {
 		this.session = session;
-		// this.eCardHandler = session.getCardHandler(slotHandle);
 		this.eCardHandler = session.getCardHandler(null);
 
-		// //IMainView mainView = session.getMainView(slotHandle);
 		this.mainView = session.getMainView();
 	}
 
@@ -318,7 +316,6 @@ public class EACProtocolHandler {
 			final EAC_Info eacInfo = (EAC_Info) session.getAttribute(EAC_Info.class.getName());
 
 			final List<byte[]> cvcerts = new ArrayList<byte[]>();
-			// final List<byte[]> cvcerts = eacInfo.getCertificateChain();
 
 			cvcerts.addAll(eac2in.getCertificate());
 
@@ -328,13 +325,7 @@ public class EACProtocolHandler {
 
 			final List<String> verifiedCerts = new ArrayList<String>();
 			for (final byte[] cvcert : cvcerts) {
-				/*
-				 * try { FileOutputStream fos = new
-				 * FileOutputStream(System.getProperty("user.home") +
-				 * "\\Desktop\\CVC" + i + "_" + caRef + "_" + chRef + ".cv");
-				 * fos.write(Hex.fromString(value)); fos.close(); } catch
-				 * (Exception e1) { e1.printStackTrace(); }
-				 */
+
 
 				i++;
 				// @TODO: check with previous certificate or ignore

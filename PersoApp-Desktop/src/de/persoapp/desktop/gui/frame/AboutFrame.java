@@ -112,10 +112,6 @@ public class AboutFrame extends JFrame {
 		super();
 		textBundle = PropertyResolver.getBundle("text");
 
-		//		int width = 340, height = 280;
-		//		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		//		this.setBounds((screenSize.width - width) / 2 , (screenSize.height - height) / 2, width, height);
-
 		// centered - this.pack() calculates optimized size
 		this.setLocationRelativeTo(null);
 

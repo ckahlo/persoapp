@@ -10,7 +10,7 @@
     <!-- Gradle overrides these values, however, the old dinosaur eclipse requires them to build correctly -->
     <uses-sdk
             android:minSdkVersion="16"
-            android:targetSdkVersion="19"
+            android:targetSdkVersion="21"
             tools:ignore="GradleOverrides" />
 
     <application

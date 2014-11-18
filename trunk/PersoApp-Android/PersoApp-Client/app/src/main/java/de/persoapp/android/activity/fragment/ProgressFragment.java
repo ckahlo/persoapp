@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -66,7 +66,11 @@ import java.util.concurrent.CountDownLatch;
 import de.persoapp.android.R;
 
 /**
+ * The <tt>ProgressFragment</tt> implements an interface to the logic of the
+ * animation which is used to animate the progress of the ongoing operation. 
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class ProgressFragment extends Fragment {
 

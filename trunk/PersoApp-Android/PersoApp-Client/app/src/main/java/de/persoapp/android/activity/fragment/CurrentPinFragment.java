@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -59,7 +59,11 @@ import de.persoapp.android.activity.CommonChangePinActivity;
 import de.persoapp.android.view.PinRow;
 
 /**
+ * The class contains the logic to confirm that the current pin is correctly
+ * typed in.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class CurrentPinFragment extends PinFragment {
 

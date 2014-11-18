@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -69,7 +69,13 @@ import de.persoapp.android.activity.CommonChangePinActivity;
 import de.persoapp.android.view.PinRow;
 
 /**
+ * The <tt>CommonChangePinFragment</tt> contains the logic of the
+ * <em>CommonChangePinActivity</em>. Additionally, the fragment 
+ * implements the functions to provide the specific view which 
+ * occupies a part of the display.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class CommonChangePinFragment extends Fragment {
 

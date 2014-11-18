@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -68,7 +68,12 @@ import de.persoapp.android.R;
 import de.persoapp.android.activity.AuthenticateActivity;
 
 /**
+ * The <tt>AuthenticateFragment</tt> is an visual part of the user interface
+ * in the <em>AuthenticateActivity</em> and contains the logic to create a 
+ * corresponding view.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class AuthenticateFragment extends Fragment {
 

@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -64,7 +64,11 @@ import de.persoapp.android.view.PinRow;
 import de.persoapp.core.client.SecureHolder;
 
 /**
+ * The <tt>CanDialog</tt> forces the user to insert the <em>CAN</em>
+ * and delivers the result to the caller through events.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class CanDialog extends AbstractGetResultDialog<SecureHolder> {
 

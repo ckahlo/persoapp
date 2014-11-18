@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -62,7 +62,11 @@ import javax.inject.Inject;
 import de.greenrobot.event.EventBus;
 
 /**
+ * The <tt>AbstractGetResultDialog</tt> serves as a platform to retrieve
+ * the result of user interaction for different operations.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public abstract class AbstractGetResultDialog<T> extends DialogFragment {
 
@@ -89,6 +93,12 @@ public abstract class AbstractGetResultDialog<T> extends DialogFragment {
         }
     }
 
+    /**
+     * The <tt>Waiter</tt> waits on results of result dialogs.
+     * 
+     * @author Ralf Wondratschek
+     * @author Rico Klimsa - added javadoc comments.
+     */
     public final class Waiter {
 
         private final CountDownLatch mCountDownLatch;

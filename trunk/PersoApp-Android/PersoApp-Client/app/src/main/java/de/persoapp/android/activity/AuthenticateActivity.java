@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -68,7 +68,11 @@ import de.persoapp.core.client.IEAC_Info;
 import de.persoapp.core.client.IMainView;
 
 /**
+ * This activity starts the online authentication of the user against the 
+ * eID-Server.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class AuthenticateActivity extends AbstractNfcActivity {
 

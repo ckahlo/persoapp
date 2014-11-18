@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -56,7 +56,12 @@ import android.support.v4.app.DialogFragment;
 import de.persoapp.android.R;
 
 /**
+ * The <tt>NfcNotSupportedDialog</tt> informs the user that the used
+ * smartphone supports no nfc and that the PersoApp is not able to
+ * run on such a phone.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class NfcNotSupportedDialog extends DialogFragment {
 

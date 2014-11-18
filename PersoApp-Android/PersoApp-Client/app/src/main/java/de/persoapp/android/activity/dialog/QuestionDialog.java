@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -59,7 +59,11 @@ import de.persoapp.android.core.adapter.NfcTransportProvider;
 import de.persoapp.core.client.PropertyResolver;
 
 /**
+ * The <tt>QuestionDialog</tt> shows different questions with a positive and a
+ * negative answer to the user and returns the result of the user interaction.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class QuestionDialog extends AbstractGetResultDialog<Boolean> {
 

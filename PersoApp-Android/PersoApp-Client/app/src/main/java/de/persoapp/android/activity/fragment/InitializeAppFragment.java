@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -69,7 +69,12 @@ import de.persoapp.android.R;
 import de.persoapp.android.nfc.DeviceStateTester;
 
 /**
+ * This class is loaded during the initialization the application. After an 
+ * successful initialization, the success animation is played to signal that
+ * the application is successful initialized.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 @SuppressWarnings("ConstantConditions")
 public class InitializeAppFragment extends Fragment {
@@ -153,6 +158,12 @@ public class InitializeAppFragment extends Fragment {
         return mSaturation;
     }
 
+    /**
+     * This class saves the initialitaion state of the application.
+     * 
+     * @author Ralf Wondratschek
+     * @author Rico Klimsa - Added javadoc comments
+     */
     public static class OnAppInitialized {
         private final boolean mSuccess;
 

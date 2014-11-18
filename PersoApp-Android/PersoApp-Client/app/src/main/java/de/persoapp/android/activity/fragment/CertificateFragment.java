@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -66,7 +66,11 @@ import de.persoapp.android.activity.AuthenticateActivity;
 import de.persoapp.core.client.IEAC_Info;
 
 /**
+ * The <tt>CertificateFragment</tt> displays information about the
+ * transmitted certificate of the eID-Server to the user.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class CertificateFragment extends Fragment {
 

@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -64,7 +64,13 @@ import de.persoapp.android.R;
 import de.persoapp.android.nfc.DeviceStateTester;
 
 /**
+ * This class provides the logic to inform the user, that the used
+ * device is not capable to communicate with an nPA. This is the
+ * case, if the extended length of the <em>NFC.apk</em> is not 
+ * supported.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class DeviceNotNpaCapableFragment extends Fragment {
 

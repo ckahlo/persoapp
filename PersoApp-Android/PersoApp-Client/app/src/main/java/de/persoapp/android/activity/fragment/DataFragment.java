@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -64,7 +64,11 @@ import de.persoapp.android.activity.AuthenticateActivity;
 import de.persoapp.core.client.IEAC_Info;
 
 /**
+ * This class manages and shows the different data, which is requested by the 
+ * eID-Server.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class DataFragment extends Fragment {
 

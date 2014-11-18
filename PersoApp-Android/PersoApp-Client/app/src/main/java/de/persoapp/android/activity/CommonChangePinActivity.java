@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -67,7 +67,11 @@ import de.persoapp.android.activity.fragment.ProgressFragment;
 import de.persoapp.core.client.IMainView;
 
 /**
+ * This activity is part of the user interface and manages the pin change
+ * operations.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class CommonChangePinActivity extends AbstractNfcActivity {
 
@@ -178,6 +182,17 @@ public class CommonChangePinActivity extends AbstractNfcActivity {
         }
     }
 
+    /**
+     * This class implements an message handler, which triggers an pin change
+     * operation according to a received message.
+     * <br/>
+     * The handler sends the success or fail message of an pin change
+     * operation to the main view fragment. Also, the handler takes
+     * care of the resource management after the message is dispatched.
+     * 
+     * @author Ralf Wondratschek
+     * @author Rico Klimsa -added javadoc comments.
+     */
     private class MyHandler extends Handler {
 
         private MyHandler(Looper looper) {

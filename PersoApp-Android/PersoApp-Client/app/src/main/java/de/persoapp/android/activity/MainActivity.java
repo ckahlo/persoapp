@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -54,7 +54,11 @@ import android.support.v4.app.FragmentTransaction;
 import de.persoapp.android.activity.fragment.MainFragment;
 
 /**
+ * This class managaes all activities of the application and updates the
+ * displayed content fragment.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc fragments.
  */
 public class MainActivity extends AbstractNfcActivity {
 

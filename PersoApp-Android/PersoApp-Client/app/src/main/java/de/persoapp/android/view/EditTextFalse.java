@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -55,7 +55,12 @@ import android.widget.EditText;
 import de.persoapp.android.R;
 
 /**
+ * This class implements a field for inserting numbers. A couple of such fields
+ * is used by the class <tt>PinRow</tt> to provide the fields for inserting a
+ * pin.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 @SuppressWarnings("UnusedDeclaration")
 public class EditTextFalse extends EditText {

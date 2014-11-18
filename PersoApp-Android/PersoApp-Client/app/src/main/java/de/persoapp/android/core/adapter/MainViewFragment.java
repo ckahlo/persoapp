@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -407,6 +407,12 @@ public class MainViewFragment extends Fragment implements IMainView {
         startActivity(intent);
     }
 
+    /**
+     * Base class for implementing an callback mechanism on specific events.
+     * 
+     * @author Ralf Wondratschek
+     * @author Rico Klimsa - added javadoc comments.
+     */
     public static abstract class MainViewCallback {
 
         public void showMainDialog(IEAC_Info eacInfo, int mode) {

@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -72,7 +72,11 @@ import de.persoapp.android.AppExtension;
 import de.persoapp.android.R;
 
 /**
+ * This class implements the used pin fields and the logic for utilizing the
+ * provided fields. The pin row has a fixed length of 6 fields.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 @SuppressWarnings({"UnusedParameters", "UnusedDeclaration"})
 public class PinRow extends LinearLayout {

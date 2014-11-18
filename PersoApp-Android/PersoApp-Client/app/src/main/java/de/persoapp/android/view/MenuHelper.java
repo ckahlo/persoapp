@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -58,7 +58,11 @@ import de.persoapp.android.R;
 import de.persoapp.android.activity.dialog.AboutDialog;
 
 /**
+ * This class implements the functions to call specific sub menu parts which 
+ * inform and guid the user by the use of the mobile eID-Client.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - added javadoc comments.
  */
 public class MenuHelper {
 

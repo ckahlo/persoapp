@@ -1,6 +1,6 @@
 /**
  *
- * COPYRIGHT (C) 2010, 2011, 2012, 2013 AGETO Innovation GmbH
+ * COPYRIGHT (C) 2010, 2011, 2012, 2013, 2014 AGETO Innovation GmbH
  *
  * Authors Christian Kahlo, Ralf Wondratschek
  *
@@ -73,7 +73,12 @@ import de.persoapp.core.util.ArrayTool;
 import de.persoapp.core.util.Hex;
 
 /**
+ * This transport provider implements nfc specific functions. The
+ * implemented functions are necessary to communicate with an nPA through
+ * the nfc module.
+ * 
  * @author Ralf Wondratschek
+ * @author Rico Klimsa - Added javadoc comments.
  */
 public class NfcTransportProvider implements TransportProvider, CCID {
 

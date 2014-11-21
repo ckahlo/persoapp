@@ -122,26 +122,26 @@ public final class MainViewEventListener implements IMainView.EventListener {
 				if (tp != null) {
 					switch (tp.lastSW()) {
 						case 0x9000:
-							result = 3;
+							result = 3; //3 pin-tries remains.
 							break;
 						case 0x63C2:
-							result = 2;
+							result = 2; //2 pin-tries remains.
 							break;
 						case 0x63C1:
-							result = 1;
+							result = 1; //1 pin-try remain.
 							break;
 						case 0x63C0:
-							result = 0;
+							result = 0; //no pin try remain. pin is locked.
 							break;
 						case 0x6283:
-							result = 255;
+							result = 255; //Authentication method is locked.
 							break;
 						default:
-							result = -1;
+							result = -1; //undefined behavior.
 							break;
 					}
 				} else {
-					result = -1;
+					result = -1; //error code - no card is connected.
 				}
 
 				break;

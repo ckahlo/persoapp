@@ -131,7 +131,16 @@ public class SALService implements SAL {
 	 * 
 	 * @param parameters
 	 *            - EAC protocol message as {@link DIDAuthenticationDataType}
-	 *            embedded in {@link DIDAuthenticate}
+	 *            embedded in {@link DIDAuthenticate}. The EAC protocol message can be from
+	 *            type {@link EAC1InputType} for the first phase of the EAC protocol.<br/> In the second 
+	 *            phase of the EAC protocol is the EAC protocol message as {@link EAC2InputType} send
+	 *            to the ClientSAL.<br/> The type {@link EACAdditionalInputType} is just used, if an additional
+	 *            phase of the EAC protocol is necessary. This happens if the signature is missing in the
+	 *            {@link EAC2InputType}  in the second phase. <br/> The input for this function
+	 *            don't have to be created manually, just transmit the received data of the corresponding
+	 *            type to the function. For further informations look at the TR-03112-7 for further 
+	 *            informations to the EAC protocol.
+	 *            
 	 * @return The returned EAC protocol response as
 	 *         {@link DIDAuthenticationDataType} embedded in
 	 *         {@link DIDAuthenticate}
@@ -144,9 +153,12 @@ public class SALService implements SAL {
 			final iso.std.iso_iec._24727.tech.schema.DIDAuthenticate parameters) {
 
 		//		final byte[] contextHandle = parameters.getConnectionHandle().getContextHandle();
-		final byte[] slotHandle = parameters.getConnectionHandle().getSlotHandle();
+		final byte[] slotHandle = parameters.getConnectionHandle().getSlotHandle();//Slothandle -> randomized 32 byte array
 
+		//The handle to the current session.
 		final ECardSession session = (ECardSession) wsCtx.getMessageContext().get(ECardSession.class.getName());
+		
+		//The handle to the connected card.
 		final ICardHandler eCardHandler = session.getCardHandler(slotHandle);
 
 		// final IMainView mainView = session.getMainView(slotHandle);
@@ -162,6 +174,7 @@ public class SALService implements SAL {
 		result.setResultMajor(EcAPIProvider.ECARD_API_RESULT_ERROR);
 		response.setResult(result);
 
+		//The authentication protocol message.
 		final DIDAuthenticationDataType authPD = parameters.getAuthenticationProtocolData();
 
 		if (authPD == null) {
@@ -174,21 +187,29 @@ public class SALService implements SAL {
 		// don't enforce for now there are eID-Servers out there giving you something, may be null
 		System.out.println("DIDAuthProtocol: " + authPD.getProtocol() + " / " + authPD.getClass());
 
+		// In the phase 1 of the EAC the eID-Server invokes DIDAuthenticate with the DIDName provided
+		// for PACE and AuthenticationProtocolData of the type EAC1InputType.
 		if (authPD instanceof EAC1InputType) {
 			final EAC1InputType eac1in = (EAC1InputType) authPD;
 			eCardHandler.reset();
 
-			final List<byte[]> cvcerts = eac1in.getCertificate();
+			final List<byte[]> cvcerts = eac1in.getCertificate(); //Card Verifier certificates of the eService
 
+			//There must be exactly one certificate description.
+			//But the current scheme allows more than one.
 			if (eac1in.getCertificateDescription().size() > 1) {
 				System.out.println("WARNING: more than one cert.desc.");
 			}
 
 			final byte[] certDescription = eac1in.getCertificateDescription().get(0);
+			//The data which is required by the request.
 			final byte[] requiredCHAT = eac1in.getRequiredCHAT();
+			//The data which is can be optional send along the request.
 			final byte[] optionalCHAT = eac1in.getOptionalCHAT();
+			//The auxiliary data, like age or place or data to check the validity of a card.
 			final byte[] auxData = eac1in.getAuthenticatedAuxiliaryData();
-			final String transactionInfo = eac1in.getTransactionInfo();
+			//Transaction related information.
+			final String transactionInfo = eac1in.getTransactionInfo(); 
 
 			System.out.println("Transaction-Info: " + transactionInfo);
 
@@ -203,7 +224,8 @@ public class SALService implements SAL {
 					final Certificate[] sourceCerts = (Certificate[]) session
 							.getAttribute(ECardSession.KEYS.SPServerCert.name());
 					final PAOSInitiator pi = (PAOSInitiator) session.getAttribute(PAOSInitiator.class.getName());
-					//
+					
+					//Certificate of the remote endpoint.
 					final Certificate idpCert = pi.getPeerCertificate();
 
 					final MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
@@ -219,7 +241,7 @@ public class SALService implements SAL {
 								break;
 							}
 						}
-
+						//eService certificate is valid.
 						if (certVerified) {
 							verified = 1;
 							System.out.println("VALID: " + ((X509Certificate) spCert).getSubjectDN());
@@ -253,6 +275,7 @@ public class SALService implements SAL {
 
 			session.setAttribute(EAC_Info.class.getName(), eacInfo);
 
+			//Handle to the main application thread.
 			final ECardWorker ecw = (ECardWorker) session.getAttribute(ECardWorker.class.getName());
 
 			/*
@@ -298,12 +321,12 @@ public class SALService implements SAL {
 
 			final String onlineAuthTitle = textBundle.get("SALService_online_auth_title");
 			while (true) {
-				do {
+				do {//Retrieve the connection to the nPA through the installed card reader.
 					if ((tp = eCardHandler.getECard()) != null) {
-						mainView.showMainDialog(eacInfo, eCardHandler.hasPACE(tp) > 0 ? IMainView.MODE_CHATONLY
-								: IMainView.MODE_PIN_CHAT);
+						mainView.showMainDialog(eacInfo, eCardHandler.hasPACE(tp) > 0 ? IMainView.MODE_CHATONLY //MainDialog with PinPanel and CHAT with a connected card
+								: IMainView.MODE_PIN_CHAT);//MainDialog with PinPanel and CHAT with a connected card.
 					} else {
-						if (!mainViewOpen) {
+						if (!mainViewOpen) {//MainDialog with PinPanel and CHAT without a card.
 							mainView.showMainDialog(eacInfo, IMainView.MODE_PIN_CHAT);
 							mainViewOpen = true;
 						}
@@ -313,11 +336,12 @@ public class SALService implements SAL {
 					}
 				} while (tp == null);
 
+				//No card is found, return null.
 				if (tp == null) {
 					return null;
 				}
 
-				if (tp.lastSW() == 0x63C1) {
+				if (tp.lastSW() == 0x63C1) { //One pin try left
 					mainView.showMessage(textBundle.get("SALService_one_pin_try"), IMainView.WARNING);
 				}
 
@@ -349,7 +373,7 @@ public class SALService implements SAL {
 
 					// XXX: rework that
 					resultCHAT = TLV.build(0x7F4C, TLV.buildOID("04007F000703010202", TLV.build(0x53, resultCHAT)));
-
+					
 					mainView.showProgress(textBundle.get("SALService_progress_pin"), 10, true);
 					final boolean success = eCardHandler.startAuthentication(resultCHAT, dialogResult.getPIN(),
 							eacInfo.getTerminalDescription());
@@ -358,7 +382,7 @@ public class SALService implements SAL {
 						mainView.showProgress(textBundle.get("SALService_progress_pin_suc"), 25, true);
 
 						if (eCardHandler.getIDPICC() == null) {
-							// Fehler bei der Verbindung, es konnte kein PACE durchgeführt werden
+							// Error during the connection. PACE are not successful executed.
 							mainView.showError(onlineAuthTitle, textBundle.get("SALService_online_auth_error_text"));
 							eCardHandler.reset();
 							return null;
@@ -391,10 +415,11 @@ public class SALService implements SAL {
 
 			eac1out.setRetryCounter(BigInteger.valueOf(3));
 			eac1out.setCertificateHolderAuthorizationTemplate(resultCHAT);
+			// File EF.CardAccess is read out from the chip card
 			eac1out.setEFCardAccess(eCardHandler.getEFCardAccess());
 			eac1out.setIDPICC(eCardHandler.getIDPICC());
 
-			// cardChallenge
+			// Challange for terminal authentication is requested from the chip.
 			final byte[] taChallenge = eCardHandler.getTAChallenge();
 			session.setAttribute("TAChallenge", taChallenge);
 			eac1out.setChallenge(taChallenge);
@@ -417,6 +442,12 @@ public class SALService implements SAL {
 
 			response.setAuthenticationProtocolData(eac1out);
 			result.setResultMajor(EcAPIProvider.ECARD_API_RESULT_OK);
+			
+			//The eService SAL then invokes DIDAuthenticate for the CADID and relays AuthenticationProtocolData 
+			//of type EAC2InputType to the client SAL. In addition to the certificate chain applicable to the 
+			//PICC, this element contains the newly generated public key EphemeralPublicKey. The certificate 
+			//chain is verified by the PICC. The CADID element contains a reference to a DID for the Chip
+			//Authentication protocol.
 		} else if (authPD instanceof EAC2InputType) {
 			final EAC2InputType eac2in = (EAC2InputType) authPD;
 
@@ -566,6 +597,7 @@ public class SALService implements SAL {
 
 				mainView.showProgress(textBundle.get("SALService_progress_cert"), 50, true);
 
+				//Initialize terminal authentication.
 				eCardHandler.initTA(ephemeralKey, eacInfo.getAuxiliaryData());
 			}
 
@@ -573,6 +605,7 @@ public class SALService implements SAL {
 				final EAC2OutputType eac2out = new EAC2OutputType();
 
 				if (eac2in.getSignature() != null) {
+					//Handle to the main application thread.
 					final ECardWorker ecw = (ECardWorker) session.getAttribute(ECardWorker.class.getName());
 					if (!eCardHandler.verifyTASignature(eac2in.getSignature())) {
 						// validation of entitlement certificate failed
@@ -591,7 +624,8 @@ public class SALService implements SAL {
 					}
 
 					eac2out.setEFCardSecurity(eCardHandler.getEFCardSecurity());
-
+					
+					//Execute chip authentication.
 					final byte[] caData = eCardHandler.execCA();
 					eac2out.setNonce(TLV.get(caData, (byte) 0x81));
 					eac2out.setAuthenticationToken(TLV.get(caData, (byte) 0x82));
@@ -609,6 +643,7 @@ public class SALService implements SAL {
 		} else if (authPD instanceof EACAdditionalInputType) {
 			final EACAdditionalInputType eacAddin = (EACAdditionalInputType) authPD;
 
+			//Handle to the main application thread.
 			final ECardWorker ecw = (ECardWorker) session.getAttribute(ECardWorker.class.getName());
 			if (!eCardHandler.verifyTASignature(eacAddin.getSignature())) {
 				// validation of entitlement certificate failed
@@ -618,6 +653,7 @@ public class SALService implements SAL {
 				if (ecw != null) {
 					ecw.callback(ECardWorker.CALLBACK_RESULT.TA_ERROR);
 				}
+				//Application timed out, return null.
 				return null;
 			} else {
 				if (ecw != null) {

@@ -130,7 +130,7 @@ public class DataFragment extends Fragment {
         if (savedInstanceState == null) {
             mActivity.setResultChat(getResultChat());
         }
-
+        view.setFilterTouchesWhenObscured(true);
         return view;
     }
 

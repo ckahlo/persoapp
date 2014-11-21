@@ -114,7 +114,7 @@ public class NewPinFragment extends PinFragment {
                 textView.setText(R.string.new_pin_pin_change_description);
                 break;
         }
-
+        view.setFilterTouchesWhenObscured(true);
         return view;
     }
 

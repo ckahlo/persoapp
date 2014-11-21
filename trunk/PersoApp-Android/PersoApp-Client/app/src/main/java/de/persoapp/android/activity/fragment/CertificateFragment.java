@@ -115,7 +115,7 @@ public class CertificateFragment extends Fragment {
         mTextViewIssuerUrl = (TextView) view.findViewById(R.id.textView_certificate_issuer_url);
 
         fillInfo();
-
+        view.setFilterTouchesWhenObscured(true);
         return view;
     }
 

@@ -99,7 +99,7 @@ public class CurrentPinFragment extends PinFragment {
         mPinRow = (PinRow) view.findViewById(R.id.pinRow_current_pin);
 
         mPinRow.setLastImeOption(EditorInfo.IME_ACTION_NEXT, true);
-
+        view.setFilterTouchesWhenObscured(true);
         return view;
     }
 

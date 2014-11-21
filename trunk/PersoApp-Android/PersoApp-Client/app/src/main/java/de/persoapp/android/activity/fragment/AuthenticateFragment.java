@@ -133,7 +133,7 @@ public class AuthenticateFragment extends Fragment {
         };
 
         mViewConfirm.setOnClickListener(onClickListener);
-
+        view.setFilterTouchesWhenObscured(true);
         return view;
     }
 

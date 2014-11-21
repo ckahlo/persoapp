@@ -83,7 +83,7 @@ public class MainFragment extends Fragment {
         };
 
         view.findViewById(R.id.card_use_npa).setOnClickListener(onClickListener);
-
+        view.setFilterTouchesWhenObscured(true);
         return view;
     }
 }

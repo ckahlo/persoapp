@@ -104,7 +104,7 @@ public class InitializeAppFragment extends Fragment {
         mColorMatrix = new ColorMatrix();
         mColorMatrix.setSaturation(mSaturation);
         mImageView.setColorFilter(new ColorMatrixColorFilter(mColorMatrix));
-
+        view.setFilterTouchesWhenObscured(true);
         return view;
     }
 

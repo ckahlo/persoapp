@@ -116,7 +116,16 @@ public class CardHandler implements ICardHandler {
 	private List<byte[]>					CAReferences;
 
 	/**
-	 * raw contents of EF.CardAccess
+	 * raw contents of EF.CardAccess. <br/>
+	 * This file contains:
+	 * <ul>
+	 * <li>PACEInfo</li>
+	 * <li>ChipAuthenticationInfo</li>
+	 * <li>ChipAuthenticationDomainParameterInfo</li>
+	 * <li>PrivilegedTerminalInfo</li>
+	 * <li>TerminalAuthenticationInfo</li>
+	 * <li>CardInfoLocator</li>
+	 * </ul>
 	 */
 	private byte[]							EFCardAccess;
 
@@ -451,6 +460,8 @@ public class CardHandler implements ICardHandler {
 	 *         <em>null<em>
 	 */
 	private byte[] sendPACECommand(final Object transport, final int function, byte[] data) {
+		
+		// The chip card interface device - card terminal.
 		final CCID ccid = getCCID(transport);
 		if (ccid != null && ccid.hasFeature(CCID.FEATURE_EXECUTE_PACE)) {
 			if (data == null) {
@@ -459,11 +470,13 @@ public class CardHandler implements ICardHandler {
 			int dataLen = data.length;
 			data = ArrayTool.arrayconcat(new byte[] { (byte) function, (byte) dataLen, (byte) (dataLen >> 8) }, data);
 
+			// response of executing PACE by the card terminal.
 			final byte[] pace_res = ccid.transmitControlCommand(CCID.FEATURE_EXECUTE_PACE, data);
 
 			final ByteBuffer bb = ByteBuffer.wrap(pace_res);
 			bb.order(ByteOrder.LITTLE_ENDIAN);
 
+			//The PACE status.
 			final int pace_status = bb.getInt();
 
 			if (pace_status == 0) {
@@ -544,6 +557,7 @@ public class CardHandler implements ICardHandler {
 
 			final byte[] data = baos.toByteArray();
 
+			//Response of the remotely execution of pace.
 			pace_res = sendPACECommand(tp, 2, data);
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -601,6 +615,7 @@ public class CardHandler implements ICardHandler {
 	 *         algorithms.
 	 */
 	private byte[] KDF(final MessageDigest md, final byte[] secret, final int counter, final int limit) {
+		// Temporary storage for key derivation.
 		final ByteBuffer temp = counter != -1 ? ByteBuffer.allocate(secret.length + 4) : ByteBuffer
 				.allocate(secret.length);
 		temp.order(ByteOrder.BIG_ENDIAN);
@@ -643,7 +658,7 @@ public class CardHandler implements ICardHandler {
 			// request CAN before PACE
 			final SecureHolder can = mainView.showCANDialog(textBundle.get("CardHandler_can_dialog_text"));
 			status = executeLocalPACE(cryptoMechanism, (byte) 0x02, can.getValue(), null);
-			if (status != 0x9000) {
+			if (status != 0x9000) {//Error by requesting the CAN.
 				return status;
 			}
 			setMSE_AT(tp, cryptoMechanism, keyReference, CHAT);
@@ -656,9 +671,10 @@ public class CardHandler implements ICardHandler {
 			e.printStackTrace();
 			return status;
 		}
-
-		BigInteger paceNonce = null;
+		// The initial randomized pace number for starting the pace protocol.
+		BigInteger paceNonce = null; 
 		try {
+			//Data authentication data, which shows the result of the steps.
 			final byte[] authData = generalAUTH(tp, null, false);
 			if (tp.lastSW() == 0x9000 && authData != null) {
 				final Cipher c = Cipher.getInstance("AES/CBC/NoPadding");
@@ -677,7 +693,12 @@ public class CardHandler implements ICardHandler {
 			return status;
 		}
 
+		//The terminal can't process PACE, so the client has to do it.
+		
+		/* The specs of the elliptic curve */
 		final ECParameterSpec ecSpec = EC_Globals.getCurve(PACEv2_curveID);
+		
+		/* The PACE protocol */
 		final PACE pace = new PACE(ecSpec, paceNonce);
 
 		/* send public key on base-curve to card */
@@ -695,15 +716,23 @@ public class CardHandler implements ICardHandler {
 		IDPICC = paceRes[0];
 		final byte[] sharedSecret = paceRes[1];
 
+		//The key for encryption
 		final byte[] kEnc = KDF(mdSHA1, sharedSecret, 0x0000001, 16);
+		
+		//The key for the message authentication code.
 		final byte[] kMac = KDF(mdSHA1, sharedSecret, 0x0000002, 16);
 		final byte[] kMac_ = kMac; // KDF(mdSHA1, sharedSecret, 0x0000003, 16);
 
 		try {
 			final Cipher c = Cipher.getInstance("AES/CBC/NoPadding");
 			c.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(kMac_, "AES"), new IvParameterSpec(new byte[16]));
+			
+			// The cipher based message authentication code.
 			final CMac cmac = new CMac(c, 8);
 
+			/*
+			 * The authentication token.
+			 */
 			byte[] authToken = TLV.build(0x7F49, TLV.buildOID(cryptoMechanism, TLV.build(0x86, paceYA)));
 			cmac.update(authToken, 0, authToken.length);
 
@@ -823,6 +852,7 @@ public class CardHandler implements ICardHandler {
 
 		this.CAReferences = new ArrayList<byte[]>();
 
+		// The chip card interface device - card terminal.
 		final CCID ccid = getCCID(tp);
 		if (ccid != null && hasPACE(ccid) > 0) {
 			return executeRemotePACE(keyReference, CHAT, termDesc);
@@ -963,7 +993,13 @@ public class CardHandler implements ICardHandler {
 	 */
 	@Override
 	public boolean verifyCertificate(byte[] data) {
+		
+		/*
+		 * The certificate to be verified
+		 */
 		final byte[] cert = TLV.get(data, (short) 0x7F21);
+		
+		// Certificate data as BER-TLV
 		data = TLV.get(cert, (short) 0x7F4E);
 
 		lastCertSubject = TLV.get(data, (short) 0x5F20);
@@ -987,6 +1023,7 @@ public class CardHandler implements ICardHandler {
 	public void initTA(final byte[] ephemeralKey, final byte[] auxData) {
 		this.TAKey = ephemeralKey;
 
+		//The APDU-data for terminal authentication.
 		byte[] data = ArrayTool.arrayconcat(TLV.build((byte) 0x80, Hex.fromString("04007F00070202020203")),
 				TLV.build((byte) 0x83, lastCertSubject));
 		data = ArrayTool.arrayconcat(data, TLV.build((byte) 0x91, ArrayTool.subArray(ephemeralKey, 0, 32)));
@@ -1126,6 +1163,7 @@ public class CardHandler implements ICardHandler {
 		// role Signature Terminal
 		executePACE(verifySecret, null, Hex.fromString("7F4C0E060904007F000703010203530103"));
 
+		//The application identifier for the electronical signing application
 		final byte[] AID = Hex.fromString(AID_eSign);
 		final byte[] capdu = { (byte) 0x00, (byte) 0xA4, (byte) 0x04, (byte) 0x0C, (byte) AID.length };
 		tp0.transmit(ArrayTool.arrayconcat(capdu, AID));

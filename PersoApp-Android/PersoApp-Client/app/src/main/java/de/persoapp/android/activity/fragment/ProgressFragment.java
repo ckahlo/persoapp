@@ -95,7 +95,7 @@ public class ProgressFragment extends Fragment {
 
         mTextViewMessage = (TextView) view.findViewById(R.id.textView_message);
         mTextViewMessage.setText(getArguments().getString(MESSAGE, ""));
-
+        view.setFilterTouchesWhenObscured(true);
         return view;
     }
 

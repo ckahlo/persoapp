@@ -148,7 +148,7 @@ public class CommonChangePinFragment extends Fragment {
                 }
             }
         });
-
+        view.setFilterTouchesWhenObscured(true);
         return view;
     }
 

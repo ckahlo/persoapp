@@ -89,7 +89,7 @@ public class ConfirmPinFragment extends PinFragment {
         View view = inflater.inflate(R.layout.fragment_confirm_pin, container, false);
 
         mPinRow = (PinRow) view.findViewById(R.id.pinRow_current_pin);
-
+        view.setFilterTouchesWhenObscured(true);
         return view;
     }
 

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        style="@style/CardStyle"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/card_background_selector"
+        android:clickable="false"
+        android:orientation="vertical"
+        android:padding="@dimen/card_padding_inner">
+
+    <CheckBox
+            android:id="@+id/data_vorname"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_vorname_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_name_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_doktorgrad"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_doktorgrad_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_anschrift"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_anschrift_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_geburtsdatum"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_geburtsdatum_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_geburtsort"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_geburtsort_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_kuenstlername"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_kuenstlername_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_ausweistyp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_ausweistyp_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_ausstellendes_land"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_austellendes_land_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_wohnortbestaetigung"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_wohnortbestaetigung_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_altersverifikation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:visibility="gone"
+            tools:text="@string/authenticate_field_altersverifikation_text"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_pseudonym"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_pseudonym_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_ablaufdatum"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_ablaufdatum_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_nationalitaet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_nationalitaet_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_geburtsname"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/data_field_margin"
+            android:text="@string/authenticate_field_geburtsname_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+    <CheckBox
+            android:id="@+id/data_nebenbestimmungen_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/authenticate_field_nebenbestimmungen_1_text"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+</LinearLayout>

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: PersoApp-Core
+Bundle-SymbolicName: PersoApp-Core
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: PersoApp-Core.jar,
+ lib/bcprov-jdk15on-151.jar
+Export-Package: de.persoapp.core;version="1.0.0",
+ de.persoapp.core.card;version="1.0.0",
+ de.persoapp.core.client;version="1.0.0",
+ de.persoapp.core.util;version="1.0.0",
+ de.persoapp.core.ws;version="1.0.0",
+ de.persoapp.core.ws.engine;version="1.0.0"

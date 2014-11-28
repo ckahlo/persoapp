@@ -1,0 +1,104 @@
+apply plugin: 'android-library'
+apply plugin: 'maven'
+
+version = '1.0.5'
+group = 'net.vrallev.android.library'
+
+dependencies {
+    provided 'com.android.support:support-v4:+'
+    compile('de.keyboardsurfer.android.widget:crouton:1.8.5@aar') {
+        // exclusion is not neccessary, but generally a good idea.
+        exclude group: 'com.google.android', module: 'support-v4'
+    }
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.0.2"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 21
+        versionCode 5
+        versionName=version
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            def mavenRepositoryUrl
+            if (!project.hasProperty('mvnRepoUrl')) {
+                println "Settings for mvnRepoUrl are missing/incomplete for ${project.name}"
+                mavenRepositoryUrl = mavenLocal().getUrl()
+            } else {
+                mavenRepositoryUrl = project.getProperties().get('mvnRepoUrl')
+            }
+
+//            mavenRepositoryUrl = "file:///${System.env.HOME}/.m2/repository"
+
+            repository(url: mavenRepositoryUrl)
+
+            pom.project {
+                name 'Android Crouton Extension'
+                packaging 'aar'
+                description 'An extension to the favorite Crouton library'
+                url 'https://github.com/vRallev/Crouton'
+
+                scm {
+                    url 'scm:git@github.com:vRallev/Crouton.git'
+                    connection 'scm:git@github.com:vRallev/Crouton.git'
+                    developerConnection 'scm:git@github.com:vRallev/Crouton.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'vRallev'
+                        name 'Ralf Wondratschek'
+                        email 'r.wondr@gmail.com'
+                    }
+                }
+            }
+        }
+    }
+
+    //noinspection GroovyAssignabilityCheck
+    task androidJavadocs(type: Javadoc) {
+        source = android.sourceSets.main.allJava
+    }
+
+    //noinspection GroovyAssignabilityCheck
+    task androidJavadocsJar(type: Jar) {
+        classifier = 'javadoc'
+        //basename = artifact_id
+        from androidJavadocs.destinationDir
+    }
+
+    //noinspection GroovyAssignabilityCheck
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        //basename = artifact_id
+        from android.sourceSets.main.allSource
+    }
+
+    artifacts {
+        //archives packageReleaseJar
+        archives androidSourcesJar
+        archives androidJavadocsJar
+    }
+}
+
+apply from: '../eclipse-compatibility.gradle'

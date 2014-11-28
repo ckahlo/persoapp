@@ -1,0 +1,60 @@
+buildscript {
+    repositories {
+        maven { url 'http://repo.springsource.org/plugins-release' }
+    }
+    dependencies {
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.1'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+apply plugin: 'propdeps'
+apply plugin: 'propdeps-maven'
+apply plugin: 'propdeps-idea'
+apply plugin: 'propdeps-eclipse'
+
+sourceCompatibility = 1.6
+
+//version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
+
+group = 'de.persoapp'
+
+repositories {
+    mavenCentral()
+    maven {
+        url '../mvn-repo'
+    }
+
+    maven {
+        url '../mvn-repo-snapshot'
+    }
+}
+
+dependencies {
+    provided 'de.persoapp:persoapp-core:1.0.0'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Version': version
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://" + new File(project.projectDir.getParent(), 'mvn-repo' + (version.endsWith('-SNAPSHOT') ? '-snapshot' : '')).getAbsolutePath())
+        }
+    }
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+        style="@style/CardInnerText"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/card_padding"
+        android:layout_marginRight="@dimen/card_padding"
+        android:background="@drawable/card_background_selector"
+        android:clickable="false"
+        android:padding="@dimen/card_padding_inner"
+        android:text="@string/init_device_description" />

@@ -53,7 +53,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 import iso.std.iso_iec._24727.tech.schema.ConnectionHandleType;
 import iso.std.iso_iec._24727.tech.schema.DIDAuthenticate;
 import iso.std.iso_iec._24727.tech.schema.DIDAuthenticateResponse;
@@ -71,7 +70,6 @@ import iso.std.iso_iec._24727.tech.schema.TransmitResponse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -88,6 +86,7 @@ import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.bund.bsi.ecard.api._1.InitializeFrameworkResponse;
+
 import de.persoapp.core.ECardWorker;
 import de.persoapp.core.card.CardHandler;
 import de.persoapp.core.client.ECardSession;
@@ -102,12 +101,15 @@ import de.persoapp.core.ws.*;
 import de.persoapp.core.ws.engine.WSContainer;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 
 /**
  * @author Rico Klimsa, 2014
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class WebServiceTest {
 	
 	private static WSContainer wsCtx = null;

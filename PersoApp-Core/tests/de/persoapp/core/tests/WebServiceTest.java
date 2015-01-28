@@ -870,7 +870,8 @@ public class WebServiceTest {
 	/**
 	 * Function invocation without certificates in the second EAC-phase.<br/>
 	 * <br/>
-	 * <b>References: </b>TR-03112-7, Section 3.6.4 <em>Overview of EAC protocol sequence</em><br/>
+	 * <b>References: </b>TR-03112-7, Section 3.6.4
+	 * <em>Overview of EAC protocol sequence</em><br/>
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
@@ -884,7 +885,9 @@ public class WebServiceTest {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li> The authentication process fails.</li>
+	 * <li>The authentication process succeeds because the <em>Certification
+	 * Authority Reference</em> element in the {@link EAC1OutputType} is missing
+	 * and thus this element is not provided.</li>
 	 * </ul>
 	 * 
 	 * @see TestSALService#didAuthenticate(DIDAuthenticate)
@@ -1198,26 +1201,33 @@ public class WebServiceTest {
 			HashMap<DIDAuthenticate,DIDAuthenticateResponse> response = salservice.response;
 			
 			assertFalse("no response from didAuthenticate",response.isEmpty());
-			assertTrue("EAC-authentication not correctly processed",response.size()>1);
+			System.out.println(response.size());
+			assertTrue("response",response.size()>1);
 			for(Entry<DIDAuthenticate,DIDAuthenticateResponse> entry : response.entrySet())
 			{
 				assertNotNull("no authentication protocol data",entry.getKey().getAuthenticationProtocolData());
 				assertNotNull("no authentication protocol return data",entry.getValue().getAuthenticationProtocolData());
 				
 				if(entry.getKey().getAuthenticationProtocolData() instanceof EAC1InputType){//EAC-phase 1 - Extended PACE - Protocol
-				
+					logger.log(Level.INFO,"First EAC-Phase");
+					
+					assertTrue("EAC1Output",entry.getValue().getAuthenticationProtocolData() instanceof EAC1OutputType);
+					
 					assertNotNull("no certificate",((EAC1InputType)entry.getKey().getAuthenticationProtocolData()).getCertificate());
 					assertNotNull("no certificate description",((EAC1InputType)entry.getKey().getAuthenticationProtocolData()).getCertificateDescription());
 					
 					assertTrue("wrong authentication protocol return data", entry.getValue().getAuthenticationProtocolData() instanceof EAC1OutputType);
 				
 					assertNotNull("no Certificate Holder Authorization Template",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getCertificateHolderAuthorizationTemplate());
-					assertNotNull("no Certification Authority Reference",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getCertificationAuthorityReference());
 					assertNotNull("no EF.CardAccess",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getEFCardAccess());
 					assertNotNull("no IDPICC",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getIDPICC());
 					assertNotNull("no Challange",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getChallenge());
 					
 				}else if(entry.getKey().getAuthenticationProtocolData() instanceof EAC2InputType){//EAC-phase 2 - combination of Terminal and Chip Authentication
+					logger.log(Level.INFO,"Second EAC-Phase");
+
+					assertTrue("EAC2Output",entry.getValue().getAuthenticationProtocolData() instanceof EAC2OutputType);
+					
 					assertNotNull("no ephemeral public key", ((EAC2InputType)entry.getKey().getAuthenticationProtocolData()).getEphemeralPublicKey());
 					
 					assertTrue("wrong authentication protocol return data", entry.getValue().getAuthenticationProtocolData() instanceof EAC2OutputType);
@@ -1227,6 +1237,7 @@ public class WebServiceTest {
 					assertNotNull("no Nonce",((EAC2OutputType)entry.getValue().getAuthenticationProtocolData()).getNonce());
 					
 					if(((EAC2InputType)entry.getKey().getAuthenticationProtocolData()).getSignature()==null){//EAC-phase 2b - conditional additional message with signature 
+						assertTrue("EAC2Output",entry.getValue().getAuthenticationProtocolData() instanceof EAC2OutputType);
 						assertNotNull("No Signature and no Challange from the PICC",((EAC2OutputType)entry.getValue().getAuthenticationProtocolData()).getChallenge());	
 					}
 					
@@ -1448,7 +1459,7 @@ public class WebServiceTest {
 				assertTrue("process is succeded", refreshURL.toLowerCase().indexOf("resultmajor=ok") < 0);
 			} else {
 
-				assertFalse("process failed", refreshURL.toLowerCase().indexOf("resultmajor=ok") < 0);
+				assertTrue("process failed", refreshURL.toLowerCase().indexOf("resultmajor=ok") > 0);
 				final URL refresh = new URL(refreshURL);
 				final HttpURLConnection uc = (HttpsURLConnection) Util.openURL(refresh);
 				uc.setInstanceFollowRedirects(true);

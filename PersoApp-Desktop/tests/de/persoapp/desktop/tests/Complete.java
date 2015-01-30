@@ -67,18 +67,16 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.sun.xml.internal.ws.api.server.WSEndpoint;
-
 import de.persoapp.core.ECardWorker;
 import de.persoapp.core.card.CardHandler;
 import de.persoapp.core.client.IMainView;
 import de.persoapp.core.client.MainViewEventListener;
-import de.persoapp.core.client.IMainView.ChangePINDialogResult;
 import de.persoapp.core.util.Util;
 import de.persoapp.core.ws.IFDService;
 import de.persoapp.core.ws.ManagementService;
 import de.persoapp.core.ws.SALService;
 import de.persoapp.core.ws.engine.WSContainer;
+import de.persoapp.core.ws.engine.WSEndpoint;
 import de.persoapp.desktop.MainView;
 import de.persoapp.desktop.ProxyAuthenticator;
 

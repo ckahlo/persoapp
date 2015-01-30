@@ -67,8 +67,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.sun.xml.internal.ws.api.server.WSEndpoint;
-
 import de.persoapp.core.ECardWorker;
 import de.persoapp.core.card.CardHandler;
 import de.persoapp.core.client.IMainView;
@@ -78,6 +76,7 @@ import de.persoapp.core.ws.IFDService;
 import de.persoapp.core.ws.ManagementService;
 import de.persoapp.core.ws.SALService;
 import de.persoapp.core.ws.engine.WSContainer;
+import de.persoapp.core.ws.engine.WSEndpoint;
 
 /**
  * Sample test case building up an integration ("complete") test.
@@ -131,7 +130,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>
+	 * <li>No Exception occurred, which indicates an successful result.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -149,7 +148,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>
+	 * <li>No Exception occurred, which indicates an successful result.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -159,7 +158,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>
+	 * <li>No Exception occurred, which indicates an successful result.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -169,7 +168,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * <li>No Exception occurred, which indicates an successful result.</li>.
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -178,7 +177,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * <li>No Exception occurred, which indicates an successful result.</li>.
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -186,7 +185,7 @@ public class Complete {
 	 * </ul>
 	 * <b>Expected Result: </b>
 	 * <ul>
-	 * <li>No Exceptions occurred, which indicates an successful result.</li>.
+	 * <li>No Exception occurred, which indicates an successful result.</li>.
 	 * </ul>
 	 */	
 	@Test

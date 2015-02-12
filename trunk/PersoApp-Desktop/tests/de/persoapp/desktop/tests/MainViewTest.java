@@ -51,18 +51,19 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Properties;
 import java.util.logging.Logger;
 
-import javax.swing.JFrame;
-
-import junit.framework.TestCase;
-
-import org.hamcrest.Description;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import de.persoapp.core.ECardWorker;
 import de.persoapp.core.card.CardHandler;
@@ -86,16 +87,17 @@ import de.persoapp.desktop.gui.frame.NewChangePinFrame;
 public class MainViewTest{
 	
 	private static WSContainer wsCtx = null;
-	private final String	DEFAULT_PIN	= "123456";
-	private final String	serviceURL	= "https://eid.services.ageto.net/persoapp/eidtest.jsp";
+	private String	DEFAULT_PIN	= null;
+	private String	serviceURL	= null;
+	
+	private static Properties properties = null;
+	
+	private static final String resourcePath = "/tests/resources/test_config.properties";
 	
 	private static Logger logger = Logger.getLogger(MainViewTest.class.getName());
 	private static IMainView	mainView = null;
 	private static IFDService ifdservice = null;
 	
-	/**
-	 * Test spy for indirect output
-	 */
 	private static SALService salservice = null;
 	private static ManagementService managementservice = null;
 	
@@ -103,8 +105,36 @@ public class MainViewTest{
 	private static ECardSession session = null;
 		
 	
+	/**
+	 * Load the resource file for default pin and
+	 * service url.
+	 * If the resource file does not exist, it
+	 * must be created by the developer per hand.
+	 */
+	@BeforeClass
+	public static void setUp() throws FileNotFoundException, IOException {
+		final File res = new File(new File("").getAbsolutePath()+resourcePath);
+
+		if(res.exists()) {
+			properties = new Properties();
+			properties.load(new FileInputStream(res));
+		}
+		else {
+			fail("Missing file: "+res.getPath());
+		}
+	}	
+	
 	@Before
 	public void init() {
+		
+		if(DEFAULT_PIN == null) {
+			DEFAULT_PIN = (String) properties.get("Default_PIN");
+		}
+		
+		if(serviceURL == null) {
+			serviceURL = (String) properties.get("eID_service_URL");
+		}		
+		
 		if(mainView==null) {
 			mainView = MainView.getInstance();
 			assertNotNull("no main view", mainView);		
@@ -115,7 +145,7 @@ public class MainViewTest{
 			assertNotNull("no card handler", eCardHandler);
 			mainView.setEventLister(new MainViewEventListener(eCardHandler, mainView));
 		}
-		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
 		if(managementservice==null) {
 			managementservice = new ManagementService();
 		}
@@ -148,7 +178,7 @@ public class MainViewTest{
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -169,7 +199,7 @@ public class MainViewTest{
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -192,7 +222,7 @@ public class MainViewTest{
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -214,7 +244,7 @@ public class MainViewTest{
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -242,7 +272,7 @@ public class MainViewTest{
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -257,7 +287,6 @@ public class MainViewTest{
 	 */			
 	@Test
 	public void EVENT_TEST_CHANGE_PIN_EID_2() {
-		
 		ChangePINDialogResult dr = new ChangePINDialogResult(DEFAULT_PIN.getBytes(),null, true);
 		assertNotNull("no change pin dialog result",dr);
 		
@@ -270,7 +299,7 @@ public class MainViewTest{
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -285,7 +314,6 @@ public class MainViewTest{
 	 */				
 	@Test
 	public void EVENT_TEST_CHANGE_PIN_EID_3() {
-		
 		ChangePINDialogResult dr = new ChangePINDialogResult(null,DEFAULT_PIN.getBytes(), true);
 		assertNotNull("no change pin dialog result",dr);
 		
@@ -297,7 +325,7 @@ public class MainViewTest{
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -312,7 +340,6 @@ public class MainViewTest{
 	 */
 	@Test
 	public void EVENT_TEST_CHANGE_PIN_EID_4() {
-		
 		ChangePINDialogResult dr = new ChangePINDialogResult(null,null, true);
 		assertNotNull("no change pin dialog result",dr);
 		

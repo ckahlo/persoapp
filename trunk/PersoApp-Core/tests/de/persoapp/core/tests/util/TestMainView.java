@@ -46,7 +46,7 @@
  * 
  */
 
-package de.persoapp.core.tests;
+package de.persoapp.core.tests.util;
 
 import de.persoapp.core.client.IEAC_Info;
 import de.persoapp.core.client.IMainView;

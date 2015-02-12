@@ -45,7 +45,7 @@
  *          <http://www.gnu.org/licenses/>.
  * 
  */
-package de.persoapp.core.tests;
+package de.persoapp.core.tests.util;
 
 import iso.std.iso_iec._24727.tech.schema.DIDAuthenticate;
 import iso.std.iso_iec._24727.tech.schema.DIDAuthenticateResponse;
@@ -68,7 +68,6 @@ import javax.jws.WebService;
 import javax.xml.ws.WebServiceContext;
 
 import de.persoapp.core.client.PropertyResolver;
-import de.persoapp.core.tests.util.ConfigTestcase;
 import de.persoapp.core.ws.SALService;
 
 /**

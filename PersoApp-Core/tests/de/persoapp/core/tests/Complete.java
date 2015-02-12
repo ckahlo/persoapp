@@ -52,6 +52,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -59,10 +62,13 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.Properties;
 import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -71,6 +77,7 @@ import de.persoapp.core.ECardWorker;
 import de.persoapp.core.card.CardHandler;
 import de.persoapp.core.client.IMainView;
 import de.persoapp.core.client.MainViewEventListener;
+import de.persoapp.core.tests.util.TestMainView;
 import de.persoapp.core.util.Util;
 import de.persoapp.core.ws.IFDService;
 import de.persoapp.core.ws.ManagementService;
@@ -90,9 +97,13 @@ public class Complete {
 	/*
 	 * magic constant for default test service
 	 */
-	private static final String	serviceURL	= "https://eid.services.ageto.net/persoapp/eidtest.jsp";
-	private final String	DEFAULT_PIN	= "123456";
+	private String	serviceURL	= null;
+	private String	DEFAULT_PIN	= null;
 
+	private static final String resourcePath = "/tests/resources/test_config.properties";
+	
+	private static Properties properties = null;
+	
 	static {
 		System.out.println("Test " + Complete.class.getName() + " loaded.");
 	}
@@ -102,11 +113,46 @@ public class Complete {
 	}
 
 	/**
+	 * Load the resource file for default pin and
+	 * service url.
+	 * If the resource file does not exist, it
+	 * must be created by the developer per hand.
+	 */
+	@BeforeClass
+	public static void setUp() throws FileNotFoundException, IOException {
+		final File res = new File(new File("").getAbsolutePath()+resourcePath);
+
+		if(res.exists()) {
+			properties = new Properties();
+			properties.load(new FileInputStream(res));
+		}
+		else {
+			fail("Missing file: "+res.getPath());
+		}
+	}
+	
+	/**
+	 * Initialize important test objects as singletons.
+	 */
+	@Before
+	public void init(){
+
+		if(DEFAULT_PIN == null) {
+			DEFAULT_PIN = (String) properties.get("Default_PIN");
+		}
+		
+		if(serviceURL == null) {
+			serviceURL = (String) properties.get("eID_service_URL");
+		}
+	}
+	
+	
+	/**
 	 * 
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -192,10 +238,10 @@ public class Complete {
 	public void a1_initialization() {
 		final IMainView mainView = TestMainView.getInstance(DEFAULT_PIN);
 		assertNotNull("no main view", mainView);
-
+		
 		final CardHandler eCardHandler = new CardHandler(mainView);
 		assertNotNull("no card handler", eCardHandler);
-
+		assertNotNull("No eID card inserted", eCardHandler.getECard());
 		mainView.setEventLister(new MainViewEventListener(eCardHandler, mainView));
 
 		final WSContainer wsCtx = new WSContainer();

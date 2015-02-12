@@ -28,16 +28,16 @@
  * 
  *          Diese Datei ist Teil von PersoApp.
  * 
- *          PersoApp ist Freie Software: Sie können es unter den Bedingungen der
+ *          PersoApp ist Freie Software: Sie kï¿½nnen es unter den Bedingungen der
  *          GNU Lesser General Public License, wie von der Free Software
  *          Foundation, Version 3 der Lizenz oder (nach Ihrer Option) jeder
- *          späteren veröffentlichten Version, weiterverbreiten und/oder
+ *          spï¿½teren verï¿½ffentlichten Version, weiterverbreiten und/oder
  *          modifizieren.
  * 
- *          PersoApp wird in der Hoffnung, dass es nützlich sein wird, aber OHNE
- *          JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
- *          Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN
- *          ZWECK. Siehe die GNU Lesser General Public License für weitere
+ *          PersoApp wird in der Hoffnung, dass es nï¿½tzlich sein wird, aber OHNE
+ *          JEDE GEWï¿½HRLEISTUNG, bereitgestellt; sogar ohne die implizite
+ *          Gewï¿½hrleistung der MARKTFï¿½HIGKEIT oder EIGNUNG Fï¿½R EINEN BESTIMMTEN
+ *          ZWECK. Siehe die GNU Lesser General Public License fï¿½r weitere
  *          Details.
  * 
  *          Sie sollten eine Kopie der GNU Lesser General Public License
@@ -51,6 +51,9 @@ package de.persoapp.desktop.tests;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.Authenticator;
@@ -59,10 +62,13 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
+import java.util.Properties;
 import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -89,10 +95,12 @@ import de.persoapp.desktop.ProxyAuthenticator;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class Complete {
 
+	private static Properties properties = null;
+	
 	/**
 	 * magic constant for default test service
 	 */
-	private final String		serviceURL	= "https://eid.services.ageto.net/persoapp/eidtest.jsp";
+	private String		serviceURL	= null;
 
 	/*
 	 * needed between test-cases
@@ -103,12 +111,42 @@ public class Complete {
 
 	private static String		refreshURL;
 
+	private static final String resourcePath = "/tests/resources/test_config.properties";
+	
+	
 	static {
 		System.out.println("Test " + Complete.class.getName() + " loaded.");
 	}
 
 	{
 		System.out.println("Test " + this.getClass().getName() + " created.");
+	}
+	
+	/**
+	 * Load the resource file for default pin and
+	 * service url.
+	 * If the resource file does not exist, it
+	 * must be created by the developer per hand.
+	 */
+	@BeforeClass
+	public static void setUp() throws FileNotFoundException, IOException {
+		final File res = new File(new File("").getAbsolutePath()+resourcePath);
+
+		if(res.exists()) {
+			properties = new Properties();
+			properties.load(new FileInputStream(res));
+		}
+		else {
+			fail("Missing file: "+res.getPath());
+		}
+	}
+	
+	@Before
+	public void init() {
+		
+		if(serviceURL == null) {
+			serviceURL = (String) properties.get("eID_service_URL");
+		}
 	}
 
 	/**
@@ -177,6 +215,7 @@ public class Complete {
 	public void b1_initializeCardHandler() {
 		eCardHandler = new CardHandler(mainView);
 		assertNotNull("no card handler", eCardHandler);
+		assertNotNull("No eID card inserted", eCardHandler.getECard());
 	}
 
 	/**

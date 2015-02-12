@@ -67,6 +67,8 @@ import iso.std.iso_iec._24727.tech.schema.RequestType;
 import iso.std.iso_iec._24727.tech.schema.Transmit;
 import iso.std.iso_iec._24727.tech.schema.TransmitResponse;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,6 +80,7 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -86,7 +89,6 @@ import java.util.logging.Logger;
 import javax.net.ssl.HttpsURLConnection;
 
 import de.bund.bsi.ecard.api._1.InitializeFrameworkResponse;
-
 import de.persoapp.core.ECardWorker;
 import de.persoapp.core.card.CardHandler;
 import de.persoapp.core.client.ECardSession;
@@ -94,6 +96,8 @@ import de.persoapp.core.client.IMainView;
 import de.persoapp.core.client.MainViewEventListener;
 import de.persoapp.core.tests.util.ConfigTestcase;
 import de.persoapp.core.tests.util.EACPhases;
+import de.persoapp.core.tests.util.TestMainView;
+import de.persoapp.core.tests.util.TestSALService;
 import de.persoapp.core.util.Hex;
 import de.persoapp.core.util.Util;
 import de.persoapp.core.util.TLV;
@@ -101,6 +105,7 @@ import de.persoapp.core.ws.*;
 import de.persoapp.core.ws.engine.WSContainer;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -113,13 +118,18 @@ import org.junit.runners.MethodSorters;
 public class WebServiceTest {
 	
 	private static WSContainer wsCtx = null;
-	private final String	DEFAULT_PIN	= "123456";
-	private final String	serviceURL	= "https://eid.services.ageto.net/persoapp/eidtest.jsp";
+	private String	DEFAULT_PIN = null;
+	private String	serviceURL	= null;
+	
+	
+	private static final String resourcePath = "/tests/resources/test_config.properties";
 	
 	private static Logger logger = Logger.getLogger(WebServiceTest.class.getName());
 	private static IMainView	mainView = null;
 
 	private static IFDService ifdservice = null;
+	
+	private static Properties properties;
 	
 	/**
 	 * Test spy for indirect output
@@ -130,34 +140,24 @@ public class WebServiceTest {
 	private static CardHandler eCardHandler = null;
 	private static ECardSession session = null;
 	
-//	/**
-//	 * The constant to identify unknown authentication protocol data.<br/>
-//	 * @see DIDAuthenticationDataType
-//	 */
-//	public static final int UNKNOWN_AUTH_PROT_DATA = 0xA;
-//	
-//	/**
-//	 * The constant to renew the authentication protocol data in the first
-//	 * phase of the EAC.
-//	 */
-//	public static final int RENEW_DATA_FIRST_PHASE_OF_EAC = 0xB;
-//
-//	/**
-//	 * The constant to renew the authentication protocol data in the second
-//	 * phase of the EAC.
-//	 */
-//	public static final int RENEW_DATA_SECOND_PHASE_OF_EAC = 0xC;
-//	
-//	/**
-//	 * The constant to renew the authentication protocol data in the additional
-//	 * phase of the EAC.
-//	 */
-//	public static final int RENEW_DATA_ADDITIONAL_PHASE_OF_EAC = 0xD;	
-//	
-//	/**
-//	 * The constant to delete the authentication protocol data.
-//	 */
-//	public static final int DELETE_DATA = 0xE;
+	/**
+	 * Load the resource file for default pin and
+	 * service url.
+	 * If the resource file does not exist, it
+	 * must be created by the developer per hand.
+	 */
+	@BeforeClass
+	public static void setUp() throws FileNotFoundException, IOException {
+		final File res = new File(new File("").getAbsolutePath()+resourcePath);
+
+		if(res.exists()) {
+			properties = new Properties();
+			properties.load(new FileInputStream(res));
+		}
+		else {
+			fail("Missing file: "+res.getPath());
+		}
+	}
 	
 	/**
 	 * Initialize important test objects as singletons.
@@ -165,6 +165,14 @@ public class WebServiceTest {
 	@Before
 	public void init(){
 
+		if(DEFAULT_PIN == null) {
+			DEFAULT_PIN = (String) properties.get("Default_PIN");
+		}
+		
+		if(serviceURL == null) {
+			serviceURL = (String) properties.get("eID_service_URL");
+		}
+		
 		if(mainView==null) {
 			mainView = TestMainView.getInstance(DEFAULT_PIN);
 			assertNotNull("no main view", mainView);		
@@ -211,7 +219,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -226,6 +234,8 @@ public class WebServiceTest {
 	 */
 	@Test
 	public void testIFDServiceNull_1() {
+		
+		assertNotNull("No eID card inserted", eCardHandler.getECard());
 		wsCtx.getMessageContext().clear();		
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		try{
@@ -234,7 +244,7 @@ public class WebServiceTest {
 			logger.log(Level.INFO, "NullPointerException is thrown: "+e.getStackTrace()[0]);
 			return;
 		} catch(final Throwable t) {
-			fail("Unexpected exception: "+t.getStackTrace()[0]);
+			fail("Unexpected exception: "+t.getMessage());
 		}
 		fail("No NullPointerException is thrown.");
 	}
@@ -246,7 +256,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -263,6 +273,9 @@ public class WebServiceTest {
 	 */
 	@Test
 	public void testIFDServiceNull_2() {
+		
+		assertNotNull("No eID card inserted", eCardHandler.getECard());
+		
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), null);
 		Transmit parameters = new Transmit();
@@ -272,7 +285,7 @@ public class WebServiceTest {
 			logger.log(Level.INFO, "NullPointerException is thrown: "+e.getStackTrace()[0]);
 			return;
 		} catch(final Throwable t) {
-			fail("Unexpected exception: "+t.getStackTrace()[0]);
+			fail("Unexpected exception: "+t.getMessage());
 		}
 		fail("No NullPointerException is thrown.");
 	}
@@ -284,7 +297,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -303,6 +316,9 @@ public class WebServiceTest {
 	 */
 	@Test
 	public void testIFDServiceInvalidParameter_1() {
+		
+		assertNotNull("No eID card inserted", eCardHandler.getECard());
+		
 		wsCtx.getMessageContext().clear();		
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		
@@ -313,7 +329,7 @@ public class WebServiceTest {
 		try{
 			response = ifdservice.transmit(parameters);			
 		} catch (final Throwable t) {
-			fail("Unexpected throwable is thrown: "+t.getStackTrace()[0]);
+			fail("Unexpected throwable is thrown: "+t.getMessage());
 		}
 
 		assertNotNull("transmit result is null",response);
@@ -329,7 +345,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -349,6 +365,9 @@ public class WebServiceTest {
 	 */
 	@Test
 	public void testIFDServiceInvalidParameter_2() {
+		
+		assertNotNull("No eID card inserted", eCardHandler.getECard());
+		
 		wsCtx.getMessageContext().clear();		
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		
@@ -365,7 +384,7 @@ public class WebServiceTest {
 		try{
 			response = ifdservice.transmit(parameters);			
 		} catch (final Throwable t) {
-			fail("Unexpected Throwable is thrown: "+t.getStackTrace()[0]);
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
 		}
 
 		assertNotNull("transmit result is null",response);
@@ -381,7 +400,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -402,6 +421,9 @@ public class WebServiceTest {
 	 */
 	@Test
 	public void testIFDServiceInvalidParameter_3() {
+		
+		assertNotNull("No eID card inserted", eCardHandler.getECard());
+		
 		wsCtx.getMessageContext().clear();		
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		
@@ -419,7 +441,7 @@ public class WebServiceTest {
 		try {			
 			response = ifdservice.transmit(parameters);			
 		} catch (final Throwable t) {
-			fail("Unexpected Throwable is thrown: "+t.getStackTrace()[0]);
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
 		}
 
 		assertNotNull("transmit result is null", response);
@@ -433,7 +455,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -452,6 +474,9 @@ public class WebServiceTest {
 	 */
 	@Test
 	public void testIFDServiceInvalidParameter_4(){
+		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		wsCtx.getMessageContext().clear();		
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		
@@ -464,7 +489,7 @@ public class WebServiceTest {
 		Transmit parameters = new Transmit();
 		parameters.getInputAPDUInfo().add(apdu);
 		
-		assertNotNull("No transport Provider",eCardHandler.getECard());
+
 		
 		try {
 			ifdservice.transmit(parameters);		
@@ -473,7 +498,7 @@ public class WebServiceTest {
 			logger.log(Level.INFO, "IllegalArgumentException is thrown: "+e.getStackTrace()[0]);
 			return;
 		} catch (final Throwable t) {
-			fail("Unexpected Throwable is thrown: "+t.getStackTrace()[0]);
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
 		}
 		
 		fail("No IllegalArgumentException is thrown.");
@@ -486,7 +511,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -507,6 +532,8 @@ public class WebServiceTest {
 	public void testIFDServiceValidParameter_1(){
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
+
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
 		
 		short FID = 0x011C;
 		byte[] correctApdu = new byte[]{0x00, (byte) 0xA4, 0x02, 0x0C, 0x02, (byte) (FID >> 8), (byte) (FID & 0xFF) };
@@ -519,13 +546,13 @@ public class WebServiceTest {
 		
 		TransmitResponse response = null;
 		
-		assertNotNull("No transport Provider",eCardHandler.getECard());
+
 		
 		try {
 			response = ifdservice.transmit(parameters);
 			eCardHandler = null;
 		} catch (final Throwable t) {
-			fail("Unexpected Throwable is thrown: "+t.getStackTrace()[0]);
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
 		}
 		assertNotNull("response is null",response);
 		assertEquals("apdu not correct", "9000",Hex.toString(response.getOutputAPDU().get(0)));
@@ -539,7 +566,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -560,6 +587,8 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), null);
 		salservice.response.clear();
+		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
 		
 		Random sr = new Random();
 		byte[] slotHandle = new byte[32];
@@ -596,7 +625,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -619,10 +648,17 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		ArrayList<String> nullList = new ArrayList<String>();
 		//Waiting on callback timeout
 		nullList.add("certificate");
-		makeNull(nullList, EACPhases.EAC_1);
+		
+		try {
+			makeNull(nullList, EACPhases.EAC_1);
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 	}	
 	
 	/**
@@ -638,7 +674,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -662,9 +698,16 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("certificateDescription");
-		makeNull(nullList, EACPhases.EAC_1);
+		
+		try {
+			makeNull(nullList, EACPhases.EAC_1);
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 	}
 	
 	/**
@@ -674,7 +717,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -699,9 +742,16 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("providerInfo");
-		makeNull(nullList, EACPhases.EAC_1,false);
+		
+		try {
+			makeNull(nullList, EACPhases.EAC_1,false);
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 	}
 	
 	/**
@@ -717,7 +767,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -742,9 +792,16 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("requiredCHAT");
-		makeNull(nullList, EACPhases.EAC_1);
+		
+		try {
+			makeNull(nullList, EACPhases.EAC_1);
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 	}	
 	
 	
@@ -755,7 +812,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -780,9 +837,16 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("optionalCHAT");
-		makeNull(nullList, EACPhases.EAC_1,false);
+		
+		try {
+			makeNull(nullList, EACPhases.EAC_1,false);
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 	}	
 	
 	
@@ -799,7 +863,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -824,9 +888,16 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("authenticatedAuxiliaryData");
-		makeNull(nullList, EACPhases.EAC_1);
+		
+		try {
+			makeNull(nullList, EACPhases.EAC_1);
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 	}
 	
 	
@@ -837,7 +908,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -862,9 +933,16 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("transactionInfo");
-		makeNull(nullList, EACPhases.EAC_1,false);
+		
+		try {
+			makeNull(nullList, EACPhases.EAC_1,false);
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 	}
 	
 	/**
@@ -875,7 +953,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -901,9 +979,16 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("certificate");
-		makeNull(nullList,EACPhases.EAC_2,false);
+		
+		try {
+			makeNull(nullList,EACPhases.EAC_2,false);
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 	}
 	
 	/**
@@ -911,7 +996,7 @@ public class WebServiceTest {
 	 * <b>Important: </b>Not handled exceptions in {@link TLV} and
 	 * {@link WSContainer} preventing this test from completing and forcing the
 	 * test suite into a deadlock until the callback in the {@link ECardWorker}
-	 * is timed out.
+	 * is triggered.
 	 * </p>
 	 * Function invocation without an ephemeralPublicKey in the second
 	 * EAC-phase.<br/>
@@ -920,7 +1005,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -945,9 +1030,16 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("ephemeralPublicKey");
-		makeNull(nullList,EACPhases.EAC_2);
+		
+		try {
+			makeNull(nullList,EACPhases.EAC_2);
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 	}	
 	
 	/**
@@ -957,7 +1049,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -982,9 +1074,16 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		ArrayList<String> nullList = new ArrayList<String>();
 		nullList.add("signature");
-		makeNull(nullList,EACPhases.EAC_2,false);
+		
+		try {	
+			makeNull(nullList,EACPhases.EAC_2,false);
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 	}
 	
 	/**
@@ -994,7 +1093,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -1018,10 +1117,12 @@ public class WebServiceTest {
 		salservice.response.clear();
 		salservice.configFlag = ConfigTestcase.DELETE_DATA;
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		try{
 			makeNull(null, EACPhases.EAC_1);
 		} catch (final Throwable t) {
-			fail("Unexpected Throwable is thrown: "+t.getStackTrace()[0]);
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
 		}
 		
 		HashMap<DIDAuthenticate,DIDAuthenticateResponse> response = salservice.response;
@@ -1041,7 +1142,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -1068,7 +1169,12 @@ public class WebServiceTest {
 		salservice.response.clear();
 		salservice.configFlag = ConfigTestcase.UNKNOWN_AUTH_PROT_DATA;
 		
-		makeAlternativeInvocationFail();
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		try {
+			makeAlternativeInvocationFail();
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
 		
 		HashMap<DIDAuthenticate,DIDAuthenticateResponse> response = salservice.response;
 		for(Entry<DIDAuthenticate,DIDAuthenticateResponse> entry: response.entrySet())
@@ -1085,9 +1191,8 @@ public class WebServiceTest {
 	/**
 	 * <p>
 	 * <b>Important: </b>Not handled exceptions in {@link TLV} and
-	 * {@link WSContainer} preventing this test from completing and forcing the
-	 * test suite in a deadlock. The PersoApp terminates and the application
-	 * pointer does not return to the test case.
+	 * {@link WSContainer} preventing this test from completing and forces the
+	 * test suite in a deadlock until the timeout is triggered.
 	 * </p>
 	 * Function invocation with missing authentication data in the first
 	 * EAC-Phase. <br/>
@@ -1096,7 +1201,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -1120,15 +1225,19 @@ public class WebServiceTest {
 		salservice.response.clear();
 		salservice.configFlag = ConfigTestcase.RENEW_DATA_FIRST_PHASE_OF_EAC;
 		
-		makeAlternativeInvocationFail();
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		try {
+			makeAlternativeInvocationFail();
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}		
 	}	
 	
 	/**
 	 * <p>
 	 * <b>Important: </b>Not handled exceptions in {@link TLV} and
-	 * {@link WSContainer} preventing this test from completing and forcing the
-	 * test suite in a deadlock. The PersoApp terminates and the application
-	 * pointer does not return to the test case.
+	 * {@link WSContainer} preventing this test from completing and forces the
+	 * test suite in a deadlock until the timeout is triggered.
 	 * </p>
 	 * Function invocation with missing authentication data in the second
 	 * EAC-Phase. <br/>
@@ -1160,8 +1269,13 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
 		salservice.configFlag = ConfigTestcase.RENEW_DATA_SECOND_PHASE_OF_EAC;
-		
-		makeAlternativeInvocationFail();
+
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		try {
+			makeAlternativeInvocationFail();
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}		
 	}
 	
 
@@ -1173,7 +1287,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -1196,59 +1310,63 @@ public class WebServiceTest {
 		wsCtx.getMessageContext().clear();
 		wsCtx.getMessageContext().put(ECardSession.class.getName(), session);
 		salservice.response.clear();
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
+		try {
 			makeAlternativeInvocationSuccess();
+		} catch(final Throwable t) {
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
+		}
+		HashMap<DIDAuthenticate,DIDAuthenticateResponse> response = salservice.response;
 			
-			HashMap<DIDAuthenticate,DIDAuthenticateResponse> response = salservice.response;
+		assertFalse("no response from didAuthenticate",response.isEmpty());
+		System.out.println(response.size());
+		assertTrue("response",response.size()>1);
+		for(Entry<DIDAuthenticate,DIDAuthenticateResponse> entry : response.entrySet())
+		{
+			assertNotNull("no authentication protocol data",entry.getKey().getAuthenticationProtocolData());
+			assertNotNull("no authentication protocol return data",entry.getValue().getAuthenticationProtocolData());
 			
-			assertFalse("no response from didAuthenticate",response.isEmpty());
-			System.out.println(response.size());
-			assertTrue("response",response.size()>1);
-			for(Entry<DIDAuthenticate,DIDAuthenticateResponse> entry : response.entrySet())
-			{
-				assertNotNull("no authentication protocol data",entry.getKey().getAuthenticationProtocolData());
-				assertNotNull("no authentication protocol return data",entry.getValue().getAuthenticationProtocolData());
+			if(entry.getKey().getAuthenticationProtocolData() instanceof EAC1InputType){//EAC-phase 1 - Extended PACE - Protocol
+				logger.log(Level.INFO,"First EAC-Phase");
 				
-				if(entry.getKey().getAuthenticationProtocolData() instanceof EAC1InputType){//EAC-phase 1 - Extended PACE - Protocol
-					logger.log(Level.INFO,"First EAC-Phase");
-					
-					assertTrue("EAC1Output",entry.getValue().getAuthenticationProtocolData() instanceof EAC1OutputType);
-					
-					assertNotNull("no certificate",((EAC1InputType)entry.getKey().getAuthenticationProtocolData()).getCertificate());
-					assertNotNull("no certificate description",((EAC1InputType)entry.getKey().getAuthenticationProtocolData()).getCertificateDescription());
-					
-					assertTrue("wrong authentication protocol return data", entry.getValue().getAuthenticationProtocolData() instanceof EAC1OutputType);
+				assertTrue("EAC1Output",entry.getValue().getAuthenticationProtocolData() instanceof EAC1OutputType);
 				
-					assertNotNull("no Certificate Holder Authorization Template",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getCertificateHolderAuthorizationTemplate());
-					assertNotNull("no EF.CardAccess",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getEFCardAccess());
-					assertNotNull("no IDPICC",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getIDPICC());
-					assertNotNull("no Challange",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getChallenge());
+				assertNotNull("no certificate",((EAC1InputType)entry.getKey().getAuthenticationProtocolData()).getCertificate());
+				assertNotNull("no certificate description",((EAC1InputType)entry.getKey().getAuthenticationProtocolData()).getCertificateDescription());
+				
+				assertTrue("wrong authentication protocol return data", entry.getValue().getAuthenticationProtocolData() instanceof EAC1OutputType);
+			
+				assertNotNull("no Certificate Holder Authorization Template",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getCertificateHolderAuthorizationTemplate());
+				assertNotNull("no EF.CardAccess",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getEFCardAccess());
+				assertNotNull("no IDPICC",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getIDPICC());
+				assertNotNull("no Challange",((EAC1OutputType)entry.getValue().getAuthenticationProtocolData()).getChallenge());
+				
+			}else if(entry.getKey().getAuthenticationProtocolData() instanceof EAC2InputType){//EAC-phase 2 - combination of Terminal and Chip Authentication
+				logger.log(Level.INFO,"Second EAC-Phase");
+				assertTrue("EAC2Output",entry.getValue().getAuthenticationProtocolData() instanceof EAC2OutputType);
 					
-				}else if(entry.getKey().getAuthenticationProtocolData() instanceof EAC2InputType){//EAC-phase 2 - combination of Terminal and Chip Authentication
-					logger.log(Level.INFO,"Second EAC-Phase");
-
+				assertNotNull("no ephemeral public key", ((EAC2InputType)entry.getKey().getAuthenticationProtocolData()).getEphemeralPublicKey());
+					
+				assertTrue("wrong authentication protocol return data", entry.getValue().getAuthenticationProtocolData() instanceof EAC2OutputType);
+					
+				assertNotNull("no EFCardSecurity",((EAC2OutputType)entry.getValue().getAuthenticationProtocolData()).getEFCardSecurity());
+				assertNotNull("no Authentication Token",((EAC2OutputType)entry.getValue().getAuthenticationProtocolData()).getAuthenticationToken());
+				assertNotNull("no Nonce",((EAC2OutputType)entry.getValue().getAuthenticationProtocolData()).getNonce());
+					
+				if(((EAC2InputType)entry.getKey().getAuthenticationProtocolData()).getSignature()==null){//EAC-phase 2b - conditional additional message with signature 
 					assertTrue("EAC2Output",entry.getValue().getAuthenticationProtocolData() instanceof EAC2OutputType);
-					
-					assertNotNull("no ephemeral public key", ((EAC2InputType)entry.getKey().getAuthenticationProtocolData()).getEphemeralPublicKey());
-					
-					assertTrue("wrong authentication protocol return data", entry.getValue().getAuthenticationProtocolData() instanceof EAC2OutputType);
-					
-					assertNotNull("no EFCardSecurity",((EAC2OutputType)entry.getValue().getAuthenticationProtocolData()).getEFCardSecurity());
-					assertNotNull("no Authentication Token",((EAC2OutputType)entry.getValue().getAuthenticationProtocolData()).getAuthenticationToken());
-					assertNotNull("no Nonce",((EAC2OutputType)entry.getValue().getAuthenticationProtocolData()).getNonce());
-					
-					if(((EAC2InputType)entry.getKey().getAuthenticationProtocolData()).getSignature()==null){//EAC-phase 2b - conditional additional message with signature 
-						assertTrue("EAC2Output",entry.getValue().getAuthenticationProtocolData() instanceof EAC2OutputType);
-						assertNotNull("No Signature and no Challange from the PICC",((EAC2OutputType)entry.getValue().getAuthenticationProtocolData()).getChallenge());	
-					}
-					
-				}else {
-					assertTrue("Unknown parameter",entry.getKey().getAuthenticationProtocolData() instanceof EACAdditionalInputType);
-					assertNotNull("no signature",((EACAdditionalInputType)entry.getValue().getAuthenticationProtocolData()).getSignature());
+					assertNotNull("No Signature and no Challange from the PICC",((EAC2OutputType)entry.getValue().getAuthenticationProtocolData()).getChallenge());	
 				}
-				assertNotNull("no result",entry.getValue().getResult());
-				assertNotNull("no major result",entry.getValue().getResult().getResultMajor());
-				assertEquals("no correct major result", EcAPIProvider.ECARD_API_RESULT_OK, entry.getValue().getResult().getResultMajor());
+					
+			}else {
+				assertTrue("Unknown parameter",entry.getKey().getAuthenticationProtocolData() instanceof EACAdditionalInputType);
+				assertNotNull("no signature",((EACAdditionalInputType)entry.getValue().getAuthenticationProtocolData()).getSignature());
 			}
+			assertNotNull("no result",entry.getValue().getResult());
+			assertNotNull("no major result",entry.getValue().getResult().getResultMajor());
+			assertEquals("no correct major result", EcAPIProvider.ECARD_API_RESULT_OK, entry.getValue().getResult().getResultMajor());
+		}
 	}
 	
 	/**
@@ -1258,7 +1376,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card test is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -1276,13 +1394,15 @@ public class WebServiceTest {
 	public void testManagementServiceNull_1() {
 		wsCtx.getMessageContext().clear();
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		try{
 			managementservice.initializeFramework(null);
 		} catch(final NullPointerException e) {
-			logger.log(Level.INFO, "NullPointerException is thrown: "+e.getStackTrace()[0]);
+			logger.log(Level.INFO, "NullPointerException is thrown: "+e.getMessage());
 			return;
 		} catch(final Throwable t) {
-			fail("Unexpected Throwable is thrown: "+t.getStackTrace()[0]);
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
 		}
 		fail("No NullPointerException is thrown.");	//fail if no exception is thrown.
 	}
@@ -1319,7 +1439,7 @@ public class WebServiceTest {
 		try{
 			ifr = managementservice.initializeFramework(parameters);
 		} catch (final Throwable t) {
-			fail("Unexpected Throwable is thrown: "+t.getStackTrace()[0]);
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
 		}
 		
 		assertNotNull("Response is null.",ifr);
@@ -1332,7 +1452,7 @@ public class WebServiceTest {
 	 * <b>Preconditions:</b>
 	 * <ul>
 	 * <li>A single basic card reader is connected to the eID-Client system.</li>
-	 * <li>A single active eID-Card is connected to the card reader.</li>
+	 * <li>A single active test eID-Card is connected to the card reader.</li>
 	 * </ul>
 	 * <b>TestStep: </b>
 	 * <ul>
@@ -1361,10 +1481,12 @@ public class WebServiceTest {
 		
 		InitializeFrameworkResponse ifr = null;
 		
+		assertNotNull("No eID card inserted",eCardHandler.getECard());
+		
 		try{
 			ifr = managementservice.initializeFramework(parameters);
 		} catch (final Throwable t) {
-			fail("Unexpected Throwable is thrown: "+t.getStackTrace()[0]);
+			fail("Unexpected Throwable is thrown: "+t.getMessage());
 		}
 		assertNotNull("Response is null",ifr);
 	}

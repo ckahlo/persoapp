@@ -159,9 +159,7 @@ public class WebServiceTest {
 		}
 	}
 	
-	/**
-	 * Initialize important test objects as singletons.
-	 */
+
 	@Before
 	public void init(){
 
@@ -173,10 +171,10 @@ public class WebServiceTest {
 			serviceURL = (String) properties.get("eID_service_URL");
 		}
 		
-		if(mainView==null) {
+//		if(mainView==null) {
 			mainView = TestMainView.getInstance(DEFAULT_PIN);
 			assertNotNull("no main view", mainView);		
-		}
+//		}
 		
 //		if( eCardHandler == null) {
 			eCardHandler = new CardHandler(mainView);
@@ -188,27 +186,27 @@ public class WebServiceTest {
 			managementservice = new ManagementService();
 		}
 		
-		if(salservice==null) {
+//		if(salservice==null) {
 			salservice = new TestSALService();
-		}
+//		}
 		
 		if(ifdservice==null) {
 			ifdservice = new IFDService();
 		}
 		
-		if(wsCtx==null) {
+//		if(wsCtx==null) {
 			wsCtx = new WSContainer();
 			assertNotNull("no web service container", wsCtx);
 			wsCtx.addService(managementservice);
 			wsCtx.addService(salservice);
 			wsCtx.addService(ifdservice);
 			wsCtx.init(null);
-		}
+//		}
 		
-		if(session == null) {
+//		if(session == null) {
 			session = new ECardSession(mainView, eCardHandler);
 			assertNotNull("no session",session);		
-		}
+//		}
 		ECardWorker.init(mainView, wsCtx, eCardHandler);
 	}
 	

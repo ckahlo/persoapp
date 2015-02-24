@@ -83,8 +83,7 @@ import de.persoapp.core.ws.SALService;
  * implementations of didAuthenticate and EAC protocol messages.
  * </p>
  * 
- * @author Christian Kahlo
- * @author Rico Klimsa - added javadoc comments.
+ * @author Rico Klimsa, 2014.
  */
 @WebService(serviceName = "SAL", portName = "SALPort", targetNamespace = "urn:iso:std:iso-iec:24727:tech:schema")
 public class TestSALService implements SAL {

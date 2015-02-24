@@ -171,42 +171,42 @@ public class WebServiceTest {
 			serviceURL = (String) properties.get("eID_service_URL");
 		}
 		
-//		if(mainView==null) {
+		if(mainView==null) {
 			mainView = TestMainView.getInstance(DEFAULT_PIN);
 			assertNotNull("no main view", mainView);		
-//		}
+		}
 		
-//		if( eCardHandler == null) {
+		if( eCardHandler == null) {
 			eCardHandler = new CardHandler(mainView);
 			assertNotNull("no card handler", eCardHandler);
 			mainView.setEventLister(new MainViewEventListener(eCardHandler, mainView));
-//		}
+		}
 		
 		if(managementservice==null) {
 			managementservice = new ManagementService();
 		}
 		
-//		if(salservice==null) {
+		if(salservice==null) {
 			salservice = new TestSALService();
-//		}
+		}
 		
 		if(ifdservice==null) {
 			ifdservice = new IFDService();
 		}
 		
-//		if(wsCtx==null) {
+		if(wsCtx==null) {
 			wsCtx = new WSContainer();
 			assertNotNull("no web service container", wsCtx);
 			wsCtx.addService(managementservice);
 			wsCtx.addService(salservice);
 			wsCtx.addService(ifdservice);
 			wsCtx.init(null);
-//		}
+		}
 		
-//		if(session == null) {
+		if(session == null) {
 			session = new ECardSession(mainView, eCardHandler);
 			assertNotNull("no session",session);		
-//		}
+		}
 		ECardWorker.init(mainView, wsCtx, eCardHandler);
 	}
 	
@@ -1596,7 +1596,7 @@ public class WebServiceTest {
 
 			
 		} catch(final NullPointerException e) {
-			logger.log(Level.INFO, "NullPointerException occured: "+e.getStackTrace()[0]);
+			logger.log(Level.INFO, "NullPointerException occured: "+e.getMessage());
 			return;
 		}
 		catch (final CertificateException e) {

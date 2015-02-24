@@ -178,11 +178,11 @@ public class WebServiceTest {
 			assertNotNull("no main view", mainView);		
 		}
 		
-		if( eCardHandler == null) {
+//		if( eCardHandler == null) {
 			eCardHandler = new CardHandler(mainView);
 			assertNotNull("no card handler", eCardHandler);
 			mainView.setEventLister(new MainViewEventListener(eCardHandler, mainView));
-		}
+//		}
 		
 		if(managementservice==null) {
 			managementservice = new ManagementService();

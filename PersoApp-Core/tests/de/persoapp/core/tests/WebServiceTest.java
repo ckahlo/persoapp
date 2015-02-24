@@ -1630,11 +1630,5 @@ public class WebServiceTest{
 	@After
 	public void tearDown() {
 		eCardHandler.reset();
-		
-		wsCtx = null;
-		eCardHandler = null;
-		salservice = null;
-		mainView = null;
-		session = null;
 	}
 }

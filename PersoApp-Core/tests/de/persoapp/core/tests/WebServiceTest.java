@@ -104,41 +104,40 @@ import de.persoapp.core.util.TLV;
 import de.persoapp.core.ws.*;
 import de.persoapp.core.ws.engine.WSContainer;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runners.MethodSorters;
-
 
 /**
  * @author Rico Klimsa, 2014
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class WebServiceTest {
+public class WebServiceTest{
 	
-	private static WSContainer wsCtx = null;
-	private String	DEFAULT_PIN = null;
-	private String	serviceURL	= null;
-	
-	
-	private static final String resourcePath = "/tests/resources/test_config.properties";
+	private static WSContainer wsCtx;
+	private String	serviceURL;
 	
 	private static Logger logger = Logger.getLogger(WebServiceTest.class.getName());
-	private static IMainView	mainView = null;
+	private static IMainView	mainView;
 
-	private static IFDService ifdservice = null;
+	private static IFDService ifdservice;
 	
 	private static Properties properties;
 	
 	/**
 	 * Test spy for indirect output
 	 */
-	private static TestSALService salservice = null;
-	private static ManagementService managementservice = null;
+	private static TestSALService salservice;
+	private static ManagementService managementservice;
 	
-	private static CardHandler eCardHandler = null;
-	private static ECardSession session = null;
+	private static CardHandler eCardHandler;
+	private static ECardSession session;
 	
 	/**
 	 * Load the resource file for default pin and
@@ -148,6 +147,7 @@ public class WebServiceTest {
 	 */
 	@BeforeClass
 	public static void setUp() throws FileNotFoundException, IOException {
+		final String resourcePath = "/tests/resources/test_config.properties";		
 		final File res = new File(new File("").getAbsolutePath()+resourcePath);
 
 		if(res.exists()) {
@@ -155,21 +155,30 @@ public class WebServiceTest {
 			properties.load(new FileInputStream(res));
 		}
 		else {
-			fail("Missing file: "+res.getPath());
+			throw new FileNotFoundException("File not found: " + resourcePath);
 		}
 	}
+
 	
+	@Rule
+	public TestWatcher watchman= new TestWatcher() {
+	  @Override
+	  protected void failed(Throwable e, Description description) {
+		  logger.severe(description.getMethodName()+"Failed!"+" "+e.getMessage());
+	  }
+
+	  @Override
+	  protected void succeeded(Description description) {
+		  logger.info(description.getMethodName()+" " + "success!");
+	  }
+
+	};
 
 	@Before
 	public void init(){
-
-		if(DEFAULT_PIN == null) {
-			DEFAULT_PIN = (String) properties.get("Default_PIN");
-		}
+		final String DEFAULT_PIN = (String) properties.get("Default_PIN");
 		
-		if(serviceURL == null) {
-			serviceURL = (String) properties.get("eID_service_URL");
-		}
+		serviceURL = (String) properties.get("eID_service_URL");
 		
 		if(mainView==null) {
 			mainView = TestMainView.getInstance(DEFAULT_PIN);
@@ -548,7 +557,6 @@ public class WebServiceTest {
 		
 		try {
 			response = ifdservice.transmit(parameters);
-			eCardHandler = null;
 		} catch (final Throwable t) {
 			fail("Unexpected Throwable is thrown: "+t.getMessage());
 		}
@@ -1616,5 +1624,17 @@ public class WebServiceTest {
 			fail(e.getMessage());
 		}
 		
+	}
+
+	
+	@After
+	public void tearDown() {
+		eCardHandler.reset();
+		
+		wsCtx = null;
+		eCardHandler = null;
+		salservice = null;
+		mainView = null;
+		session = null;
 	}
 }
